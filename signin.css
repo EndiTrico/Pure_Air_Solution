@@ -52,14 +52,20 @@ form, div.welcome-div{
   z-index: 50;
 }
 
-/*form.signup-form {
+.hidden{
+  display: none;
+}
+
+form.signin-form {
   opacity: 0;
   z-index: 1;
 }
-.container.welcome-mode form.signup-form {
+
+.container.welcome-mode form.signin-form {
   opacity: 1;
   z-index: 2;
-}*/
+}
+
 div.welcome-div {
   opacity: 0;
   z-index: 1;
