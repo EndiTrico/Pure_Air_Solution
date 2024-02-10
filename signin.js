@@ -1,11 +1,11 @@
 const sign_in_btn = document.querySelector("#sign-in-btn");
-const sign_up_btn = document.querySelector("#sign-up-btn");
+const welcome_btn = document.querySelector("#welcome-btn");
 const container = document.querySelector(".container");
 
-sign_up_btn.addEventListener("click", () => {
-  container.classList.add("sign-up-mode");
+welcome_btn.addEventListener("click", () => {
+  container.classList.add("welcome-mode");
 });
 
 sign_in_btn.addEventListener("click", () => {
-  container.classList.remove("sign-up-mode");
+  container.classList.remove("welcome-mode");
 });
