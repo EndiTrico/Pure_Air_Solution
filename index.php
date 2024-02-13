@@ -7,9 +7,6 @@ $errorMessage = '';
 
 // check not NULL
 if (isset($_POST['email']) && isset($_POST['password'])) {
-  header('Location: admin_dashboard.php');
-
-
 
   // check that values are not empty string, 0, or false
   if (!empty($_POST['email']) && !empty($_POST['password'])) {
@@ -29,11 +26,6 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
         header('Location: client_dashboard.php');
         exit();
       }
-      else {
-        header('Location: admin_dashboard.php');
-        exit();
-      }
-
     } else {
       $errorMessage = 'Error: Wrong Email or Password!';
     }
@@ -72,15 +64,15 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
             </div>
             <button name="submit" class="btn solid">Log In</button>
             <?php
-				      if ($errorMessage != '') {
-				    ?>
+            if ($errorMessage != '') {
+              ?>
               <div class="errorMessage">
-						<?php echo $errorMessage; ?>
-					</div>
+                <?php echo $errorMessage; ?>
+              </div>
 
-				<?php
-				}
-				?>
+              <?php
+            }
+            ?>
             <p class="social-text">Or Sign in with social platforms</p>
           </form>
         </div>
