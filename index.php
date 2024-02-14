@@ -13,7 +13,7 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    if (validateLogin($email, $password)) {
+   // if (validateLogin($email, $password)) {
       //start the session and register a variable
       // the user id and password match,
       // set the session
@@ -30,9 +30,9 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
       $errorMessage = 'Error: Wrong Email or Password!';
     }
 
-  } else {
-    $errorMessage = 'Required Fields Missing!';
-  }
+ // } else {
+  //  $errorMessage = 'Required Fields Missing!';
+ // }
 }
 ?>
 

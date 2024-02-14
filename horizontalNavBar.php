@@ -1,12 +1,23 @@
 <?php
-    require 'database/config.php';
-    require 'database/opendb.php';
+require 'database/config.php';
+require 'database/opendb.php';
 
-    $query = "SELECT CONCAT(FIRST_NAME, ' ', LAST_NAME) AS Full_Name FROM users WHERE EMAIL = '" . $_SESSION['email'] . "'";
-    $result = mysqli_query($conn, $query);
-    $row = mysqli_fetch_assoc($result);
-    $fullName = $row['Full_Name'];
-    $initials = strtoupper(substr($row["first_name"], 0, 1) . substr($row["last_name"], 0, 1));
+$query = "SELECT CONCAT(FIRST_NAME, ' ', LAST_NAME) AS Full_Name FROM users WHERE EMAIL = '" . $_SESSION['email'] . "'";
+$result = mysqli_query($conn, $query);
+$row = mysqli_fetch_assoc($result);
+$fullName = $row['Full_Name'];
+
+$query1 = "SELECT FIRST_NAME FROM users WHERE EMAIL = '" . $_SESSION['email'] . "'";
+$first_name_result = mysqli_query($conn, $query1);
+$first_name_row = mysqli_fetch_assoc($first_name_result);
+$first_name = $first_name_row['FIRST_NAME'];
+
+$query2 = "SELECT LAST_NAME FROM users WHERE EMAIL = '" . $_SESSION['email'] . "'";
+$last_name_result = mysqli_query($conn, $query2);
+$last_name_row = mysqli_fetch_assoc($last_name_result);
+$last_name = $last_name_row['LAST_NAME'];
+
+$initials = strtoupper(substr($first_name, 0, 1) . substr($last_name, 0, 1));
 
 ?>
 
@@ -101,8 +112,7 @@
                         <a href="#" class="list-group-item">
                             <div class="row g-0 align-items-center">
                                 <div class="col-2">
-                                    <img src="img/avatars/avatar-5.jpg" class="avatar img-fluid rounded-circle"
-                                        alt="Vanessa Tucker">
+                                    <img src="img/avatars/avatar-5.jpg" class="avatar img-fluid rounded-circle" alt="Vanessa Tucker">
                                 </div>
                                 <div class="col-10 ps-2">
                                     <div class="text-dark">Vanessa Tucker</div>
@@ -115,8 +125,7 @@
                         <a href="#" class="list-group-item">
                             <div class="row g-0 align-items-center">
                                 <div class="col-2">
-                                    <img src="img/avatars/avatar-2.jpg" class="avatar img-fluid rounded-circle"
-                                        alt="William Harris">
+                                    <img src="img/avatars/avatar-2.jpg" class="avatar img-fluid rounded-circle" alt="William Harris">
                                 </div>
                                 <div class="col-10 ps-2">
                                     <div class="text-dark">William Harris</div>
@@ -129,8 +138,7 @@
                         <a href="#" class="list-group-item">
                             <div class="row g-0 align-items-center">
                                 <div class="col-2">
-                                    <img src="img/avatars/avatar-4.jpg" class="avatar img-fluid rounded-circle"
-                                        alt="Christina Mason">
+                                    <img src="img/avatars/avatar-4.jpg" class="avatar img-fluid rounded-circle" alt="Christina Mason">
                                 </div>
                                 <div class="col-10 ps-2">
                                     <div class="text-dark">Christina Mason</div>
@@ -143,8 +151,7 @@
                         <a href="#" class="list-group-item">
                             <div class="row g-0 align-items-center">
                                 <div class="col-2">
-                                    <img src="img/avatars/avatar-3.jpg" class="avatar img-fluid rounded-circle"
-                                        alt="Sharon Lessman">
+                                    <img src="img/avatars/avatar-3.jpg" class="avatar img-fluid rounded-circle" alt="Sharon Lessman">
                                 </div>
                                 <div class="col-10 ps-2">
                                     <div class="text-dark">Sharon Lessman</div>
@@ -165,7 +172,9 @@
                     <i class="align-middle" data-feather="settings"></i>
                 </a>
 
-                <a style="width: 40px; /* Adjust the width and height as needed */
+
+                <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown" >
+                    <div style="width: 40px; /* Adjust the width and height as needed */
     height: 40px;
     border-radius: 50%; /* Ensures the element is circular */
     background-color: #007bff; /* Background color of the circle */
@@ -173,18 +182,15 @@
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    font-size: 20px; /* Adjust the font size of the initials */
-    font-weight: bold; /* Optionally adjust the font weight */" class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-    <!-- Display circular initials -->
-    <div class="avatar-circle"><?php echo $initials; ?></div>
-    <!-- Display full name -->
-    <span class="text-dark"><?php echo $fullName; ?></span>
-</a>
+    font-size: 17px; /* Adjust the font size of the initials */
+    font-weight: bold; /* Optionally adjust the font weight */" class="avatar img-fluid me-1 avatar-circle" alt="Charles Hall"><?php echo $initials; ?></div> <span class="text-dark"><?php echo $fullName; ?></span>
 
                 
+                </a>
+
+
                 <div class="dropdown-menu dropdown-menu-end">
-                    <a class="dropdown-item" href="pages-profile.html"><i class="align-middle me-1"
-                            data-feather="user"></i> Profile</a>
+                    <a class="dropdown-item" href="pages-profile.html"><i class="align-middle me-1" data-feather="user"></i> Profile</a>
                     <a class="dropdown-item" href="#"><i class="align-middle me-1" data-feather="pie-chart"></i>
                         Analytics</a>
                     <div class="dropdown-divider"></div>

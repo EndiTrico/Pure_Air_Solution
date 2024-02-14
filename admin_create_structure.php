@@ -14,12 +14,12 @@ $successfulMessage = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['create_user'])) {
         // Retrieve form data
+        $structure_name = mysqli_real_escape_string($conn, $_POST['structure_name']);
         $company_name = mysqli_real_escape_string($conn, $_POST['company_name']);
-        $company_email = mysqli_real_escape_string($conn, $_POST['company_email']);
 
         // Insert data into the users table
         $sql = "INSERT INTO companies (NAME, EMAIL) VALUES 
-                    ('$company_name', '$company_email')";
+                    ('$structure_name', '$company_name')";
         try {
             if (mysqli_query($conn, $sql)) {
                 $successfulMessage = "User created successfully";
@@ -34,6 +34,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 // Close the database connection
 include 'database/closedb.php';
+
+function showCompaniesName()
+{
+    include 'database/config.php';
+    include 'database/opendb.php';
+
+    $query = "SELECT COMPANY_ID, NAME FROM Companies";
+    $company = mysqli_query($conn, $query);
+
+    $companyDropDown = "";
+    // Start HTML select element
+    $companyDropDown .= '<select class="form-select mb-3" name = "company_name" required>';
+    $companyDropDown .= '<option value="" disabled selected>Select Company</option>';
+
+    // Check if the query was successful
+    if ($company) {
+        // Fetch rows from the result set
+        while ($row = mysqli_fetch_assoc($company)) {
+            // Output an option for each company
+            $companyDropDown .= '<option value="' . $row['COMPANY_ID'] . '">' . htmlspecialchars($row['NAME']) . '</option>';
+        }
+    } else {
+        // If the query failed, handle the error
+        $companyDropDown .= "Error: " . mysqli_error($conn);
+    }
+
+    // Close HTML select element
+    $companyDropDown .= '</select>';
+
+    // Close the database connection
+    include 'database/closedb.php';
+
+    return $companyDropDown;
+}
 ?>
 
 
@@ -70,12 +104,13 @@ include 'database/closedb.php';
             <main class="content">
                 <div class="container-fluid p-0">
 
+
                     <div class="row">
                         <div class="col-12 col-lg-1">
                             <a class="btn transparent-btn" style="margin-top: -8px;" href="admin_create.php"><img src="./images/back_button.png"></a>
                         </div>
                         <div class="col-12 col-lg-11">
-                            <h1 class="h3 mb-3">Create Company</h1>
+                            <h1 class="h3 mb-3">Create Structure</h1>
                         </div>
                         <div class="col-12">
                             <div class="card">
@@ -99,20 +134,22 @@ include 'database/closedb.php';
                                                     <div class="col-12 col-lg-6">
                                                         <div class="card">
                                                             <div class="card-header">
-                                                                <h5 class="card-title mb-0">Company Name</h5>
+                                                                <h5 class="card-title mb-0">Structure Name</h5>
                                                             </div>
                                                             <div class="card-body">
-                                                                <input type="text" class="form-control" name="company_name" placeholder="Company Name" required>
+                                                                <input type="text" class="form-control" name="structure_name" placeholder="Structure Name" required>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-lg-6">
                                                         <div class="card">
                                                             <div class="card-header">
-                                                                <h5 class="card-title mb-0">Email</h5>
+                                                                <h5 class="card-title mb-0">Company</h5>
                                                             </div>
                                                             <div class="card-body">
-                                                                <input type="email" class="form-control" name="company_email" placeholder="Email" required>
+                                                                <div>
+                                                                    <?php echo showCompaniesName() ?>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>

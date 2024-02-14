@@ -52,7 +52,7 @@ function showCompaniesName()
     include 'database/config.php';
     include 'database/opendb.php';
 
-    $query = "SELECT Name FROM Companies";
+    $query = "SELECT COMPANY_ID, NAME FROM Companies";
     $company = mysqli_query($conn, $query);
 
     $companyDropDown = "";
@@ -65,7 +65,7 @@ function showCompaniesName()
         // Fetch rows from the result set
         while ($row = mysqli_fetch_assoc($company)) {
             // Output an option for each company
-            $companyDropDown .= '<option>' . htmlspecialchars($row['Name']) . '</option>';
+            $companyDropDown .= '<option value="' . $row['COMPANY_ID'] . '">' . htmlspecialchars($row['NAME']) . '</option>';
         }
     } else {
         // If the query failed, handle the error
@@ -92,8 +92,7 @@ function showCompaniesName()
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
     <meta name="author" content="AdminKit">
-    <meta name="keywords"
-        content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+    <meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
@@ -116,10 +115,14 @@ function showCompaniesName()
 
             <main class="content">
                 <div class="container-fluid p-0">
-
-                    <h1 class="h3 mb-3">Create Entities</h1>
-
                     <div class="row">
+                        <div class="col-12 col-lg-1">
+                            <a class="btn transparent-btn" style="margin-top: -8px;" href="admin_create.php"><img src="./images/back_button.png"></a>
+                        </div>
+                        <div class="col-12 col-lg-11">
+                            <h1 class="h3 mb-3">Create User</h1>
+                        </div>
+
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
@@ -149,8 +152,7 @@ function showCompaniesName()
                                                         <h5 class="card-title mb-0">First Name</h5>
                                                     </div>
                                                     <div class="card-body">
-                                                        <input type="text" class="form-control" name="first_name"
-                                                            placeholder="First Name" required>
+                                                        <input type="text" class="form-control" name="first_name" placeholder="First Name" required>
                                                     </div>
                                                 </div>
 
@@ -159,8 +161,7 @@ function showCompaniesName()
                                                         <h5 class="card-title mb-0">Last Name</h5>
                                                     </div>
                                                     <div class="card-body">
-                                                        <input type="text" class="form-control" name="last_name"
-                                                            placeholder="Last Name" required>
+                                                        <input type="text" class="form-control" name="last_name" placeholder="Last Name" required>
                                                     </div>
                                                 </div>
 
@@ -188,8 +189,7 @@ function showCompaniesName()
                                                     </div>
                                                     <div class="card-body">
                                                         <div>
-                                                            <input type="email" placeholder="Email" name="user_email"
-                                                                value="" class="form-control" required />
+                                                            <input type="email" placeholder="Email" name="user_email" value="" class="form-control" required />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -199,9 +199,7 @@ function showCompaniesName()
                                                         <h5 class="card-title mb-0">Password</h5>
                                                     </div>
                                                     <div class="card-body">
-                                                        <input type="password" placeholder="Password"
-                                                            name="user_password" class="form-control" value=""
-                                                            required />
+                                                        <input type="password" placeholder="Password" name="user_password" class="form-control" value="" required />
                                                     </div>
                                                 </div>
 
@@ -218,8 +216,7 @@ function showCompaniesName()
                                             </div>
                                             <div class="row">
                                                 <div class="col-12 d-flex justify-content-center">
-                                                    <button type="submit" name="create_user"
-                                                        class="btn btn-success btn-lg">Create User</button>
+                                                    <button type="submit" name="create_user" class="btn btn-success btn-lg">Create User</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -235,8 +232,7 @@ function showCompaniesName()
                     <div class="row text-muted">
                         <div class="col-6 text-start">
                             <p class="mb-0">
-                                <a class="text-muted" href="https://adminkit.io/"
-                                    target="_blank"><strong>AdminKit</strong></a> &copy;
+                                <a class="text-muted" href="https://adminkit.io/" target="_blank"><strong>AdminKit</strong></a> &copy;
                             </p>
                         </div>
                         <div class="col-6 text-end">

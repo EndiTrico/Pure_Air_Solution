@@ -90,8 +90,7 @@ include 'database/closedb.php';
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
     <meta name="author" content="AdminKit">
-    <meta name="keywords"
-        content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+    <meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
@@ -129,18 +128,14 @@ include 'database/closedb.php';
                                         <div class="col-12 col-lg-6">
                                             <div class="card w-100">
                                                 <div class="card-header">
-                                                    <a href="admin_create_user.php"
-                                                        class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                        style="font-size: 28px; height: 200px; font-weight: bold;">Create
+                                                    <a href="admin_create_user.php" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-size: 28px; height: 200px; font-weight: bold;">Create
                                                         User</a>
                                                 </div>
                                             </div>
 
                                             <div class="card w-100">
                                                 <div class="card-header">
-                                                    <a href="admin_create_company.php"
-                                                        class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                        style="font-size: 28px; height: 200px; font-weight: bold;">Create
+                                                    <a href="admin_create_company.php" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-size: 28px; height: 200px; font-weight: bold;">Create
                                                         Company</a>
                                                 </div>
                                             </div>
@@ -149,18 +144,14 @@ include 'database/closedb.php';
                                         <div class=" col-12 col-lg-6">
                                             <div class="card w-100">
                                                 <div class="card-header">
-                                                    <a href="admin_create_user.php"
-                                                        class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                        style="font-size: 28px; height: 200px; font-weight: bold;">Create
+                                                    <a href="admin_create_structure.php" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-size: 28px; height: 200px; font-weight: bold;">Create
                                                         Structure</a>
                                                 </div>
                                             </div>
 
                                             <div class=" card w-100">
                                                 <div class="card-header">
-                                                    <a href="admin_create_user.php"
-                                                        class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                        style="font-size: 28px; height: 200px; font-weight: bold;">Create
+                                                    <a href="admin_create_department.php" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-size: 28px; height: 200px; font-weight: bold;">Create
                                                         Departments</a>
                                                 </div>
                                             </div>
@@ -174,31 +165,14 @@ include 'database/closedb.php';
 
                     </div>
                 </div>
-        </div>
-    </div>
-    </main>
+            </main>
 
-    <script>
-        function showForm(formId) {
-            // Hide all forms
-            document.querySelectorAll('.card-body form').forEach(form => {
-                form.style.display = 'none';
-            });
-
-            // Show the selected form
-            document.getElementById(formId).style.display = 'block';
-        }
-
-    </script>
-
-   
     <footer class="footer">
         <div class="container-fluid">
             <div class="row text-muted">
                 <div class="col-6 text-start">
                     <p class="mb-0">
                         <a class="text-muted" href="https://adminkit.io/" target="_blank"><strong>AdminKit</strong></a>
-                        &copy;
                     </p>
                 </div>
                 <div class="col-6 text-end">
