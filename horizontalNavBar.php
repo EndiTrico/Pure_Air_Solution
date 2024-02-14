@@ -6,6 +6,8 @@
     $result = mysqli_query($conn, $query);
     $row = mysqli_fetch_assoc($result);
     $fullName = $row['Full_Name'];
+    $initials = strtoupper(substr($row["first_name"], 0, 1) . substr($row["last_name"], 0, 1));
+
 ?>
 
 <nav class="navbar navbar-expand navbar-light navbar-bg">
@@ -163,11 +165,22 @@
                     <i class="align-middle" data-feather="settings"></i>
                 </a>
 
-                <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-                    <img src="img/avatars/avatar.jpg" class="avatar img-fluid rounded me-1" alt="Charles Hall" /> <span
-                        class="text-dark"><?php echo $fullName;?></span>
+                <a style="width: 40px; /* Adjust the width and height as needed */
+    height: 40px;
+    border-radius: 50%; /* Ensures the element is circular */
+    background-color: #007bff; /* Background color of the circle */
+    color: #fff; /* Color of the text (initials) */
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px; /* Adjust the font size of the initials */
+    font-weight: bold; /* Optionally adjust the font weight */" class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
+    <!-- Display circular initials -->
+    <div class="avatar-circle"><?php echo $initials; ?></div>
+    <!-- Display full name -->
+    <span class="text-dark"><?php echo $fullName; ?></span>
+</a>
 
-                </a>
                 
                 <div class="dropdown-menu dropdown-menu-end">
                     <a class="dropdown-item" href="pages-profile.html"><i class="align-middle me-1"
