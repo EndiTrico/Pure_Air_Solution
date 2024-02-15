@@ -8,74 +8,7 @@ include 'database/opendb.php';
 $errorMessage = "";
 $successfulMessage = "";
 
-function showCompaniesName()
-{
-    include 'database/config.php';
-    include 'database/opendb.php';
-
-    $query = "SELECT Name FROM Companies";
-    $company = mysqli_query($conn, $query);
-
-    $companyDropDown = "";
-    // Start HTML select element
-    $companyDropDown .= '<select class="form-select mb-3" name = "user_company" required>';
-    $companyDropDown .= '<option selected>Select Company</option>';
-
-    // Check if the query was successful
-    if ($company) {
-        // Fetch rows from the result set
-        while ($row = mysqli_fetch_assoc($company)) {
-            // Output an option for each company
-            $companyDropDown .= '<option>' . htmlspecialchars($row['Name']) . '</option>';
-        }
-    } else {
-        // If the query failed, handle the error
-        $companyDropDown .= "Error: " . mysqli_error($conn);
-    }
-
-    // Close HTML select element
-    $companyDropDown .= '</select>';
-
-    // Close the database connection
-    include 'database/closedb.php';
-
-    return $companyDropDown;
-}
-
-function showStructuresName()
-{
-    include 'database/config.php';
-    include 'database/opendb.php';
-
-    // Perform the SQL query to fetch company names
-    $query2 = "SELECT Name FROM Structures";
-    $structure = mysqli_query($conn, $query2);
-
-    $structureDropDown = "";
-    $structureDropDown .= '<select name="structure_name" class="form-select mb-3" required>';
-    $structureDropDown .= '<option selected>Select Structure</option>';
-
-    if ($structure) {
-        // Fetch rows from the result set
-        while ($row = mysqli_fetch_assoc($structure)) {
-            // Output an option for each company
-            $structureDropDown .= '<option>' . htmlspecialchars($row['Name']) . '</option>';
-        }
-    } else {
-        // If the query failed, handle the error
-        $structureDropDown .= "Error: " . mysqli_error($conn);
-    }
-
-    // Close HTML select element
-    $structureDropDown .= '</select>';
-
-    // Close the database connection
-    include 'database/closedb.php';
-
-    return $structureDropDown;
-}
-
-function displayEntity($entityype)
+function displayEntity($entityype, $searchValue = "")
 {
     include 'database/config.php';
     include 'database/opendb.php';
@@ -86,6 +19,10 @@ function displayEntity($entityype)
     if ($entityype == "user") {
         $query = "SELECT u.USER_ID, u.FIRST_NAME, u.LAST_NAME, u.EMAIL, u.ROLE, c.NAME FROM users
                 JOIN companies ON u.COMPANY_ID = c.COMPANY_ID";
+        if (!empty($searchValue)) {
+            // Add WHERE clause to filter based on search query
+            $query .= " WHERE u.FIRST_NAME LIKE '%$searchValue%' OR u.LAST_NAME LIKE '%$searchValue%' OR u.EMAIL LIKE '%$searchValue%'";
+        }
         $tableQuery .= "<table>
     <tr>
       <th>User ID</th>
@@ -95,6 +32,7 @@ function displayEntity($entityype)
       <th>Password</th>
       <th>Role</th>
       <th>Company Name</th>
+      <th>Actions</th>
     </tr>";
     } elseif ($entityype == "company") {
         $query = "SELECT * FROM companies";
@@ -105,7 +43,6 @@ function displayEntity($entityype)
     }
 
     $result = mysqli_query($conn, $query);
-
 
     if (mysqli_num_rows($result) > 0) {
         // Output data of each row
@@ -128,6 +65,7 @@ function displayEntity($entityype)
     return $tableQuery;
 }
 
+
 // Close the database connection
 include 'database/closedb.php';
 ?>
@@ -142,7 +80,8 @@ include 'database/closedb.php';
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
     <meta name="author" content="AdminKit">
-    <meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+    <meta name="keywords"
+        content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
@@ -156,8 +95,8 @@ include 'database/closedb.php';
 
     <script src="https://code.jquery.com/jquery-3.6 .0.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $(".display-button").click(function() {
+        $(document).ready(function () {
+            $(".display-button").click(function () {
                 var dataType = $(this).data('type'); // Get the data-type attribute of the clicked button
                 $.ajax({
                     url: <?php echo $_SERVER["PHP_SELF"]; ?>,
@@ -166,8 +105,27 @@ include 'database/closedb.php';
                         type: dataType
                     },
                     dataType: "html",
-                    success: function(response) {
+                    success: function (response) {
                         $("#data-table").html(response); // Update the table with fetched data
+                    }
+                });
+            });
+
+            $("#search-box").keyup(function () {
+                var searchValue = $(this).val().trim(); // Get the value of the search box
+                var dataType = $(".display-button.active").data('type'); // Get the data-type attribute of the active button
+
+                // Send AJAX request to fetch filtered data
+                $.ajax({
+                    url: <?php echo $_SERVER["PHP_SELF"]; ?>,
+                    method: "POST",
+                    data: {
+                        type: dataType,
+                        search: searchValue // Pass the search query to the server
+                    },
+                    dataType: "html",
+                    success: function (response) {
+                        $("#data-table").html(response); // Update the table with filtered data
                     }
                 });
             });
@@ -194,28 +152,36 @@ include 'database/closedb.php';
                                     <div class="row">
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="showResult('output', 'user')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Create
+                                                <a onclick="showResult('output', 'user')"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Create
                                                     User</a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a href="admin_create_company.php" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Create
+                                                <a href="admin_create_company.php"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Create
                                                     Company</a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a href="admin_create_structure.php" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Create
+                                                <a href="admin_create_structure.php"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Create
                                                     Structure</a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a href="admin_create_department.php" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Create
+                                                <a href="admin_create_department.php"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Create
                                                     Departments</a>
                                             </div>
                                         </div>
@@ -223,7 +189,8 @@ include 'database/closedb.php';
 
                                     <div class="col-12 col-lg-12">
                                         <div class="card-header output" id="output" style="display: none;">
-                                            <input type="text" class="form-control" id="search-box" placeholder="Search">
+                                          <input type="text" class="form-control" id="search-box" placeholder="Search">
+
                                         </div>
                                         <div class="card-body output" id="output" style="display: none;">
 
@@ -248,7 +215,7 @@ include 'database/closedb.php';
                     document.getElementById(formId).style.display = 'block';
 
                     if (entity == 'user') {
-                        <?php echo displayEntity('user');?>
+                        <?php echo displayEntity('user'); ?>
                     } else if (entity == 'company') {
                         displayEntity();
                     } else if (entity == 'structure') {
@@ -265,7 +232,8 @@ include 'database/closedb.php';
                     <div class="row text-muted">
                         <div class="col-6 text-start">
                             <p class="mb-0">
-                                <a class="text-muted" href="https://adminkit.io/" target="_blank"><strong>AdminKit</strong></a>
+                                <a class="text-muted" href="https://adminkit.io/"
+                                    target="_blank"><strong>AdminKit</strong></a>
                                 &copy;
                             </p>
                         </div>
