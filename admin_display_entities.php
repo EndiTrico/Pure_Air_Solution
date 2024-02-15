@@ -5,8 +5,6 @@ session_start();
 include 'database/config.php';
 include 'database/opendb.php';
 
-$entity_selected ="";
-
 // Close the database connection
 include 'database/closedb.php';
 ?>
@@ -37,13 +35,12 @@ include 'database/closedb.php';
 
     <style>
         #searchBox {
-    border-radius: 50px; /* 50% of the height, adjust as needed */
-    align-items: center; /* Center text horizontally */
-    margin: 0 auto; /* Center horizontally */
-    display: block; /* Ensure it takes full width */
-    width: 80%; /* Adjust width as needed */
-}
-        </style>
+            border-radius: 50px;
+            margin-left: 65%;
+            width: 80%;
+            display: none;
+        }
+    </style>
 
 </head>
 
@@ -94,7 +91,7 @@ include 'database/closedb.php';
 
                                     <div class="col-12 col-lg-12">
                                         <div class="card-header output col-md-6" id="output">
-                                        <input oninput="search()" type="text" id="searchBox" class="form-control justify-content-center" placeholder="Search...">
+                                           <input oninput="search()" type="text" id="searchBox" class="form-control justify-content-center" placeholder="Search...">
 
                                         </div>
 
@@ -113,34 +110,37 @@ include 'database/closedb.php';
 
             <script>
                 var selected_entity = "";
-        function fetchData(entity) {
-            selected_entity =entity;
-            var searchQuery = document.getElementById('searchBox').value;
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    document.getElementById("tableContainer").innerHTML = this.responseText;
-                }
-            };
-            xhttp.open("GET", "fetch_data.php?entity=" + entity + "&search=" + searchQuery, true);
-            xhttp.send();
 
-            
-        }
+                function fetchData(entity) {
+                   
+                    document.getElementById("searchBox").style.display = "block";
 
-        function search() {
-            var entity = selected_entity; // Set the entity you want to search for, e.g., 'users', 'companies', etc.
-            var searchQuery = document.getElementById('searchBox').value;
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    document.getElementById("tableContainer").innerHTML = this.responseText;
+                    selected_entity = entity;
+                    var searchQuery = document.getElementById('searchBox').value;
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            document.getElementById("tableContainer").innerHTML = this.responseText;
+                        }
+                    };
+                    xhttp.open("GET", "fetch_data.php?entity=" + entity + "&search=" + searchQuery, true);
+                    xhttp.send();
+                    
                 }
-            };
-            xhttp.open("GET", "fetch_data.php?entity=" + entity + "&search=" + searchQuery, true);
-            xhttp.send();
-        }
-    </script>
+
+                function search() {
+                    var entity = selected_entity; // Set the entity you want to search for, e.g., 'users', 'companies', etc.
+                    var searchQuery = document.getElementById('searchBox').value;
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            document.getElementById("tableContainer").innerHTML = this.responseText;
+                        }
+                    };
+                    xhttp.open("GET", "fetch_data.php?entity=" + entity + "&search=" + searchQuery, true);
+                    xhttp.send();
+                }
+            </script>
 
 
             <footer class="footer">

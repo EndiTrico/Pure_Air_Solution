@@ -8,11 +8,9 @@ include 'database/opendb.php';
 $errorMessage = "";
 $successfulMessage = "";
 
-$errorMessage = "";
-$successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['create_user'])) {
+    if (isset($_POST['create_company'])) {
         // Retrieve form data
         $company_name = mysqli_real_escape_string($conn, $_POST['company_name']);
         $company_email = mysqli_real_escape_string($conn, $_POST['company_email']);
@@ -22,9 +20,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     ('$company_name', '$company_email')";
         try {
             if (mysqli_query($conn, $sql)) {
-                $successfulMessage = "User created successfully";
+                $successfulMessage = "Company Created Successfully";
             } else {
-                $errorMessage = "Error: Failed to create company";
+                $errorMessage = "Error: Failed to Update Company";
             }
         } catch (mysqli_sql_exception $e) {
             $errorMessage = "Error: " . $e->getMessage();
@@ -119,7 +117,7 @@ include 'database/closedb.php';
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-12 d-flex justify-content-center">
-                                                        <button name="create_user" id="createUserButton" class="btn btn-success btn-lg">Create Company</button>
+                                                        <button name="create_company" id="createUserButton" class="btn btn-success btn-lg">Create Company</button>
                                                     </div>
                                                 </div>
                                         </form>

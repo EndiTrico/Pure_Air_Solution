@@ -33,9 +33,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     ('$first_name', '$last_name', '$user_email', '$md5', '$role', 1, $company_id)";
             try {
                 if (mysqli_query($conn, $sql)) {
-                    $successfulMessage = "User created successfully";
+                    $successfulMessage = "User Created Successfully";
                 } else {
-                    $errorMessage = "Error: Failed to create user";
+                    $errorMessage = "Error: Failed to Create User";
                 }
             } catch (mysqli_sql_exception $e) {
                 $errorMessage = "Error: " . $e->getMessage();
