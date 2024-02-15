@@ -5,66 +5,7 @@ session_start();
 include 'database/config.php';
 include 'database/opendb.php';
 
-$errorMessage = "";
-$successfulMessage = "";
-
-function displayEntity($entityype, $searchValue = "")
-{
-    include 'database/config.php';
-    include 'database/opendb.php';
-
-    // Get data type from AJAX request
-    $tableQuery = "";
-    // Fetch data based on data type
-    if ($entityype == "user") {
-        $query = "SELECT u.USER_ID, u.FIRST_NAME, u.LAST_NAME, u.EMAIL, u.ROLE, c.NAME FROM users
-                JOIN companies ON u.COMPANY_ID = c.COMPANY_ID";
-        if (!empty($searchValue)) {
-            // Add WHERE clause to filter based on search query
-            $query .= " WHERE u.FIRST_NAME LIKE '%$searchValue%' OR u.LAST_NAME LIKE '%$searchValue%' OR u.EMAIL LIKE '%$searchValue%'";
-        }
-        $tableQuery .= "<table>
-    <tr>
-      <th>User ID</th>
-      <th>First Name</th>
-      <th>Last Name</th>
-      <th>Email</th>
-      <th>Password</th>
-      <th>Role</th>
-      <th>Company Name</th>
-      <th>Actions</th>
-    </tr>";
-    } elseif ($entityype == "company") {
-        $query = "SELECT * FROM companies";
-    } elseif ($entityype == "structure") {
-        $query = "SELECT * FROM structures";
-    } elseif ($entityype == "department") {
-        $query = "SELECT * FROM departments";
-    }
-
-    $result = mysqli_query($conn, $query);
-
-    if (mysqli_num_rows($result) > 0) {
-        // Output data of each row
-        while ($row = mysqli_fetch_assoc($result)) {
-
-            $tableQuery .= "<tr>";
-
-            foreach ($row as $column => $value) {
-                // Echo each column's value
-                $tableQuery .= "<td>" . $value . "</td>";
-            }
-
-            $tableQuery .= "</tr>";
-        }
-    } else {
-        echo "0 results";
-    }
-    include 'database/closedb.php';
-
-    return $tableQuery;
-}
-
+$entity_selected ="";
 
 // Close the database connection
 include 'database/closedb.php';
@@ -80,8 +21,7 @@ include 'database/closedb.php';
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
     <meta name="author" content="AdminKit">
-    <meta name="keywords"
-        content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+    <meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
@@ -94,43 +34,16 @@ include 'database/closedb.php';
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
     <script src="https://code.jquery.com/jquery-3.6 .0.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $(".display-button").click(function () {
-                var dataType = $(this).data('type'); // Get the data-type attribute of the clicked button
-                $.ajax({
-                    url: <?php echo $_SERVER["PHP_SELF"]; ?>,
-                    method: "POST",
-                    data: {
-                        type: dataType
-                    },
-                    dataType: "html",
-                    success: function (response) {
-                        $("#data-table").html(response); // Update the table with fetched data
-                    }
-                });
-            });
 
-            $("#search-box").keyup(function () {
-                var searchValue = $(this).val().trim(); // Get the value of the search box
-                var dataType = $(".display-button.active").data('type'); // Get the data-type attribute of the active button
-
-                // Send AJAX request to fetch filtered data
-                $.ajax({
-                    url: <?php echo $_SERVER["PHP_SELF"]; ?>,
-                    method: "POST",
-                    data: {
-                        type: dataType,
-                        search: searchValue // Pass the search query to the server
-                    },
-                    dataType: "html",
-                    success: function (response) {
-                        $("#data-table").html(response); // Update the table with filtered data
-                    }
-                });
-            });
-        });
-    </script>
+    <style>
+        #searchBox {
+    border-radius: 50px; /* 50% of the height, adjust as needed */
+    align-items: center; /* Center text horizontally */
+    margin: 0 auto; /* Center horizontally */
+    display: block; /* Ensure it takes full width */
+    width: 80%; /* Adjust width as needed */
+}
+        </style>
 
 </head>
 
@@ -152,49 +65,43 @@ include 'database/closedb.php';
                                     <div class="row">
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="showResult('output', 'user')"
-                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                    style="font-weight: bold;">Create
+                                                <a onclick="fetchData('users')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Create
                                                     User</a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a href="admin_create_company.php"
-                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                    style="font-weight: bold;">Create
+                                                <a onclick="fetchData('companies')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Create
                                                     Company</a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a href="admin_create_structure.php"
-                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                    style="font-weight: bold;">Create
+                                                <a onclick="fetchData('structures')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Create
                                                     Structure</a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a href="admin_create_department.php"
-                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                    style="font-weight: bold;">Create
+                                                <a onclick="fetchData('departments')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Create
                                                     Departments</a>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="col-12 col-lg-12">
-                                        <div class="card-header output" id="output" style="display: none;">
-                                          <input type="text" class="form-control" id="search-box" placeholder="Search">
+                                        <div class="card-header output col-md-6" id="output">
+                                        <input oninput="search()" type="text" id="searchBox" class="form-control justify-content-center" placeholder="Search...">
 
                                         </div>
-                                        <div class="card-body output" id="output" style="display: none;">
 
+                                        <div id="tableContainer" class="mt-4">
+                                            <!-- Table will be displayed here -->
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -205,26 +112,35 @@ include 'database/closedb.php';
 
 
             <script>
-                function showResult(formId, entity) {
-                    // Hide all forms
-                    document.querySelectorAll('.card-body output').forEach(form => {
-                        form.style.display = 'none';
-                    });
-
-                    // Show the selected form
-                    document.getElementById(formId).style.display = 'block';
-
-                    if (entity == 'user') {
-                        <?php echo displayEntity('user'); ?>
-                    } else if (entity == 'company') {
-                        displayEntity();
-                    } else if (entity == 'structure') {
-                        displayEntity();
-                    } else if (entity == 'department') {
-                        displayEntity();
-                    }
+                var selected_entity = "";
+        function fetchData(entity) {
+            selected_entity =entity;
+            var searchQuery = document.getElementById('searchBox').value;
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("tableContainer").innerHTML = this.responseText;
                 }
-            </script>
+            };
+            xhttp.open("GET", "fetch_data.php?entity=" + entity + "&search=" + searchQuery, true);
+            xhttp.send();
+
+            
+        }
+
+        function search() {
+            var entity = selected_entity; // Set the entity you want to search for, e.g., 'users', 'companies', etc.
+            var searchQuery = document.getElementById('searchBox').value;
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("tableContainer").innerHTML = this.responseText;
+                }
+            };
+            xhttp.open("GET", "fetch_data.php?entity=" + entity + "&search=" + searchQuery, true);
+            xhttp.send();
+        }
+    </script>
 
 
             <footer class="footer">
@@ -232,8 +148,7 @@ include 'database/closedb.php';
                     <div class="row text-muted">
                         <div class="col-6 text-start">
                             <p class="mb-0">
-                                <a class="text-muted" href="https://adminkit.io/"
-                                    target="_blank"><strong>AdminKit</strong></a>
+                                <a class="text-muted" href="https://adminkit.io/" target="_blank"><strong>AdminKit</strong></a>
                                 &copy;
                             </p>
                         </div>
