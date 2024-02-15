@@ -26,7 +26,7 @@ function showCompaniesName()
         // Fetch rows from the result set
         while ($row = mysqli_fetch_assoc($company)) {
             // Output an option for each company
-            $companyDropDown .= '<option>' . htmlspecialchars($row['Name']) . '</option>';
+            $companyDropDown .= '<option>' . htmlspecialchars($row['NAME']) . '</option>';
         }
     } else {
         // If the query failed, handle the error
@@ -59,7 +59,7 @@ function showStructuresName()
         // Fetch rows from the result set
         while ($row = mysqli_fetch_assoc($structure)) {
             // Output an option for each company
-            $structureDropDown .= '<option>' . htmlspecialchars($row['Name']) . '</option>';
+            $structureDropDown .= '<option>' . htmlspecialchars($row['NAME']) . '</option>';
         }
     } else {
         // If the query failed, handle the error

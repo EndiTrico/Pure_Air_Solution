@@ -8,13 +8,13 @@ $search = $_GET['search'];
 
 $query = "SELECT * FROM $entity";
 if (!empty($search)) {
-    if($entity == "users"){
+    if ($entity == "users") {
         $query .= " WHERE CONCAT(first_name, ' ', last_name, ' ', email, ' ', role, ' ', company_ID) LIKE '%$search%'";
-    } else if ($entity == "companies"){
+    } else if ($entity == "companies") {
         $query .= " WHERE CONCAT(name, ' ', email) LIKE '%$search%'";
-    } else if ($entity == "structures"){
+    } else if ($entity == "structures") {
         $query .= " WHERE CONCAT(name, ' ', company_ID) LIKE '%$search%'";
-    } else if ($entity == "departures"){
+    } else if ($entity == "departures") {
         $query .= " WHERE CONCAT(name, ' ', company_ID, structure_ID) LIKE '%$search%'";
     }
 }
@@ -36,17 +36,18 @@ if (mysqli_num_rows($result) > 0) {
     while ($row = mysqli_fetch_assoc($result)) {
         echo '<tr>';
         foreach ($row as $key => $value) {
-            if ($key === 'IS_ACTIVE') {
-                $value = ($value == 1) ? '<td><span class="badge bg-success">Active</span></td>' : 
-                '<td><span class="badge bg-danger">Inactive</span></td>';
+            if ($key == 'IS_ACTIVE') {
+                echo $value == 1 ? '<td><span class="badge bg-success">Active</span></td>' :
+                    '<td><span class="badge bg-danger">Inactive</span></td>';
+            } else {
+                echo '<td>' . $value . '</td>';
             }
-            echo '<td>' . $value . '</td>';
         }
-    
-        echo '<td><a href="admin_edit.php?id='. reset($row) .'&entity='. $entity . '" class="btn btn-warning">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+
+        echo '<td><a href="admin_edit.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-warning">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
         echo '<a class="btn btn-danger">Delete</a></td>';
         echo '</tr>';
-    } 
+    }
     echo '</tbody>';
     echo '</table>';
 } else {
@@ -57,6 +58,4 @@ if (mysqli_num_rows($result) > 0) {
 
 mysqli_free_result($result);
 include 'database/closedb.php';
-
-
 ?>

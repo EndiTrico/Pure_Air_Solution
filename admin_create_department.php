@@ -8,18 +8,22 @@ include 'database/opendb.php';
 $errorMessage = "";
 $successfulMessage = "";
 
-$errorMessage = "";
-$successfulMessage = "";
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['create_department'])) {
         // Retrieve form data
         $department_name = mysqli_real_escape_string($conn, $_POST['department_name']);
         $company_name = mysqli_real_escape_string($conn, $_POST['company_name']);
+        $structure_name = mysqli_real_escape_string($conn, $_POST['structure_name']);
+
+        $query_structure = "SELECT STRUCTURE_ID FROM Structures WHERE NAME = '" .  $structure_name . "'";
+        $structure = mysqli_query($conn, $query);
+        $row_structure = mysqli_fetch_assoc($structure);
+
+
 
         // Insert data into the users table
-        $sql = "INSERT INTO companies (NAME, EMAIL) VALUES 
-                    ('$department_name', '$company_name')";
+        $sql = "INSERT INTO companies (NAME, COMPANY_ID, STRUCTURE_ID, IS_ACTIVE) VALUES 
+                    ('$department_name', '$row_structure[STRUCTURE_ID]', '$company_name', 1)";
         try {
             if (mysqli_query($conn, $sql)) {
                 $successfulMessage = "User created successfully";

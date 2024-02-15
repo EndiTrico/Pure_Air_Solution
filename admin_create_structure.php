@@ -18,8 +18,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $company_name = mysqli_real_escape_string($conn, $_POST['company_name']);
 
         // Insert data into the users table
-        $sql = "INSERT INTO companies (NAME, EMAIL) VALUES 
-                    ('$structure_name', '$company_name')";
+        $sql = "INSERT INTO companies (NAME, COMPANY_ID, IS_ACTIVE) VALUES 
+                    ('$structure_name', '$company_name', 1)";
         try {
             if (mysqli_query($conn, $sql)) {
                 $successfulMessage = "User created successfully";
@@ -45,7 +45,7 @@ function showCompaniesName()
 
     $companyDropDown = "";
     // Start HTML select element
-    $companyDropDown .= '<select class="form-select mb-3" name = "company_name" required>';
+    $companyDropDown .= '<select class="form-select mb-3" name = "structure_name" required>';
     $companyDropDown .= '<option value="" disabled selected>Select Company</option>';
 
     // Check if the query was successful

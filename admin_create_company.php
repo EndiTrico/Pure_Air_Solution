@@ -16,8 +16,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $company_email = mysqli_real_escape_string($conn, $_POST['company_email']);
 
         // Insert data into the users table
-        $sql = "INSERT INTO companies (NAME, EMAIL) VALUES 
-                    ('$company_name', '$company_email')";
+        $sql = "INSERT INTO companies (NAME, EMAIL, IS_ACTIVE) VALUES 
+                    ('$company_name', '$company_email', 1)";
         try {
             if (mysqli_query($conn, $sql)) {
                 $successfulMessage = "Company Created Successfully";

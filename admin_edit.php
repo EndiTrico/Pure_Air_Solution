@@ -151,7 +151,7 @@ function showForm()
                         <h5 class="card-title mb-0">First Name</h5>
                     </div>
                     <div class="card-body">
-                        <input type="text" class="form-control" name="first_name" placeholder="First Name" value="' . $row["First_Name"] . '" required>
+                        <input type="text" class="form-control" name="first_name" placeholder="First Name" value="' . $row["FIRST_NAME"] . '" required>
                     </div>
                 </div>
 
@@ -160,7 +160,7 @@ function showForm()
                         <h5 class="card-title mb-0">Last Name</h5>
                     </div>
                     <div class="card-body">
-                        <input type="text" class="form-control" name="last_name" placeholder="Last Name" value="' . $row["Last_Name"] . '" required>
+                        <input type="text" class="form-control" name="last_name" placeholder="Last Name" value="' . $row["LAST_NAME"] . '" required>
                     </div>
                 </div>
 
@@ -172,8 +172,8 @@ function showForm()
                         <div>
                             <select name="role" class="form-select mb-3" required>
                                 <option value="" disabled selected>Select Role</option> 
-                                <option ' . ($row["Role"] == "Admin" ? 'selected' : '') . '>Admin</option>
-                                <option ' . ($row["Role"] == "Client" ? 'selected' : '') . '>Client</option>
+                                <option ' . ($row["ROLE"] == "Admin" ? 'selected' : '') . '>Admin</option>
+                                <option ' . ($row["ROLE"] == "Client" ? 'selected' : '') . '>Client</option>
                             </select>
                         </div>
                     </div>
@@ -187,7 +187,7 @@ function showForm()
                     </div>
                     <div class="card-body">
                         <div>
-                            <input type="email" placeholder="Email" name="user_email" class="form-control" value="' . $row["Email"] . '"  required>
+                            <input type="email" placeholder="Email" name="user_email" class="form-control" value="' . $row["EMAIL"] . '"  required>
                         </div>
                     </div>
                 </div>
@@ -197,7 +197,6 @@ function showForm()
                         <h5 class="card-title mb-0">Password</h5>
                     </div>
                     <div class="card-body">
-                    
                         <input type="password" placeholder="Password" name="user_password" class="form-control"/>
                     </div>
                 </div>
@@ -236,7 +235,7 @@ function showForm()
                                 <h5 class="card-title mb-0">Company Name</h5>
                             </div>
                             <div class="card-body">
-                                <input type="text" class="form-control" name="company_name" placeholder="Company Name" value="' . $row['Name'] . '"required>
+                                <input type="text" class="form-control" name="company_name" placeholder="Company Name" value="' . $row['NAME'] . '"required>
                             </div>
                         </div>
                     </div>
@@ -246,7 +245,7 @@ function showForm()
                                 <h5 class="card-title mb-0">Email</h5>
                             </div>
                             <div class="card-body">
-                                <input type="email" class="form-control" name="company_email" placeholder="Email" value="' . $row['Email'] . '"required>
+                                <input type="email" class="form-control" name="company_email" placeholder="Email" value="' . $row['EMAIL'] . '"required>
                             </div>
                         </div>
                     </div>
