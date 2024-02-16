@@ -14,19 +14,44 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $structure_name = mysqli_real_escape_string($conn, $_POST['structure_name']);
         $company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
 
-        echo "<script>alert('This is an alert " . $company_id . "!');</script>";
-        
-        // Insert data into the users table
-        $sql = "INSERT INTO structures (NAME, COMPANY_ID, IS_ACTIVE) VALUES 
-                    ('$structure_name', '$company_id', 1)";
-        try {
-            if (mysqli_query($conn, $sql)) {
-                $successfulMessage = "Structure Created Successfully";
-            } else {
-                $errorMessage = "Error: Failed to Create Structure";
+        $queryCheck = "SELECT STRUCTURE_ID FROM structures 
+                        WHERE NAME = '$structure_name' 
+                            AND COMPANY_ID = $company_id 
+                            AND IS_ACTIVE = 0 
+                        LIMIT 1";
+        $resultCheck = mysqli_query($conn, $queryCheck);
+
+        if (mysqli_num_rows($resultCheck) > 0) {
+            $rowCheck = mysqli_fetch_assoc($resultCheck);
+
+            $sql = "UPDATE structures 
+                    SET 
+                        NAME = '$structure_name', 
+                        IS_ACTIVE = 1, 
+                        COMPANY_ID = '$company_id'
+                    WHERE STRUCTURE_ID =" . $rowCheck['STRUCTURE_ID'];
+
+            try {
+                if (mysqli_query($conn, $sql)) {
+                    $successfulMessage = "Structure Activated Successfully";
+                } else {
+                    $errorMessage = "Error: Failed to Activate Structure";
+                }
+            } catch (mysqli_sql_exception $e) {
+                $errorMessage = "Error: " . $e->getMessage();
             }
-        } catch (mysqli_sql_exception $e) {
-            $errorMessage = "Error: " . $e->getMessage();
+        } else {
+            $sql = "INSERT INTO structures (NAME, COMPANY_ID, IS_ACTIVE) VALUES 
+                    ('$structure_name', '$company_id', 1)";
+            try {
+                if (mysqli_query($conn, $sql)) {
+                    $successfulMessage = "Structure Created Successfully";
+                } else {
+                    $errorMessage = "Error: Failed to Create Structure";
+                }
+            } catch (mysqli_sql_exception $e) {
+                $errorMessage = "Error: " . $e->getMessage();
+            }
         }
     }
 }
@@ -79,7 +104,8 @@ function showCompaniesName()
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
     <meta name="author" content="AdminKit">
-    <meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+    <meta name="keywords"
+        content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
@@ -106,7 +132,8 @@ function showCompaniesName()
 
                     <div class="row">
                         <div class="col-12 col-lg-1">
-                            <a class="btn transparent-btn" style="margin-top: -8px;" href="admin_create.php"><img src="./images/back_button.png"></a>
+                            <a class="btn transparent-btn" style="margin-top: -8px;" href="admin_create.php"><img
+                                    src="./images/back_button.png"></a>
                         </div>
                         <div class="col-12 col-lg-11">
                             <h1 class="h3 mb-3">Create Structure</h1>
@@ -136,7 +163,9 @@ function showCompaniesName()
                                                                 <h5 class="card-title mb-0">Structure Name</h5>
                                                             </div>
                                                             <div class="card-body">
-                                                                <input type="text" class="form-control" name="structure_name" placeholder="Structure Name" required>
+                                                                <input type="text" class="form-control"
+                                                                    name="structure_name" placeholder="Structure Name"
+                                                                    required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -155,7 +184,8 @@ function showCompaniesName()
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-12 d-flex justify-content-center">
-                                                        <button name="create_structure" id="createStructureButton" class="btn btn-success btn-lg">Create Structure</button>
+                                                        <button name="create_structure" id="createStructureButton"
+                                                            class="btn btn-success btn-lg">Create Structure</button>
                                                     </div>
                                                 </div>
                                         </form>
@@ -173,7 +203,8 @@ function showCompaniesName()
                     <div class="row text-muted">
                         <div class="col-6 text-start">
                             <p class="mb-0">
-                                <a class="text-muted" href="https://adminkit.io/" target="_blank"><strong>AdminKit</strong></a> &copy;
+                                <a class="text-muted" href="https://adminkit.io/"
+                                    target="_blank"><strong>AdminKit</strong></a> &copy;
                             </p>
                         </div>
                         <div class="col-6 text-end">

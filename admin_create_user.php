@@ -20,17 +20,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $md5 = md5($user_password);
 
-        $query3 = "SELECT COMPANY_ID FROM companies WHERE NAME = '$user_company'";
-        // Perform validation if necessary
-        $result = mysqli_query($conn, $query3);
-        if ($result && mysqli_num_rows($result) > 0) {
-            // Fetch one row from the result set
-            $row_user_company = mysqli_fetch_assoc($result);
-            $company_id = $row_user_company['COMPANY_ID'];
+        $queryCheck = "SELECT USER_ID FROM users 
+                        WHERE EMAIL = '$user_email' AND IS_ACTIVE = 0 LIMIT 1";
+        $resultCheck = mysqli_query($conn, $queryCheck);
 
-            // Insert data into the users table
+        if (mysqli_num_rows($resultCheck) > 0) {
+            $rowCheck = mysqli_fetch_assoc($resultCheck); 
+
+            $sql = "UPDATE users 
+            SET FIRST_NAME = '$first_name', 
+                LAST_NAME = '$last_name', 
+                PASSWORD = '$md5', 
+                ROLE = '$role', 
+                IS_ACTIVE = 1, 
+                EMAIL = '$user_email',
+                COMPANY_ID = $company_id 
+            WHERE USER_ID = " . $rowCheck['USER_ID'];
+
+            try {
+                if (mysqli_query($conn, $sql)) {
+                    $successfulMessage = "User Activated Successfully";
+                } else {
+                    $errorMessage = "Error: Failed to Activate User";
+                }
+            } catch (mysqli_sql_exception $e) {
+                $errorMessage = "Error: " . $e->getMessage();
+            }
+        } else {
             $sql = "INSERT INTO users (FIRST_NAME, LAST_NAME, EMAIL, PASSWORD, ROLE, IS_ACTIVE, COMPANY_ID) VALUES 
-                    ('$first_name', '$last_name', '$user_email', '$md5', '$role', 1, $company_id)";
+                ('$first_name', '$last_name', '$user_email', '$md5', '$role', 1, $company_id)";
             try {
                 if (mysqli_query($conn, $sql)) {
                     $successfulMessage = "User Created Successfully";
@@ -92,7 +110,8 @@ function showCompaniesName()
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
     <meta name="author" content="AdminKit">
-    <meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+    <meta name="keywords"
+        content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
@@ -117,7 +136,8 @@ function showCompaniesName()
                 <div class="container-fluid p-0">
                     <div class="row">
                         <div class="col-12 col-lg-1">
-                            <a class="btn transparent-btn" style="margin-top: -8px;" href="admin_create.php"><img src="./images/back_button.png"></a>
+                            <a class="btn transparent-btn" style="margin-top: -8px;" href="admin_create.php"><img
+                                    src="./images/back_button.png"></a>
                         </div>
                         <div class="col-12 col-lg-11">
                             <h1 class="h3 mb-3">Create User</h1>
@@ -152,7 +172,8 @@ function showCompaniesName()
                                                         <h5 class="card-title mb-0">First Name</h5>
                                                     </div>
                                                     <div class="card-body">
-                                                        <input type="text" class="form-control" name="first_name" placeholder="First Name" required>
+                                                        <input type="text" class="form-control" name="first_name"
+                                                            placeholder="First Name" required>
                                                     </div>
                                                 </div>
 
@@ -161,7 +182,8 @@ function showCompaniesName()
                                                         <h5 class="card-title mb-0">Last Name</h5>
                                                     </div>
                                                     <div class="card-body">
-                                                        <input type="text" class="form-control" name="last_name" placeholder="Last Name" required>
+                                                        <input type="text" class="form-control" name="last_name"
+                                                            placeholder="Last Name" required>
                                                     </div>
                                                 </div>
 
@@ -189,7 +211,8 @@ function showCompaniesName()
                                                     </div>
                                                     <div class="card-body">
                                                         <div>
-                                                            <input type="email" placeholder="Email" name="user_email" value="" class="form-control" required />
+                                                            <input type="email" placeholder="Email" name="user_email"
+                                                                value="" class="form-control" required />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -199,7 +222,9 @@ function showCompaniesName()
                                                         <h5 class="card-title mb-0">Password</h5>
                                                     </div>
                                                     <div class="card-body">
-                                                        <input type="password" placeholder="Password" name="user_password" class="form-control" value="" required />
+                                                        <input type="password" placeholder="Password"
+                                                            name="user_password" class="form-control" value=""
+                                                            required />
                                                     </div>
                                                 </div>
 
@@ -216,7 +241,8 @@ function showCompaniesName()
                                             </div>
                                             <div class="row">
                                                 <div class="col-12 d-flex justify-content-center">
-                                                    <button type="submit" name="create_user" class="btn btn-success btn-lg">Create User</button>
+                                                    <button type="submit" name="create_user"
+                                                        class="btn btn-success btn-lg">Create User</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -232,7 +258,8 @@ function showCompaniesName()
                     <div class="row text-muted">
                         <div class="col-6 text-start">
                             <p class="mb-0">
-                                <a class="text-muted" href="https://adminkit.io/" target="_blank"><strong>AdminKit</strong></a> &copy;
+                                <a class="text-muted" href="https://adminkit.io/"
+                                    target="_blank"><strong>AdminKit</strong></a> &copy;
                             </p>
                         </div>
                         <div class="col-6 text-end">

@@ -10,26 +10,49 @@ $successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['create_department'])) {
-        // Retrieve form data
         $department_name = mysqli_real_escape_string($conn, $_POST['department_name']);
         $company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
         $structure_id = mysqli_real_escape_string($conn, $_POST['structure_name']);
 
-        //$query_structure = "SELECT STRUCTURE_ID FROM Structures WHERE NAME = '" .  $structure_id . "'";
-        //$structure = mysqli_query($conn, $query);
-        //$row_structure = mysqli_fetch_assoc($structure);
+        $queryCheck = "SELECT DEPARTMENT_ID FROM structures 
+                        WHERE NAME = '$department_name' 
+                            AND COMPANY_ID = $company_id 
+                            AND IS_ACTIVE = 0 
+                            AND STRUCTURE_ID = $structure_id 
+                        LIMIT 1";
+        $resultCheck = mysqli_query($conn, $queryCheck);
 
-        // Insert data into the users table
-        $sql = "INSERT INTO departments (NAME, COMPANY_ID, STRUCTURE_ID, IS_ACTIVE) VALUES 
-                    ('$department_name', '$company_id', '$structure_id',  1)";
-        try {
-            if (mysqli_query($conn, $sql)) {
-                $successfulMessage = "User created successfully";
-            } else {
-                $errorMessage = "Error: Failed to create company";
+        if (mysqli_num_rows($resultCheck) > 0) {
+            $rowCheck = mysqli_fetch_assoc($resultCheck);
+
+            $sql = "UPDATE departments 
+                    SET NAME = '$department_name', 
+                        COMPANY_ID = '$company_id', 
+                        STRUCTURE_ID = '$structure_id', 
+                        IS_ACTIVE = 1
+                    WHERE DEPARTMENT_ID = " . $rowCheck['DEPARTMENT_ID'];
+
+            try {
+                if (mysqli_query($conn, $sql)) {
+                    $successfulMessage = "Department Activated Successfully";
+                } else {
+                    $errorMessage = "Error: Failed to Activate Department";
+                }
+            } catch (mysqli_sql_exception $e) {
+                $errorMessage = "Error: " . $e->getMessage();
             }
-        } catch (mysqli_sql_exception $e) {
-            $errorMessage = "Error: " . $e->getMessage();
+        } else {
+            $sql = "INSERT INTO departments (NAME, COMPANY_ID, STRUCTURE_ID, IS_ACTIVE) VALUES 
+            ('$department_name', '$company_id', '$structure_id',  1)";
+            try {
+                if (mysqli_query($conn, $sql)) {
+                    $successfulMessage = "User created successfully";
+                } else {
+                    $errorMessage = "Error: Failed to create company";
+                }
+            } catch (mysqli_sql_exception $e) {
+                $errorMessage = "Error: " . $e->getMessage();
+            }
         }
     }
 }
@@ -47,27 +70,19 @@ function showCompaniesName()
 
     $companyDropDown = "";
 
-    // Start HTML select element
     $companyDropDown .= '<select class="form-select mb-3" name = "company_name" id="company-dropdown" required>';
     $companyDropDown .= '<option value="" disabled selected>Select Company</option>';
 
-    // Check if the query was successful
     if ($company) {
-        // Fetch rows from the result set
         while ($row = mysqli_fetch_assoc($company)) {
-            // Output an option for each company
             $companyDropDown .= '<option value="' . $row['COMPANY_ID'] . '">' . htmlspecialchars($row['NAME']) . '</option>';
         }
     } else {
-        // If the query failed, handle the error
         $companyDropDown .= "Error: " . mysqli_error($conn);
     }
 
-
-    // Close HTML select element
     $companyDropDown .= '</select>';
 
-    // Close the database connection
     include 'database/closedb.php';
 
     return $companyDropDown;
@@ -170,8 +185,8 @@ function showCompaniesName()
                                                                     <h5 class="card-title mb-0">Structure Name</h5>
                                                                 </div>
                                                                 <div class="card-body">
-                                                                    <select  name="structure_name" id="structure_name" class="form-select mb-3"
-                                                                        required>
+                                                                    <select name="structure_name" id="structure_name"
+                                                                        class="form-select mb-3" required>
                                                                         <option disable selected value="">Select
                                                                             Structure</option>
                                                                     </select>
