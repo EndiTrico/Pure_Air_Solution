@@ -39,11 +39,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 // Close the database connection
 include 'database/closedb.php';
 
-function renderStructuresDropdown()
-{
-}
-
-
 function showCompaniesName()
 {
     include 'database/config.php';
@@ -222,7 +217,6 @@ function showCompaniesName()
                                                                     <h5 class="card-title mb-0">Structure Name</h5>
                                                                 </div>
                                                                 <div class="card-body">
-                                                                    <?php renderStructuresDropdown(); ?>
                                                                     <select id="structure_name" class="form-select mb-3" required>
                                                                         <option disable selected value="">Select Structure</option>
                                                                     </select>
@@ -278,7 +272,24 @@ function showCompaniesName()
     </div>
 
     <script src="js/app.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#company-dropdown').change(function() {
+                var Stdid = $('#company').val();
 
+                $.ajax({
+                    type: 'POST',
+                    url: 'fetch_structures.php',
+                    data: {
+                        id: Stdid
+                    },
+                    success: function(data) {
+                        $('#structure_name').html(data);
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

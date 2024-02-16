@@ -16,13 +16,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $company_email = mysqli_real_escape_string($conn, $_POST['company_email']);
 
         // Insert data into the users table
-        $sql = "INSERT INTO companies (NAME, EMAIL, IS_ACTIVE) VALUES 
-                    ('$company_name', '$company_email', 1)";
+        $sql = "INSERT INTO companies (NAME, EMAIL, DATE_JOINED, IS_ACTIVE) VALUES 
+                    ('$company_name', '$company_email', date('d-m-Y'), 1)";
         try {
             if (mysqli_query($conn, $sql)) {
                 $successfulMessage = "Company Created Successfully";
             } else {
-                $errorMessage = "Error: Failed to Update Company";
+                $errorMessage = "Error: Failed to Create Company";
             }
         } catch (mysqli_sql_exception $e) {
             $errorMessage = "Error: " . $e->getMessage();

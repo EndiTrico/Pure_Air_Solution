@@ -8,23 +8,22 @@ include 'database/opendb.php';
 $errorMessage = "";
 $successfulMessage = "";
 
-$errorMessage = "";
-$successfulMessage = "";
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['create_user'])) {
         // Retrieve form data
         $structure_name = mysqli_real_escape_string($conn, $_POST['structure_name']);
-        $company_name = mysqli_real_escape_string($conn, $_POST['company_name']);
+        $company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
 
+        echo "<script>alert('This is an alert " . $company_id . "!');</script>";
+        
         // Insert data into the users table
-        $sql = "INSERT INTO companies (NAME, COMPANY_ID, IS_ACTIVE) VALUES 
-                    ('$structure_name', '$company_name', 1)";
+        $sql = "INSERT INTO structures (NAME, COMPANY_ID, IS_ACTIVE) VALUES 
+                    ('$structure_name', '$company_id', 1)";
         try {
             if (mysqli_query($conn, $sql)) {
-                $successfulMessage = "User created successfully";
+                $successfulMessage = "Structure Created Successfully";
             } else {
-                $errorMessage = "Error: Failed to create company";
+                $errorMessage = "Error: Failed to Create Structure";
             }
         } catch (mysqli_sql_exception $e) {
             $errorMessage = "Error: " . $e->getMessage();
@@ -45,7 +44,7 @@ function showCompaniesName()
 
     $companyDropDown = "";
     // Start HTML select element
-    $companyDropDown .= '<select class="form-select mb-3" name = "structure_name" required>';
+    $companyDropDown .= '<select class="form-select mb-3" name = "company_name" required>';
     $companyDropDown .= '<option value="" disabled selected>Select Company</option>';
 
     // Check if the query was successful
