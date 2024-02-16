@@ -9,7 +9,7 @@ $errorMessage = "";
 $successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['create_user'])) {
+    if (isset($_POST['create_structure'])) {
         // Retrieve form data
         $structure_name = mysqli_real_escape_string($conn, $_POST['structure_name']);
         $company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
@@ -155,7 +155,7 @@ function showCompaniesName()
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-12 d-flex justify-content-center">
-                                                        <button name="create_user" id="createUserButton" class="btn btn-success btn-lg">Create Company</button>
+                                                        <button name="create_structure" id="createStructureButton" class="btn btn-success btn-lg">Create Structure</button>
                                                     </div>
                                                 </div>
                                         </form>

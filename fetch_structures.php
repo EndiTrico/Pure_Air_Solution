@@ -2,10 +2,12 @@
 include 'database/config.php';
 include 'database/opendb.php';
 
-//if (!empty($_POST["STRUCTURE_ID"])) {
-    // Fetch city data based on the specific state 
-    $query = "SELECT * FROM structures WHERE STRUCTURE_ID = " . $_POST['STRUCTURE_ID'] . " ";
-    $result = mysqli_query($conn,$sql);
+$id = $_POST["id"];
+
+if (!empty($id)) {
+
+    $query = "SELECT * FROM structures WHERE COMPANY_ID = '$id'";
+    $result = mysqli_query($conn, $query);
 
     // Generate HTML of city options list 
     if ($result->num_rows > 0) {
@@ -13,7 +15,7 @@ include 'database/opendb.php';
             echo '<option value="' . $row['STRUCTURE_ID'] . '">' . $row['NAME'] . '</option>';
         }
     } else {
-        echo '<option value="">Structures Not Available</option>';
+        echo '<option disable selected value="" >Structures Not Available</option>';
     }
-//}
+}
 include 'database/closedb.php';
