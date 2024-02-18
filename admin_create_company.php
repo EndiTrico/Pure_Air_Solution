@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// open database
 include 'database/config.php';
 include 'database/opendb.php';
 
@@ -11,14 +10,13 @@ $successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['create_company'])) {
-        // Retrieve form data
         $company_name = mysqli_real_escape_string($conn, $_POST['company_name']);
         $company_email = mysqli_real_escape_string($conn, $_POST['company_email']);
 
         $queryCheck = "SELECT COMPANY_ID FROM companies 
                         WHERE 
                             IS_ACTIVE = 0 
-                            AND NAME = $company_email 
+                            AND (NAME = $company_name OR EMAIL = $company_email)
                         LIMIT 1";
         $resultCheck = mysqli_query($conn, $queryCheck);
 
@@ -43,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         } else {
             $sql = "INSERT INTO companies (NAME, EMAIL, DATE_JOINED, IS_ACTIVE) VALUES 
-            ('$company_name', '$company_email', date('d-m-Y'), 1)";
+            ('$company_name', '$company_email', DATE(NOW()), 1)";
             try {
                 if (mysqli_query($conn, $sql)) {
                     $successfulMessage = "Company Created Successfully";
@@ -57,7 +55,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Close the database connection
 include 'database/closedb.php';
 ?>
 
@@ -79,7 +76,7 @@ include 'database/closedb.php';
 
     <link rel="canonical" href="https://demo-basic.adminkit.io/pages-blank.html" />
 
-    <title>Blank Page | AdminKit Demo</title>
+    <title>Create Company</title>
 
     <link href="css/app.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -108,7 +105,6 @@ include 'database/closedb.php';
                             <div class="card">
                                 <div class="card-body">
                                     <div class="card-body">
-                                        <!-- Form for creating company -->
                                         <form id="companyForm" method="post">
                                             <div class="row">
 
@@ -153,8 +149,8 @@ include 'database/closedb.php';
                                                             class="btn btn-success btn-lg">Create Company</button>
                                                     </div>
                                                 </div>
+                                            </div>
                                         </form>
-
                                     </div>
                                 </div>
                             </div>
@@ -163,37 +159,11 @@ include 'database/closedb.php';
                 </div>
             </main>
 
-            <footer class="footer">
-                <div class="container-fluid">
-                    <div class="row text-muted">
-                        <div class="col-6 text-start">
-                            <p class="mb-0">
-                                <a class="text-muted" href="https://adminkit.io/"
-                                    target="_blank"><strong>AdminKit</strong></a> &copy;
-                            </p>
-                        </div>
-                        <div class="col-6 text-end">
-                            <ul class="list-inline">
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Support</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Help Center</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Privacy</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Terms</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </footer>
+            <?php
+            include "footer.php";
+            ?>
         </div>
     </div>
-
     <script src="js/app.js"></script>
 
 </body>

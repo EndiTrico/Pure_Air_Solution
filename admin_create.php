@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// open database
 include 'database/config.php';
 include 'database/opendb.php';
 
@@ -17,26 +16,19 @@ function showCompaniesName()
     $company = mysqli_query($conn, $query);
 
     $companyDropDown = "";
-    // Start HTML select element
     $companyDropDown .= '<select class="form-select mb-3" name = "user_company" required>';
     $companyDropDown .= '<option selected>Select Company</option>';
 
-    // Check if the query was successful
     if ($company) {
-        // Fetch rows from the result set
         while ($row = mysqli_fetch_assoc($company)) {
-            // Output an option for each company
             $companyDropDown .= '<option>' . htmlspecialchars($row['NAME']) . '</option>';
         }
     } else {
-        // If the query failed, handle the error
         $companyDropDown .= "Error: " . mysqli_error($conn);
     }
 
-    // Close HTML select element
     $companyDropDown .= '</select>';
 
-    // Close the database connection
     include 'database/closedb.php';
 
     return $companyDropDown;
@@ -47,7 +39,6 @@ function showStructuresName()
     include 'database/config.php';
     include 'database/opendb.php';
 
-    // Perform the SQL query to fetch company names
     $query2 = "SELECT Name FROM Structures";
     $structure = mysqli_query($conn, $query2);
 
@@ -56,27 +47,20 @@ function showStructuresName()
     $structureDropDown .= '<option selected>Select Structure</option>';
 
     if ($structure) {
-        // Fetch rows from the result set
         while ($row = mysqli_fetch_assoc($structure)) {
-            // Output an option for each company
             $structureDropDown .= '<option>' . htmlspecialchars($row['NAME']) . '</option>';
         }
     } else {
-        // If the query failed, handle the error
         $structureDropDown .= "Error: " . mysqli_error($conn);
     }
 
-    // Close HTML select element
     $structureDropDown .= '</select>';
 
-    // Close the database connection
     include 'database/closedb.php';
 
     return $structureDropDown;
 }
 
-
-// Close the database connection
 include 'database/closedb.php';
 ?>
 
@@ -90,23 +74,20 @@ include 'database/closedb.php';
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
     <meta name="author" content="AdminKit">
-    <meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+    <meta name="keywords"
+        content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
 
     <link rel="canonical" href="https://demo-basic.adminkit.io/pages-blank.html" />
 
-    <title>Blank Page | AdminKit Demo</title>
+    <title>Create Entities</title>
 
     <link href="css/app.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
     <script src="https://code.jquery.com/jquery-3.6 .0.min.js"></script>
-    <script>
-
-    </script>
-
 </head>
 
 <body>
@@ -128,14 +109,18 @@ include 'database/closedb.php';
                                         <div class="col-12 col-lg-6">
                                             <div class="card w-100">
                                                 <div class="card-header">
-                                                    <a href="admin_create_user.php" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-size: 28px; height: 200px; font-weight: bold;">Create
+                                                    <a href="admin_create_user.php"
+                                                        class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                        style="font-size: 28px; height: 200px; font-weight: bold;">Create
                                                         User</a>
                                                 </div>
                                             </div>
 
                                             <div class="card w-100">
                                                 <div class="card-header">
-                                                    <a href="admin_create_company.php" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-size: 28px; height: 200px; font-weight: bold;">Create
+                                                    <a href="admin_create_company.php"
+                                                        class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                        style="font-size: 28px; height: 200px; font-weight: bold;">Create
                                                         Company</a>
                                                 </div>
                                             </div>
@@ -144,14 +129,18 @@ include 'database/closedb.php';
                                         <div class=" col-12 col-lg-6">
                                             <div class="card w-100">
                                                 <div class="card-header">
-                                                    <a href="admin_create_structure.php" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-size: 28px; height: 200px; font-weight: bold;">Create
+                                                    <a href="admin_create_structure.php"
+                                                        class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                        style="font-size: 28px; height: 200px; font-weight: bold;">Create
                                                         Structure</a>
                                                 </div>
                                             </div>
 
                                             <div class=" card w-100">
                                                 <div class="card-header">
-                                                    <a href="admin_create_department.php" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-size: 28px; height: 200px; font-weight: bold;">Create
+                                                    <a href="admin_create_department.php"
+                                                        class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                        style="font-size: 28px; height: 200px; font-weight: bold;">Create
                                                         Departments</a>
                                                 </div>
                                             </div>
@@ -167,35 +156,10 @@ include 'database/closedb.php';
                 </div>
             </main>
 
-    <footer class="footer">
-        <div class="container-fluid">
-            <div class="row text-muted">
-                <div class="col-6 text-start">
-                    <p class="mb-0">
-                        <a class="text-muted" href="https://adminkit.io/" target="_blank"><strong>AdminKit</strong></a>
-                    </p>
-                </div>
-                <div class="col-6 text-end">
-                    <ul class="list-inline">
-                        <li class="list-inline-item">
-                            <a class="text-muted" href="https://adminkit.io/" target="_blank">Support</a>
-                        </li>
-                        <li class="list-inline-item">
-                            <a class="text-muted" href="https://adminkit.io/" target="_blank">Help
-                                Center</a>
-                        </li>
-                        <li class="list-inline-item">
-                            <a class="text-muted" href="https://adminkit.io/" target="_blank">Privacy</a>
-                        </li>
-                        <li class="list-inline-item">
-                            <a class="text-muted" href="https://adminkit.io/" target="_blank">Terms</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+            <?php
+            include "footer.php";
+            ?>
         </div>
-    </footer>
-    </div>
     </div>
 
     <script src="js/app.js"></script>

@@ -19,7 +19,8 @@ include 'database/closedb.php';
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
     <meta name="author" content="AdminKit">
-    <meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+    <meta name="keywords"
+        content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
@@ -32,6 +33,7 @@ include 'database/closedb.php';
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
     <script src="https://code.jquery.com/jquery-3.6 .0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         #searchBox {
@@ -53,7 +55,7 @@ include 'database/closedb.php';
             <main class="content">
                 <div class="container-fluid p-0">
 
-                    <h1 class="h3 mb-3">Create Entities</h1>
+                    <h1 class="h3 mb-3">Display Entities</h1>
 
                     <div class="row">
                         <div class="col-12">
@@ -62,28 +64,36 @@ include 'database/closedb.php';
                                     <div class="row">
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('users')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Create
-                                                    User</a>
+                                                <a onclick="fetchData('users')"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Display
+                                                    Users</a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('companies')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Create
-                                                    Company</a>
+                                                <a onclick="fetchData('companies')"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Display
+                                                    Companies</a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('structures')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Create
-                                                    Structure</a>
+                                                <a onclick="fetchData('structures')"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Display
+                                                    Structures</a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('departments')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Create
+                                                <a onclick="fetchData('departments')"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Display
                                                     Departments</a>
                                             </div>
                                         </div>
@@ -91,12 +101,12 @@ include 'database/closedb.php';
 
                                     <div class="col-12 col-lg-12">
                                         <div class="card-header output col-md-6" id="output">
-                                           <input oninput="search()" type="text" id="searchBox" class="form-control justify-content-center" placeholder="Search...">
+                                            <input oninput="search()" type="text" id="searchBox"
+                                                class="form-control justify-content-center" placeholder="Search...">
 
                                         </div>
 
                                         <div id="tableContainer" class="mt-4">
-                                            <!-- Table will be displayed here -->
                                         </div>
 
                                     </div>
@@ -112,27 +122,27 @@ include 'database/closedb.php';
                 var selected_entity = "";
 
                 function fetchData(entity) {
-                   
+
                     document.getElementById("searchBox").style.display = "block";
 
                     selected_entity = entity;
                     var searchQuery = document.getElementById('searchBox').value;
                     var xhttp = new XMLHttpRequest();
-                    xhttp.onreadystatechange = function() {
+                    xhttp.onreadystatechange = function () {
                         if (this.readyState == 4 && this.status == 200) {
                             document.getElementById("tableContainer").innerHTML = this.responseText;
                         }
                     };
                     xhttp.open("GET", "fetch_data.php?entity=" + entity + "&search=" + searchQuery, true);
                     xhttp.send();
-                    
+
                 }
 
                 function search() {
-                    var entity = selected_entity; // Set the entity you want to search for, e.g., 'users', 'companies', etc.
+                    var entity = selected_entity; 
                     var searchQuery = document.getElementById('searchBox').value;
                     var xhttp = new XMLHttpRequest();
-                    xhttp.onreadystatechange = function() {
+                    xhttp.onreadystatechange = function () {
                         if (this.readyState == 4 && this.status == 200) {
                             document.getElementById("tableContainer").innerHTML = this.responseText;
                         }
@@ -140,38 +150,34 @@ include 'database/closedb.php';
                     xhttp.open("GET", "fetch_data.php?entity=" + entity + "&search=" + searchQuery, true);
                     xhttp.send();
                 }
+                function confirmDelete(id, entity) {
+                    Swal.fire({
+                        title: "Are You Sure?",
+                        text: "All the dependent entities will be set to inactive",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Swal.fire({
+                                title: "Deleted!",
+                                text: "Action performed successfully",
+                                icon: "success",
+                                showConfirmButton: false
+                            });
+                            setTimeout(function () {
+                                var url = 'admin_delete.php?id=' + encodeURIComponent(id) + '&entity=' + encodeURIComponent(entity);
+                                window.location.href = url;
+                            }, 2000);
+                        }
+                    });
+                }
             </script>
-
-
-            <footer class="footer">
-                <div class="container-fluid">
-                    <div class="row text-muted">
-                        <div class="col-6 text-start">
-                            <p class="mb-0">
-                                <a class="text-muted" href="https://adminkit.io/" target="_blank"><strong>AdminKit</strong></a>
-                                &copy;
-                            </p>
-                        </div>
-                        <div class="col-6 text-end">
-                            <ul class="list-inline">
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Support</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Help
-                                        Center</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Privacy</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Terms</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </footer>
+            <?php
+            include "footer.php";
+            ?>
         </div>
     </div>
 

@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// open database
 include 'database/config.php';
 include 'database/opendb.php';
 
@@ -10,7 +9,6 @@ $successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['create_user'])) {
-        // Retrieve form data
         $first_name = mysqli_real_escape_string($conn, $_POST['first_name']);
         $last_name = mysqli_real_escape_string($conn, $_POST['last_name']);
         $user_email = mysqli_real_escape_string($conn, $_POST['user_email']);
@@ -21,11 +19,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $md5 = md5($user_password);
 
         $queryCheck = "SELECT USER_ID FROM users 
-                        WHERE EMAIL = '$user_email' AND IS_ACTIVE = 0 LIMIT 1";
+                        WHERE EMAIL = '$user_email' 
+                            AND IS_ACTIVE = 0 LIMIT 1";
         $resultCheck = mysqli_query($conn, $queryCheck);
 
         if (mysqli_num_rows($resultCheck) > 0) {
-            $rowCheck = mysqli_fetch_assoc($resultCheck); 
+            $rowCheck = mysqli_fetch_assoc($resultCheck);
 
             $sql = "UPDATE users 
             SET FIRST_NAME = '$first_name', 
@@ -34,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 ROLE = '$role', 
                 IS_ACTIVE = 1, 
                 EMAIL = '$user_email',
-                COMPANY_ID = $company_id 
+                COMPANY_ID = $user_company 
             WHERE USER_ID = " . $rowCheck['USER_ID'];
 
             try {
@@ -48,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         } else {
             $sql = "INSERT INTO users (FIRST_NAME, LAST_NAME, EMAIL, PASSWORD, ROLE, IS_ACTIVE, COMPANY_ID) VALUES 
-                ('$first_name', '$last_name', '$user_email', '$md5', '$role', 1, $company_id)";
+                ('$first_name', '$last_name', '$user_email', '$md5', '$role', 1, $user_company)";
             try {
                 if (mysqli_query($conn, $sql)) {
                     $successfulMessage = "User Created Successfully";
@@ -62,7 +61,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Close the database connection
 include 'database/closedb.php';
 
 function showCompaniesName()
@@ -74,26 +72,19 @@ function showCompaniesName()
     $company = mysqli_query($conn, $query);
 
     $companyDropDown = "";
-    // Start HTML select element
     $companyDropDown .= '<select class="form-select mb-3" name = "user_company" required>';
     $companyDropDown .= '<option value="" disabled selected>Select Company</option>';
 
-    // Check if the query was successful
     if ($company) {
-        // Fetch rows from the result set
         while ($row = mysqli_fetch_assoc($company)) {
-            // Output an option for each company
             $companyDropDown .= '<option value="' . $row['COMPANY_ID'] . '">' . htmlspecialchars($row['NAME']) . '</option>';
         }
     } else {
-        // If the query failed, handle the error
         $companyDropDown .= "Error: " . mysqli_error($conn);
     }
 
-    // Close HTML select element
     $companyDropDown .= '</select>';
 
-    // Close the database connection
     include 'database/closedb.php';
 
     return $companyDropDown;
@@ -118,7 +109,7 @@ function showCompaniesName()
 
     <link rel="canonical" href="https://demo-basic.adminkit.io/pages-blank.html" />
 
-    <title>Blank Page | AdminKit Demo</title>
+    <title>Create User</title>
 
     <link href="css/app.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -253,34 +244,9 @@ function showCompaniesName()
                     </div>
                 </div>
             </main>
-            <footer class="footer">
-                <div class="container-fluid">
-                    <div class="row text-muted">
-                        <div class="col-6 text-start">
-                            <p class="mb-0">
-                                <a class="text-muted" href="https://adminkit.io/"
-                                    target="_blank"><strong>AdminKit</strong></a> &copy;
-                            </p>
-                        </div>
-                        <div class="col-6 text-end">
-                            <ul class="list-inline">
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Support</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Help Center</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Privacy</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Terms</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </footer>
+            <?php
+            include "footer.php";
+            ?>
         </div>
     </div>
 

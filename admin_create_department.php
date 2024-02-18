@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// open database
 include 'database/config.php';
 include 'database/opendb.php';
 
@@ -57,7 +56,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Close the database connection
 include 'database/closedb.php';
 
 function showCompaniesName()
@@ -107,7 +105,7 @@ function showCompaniesName()
 
     <link rel="canonical" href="https://demo-basic.adminkit.io/pages-blank.html" />
 
-    <title>Blank Page | AdminKit Demo</title>
+    <title>Create Department</title>
 
     <link href="css/app.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -137,7 +135,6 @@ function showCompaniesName()
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="card-body">
-                                            <!-- Form for creating company -->
                                             <form id="companyForm" method="post">
                                                 <div class="row">
 
@@ -203,8 +200,8 @@ function showCompaniesName()
                                                                 Department</button>
                                                         </div>
                                                     </div>
+                                                </div>
                                             </form>
-
                                         </div>
                                     </div>
                                 </div>
@@ -213,34 +210,9 @@ function showCompaniesName()
                     </div>
             </main>
 
-            <footer class="footer">
-                <div class="container-fluid">
-                    <div class="row text-muted">
-                        <div class="col-6 text-start">
-                            <p class="mb-0">
-                                <a class="text-muted" href="https://adminkit.io/"
-                                    target="_blank"><strong>AdminKit</strong></a> &copy;
-                            </p>
-                        </div>
-                        <div class="col-6 text-end">
-                            <ul class="list-inline">
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Support</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Help Center</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Privacy</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Terms</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </footer>
+            <?php
+            include "footer.php";
+            ?>
         </div>
     </div>
 
@@ -251,8 +223,8 @@ function showCompaniesName()
     <script type="text/javascript">
         $(document).ready(function () {
             $("#company-dropdown").change(function () {
-                var country_id = $(this).val();
-                var post_id = 'id=' + country_id;
+                var companyID = $(this).val();
+                var post_id = 'id=' + companyID;
                 $.ajax
                     ({
                         type: "POST",

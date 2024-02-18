@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// open database
 include 'database/config.php';
 include 'database/opendb.php';
 
@@ -10,7 +9,6 @@ $successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['create_structure'])) {
-        // Retrieve form data
         $structure_name = mysqli_real_escape_string($conn, $_POST['structure_name']);
         $company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
 
@@ -56,7 +54,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Close the database connection
 include 'database/closedb.php';
 
 function showCompaniesName()
@@ -68,26 +65,19 @@ function showCompaniesName()
     $company = mysqli_query($conn, $query);
 
     $companyDropDown = "";
-    // Start HTML select element
     $companyDropDown .= '<select class="form-select mb-3" name = "company_name" required>';
     $companyDropDown .= '<option value="" disabled selected>Select Company</option>';
 
-    // Check if the query was successful
     if ($company) {
-        // Fetch rows from the result set
         while ($row = mysqli_fetch_assoc($company)) {
-            // Output an option for each company
             $companyDropDown .= '<option value="' . $row['COMPANY_ID'] . '">' . htmlspecialchars($row['NAME']) . '</option>';
         }
     } else {
-        // If the query failed, handle the error
         $companyDropDown .= "Error: " . mysqli_error($conn);
     }
 
-    // Close HTML select element
     $companyDropDown .= '</select>';
 
-    // Close the database connection
     include 'database/closedb.php';
 
     return $companyDropDown;
@@ -112,7 +102,7 @@ function showCompaniesName()
 
     <link rel="canonical" href="https://demo-basic.adminkit.io/pages-blank.html" />
 
-    <title>Blank Page | AdminKit Demo</title>
+    <title>Create Structure</title>
 
     <link href="css/app.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -128,8 +118,6 @@ function showCompaniesName()
 
             <main class="content">
                 <div class="container-fluid p-0">
-
-
                     <div class="row">
                         <div class="col-12 col-lg-1">
                             <a class="btn transparent-btn" style="margin-top: -8px;" href="admin_create.php"><img
@@ -142,10 +130,8 @@ function showCompaniesName()
                             <div class="card">
                                 <div class="card-body">
                                     <div class="card-body">
-                                        <!-- Form for creating company -->
-                                        <form id="companyForm" method="post">
+\                                        <form id="structureForm" method="post">
                                             <div class="row">
-
                                                 <?php
                                                 if (!empty($errorMessage)) {
                                                     echo '<div class="col-12"> <div class="card"> <div class="card-header"><div style="height: 30px; font-size:20px; text-align:center; background-color: #ffcccc; color: #cc0000;" class="alert alert-danger" role="alert">' . $errorMessage . '</div>                                                    </div>
@@ -188,8 +174,8 @@ function showCompaniesName()
                                                             class="btn btn-success btn-lg">Create Structure</button>
                                                     </div>
                                                 </div>
+                                            </div>
                                         </form>
-
                                     </div>
                                 </div>
                             </div>
@@ -198,34 +184,9 @@ function showCompaniesName()
                 </div>
             </main>
 
-            <footer class="footer">
-                <div class="container-fluid">
-                    <div class="row text-muted">
-                        <div class="col-6 text-start">
-                            <p class="mb-0">
-                                <a class="text-muted" href="https://adminkit.io/"
-                                    target="_blank"><strong>AdminKit</strong></a> &copy;
-                            </p>
-                        </div>
-                        <div class="col-6 text-end">
-                            <ul class="list-inline">
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Support</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Help Center</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Privacy</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Terms</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </footer>
+            <?php
+            include "footer.php";
+            ?>
         </div>
     </div>
 

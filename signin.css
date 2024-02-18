@@ -214,8 +214,6 @@ div.welcome-div {
   transform: translateX(800px);
 }
 
-/* ANIMATION */
-
 .container.welcome-mode:before {
   transform: translate(100%, -50%);
   right: 52%;

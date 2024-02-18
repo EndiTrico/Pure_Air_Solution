@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// open database
 include 'database/config.php';
 include 'database/opendb.php';
 
@@ -18,21 +17,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $user_password = mysqli_real_escape_string($conn, $_POST['user_password']);
         $role = mysqli_real_escape_string($conn, $_POST['role']);
         $user_company = mysqli_real_escape_string($conn, $_POST['user_company']);
-        //$query3 = "SELECT COMPANY_ID FROM companies WHERE NAME = '$user_company'";
 
         $query_user = "SELECT password FROM users WHERE USER_ID =" . $id;
-        $password =  mysqli_query($conn, $query_user);
-        //$result = mysqli_query($conn, $query3);
-
-        // if ($result && mysqli_num_rows($result) >= 0) {
-        // Fetch one row from the result set
-        // $row_user_company = mysqli_fetch_assoc($result);
-        // $company_id = $row_user_company['COMPANY_ID'];
+        $password = mysqli_query($conn, $query_user);
 
         $sql = "";
         $md5 = md5($user_password);
 
-        if ($md5 == $user_email) {
+        if ($md5 == $user_password) {
             $sql = "UPDATE users SET 
                 FIRST_NAME = '$first_name', 
                 LAST_NAME = '$last_name', 
@@ -50,7 +42,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 COMPANY_ID = $user_company 
                 WHERE USER_ID = $id";
         }
-
         try {
             if (mysqli_query($conn, $sql)) {
                 $successfulMessage = "User Updated Successfully";
@@ -60,16 +51,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } catch (mysqli_sql_exception $e) {
             $errorMessage = "Error: " . $e->getMessage();
         }
-        //  }
     } else if (isset($_POST['update_company'])) {
-        // Retrieve form data
         $company_name = mysqli_real_escape_string($conn, $_POST['company_name']);
         $company_email = mysqli_real_escape_string($conn, $_POST['company_email']);
 
-        // Insert data into the users table
         $sql = "UPDATE companies 
-        SET EMAIL = '$company_email' 
-        WHERE NAME = '$company_name'";
+        SET EMAIL = '$company_email', 
+            NAME = '$company_name'
+        WHERE COMPANY_ID = $id";
 
         try {
             if (mysqli_query($conn, $sql)) {
@@ -80,13 +69,66 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } catch (mysqli_sql_exception $e) {
             $errorMessage = "Error: " . $e->getMessage();
         }
+    } else if (isset($_POST['update_structure'])) {
+        $structure_name = mysqli_real_escape_string($conn, $_POST['structure_name']);
+        $company_id = mysqli_real_escape_string($conn, $_POST['company_id']);
+
+        $sql = "UPDATE structures 
+                SET COMPANY_ID = '$company_id' 
+                    NAME = '$structure_name'
+                WHERE STRUCTURE_ID = $id";
+
+        try {
+            if (mysqli_query($conn, $sql)) {
+                $successfulMessage = "Structure Updated Successfully";
+            } else {
+                $errorMessage = "Error: Failed to Update Structure";
+            }
+        } catch (mysqli_sql_exception $e) {
+            $errorMessage = "Error: " . $e->getMessage();
+        }
+    } else if (isset($_POST['update_department'])) {
+        $department_name = mysqli_real_escape_string($conn, $_POST['department_name']);
+        $company_id = mysqli_real_escape_string($conn, $_POST['company_id']);
+        $structure_id = mysqli_real_escape_string($conn, $_POST['structure_id']);
+
+        $sql = "UPDATE departments 
+                SET COMPANY_ID = '$company_id' 
+                    NAME = '$department_name',
+                    STRUCTURE_ID = '$structure_id'
+                WHERE DEPARTMENT_ID = $id";
+        try {
+            if (mysqli_query($conn, $sql)) {
+                $successfulMessage = "Structure Updated Successfully";
+            } else {
+                $errorMessage = "Error: Failed to Update Structure";
+            }
+        } catch (mysqli_sql_exception $e) {
+            $errorMessage = "Error: " . $e->getMessage();
+        }
     }
 }
 
-// Close the database connection
 include 'database/closedb.php';
 
-function showCompaniesNameDropDown()
+function showStructureForDepartment($id){
+    include 'database/config.php';
+    include 'database/opendb.php';
+
+    $sql = "SELECT s.STRUCTURE_ID, s.NAME FROM structures s 
+            INNER JOIN departments d ON s.STRUCTURE_ID = d.STRUCTURE_ID
+            WHERE d.DEPARTMENT_ID = $id
+            LIMIT 1";
+    
+    $execute = mysqli_query($conn, $sql);
+    $row_retrieve = mysqli_fetch_assoc($execute);
+    
+    include 'database/closedb.php';
+    
+    return  '<option selected value="' . $row_retrieve["STRUCTURE_ID"] . '">' . htmlspecialchars($row_retrieve['NAME']) . '</option>';
+}
+
+function showCompaniesNameDropDown($entity)
 {
     include 'database/config.php';
     include 'database/opendb.php';
@@ -96,31 +138,30 @@ function showCompaniesNameDropDown()
     $query = "SELECT COMPANY_ID, NAME FROM Companies";
     $company = mysqli_query($conn, $query);
 
-    $query2 = "SELECT COMPANY_ID FROM Users WHERE USER_ID =" . $id;
-    $user_company =  mysqli_query($conn, $query2);
-    $row_comapany = mysqli_fetch_assoc($user_company);
+    if ($entity == "users") {
+        $sql = "SELECT COMPANY_ID FROM Users WHERE USER_ID =" . $id;
+    } else if ($entity == "structures") {
+        $sql = "SELECT COMPANY_ID FROM Structures WHERE STRUCTURE_ID =" . $id;
+    } else if ($entity == "departments") {
+        $sql = "SELECT COMPANY_ID FROM Departments WHERE DEPARTMENT_ID =" . $id;
+    }
+    $execute = mysqli_query($conn, $sql);
+    $row_retrieve = mysqli_fetch_assoc($execute);
 
     $companyDropDown = "";
-    // Start HTML select element
-    $companyDropDown .= '<select class="form-select mb-3" name = "user_company" required>';
+    $companyDropDown .= '<select class="form-select mb-3" name = "user_company" id="company-dropdown" required>';
     $companyDropDown .= '<option value="" disabled selected>Select Company</option>';
 
-    // Check if the query was successful
     if ($company) {
-        // Fetch rows from the result set
         while ($row = mysqli_fetch_assoc($company)) {
-            // Output an option for each company
-            $companyDropDown .= '<option ' . ($row_comapany['COMPANY_ID'] == $row['COMPANY_ID'] ? 'selected' : '') . ' value="' . $row['COMPANY_ID'] . '">' . htmlspecialchars($row['NAME']) . '</option>';
+            $companyDropDown .= '<option ' . ($row_retrieve['COMPANY_ID'] == $row['COMPANY_ID'] ? 'selected' : '') . ' value="' . $row['COMPANY_ID'] . '">' . htmlspecialchars($row['NAME']) . '</option>';
         }
     } else {
-        // If the query failed, handle the error
         $companyDropDown .= "Error: " . mysqli_error($conn);
     }
 
-    // Close HTML select element
     $companyDropDown .= '</select>';
 
-    // Close the database connection
     include 'database/closedb.php';
 
     return $companyDropDown;
@@ -143,9 +184,8 @@ function showForm()
             $row = mysqli_fetch_assoc($result);
 
             echo '<form id="userForm" method="post">
-        <div class="row">';
-
-            echo '<div class="col-12 col-lg-6">
+        <div class="row">
+        <div class="col-12 col-lg-6">
                 <div class="card">
                     <div class="card-header">
                         <h5 class="card-title mb-0">First Name</h5>
@@ -206,7 +246,7 @@ function showForm()
                         <h5 class="card-title mb-0">Company</h5>
                     </div>
                     <div class="card-body">
-                        <div>' . showCompaniesNameDropDown() .
+                        <div>' . showCompaniesNameDropDown($entity) .
                 '</div>
                     </div>
                 </div>
@@ -223,7 +263,6 @@ function showForm()
         $query = "SELECT * FROM COMPANIES WHERE COMPANY_ID =" . $id;
         $result = mysqli_query($conn, $query);
 
-        // Check if the query was successful
         if ($result) {
             $row = mysqli_fetch_assoc($result);
             echo '<form id="companyForm" method="post">
@@ -257,6 +296,124 @@ function showForm()
                 </div>
         </form>';
         }
+    } else if ($entity == 'structures') {
+        $query = "SELECT * FROM STRUCTURES WHERE STRUCTURE_ID =" . $id;
+        $result = mysqli_query($conn, $query);
+
+        if ($result) {
+            $row = mysqli_fetch_assoc($result);
+            echo '<div class="row">
+            <div class="col-12 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Structure Name</h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" class="form-control"
+                            name="structure_name" placeholder="Structure Name" value="' . $row["NAME"] . '" 
+                            required>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Company</h5>
+                    </div>
+                    <div class="card-body">
+                        <div>'
+                . showCompaniesNameDropDown($entity) .
+                '</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center">
+                <button name="update_structure" id="updateStructureButton"
+                    class="btn btn-success btn-lg">Update Structure</button>
+            </div>
+        </div>
+        </form>';
+        }
+    } else if ($entity == "departments") {
+        $query = "SELECT * FROM Departments WHERE DEPARTMENT_ID =" . $id;
+        $result = mysqli_query($conn, $query);
+
+        // Check if the query was successful
+        if ($result) {
+            $row = mysqli_fetch_assoc($result);
+    echo '    
+            <form id="departmentForm" method="post">
+                <div class="row">
+                    <div class="col-12 col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Deparment Name</h5>
+                            </div>
+                            <div class="card-body">
+                                <input type="text" class="form-control"
+                                name="department_name" value = "' . $row["NAME"] . '" 
+                                placeholder="Department Name" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Company</h5>
+                            </div>
+                        <div class="card-body">
+                            <div>' 
+                                . showCompaniesNameDropDown($entity) . '
+                            </div>
+                        </div>
+                    </div>
+</div>
+                    <div class="row">
+                        <div class="col-12 col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Structure Name</h5>
+                                </div>
+                            <div class="card-body">
+                                <select name="structure_name" id="structure_name"
+                                    class="form-select mb-3" required>
+                                        <option disable selected value="">Select Structure</option>
+                                            '. showStructureForDepartment($id).'
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-center">
+                            <button name="update_department" id="updateDepartmentButton"
+                                class="btn btn-success btn-lg">Update Department</button>
+                        </div>
+                    </div>
+</form>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#company-dropdown").change(function () {
+            var companyID = $(this).val();
+            var post_id = "id=" + companyID;
+            $.ajax
+                ({
+                    type: "POST",
+                    url: "fetch_structures.php",
+                    data: post_id,
+                    cache: false,
+                    success: function (cities) {
+                        $("#structure_name").html(cities);
+                    }
+                });
+        });
+    });
+</script>';
+        }
     }
     include 'database/closedb.php';
 }
@@ -272,14 +429,15 @@ function showForm()
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
     <meta name="author" content="AdminKit">
-    <meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+    <meta name="keywords"
+        content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
 
     <link rel="canonical" href="https://demo-basic.adminkit.io/pages-blank.html" />
 
-    <title>Blank Page | AdminKit Demo</title>
+    <title>Edit Entity</title>
 
     <link href="css/app.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -297,10 +455,23 @@ function showForm()
                 <div class="container-fluid p-0">
                     <div class="row">
                         <div class="col-12 col-lg-1">
-                            <a class="btn transparent-btn" style="margin-top: -8px;" href="admin_display_entities.php"><img src="./images/back_button.png"></a>
+                            <a class="btn transparent-btn" style="margin-top: -8px;"
+                                href="admin_display_entities.php"><img src="./images/back_button.png"></a>
                         </div>
                         <div class="col-12 col-lg-11">
-                            <h1 class="h3 mb-3">Update User</h1>
+                            <h1 class="h3 mb-3">Update
+                                <?php
+                                if ($entity == "users") {
+                                    echo "User";
+                                } else if ($entity == "companies") {
+                                    echo "Company";
+                                } else if ($entity == "structures") {
+                                    echo "Structure";
+                                } else if ($entity == "departments") {
+                                    echo "Department";
+                                }
+                                ?>
+                            </h1>
                         </div>
 
                         <div class="col-12">
@@ -321,40 +492,16 @@ function showForm()
                                                         </div>';
                                     }
                                     ?>
-                                    <?php showForm(); ?>
+                                    <?php showForm() ?>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </main>
-            <footer class="footer">
-                <div class="container-fluid">
-                    <div class="row text-muted">
-                        <div class="col-6 text-start">
-                            <p class="mb-0">
-                                <a class="text-muted" href="https://adminkit.io/" target="_blank"><strong>AdminKit</strong></a> &copy;
-                            </p>
-                        </div>
-                        <div class="col-6 text-end">
-                            <ul class="list-inline">
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Support</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Help Center</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Privacy</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Terms</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </footer>
+            <?php
+            include "footer.php";
+            ?>
         </div>
     </div>
 

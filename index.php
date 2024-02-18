@@ -1,22 +1,15 @@
 <?php
-// start the session
 session_start();
-include_once 'validateLogin.php';
+include 'validateLogin.php';
 
 $errorMessage = '';
 
-// check not NULL
-if (isset($_POST['email']) && isset($_POST['password'])) {
+  if (isset($_POST['email']) && isset($_POST['password'])) {
+    if (!empty($_POST['email']) && !empty($_POST['password'])) {
+      $email = $_POST['email'];
+      $password = $_POST['password'];
 
-  // check that values are not empty string, 0, or false
-  if (!empty($_POST['email']) && !empty($_POST['password'])) {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
 
-   // if (validateLogin($email, $password)) {
-      //start the session and register a variable
-      // the user id and password match,
-      // set the session
       $_SESSION['email'] = $email;
 
       if (determineRole($email) == "Admin") {
@@ -29,10 +22,7 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
     } else {
       $errorMessage = 'Error: Wrong Email or Password!';
     }
-
- // } else {
-  //  $errorMessage = 'Required Fields Missing!';
- // }
+  
 }
 ?>
 
@@ -73,7 +63,6 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
               <?php
             }
             ?>
-            <p class="social-text">Or Sign in with social platforms</p>
           </form>
         </div>
       </div>

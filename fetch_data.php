@@ -15,7 +15,7 @@ if (!empty($search)) {
     } else if ($entity == "structures") {
         $query .= " WHERE CONCAT(name, ' ', company_ID) LIKE '%$search%'";
     } else if ($entity == "departures") {
-        $query .= " WHERE CONCAT(name, ' ', company_ID, structure_ID) LIKE '%$search%'";
+        $query .= " WHERE CONCAT(name, ' ', company_ID, ' ', structure_ID) LIKE '%$search%'";
     }
 }
 
@@ -35,18 +35,29 @@ if (mysqli_num_rows($result) > 0) {
     echo '<tbody>';
     while ($row = mysqli_fetch_assoc($result)) {
         echo '<tr>';
+        $is_active = 0;
+        $is_admin = "Admin";
         foreach ($row as $key => $value) {
             if ($key == 'IS_ACTIVE') {
                 echo $value == 1 ? '<td><span class="badge bg-success">Active</span></td>' :
                     '<td><span class="badge bg-danger">Inactive</span></td>';
-            } else {
+                $is_active = $value;
+            }
+            else {
                 echo '<td>' . $value . '</td>';
             }
+            if($key == 'ROLE'){
+                $is_admin = $value;
+            }
         }
-
         echo '<td><a href="admin_edit.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-warning">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-        echo '<a class="btn btn-danger">Delete</a></td>';
-        echo '</tr>';
+        
+        if ($is_active == 1 && $is_admin == "Client") {
+            echo '<button class="btn btn-danger" onclick="confirmDelete(' . reset($row) . ', \'' . $entity . '\')">Delete</button>';
+        } else {
+            echo '<button disabled class="btn btn-danger" onclick="confirmDelete(' . reset($row) . ', \'' . $entity . '\')">Delete</button>';
+        }
+        echo '</td></tr>';
     }
     echo '</tbody>';
     echo '</table>';
@@ -58,4 +69,3 @@ if (mysqli_num_rows($result) > 0) {
 
 mysqli_free_result($result);
 include 'database/closedb.php';
-?>
