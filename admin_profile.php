@@ -104,7 +104,7 @@ function showForm($email)
                         <h5 class="card-title mb-0">Password</h5>
                     </div>
                     <div class="card-body">
-                        <input type="password" placeholder="Password" name="user_confirm_password" class="form-control"/>
+                        <input type="password" placeholder="Confirm Password" name="user_confirm_password" class="form-control"/>
                     </div>
                 </div>
 
