@@ -113,11 +113,11 @@ include 'database/closedb.php';
 			margin-bottom: 40px;
 		}
 
-		.text-wrapper{
+		.text-wrapper {
 			text-align: center;
 		}
 
-		.welcome-msg{
+		.welcome-msg {
 			text-align: center;
 			font-size: 36px;
 			font-weight: bold;
@@ -146,24 +146,23 @@ include 'database/closedb.php';
 									<div class="row">
 										<div class="col-12 col-lg-6 d-flex justify-content-center">
 											<div class="card-header">
-												<img style = "height: 300px;" src="img/happynews.svg">
+												<img style="height: 300px;" src="img/happynews.svg">
 											</div>
 										</div>
 										<div class="col-12 col-lg-6 d-flex justify-content-center">
 											<div class="card-header">
-												<h1 class = "welcome-msg" style = "margin-top: 80px">Welcome</h1>
-												<h1 class = "welcome-msg" style = "margin-top: 50px"><?php echo $fullName?></h1>
+												<h1 class="welcome-msg" style="margin-top: 80px">Welcome</h1>
+												<h1 class="welcome-msg" style="margin-top: 50px"><?php echo $fullName ?></h1>
 											</div>
 										</div>
 										<div class="col-12 col-lg-12 d-flex justify-content-center">
 											<div class="card-header">
-											<br><br>
+												<br><br>
 												<h1 class="dashboard-title">Active Entities</h1>
 											</div>
 										</div>
-
-										<div class="col-12 col-md-6 col-lg-3">
-											<div class="containercount">
+										<div class="col-12 col-md-6 col-lg-3 text-center text-md-left">
+											<div class="containercount mx-auto">
 												<i class="fa fa-users"></i>
 												<span class="num" data-val="<?php echo numberOfActiveEntities('users'); ?>"></span>
 												<div class="text-wrapper">
@@ -171,8 +170,8 @@ include 'database/closedb.php';
 												</div>
 											</div>
 										</div>
-										<div class="col-12 col-md-6 col-lg-3">
-											<div class="containercount">
+										<div class="col-12 col-md-6 col-lg-3 text-center text-md-left">
+											<div class="containercount mx-auto">
 												<i class="fa fa-building"></i>
 												<span class="num" data-val="<?php echo numberOfActiveEntities('companies'); ?>"></span>
 												<div class="text-wrapper">
@@ -180,8 +179,8 @@ include 'database/closedb.php';
 												</div>
 											</div>
 										</div>
-										<div class="col-12 col-md-6 col-lg-3">
-											<div class="containercount">
+										<div class="col-12 col-md-6 col-lg-3 text-center text-md-left">
+											<div class="containercount mx-auto">
 												<i class="fa fa-cubes"></i>
 												<span class="num" data-val="<?php echo numberOfActiveEntities('structures'); ?>"></span>
 												<div class="text-wrapper">
@@ -189,8 +188,8 @@ include 'database/closedb.php';
 												</div>
 											</div>
 										</div>
-										<div class="col-12 col-md-6 col-lg-3">
-											<div class="containercount">
+										<div class="col-12 col-md-6 col-lg-3 text-center text-md-left">
+											<div class="containercount mx-auto">
 												<i class="fa fa-sitemap"></i>
 												<span class="num" data-val="<?php echo numberOfActiveEntities('departments'); ?>"></span>
 												<div class="text-wrapper">
