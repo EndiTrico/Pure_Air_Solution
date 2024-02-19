@@ -4,7 +4,7 @@
 
 <nav id="sidebar" class="sidebar js-sidebar">
 	<div class="sidebar-content js-simplebar">
-		<a class="sidebar-brand" href="admin_dashboard.php">
+		<a class="sidebar-brand" href = "admin_dashboard.php">
 			<span class="align-middle">Pure Air Solutions</span>
 		</a>
 
@@ -103,27 +103,25 @@
 	</div>
 </nav>
 <script>
-    const sidebarItems = document.querySelectorAll('.sidebar-item');
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebarItems = document.querySelectorAll('.sidebar-item');
+        const currentPage = window.location.pathname.split('/').pop(); // Get the current page name
 
-    let activeItem = null;
+        sidebarItems.forEach(item => {
+            const link = item.querySelector('.sidebar-link');
+            const href = link.getAttribute('href');
 
-    const savedActiveItemIndex = localStorage.getItem('activeItemIndex');
-    if (savedActiveItemIndex !== null) {
-        sidebarItems[savedActiveItemIndex].classList.add('active');
-        activeItem = sidebarItems[savedActiveItemIndex];
-    }
-
-    sidebarItems.forEach((item, index) => {
-        item.addEventListener('click', () => {
-            if (activeItem !== null) {
-                activeItem.classList.remove('active');
+            if (currentPage === href) {
+                item.classList.add('active');
             }
 
-            item.classList.add('active');
+            link.addEventListener('click', () => {
+                sidebarItems.forEach(otherItem => {
+                    otherItem.classList.remove('active');
+                });
 
-            activeItem = item;
-
-            localStorage.setItem('activeItemIndex', index);
+                item.classList.add('active');
+            });
         });
     });
 </script>

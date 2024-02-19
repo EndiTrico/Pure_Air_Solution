@@ -1,42 +1,42 @@
 <?php
 
-function validateLogin($email, $pw)
+function validateLogin($email, $password)
 {
     include 'database/config.php';
     include 'database/opendb.php';
-    
-    $md5 = md5($pw);
-    $query = "SELECT * FROM users WHERE Email='$email' AND Password='$md5'";
-    $result = mysqli_query($conn, $query) or die ("Error executing the query");
 
-    $numrows = mysqli_num_rows($result);
-    if($numrows > 0){
-        include 'database/closedb.php';  
-        return true;
+    $query = "SELECT * FROM users WHERE Email=? AND Password=?";
+    $stmt = mysqli_prepare($conn, $query);
+    $md5 = md5($password);
+    mysqli_stmt_bind_param($stmt, "ss", $email, $md5);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_store_result($stmt);
+    $numrows = mysqli_stmt_num_rows($stmt);
+    mysqli_stmt_close($stmt);
+    include 'database/closedb.php';
+
+    if ($numrows > 0) {
+        return ['success' => true];
     } else {
-        include 'database/closedb.php';  
-        return false;
+        return ['success' => false, 'message' => "Invalid credentials!"];
     }
-
 }
 
-function determineRole($email){
+
+function determineRole($email)
+{
     include 'database/config.php';
     include 'database/opendb.php';
-    
-    $escaped_email = mysqli_real_escape_string($conn, $email);
-    
-    $query = "SELECT Role FROM users WHERE Email = '$escaped_email'";
-    $result = mysqli_query($conn, $query);
 
-    if ($result && mysqli_num_rows($result) > 0) {
-        $row = mysqli_fetch_assoc($result);
-        $role = $row['Role'];
-        
-        include 'database/closedb.php';
-        return $role;
-    } else {
-        include 'database/closedb.php';
-        return null;
-    }
+    $query = "SELECT Role FROM users WHERE Email=?";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "s", $email);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_store_result($stmt);
+    mysqli_stmt_bind_result($stmt, $role);
+    mysqli_stmt_fetch($stmt);
+    mysqli_stmt_close($stmt);
+    include 'database/closedb.php';
+
+    return $role;
 }

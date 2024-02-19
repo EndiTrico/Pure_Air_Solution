@@ -23,7 +23,7 @@ include 'nameInitials.php';
                                 font-size: 17px;
                                 font-weight: bold;" class="avatar img-fluid me-1 avatar-circle">
                         <?php echo $initials; ?>
-                    </div> <span class="text-dark">
+                    </div> <span class="text-dark card-title" style="font-weight: bold; color:black !important;">
                         <?php echo $fullName; ?>
                     </span>
                 </a>

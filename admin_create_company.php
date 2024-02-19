@@ -1,12 +1,11 @@
 <?php
-session_start();
+include 'auth_check.php';
 
 include 'database/config.php';
 include 'database/opendb.php';
 
 $errorMessage = "";
 $successfulMessage = "";
-
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['create_company'])) {

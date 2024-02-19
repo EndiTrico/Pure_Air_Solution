@@ -1,5 +1,5 @@
 <?php
-session_start();
+include 'auth_check.php';
 
 include 'database/config.php';
 include 'database/opendb.php';
@@ -101,7 +101,7 @@ function showForm($email)
 
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title mb-0">Password</h5>
+                        <h5 class="card-title mb-0">Confirm Password</h5>
                     </div>
                     <div class="card-body">
                         <input type="password" placeholder="Confirm Password" name="user_confirm_password" class="form-control"/>

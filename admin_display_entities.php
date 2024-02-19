@@ -1,11 +1,9 @@
 <?php
-session_start();
+include 'auth_check.php';
 
-// open database
 include 'database/config.php';
 include 'database/opendb.php';
 
-// Close the database connection
 include 'database/closedb.php';
 ?>
 

@@ -27,7 +27,7 @@ input {
   left: 0;
 }
 
-.signin-welcome {
+.signin-signup {
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -39,7 +39,7 @@ input {
   z-index: 5;
 }
 
-form, div.welcome-div{
+form {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -49,28 +49,16 @@ form, div.welcome-div{
   overflow: hidden;
   grid-column: 1 / 2;
   grid-row: 1 / 2;
-  z-index: 50;
 }
 
-.hidden{
-  display: none;
-}
-
-form.signin-form {
+form.sign-up-form {
   opacity: 0;
   z-index: 1;
 }
 
-.container.welcome-mode form.signin-form {
-  opacity: 1;
+form.sign-in-form {
   z-index: 2;
 }
-
-div.welcome-div {
-  opacity: 0;
-  z-index: 1;
-}
-
 
 .title {
   font-size: 2.2rem;
@@ -89,7 +77,6 @@ div.welcome-div {
   grid-template-columns: 15% 85%;
   padding: 0 0.4rem;
   position: relative;
-  
 }
 
 .input-field i {
@@ -113,6 +100,36 @@ div.welcome-div {
 .input-field input::placeholder {
   color: #aaa;
   font-weight: 500;
+}
+
+.social-text {
+  padding: 0.7rem 0;
+  font-size: 1rem;
+}
+
+.social-media {
+  display: flex;
+  justify-content: center;
+}
+
+.social-icon {
+  height: 46px;
+  width: 46px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 0.45rem;
+  color: #333;
+  border-radius: 50%;
+  border: 1px solid #333;
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: 0.3s;
+}
+
+.social-icon:hover {
+  color: #4481eb;
+  border-color: #4481eb;
 }
 
 .btn {
@@ -214,37 +231,42 @@ div.welcome-div {
   transform: translateX(800px);
 }
 
-.container.welcome-mode:before {
+/* ANIMATION */
+
+.container.sign-up-mode:before {
   transform: translate(100%, -50%);
   right: 52%;
 }
 
-.container.welcome-mode .left-panel .image,
-.container.welcome-mode .left-panel .content {
+.container.sign-up-mode .left-panel .image,
+.container.sign-up-mode .left-panel .content {
   transform: translateX(-800px);
 }
 
-.container.welcome-mode .signin-welcome {
+.container.sign-up-mode .signin-signup {
   left: 25%;
 }
 
-.container.welcome-mode div.welcome-div {
+.container.sign-up-mode form.sign-up-form {
   opacity: 1;
   z-index: 2;
 }
 
+.container.sign-up-mode form.sign-in-form {
+  opacity: 0;
+  z-index: 1;
+}
 
-
-.container.welcome-mode .right-panel .image,
-.container.welcome-mode .right-panel .content {
+.container.sign-up-mode .right-panel .image,
+.container.sign-up-mode .right-panel .content {
   transform: translateX(0%);
 }
 
-.container.welcome-mode .left-panel {
+.container.sign-up-mode .left-panel {
   pointer-events: none;
 }
 
-.container.welcome-mode .right-panel {
+.container.sign-up-mode .right-panel {
   pointer-events: all;
 }
 
@@ -253,15 +275,15 @@ div.welcome-div {
     min-height: 800px;
     height: 100vh;
   }
-  .signin-welcome {
+  .signin-signup {
     width: 100%;
     top: 95%;
     transform: translate(-50%, -100%);
     transition: 1s 0.8s ease-in-out;
   }
 
-  y.signin-welcome,
-  .container.welcome-mode .signin-welcome {
+  .signin-signup,
+  .container.sign-up-mode .signin-signup {
     left: 50%;
   }
 
@@ -324,19 +346,19 @@ div.welcome-div {
     transition: 2s ease-in-out;
   }
 
-  .container.welcome-mode:before {
+  .container.sign-up-mode:before {
     transform: translate(-50%, 100%);
     bottom: 32%;
     right: initial;
   }
 
-  .container.welcome-mode .left-panel .image,
-  .container.welcome-mode .left-panel .content {
+  .container.sign-up-mode .left-panel .image,
+  .container.sign-up-mode .left-panel .content {
     transform: translateY(-300px);
   }
 
-  .container.welcome-mode .right-panel .image,
-  .container.welcome-mode .right-panel .content {
+  .container.sign-up-mode .right-panel .image,
+  .container.sign-up-mode .right-panel .content {
     transform: translateY(0px);
   }
 
@@ -345,7 +367,7 @@ div.welcome-div {
     transform: translateY(300px);
   }
 
-  .container.welcome-mode .signin-welcome {
+  .container.sign-up-mode .signin-signup {
     top: 5%;
     transform: translate(-50%, 0);
   }
@@ -355,9 +377,7 @@ div.welcome-div {
   form {
     padding: 0 1.5rem;
   }
-  div.welcome-div {
-    padding: 0 1.5rem;
-  }
+
   .image {
     display: none;
   }
@@ -373,7 +393,7 @@ div.welcome-div {
     left: 50%;
   }
 
-  .container.welcome-mode:before {
+  .container.sign-up-mode:before {
     bottom: 28%;
     left: 50%;
   }
