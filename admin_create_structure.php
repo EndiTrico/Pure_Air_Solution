@@ -130,7 +130,7 @@ function showCompaniesName()
                             <div class="card">
                                 <div class="card-body">
                                     <div class="card-body">
-\                                        <form id="structureForm" method="post">
+                                        <form id="structureForm" method="post">
                                             <div class="row">
                                                 <?php
                                                 if (!empty($errorMessage)) {
