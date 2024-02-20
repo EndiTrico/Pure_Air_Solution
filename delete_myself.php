@@ -4,12 +4,13 @@ include 'database/opendb.php';
 
 $email = $_GET['email'];
 
-
 $queryUsers = "UPDATE users 
-                SET IS_ACTIVE = 0
-                WHERE EMAIL = '" . $email . "'";
+               SET IS_ACTIVE = 0
+               WHERE EMAIL = ?";
 
-mysqli_query($conn, $queryUsers);
+$stmt = mysqli_prepare($conn, $queryUsers);
+mysqli_stmt_bind_param($stmt, "s", $email);
+mysqli_stmt_execute($stmt);
 
 include 'database/closedb.php';
 

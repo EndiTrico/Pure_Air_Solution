@@ -6,25 +6,28 @@ include 'database/opendb.php';
 
 function numberOfActiveEntities($entity)
 {
-	include 'database/config.php';
-	include 'database/opendb.php';
+    include 'database/config.php';
+    include 'database/opendb.php';
 
-	$sql = "SELECT COUNT(*)
-			FROM " . $entity . "
-			WHERE IS_ACTIVE = 1";
+    $sql = "SELECT COUNT(*)
+            FROM $entity
+            WHERE IS_ACTIVE = 1";
 
-	$execute = mysqli_query($conn, $sql);
+    $stmt = mysqli_prepare($conn, $sql);
 
-	if ($execute) {
-		$row = mysqli_fetch_array($execute);
-		$count = $row[0];
-		include 'database/closedb.php';
+    if ($stmt) {
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_bind_result($stmt, $count);
+        mysqli_stmt_fetch($stmt);
+        mysqli_stmt_close($stmt);
+        
+        include 'database/closedb.php';
 
-		return $count;
-	} else {
-		include 'database/closedb.php';
-		return 0;
-	}
+        return $count;
+    } else {
+        include 'database/closedb.php';
+        return 0;
+    }
 }
 
 include 'database/closedb.php';
@@ -149,7 +152,7 @@ include 'database/closedb.php';
 										<div class="col-12 col-lg-6 d-flex justify-content-center">
 											<div class="card-header">
 												<h1 class="welcome-msg" style="margin-top: 80px">Welcome</h1>
-												<h1 class="welcome-msg" style="margin-top: 50px"><?php echo $fullName ?></h1>
+												<h1 class="welcome-msg" style="margin-top: 50px"><?php echo fullName() ?></h1>
 											</div>
 										</div>
 										<div class="col-12 col-lg-12 d-flex justify-content-center">

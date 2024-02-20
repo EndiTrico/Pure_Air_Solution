@@ -13,45 +13,59 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
         $structure_id = mysqli_real_escape_string($conn, $_POST['structure_name']);
 
-        $queryCheck = "SELECT DEPARTMENT_ID FROM structures 
-                        WHERE NAME = '$department_name' 
-                            AND COMPANY_ID = $company_id 
+        $queryCheck = "SELECT DEPARTMENT_ID FROM departments 
+                        WHERE NAME = ? 
+                            AND COMPANY_ID = ? 
                             AND IS_ACTIVE = 0 
-                            AND STRUCTURE_ID = $structure_id 
+                            AND STRUCTURE_ID = ? 
                         LIMIT 1";
-        $resultCheck = mysqli_query($conn, $queryCheck);
 
-        if (mysqli_num_rows($resultCheck) > 0) {
-            $rowCheck = mysqli_fetch_assoc($resultCheck);
+        $stmt = mysqli_prepare($conn, $queryCheck);
+        mysqli_stmt_bind_param($stmt, "sii", $department_name, $company_id, $structure_id);
+        mysqli_stmt_execute($stmt);
+        $resultCheck = mysqli_stmt_get_result($stmt);
 
-            $sql = "UPDATE departments 
-                    SET NAME = '$department_name', 
-                        COMPANY_ID = '$company_id', 
-                        STRUCTURE_ID = '$structure_id', 
-                        IS_ACTIVE = 1
-                    WHERE DEPARTMENT_ID = " . $rowCheck['DEPARTMENT_ID'];
+        if ($resultCheck) {
+            if (mysqli_num_rows($resultCheck) > 0) {
+                $rowCheck = mysqli_fetch_assoc($resultCheck);
 
-            try {
-                if (mysqli_query($conn, $sql)) {
-                    $successfulMessage = "Department Activated Successfully";
-                } else {
-                    $errorMessage = "Error: Failed to Activate Department";
+                $sql = "UPDATE departments 
+                        SET NAME = ?, 
+                            COMPANY_ID = ?, 
+                            STRUCTURE_ID = ?, 
+                            IS_ACTIVE = 1
+                        WHERE DEPARTMENT_ID = ?";
+
+                $stmt = mysqli_prepare($conn, $sql);
+                mysqli_stmt_bind_param($stmt, "siii", $department_name, $company_id, $structure_id, $rowCheck['DEPARTMENT_ID']);
+
+                try {
+                    if (mysqli_stmt_execute($stmt)) {
+                        $successfulMessage = "Department Activated Successfully";
+                    } else {
+                        $errorMessage = "Error: Failed to Activate Department";
+                    }
+                } catch (Exception $e) {
+                    $errorMessage = $e->getMessage();
                 }
-            } catch (mysqli_sql_exception $e) {
-                $errorMessage = "Error: " . $e->getMessage();
+            } else {
+                $sql = "INSERT INTO departments (NAME, COMPANY_ID, STRUCTURE_ID, IS_ACTIVE) VALUES 
+                        (?, ?, ?,  1)";
+                $stmt = mysqli_prepare($conn, $sql);
+                mysqli_stmt_bind_param($stmt, "sii", $department_name, $company_id, $structure_id);
+
+                try {
+                    if (mysqli_stmt_execute($stmt)) {
+                        $successfulMessage = "Department Created Successfully";
+                    } else {
+                        $errorMessage = "Error: Failed to Create Department";
+                    }
+                } catch (Exception $e) {
+                    $errorMessage = $e->getMessage();
+                }
             }
         } else {
-            $sql = "INSERT INTO departments (NAME, COMPANY_ID, STRUCTURE_ID, IS_ACTIVE) VALUES 
-            ('$department_name', '$company_id', '$structure_id',  1)";
-            try {
-                if (mysqli_query($conn, $sql)) {
-                    $successfulMessage = "User created successfully";
-                } else {
-                    $errorMessage = "Error: Failed to create company";
-                }
-            } catch (mysqli_sql_exception $e) {
-                $errorMessage = "Error: " . $e->getMessage();
-            }
+            $errorMessage = "Error: " . mysqli_error($conn);
         }
     }
 }
@@ -95,7 +109,7 @@ function showCompaniesName()
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    
+
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
 
@@ -118,8 +132,7 @@ function showCompaniesName()
 
                     <div class="row">
                         <div class="col-12 col-lg-1">
-                            <a class="btn transparent-btn" style="margin-top: -8px;" href="admin_create.php"><img
-                                    src="./images/back_button.png">
+                            <a class="btn transparent-btn" style="margin-top: -8px;" href="admin_create.php"><img src="./images/back_button.png">
                             </a>
                         </div>
                         <div class="col-12 col-lg-11">
@@ -135,11 +148,23 @@ function showCompaniesName()
 
                                                     <?php
                                                     if (!empty($errorMessage)) {
-                                                        echo '<div class="col-12"> <div class="card"> <div class="card-header"><div style="height: 30px; font-size:20px; text-align:center; background-color: #ffcccc; color: #cc0000;" class="alert alert-danger" role="alert">' . $errorMessage . '</div>                                                    </div>
-                                                    </div> </div>';
+                                                        echo '<div class="col-12">
+                                                            <div class="card">
+                                                                <div class="card-header">
+                                                                    <div style="height: auto; font-size:20px; text-align:center; background-color: #ffcccc; color: #cc0000;" class="alert alert-danger" role="alert"><h4 style = "padding-top:5px; color: #cc0000; font-weight:bold;">' . $errorMessage . '</h4>
+                                                                    </div> 
+                                                                </div>                                                    
+                                                            </div>
+                                                        </div>';
                                                     } else if (!empty($successfulMessage)) {
-                                                        echo '<div class="col-12"> <div class="card"> <div class="card-header"><div style="height: 30px; font-size:20px; text-align:center; background-color: #ccffcc; color: #006600;" class="alert alert-success" role="alert">' . $successfulMessage . '</div>                                                    </div>
-                                                    </div></div>';
+                                                        echo '<div class="col-12">
+                                                            <div class="card">
+                                                                <div class="card-header">
+                                                                    <div style="height: auto; font-size:20px; text-align:center; background-color: #ccffcc; color: #006600;" class="alert alert-success" role="alert"><h4 style = "padding-top:5px; color: #006600; font-weight:bold;">' . $successfulMessage . '</h4>
+                                                                    </div> 
+                                                                </div>                                                    
+                                                            </div>
+                                                        </div>';
                                                     }
                                                     ?>
 
@@ -150,9 +175,7 @@ function showCompaniesName()
                                                                     <h5 class="card-title mb-0">Deparment Name</h5>
                                                                 </div>
                                                                 <div class="card-body">
-                                                                    <input type="text" class="form-control"
-                                                                        name="department_name"
-                                                                        placeholder="Department Name" required>
+                                                                    <input type="text" class="form-control" name="department_name" placeholder="Department Name" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -177,8 +200,7 @@ function showCompaniesName()
                                                                     <h5 class="card-title mb-0">Structure Name</h5>
                                                                 </div>
                                                                 <div class="card-body">
-                                                                    <select name="structure_name" id="structure_name"
-                                                                        class="form-select mb-3" required>
+                                                                    <select name="structure_name" id="structure_name" class="form-select mb-3" required>
                                                                         <option disable selected value="">Select
                                                                             Structure</option>
                                                                     </select>
@@ -190,8 +212,7 @@ function showCompaniesName()
 
                                                     <div class="row">
                                                         <div class="col-12 d-flex justify-content-center">
-                                                            <button name="create_department" id="createDepartmentButton"
-                                                                class="btn btn-success btn-lg">Create
+                                                            <button name="create_department" id="createDepartmentButton" class="btn btn-success btn-lg">Create
                                                                 Department</button>
                                                         </div>
                                                     </div>
@@ -216,20 +237,19 @@ function showCompaniesName()
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
     </script>
     <script type="text/javascript">
-        $(document).ready(function () {
-            $("#company-dropdown").change(function () {
+        $(document).ready(function() {
+            $("#company-dropdown").change(function() {
                 var companyID = $(this).val();
                 var post_id = 'id=' + companyID;
-                $.ajax
-                    ({
-                        type: "POST",
-                        url: "fetch_structures.php",
-                        data: post_id,
-                        cache: false,
-                        success: function (cities) {
-                            $("#structure_name").html(cities);
-                        }
-                    });
+                $.ajax({
+                    type: "POST",
+                    url: "fetch_structures.php",
+                    data: post_id,
+                    cache: false,
+                    success: function(cities) {
+                        $("#structure_name").html(cities);
+                    }
+                });
             });
         });
     </script>

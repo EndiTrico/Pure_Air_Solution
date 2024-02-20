@@ -13,43 +13,70 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
 
         $queryCheck = "SELECT STRUCTURE_ID FROM structures 
-                        WHERE NAME = '$structure_name' 
-                            AND COMPANY_ID = $company_id 
+                       WHERE NAME = ? 
+                            AND COMPANY_ID = ? 
                             AND IS_ACTIVE = 0 
-                        LIMIT 1";
-        $resultCheck = mysqli_query($conn, $queryCheck);
+                       LIMIT 1";
+        $stmtCheck = mysqli_prepare($conn, $queryCheck);
+        if ($stmtCheck) {
+            mysqli_stmt_bind_param($stmtCheck, "si", $structure_name, $company_id);
 
-        if (mysqli_num_rows($resultCheck) > 0) {
-            $rowCheck = mysqli_fetch_assoc($resultCheck);
+            if (mysqli_stmt_execute($stmtCheck)) {
+                $resultCheck = mysqli_stmt_get_result($stmtCheck);
+                if (mysqli_num_rows($resultCheck) > 0) {
+                    $rowCheck = mysqli_fetch_assoc($resultCheck);
 
-            $sql = "UPDATE structures 
-                    SET 
-                        NAME = '$structure_name', 
-                        IS_ACTIVE = 1, 
-                        COMPANY_ID = '$company_id'
-                    WHERE STRUCTURE_ID =" . $rowCheck['STRUCTURE_ID'];
+                    $sql = "UPDATE structures 
+                            SET NAME = ?, 
+                                IS_ACTIVE = 1, 
+                                COMPANY_ID = ?
+                            WHERE STRUCTURE_ID = ?";
+                    $stmt = mysqli_prepare($conn, $sql);
+                    if ($stmt) {
+                        mysqli_stmt_bind_param($stmt, "sii", $structure_name, $company_id, $rowCheck['STRUCTURE_ID']);
 
-            try {
-                if (mysqli_query($conn, $sql)) {
-                    $successfulMessage = "Structure Activated Successfully";
+                        try {
+                            if (mysqli_stmt_execute($stmt)) {
+                                $successfulMessage = "Structure Activated Successfully";
+                            } else {
+                                $errorMessage = "Error: Failed to Activate Structure";
+                            }
+                        } catch (mysqli_sql_exception $e) {
+                            $errorMessage = "Error: " . $e->getMessage();
+                        }
+
+                        mysqli_stmt_close($stmt);
+                    } else {
+                        $errorMessage = "Error: Failed to prepare statement";
+                    }
                 } else {
-                    $errorMessage = "Error: Failed to Activate Structure";
+                    $sql = "INSERT INTO structures (NAME, COMPANY_ID, IS_ACTIVE) VALUES (?, ?, 1)";
+                    $stmt = mysqli_prepare($conn, $sql);
+                    if ($stmt) {
+                        mysqli_stmt_bind_param($stmt, "si", $structure_name, $company_id);
+
+                        try {
+                            if (mysqli_stmt_execute($stmt)) {
+                                $successfulMessage = "Structure Created Successfully";
+                            } else {
+                                $errorMessage = "Error: Failed to Create Structure";
+                            }
+                        } catch (mysqli_sql_exception $e) {
+                            $errorMessage = "Error: " . $e->getMessage();
+                        }
+
+                        mysqli_stmt_close($stmt);
+                    } else {
+                        $errorMessage = "Error: Failed to prepare statement";
+                    }
                 }
-            } catch (mysqli_sql_exception $e) {
-                $errorMessage = "Error: " . $e->getMessage();
+            } else {
+                $errorMessage = "Error: Failed to execute statement";
             }
+
+            mysqli_stmt_close($stmtCheck);
         } else {
-            $sql = "INSERT INTO structures (NAME, COMPANY_ID, IS_ACTIVE) VALUES 
-                    ('$structure_name', '$company_id', 1)";
-            try {
-                if (mysqli_query($conn, $sql)) {
-                    $successfulMessage = "Structure Created Successfully";
-                } else {
-                    $errorMessage = "Error: Failed to Create Structure";
-                }
-            } catch (mysqli_sql_exception $e) {
-                $errorMessage = "Error: " . $e->getMessage();
-            }
+            $errorMessage = "Error: Failed to prepare statement";
         }
     }
 }
@@ -117,8 +144,7 @@ function showCompaniesName()
                 <div class="container-fluid p-0">
                     <div class="row">
                         <div class="col-12 col-lg-1">
-                            <a class="btn transparent-btn" style="margin-top: -8px;" href="admin_create.php"><img
-                                    src="./images/back_button.png"></a>
+                            <a class="btn transparent-btn" style="margin-top: -8px;" href="admin_create.php"><img src="./images/back_button.png"></a>
                         </div>
                         <div class="col-12 col-lg-11">
                             <h1 class="h3 mb-3">Create Structure</h1>
@@ -131,11 +157,23 @@ function showCompaniesName()
                                             <div class="row">
                                                 <?php
                                                 if (!empty($errorMessage)) {
-                                                    echo '<div class="col-12"> <div class="card"> <div class="card-header"><div style="height: 30px; font-size:20px; text-align:center; background-color: #ffcccc; color: #cc0000;" class="alert alert-danger" role="alert">' . $errorMessage . '</div>                                                    </div>
-                                                    </div> </div>';
+                                                    echo '<div class="col-12">
+                                                            <div class="card">
+                                                                <div class="card-header">
+                                                                    <div style="height: auto; font-size:20px; text-align:center; background-color: #ffcccc; color: #cc0000;" class="alert alert-danger" role="alert"><h4 style = "padding-top:5px; color: #cc0000; font-weight:bold;">' . $errorMessage . '</h4>
+                                                                    </div> 
+                                                                </div>                                                    
+                                                            </div>
+                                                        </div>';
                                                 } else if (!empty($successfulMessage)) {
-                                                    echo '<div class="col-12"> <div class="card"> <div class="card-header"><div style="height: 30px; font-size:20px; text-align:center; background-color: #ccffcc; color: #006600;" class="alert alert-success" role="alert">' . $successfulMessage . '</div>                                                    </div>
-                                                    </div></div>';
+                                                    echo '<div class="col-12">
+                                                            <div class="card">
+                                                                <div class="card-header">
+                                                                    <div style="height: auto; font-size:20px; text-align:center; background-color: #ccffcc; color: #006600;" class="alert alert-success" role="alert"><h4 style = "padding-top:5px; color: #006600; font-weight:bold;">' . $successfulMessage . '</h4>
+                                                                    </div> 
+                                                                </div>                                                    
+                                                            </div>
+                                                        </div>';
                                                 }
                                                 ?>
 
@@ -146,9 +184,7 @@ function showCompaniesName()
                                                                 <h5 class="card-title mb-0">Structure Name</h5>
                                                             </div>
                                                             <div class="card-body">
-                                                                <input type="text" class="form-control"
-                                                                    name="structure_name" placeholder="Structure Name"
-                                                                    required>
+                                                                <input type="text" class="form-control" name="structure_name" placeholder="Structure Name" required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -167,8 +203,7 @@ function showCompaniesName()
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-12 d-flex justify-content-center">
-                                                        <button name="create_structure" id="createStructureButton"
-                                                            class="btn btn-success btn-lg">Create Structure</button>
+                                                        <button name="create_structure" id="createStructureButton" class="btn btn-success btn-lg">Create Structure</button>
                                                     </div>
                                                 </div>
                                             </div>

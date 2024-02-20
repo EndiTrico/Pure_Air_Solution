@@ -17,50 +17,71 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $user_password = mysqli_real_escape_string($conn, $_POST['user_password']);
         $user_confirm_password = mysqli_real_escape_string($conn, $_POST['user_confirm_password']);
 
-        $hashed_password = password_hash('sha256', $user_password);
-
         if ($user_password == $user_confirm_password) {
-            $sql = "UPDATE users 
-                SET FIRST_NAME = '$first_name', 
-                    LAST_NAME = '$last_name', 
-                    PASSWORD = '$hashed_password',  
-                    EMAIL = '$user_email'
-                WHERE EMAIL = '$email'";
+            $hashed_password = password_hash($user_password, PASSWORD_BCRYPT);
 
-            try {
-                if (mysqli_query($conn, $sql)) {
-                    $successfulMessage = "Profile Updated Successfully";
-                } else {
-                    $errorMessage = "Error: Failed to Update Profile";
+            $sql = "UPDATE users 
+                    SET FIRST_NAME = ?, 
+                        LAST_NAME = ?, 
+                        PASSWORD = ?,  
+                        EMAIL = ?
+                    WHERE EMAIL = ?";
+
+            $stmt = mysqli_prepare($conn, $sql);
+
+            if ($stmt) {
+                mysqli_stmt_bind_param($stmt, "sssss", $first_name, $last_name, $hashed_password, $user_email, $email);
+
+                try {
+                    if (mysqli_stmt_execute($stmt)) {
+                        $successfulMessage = "Profile Updated Successfully";
+                        $_SESSION['email'] = $user_email;
+                    } else {
+                        $errorMessage = "Error: Failed to Update Profile";
+                    }
+                } catch (mysqli_sql_exception $e) {
+                    $errorMessage = "Error: " . $e->getMessage();
+                } finally{
+                    mysqli_stmt_close($stmt);
                 }
-            } catch (mysqli_sql_exception $e) {
-                $errorMessage = "Error: " . $e->getMessage();
+            } else {
+                $errorMessage = "Error: Failed to prepare statement";
             }
         } else {
             $errorMessage = "Passwords Do Not Match!";
         }
-
     }
 }
 
-include 'database/closedb.php';
 
 function showForm($email)
 {
     include 'database/config.php';
     include 'database/opendb.php';
 
-    $query_id = "SELECT USER_ID FROM Users WHERE EMAIL = '" . $email . "' LIMIT 1";
-    $result_id = mysqli_query($conn, $query_id);
-    $id = mysqli_fetch_assoc($result_id);
+    $query_id = "SELECT USER_ID FROM Users WHERE EMAIL = ? LIMIT 1";
+    $stmt_id = mysqli_prepare($conn, $query_id);
+    if ($stmt_id) {
 
-    $query = "SELECT * FROM Users WHERE USER_ID =" . $id["USER_ID"];
-    $result = mysqli_query($conn, $query);
+        mysqli_stmt_bind_param($stmt_id, "s", $email);
 
-    if ($result) {
-        $row = mysqli_fetch_assoc($result);
+        if (mysqli_stmt_execute($stmt_id)) {
+            mysqli_stmt_bind_result($stmt_id, $id);
 
-        echo '
+            if (mysqli_stmt_fetch($stmt_id)) {
+                mysqli_stmt_close($stmt_id);
+
+                $query = "SELECT * FROM Users WHERE USER_ID = ?";
+                $stmt = mysqli_prepare($conn, $query);
+
+                if ($stmt) {
+                    mysqli_stmt_bind_param($stmt, "i", $id);
+
+                    if (mysqli_stmt_execute($stmt)) {
+                        $result = mysqli_stmt_get_result($stmt);
+                        if ($result) {
+                            $row = mysqli_fetch_assoc($result);
+                            echo '
             <div class="col-12 col-lg-6">
                 <div class="card">
                     <div class="card-header">
@@ -114,6 +135,11 @@ function showForm($email)
                     </div>
                 </div>
             </div>';
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -130,7 +156,6 @@ function showForm($email)
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
-
 
     <title>My Profile</title>
 
@@ -163,18 +188,25 @@ function showForm($email)
                                             <?php
                                             if (!empty($errorMessage)) {
                                                 echo '<div class="col-12">
-                                                            <div class="card">
-                                                                <div class="card-header"><div style="height: 30px; font-size:20px; text-align:center; background-color: #ffcccc; color: #cc0000;" class="alert alert-danger" role="alert">' . $errorMessage . '</div>                                                    </div>
-                                                            </div>
-                                                        </div>';
+                                                        <div class="card">
+                                                            <div class="card-header">
+                                                                <div style="height: auto; font-size:20px; text-align:center; background-color: #ffcccc; color: #cc0000;" class="alert alert-danger" role="alert"><h4 style = "padding-top:5px; color: #cc0000; font-weight:bold;">' . $errorMessage . '</h4>
+                                                                </div> 
+                                                            </div>                                                    
+                                                        </div>
+                                                    </div>';
                                             } else if (!empty($successfulMessage)) {
                                                 echo '<div class="col-12">
-                                                            <div class="card">
-                                                                <div class="card-header"><div style="height: 30px; font-size:20px; text-align:center; background-color: #ccffcc; color: #006600;" class="alert alert-success" role="alert">' . $successfulMessage . '</div>                                                    </div>
-                                                            </div>
-                                                        </div>';
+                                                        <div class="card">
+                                                            <div class="card-header">
+                                                                <div style="height: auto; font-size:20px; text-align:center; background-color: #ccffcc; color: #006600;" class="alert alert-success" role="alert"><h4 style = "padding-top:5px; color: #006600; font-weight:bold;">' . $successfulMessage . '</h4>
+                                                                </div> 
+                                                            </div>                                                    
+                                                        </div>
+                                                    </div>';
                                             }
                                             ?>
+
 
                                             <div class="col-12 col-lg-6">
                                                 <div>
@@ -184,8 +216,7 @@ function showForm($email)
                                                                 margin-top: 5%;">
                                                         <?php echo fullName() ?>
                                                     </h5>
-                                                    <div
-                                                        style="display: flex; justify-content: center; align-items: center;">
+                                                    <div style="display: flex; justify-content: center; align-items: center;">
                                                         <div style="width: 400px;
                                                                 height: 400px;
                                                                 border-radius: 50%; 
@@ -196,8 +227,7 @@ function showForm($email)
                                                                 justify-content: center;
                                                                 align-items: center;
                                                                 font-size: 200px;
-                                                                font-weight: bold;"
-                                                            class="avatar img-fluid me-1 avatar-circle">
+                                                                font-weight: bold;" class="avatar img-fluid me-1 avatar-circle">
                                                             <?php echo initials(); ?>
                                                         </div>
                                                     </div>

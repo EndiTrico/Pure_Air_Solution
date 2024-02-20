@@ -24,9 +24,9 @@ $email = $_SESSION['email'];
                                 align-items: center;
                                 font-size: 17px;
                                 font-weight: bold;" class="avatar img-fluid me-1 avatar-circle">
-                        <?php echo $initials; ?>
+                        <?php echo initials(); ?>
                     </div> <span class="text-dark card-title" style="font-weight: bold; color:black !important;">
-                        <?php echo $fullName; ?>
+                        <?php echo fullName(); ?>
                     </span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end">

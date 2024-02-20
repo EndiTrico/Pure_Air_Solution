@@ -13,46 +13,68 @@ $queryCompany = "";
 if ($entity == "companies") {
     $queryDepartments = "UPDATE departments 
                         SET IS_ACTIVE = 0
-                        WHERE COMPANY_ID = " . $id;
+                        WHERE COMPANY_ID = ?";
     $queryStructures = "UPDATE structures 
                         SET IS_ACTIVE = 0
-                        WHERE COMPANY_ID = " . $id;
+                        WHERE COMPANY_ID = ?";
     $queryUsers = "UPDATE users 
                     SET IS_ACTIVE = 0
-                    WHERE COMPANY_ID = " . $id;
+                    WHERE COMPANY_ID = ?";
     $queryCompany = "UPDATE companies
                     SET IS_ACTIVE = 0,
                     DATE_LEFT = DATE(NOW())
-                    WHERE COMPANY_ID = $id ";
+                    WHERE COMPANY_ID = ?";
 
-    mysqli_query($conn, $queryDepartments);
-    mysqli_query($conn, $queryStructures);
-    mysqli_query($conn, $queryUsers);
-    mysqli_query($conn, $queryCompany);
+    $stmtDepartments = mysqli_prepare($conn, $queryDepartments);
+    $stmtStructures = mysqli_prepare($conn, $queryStructures);
+    $stmtUsers = mysqli_prepare($conn, $queryUsers);
+    $stmtCompany = mysqli_prepare($conn, $queryCompany);
+
+    mysqli_stmt_bind_param($stmtDepartments, "i", $id);
+    mysqli_stmt_bind_param($stmtStructures, "i", $id);
+    mysqli_stmt_bind_param($stmtUsers, "i", $id);
+    mysqli_stmt_bind_param($stmtCompany, "i", $id);
+
+    mysqli_stmt_execute($stmtDepartments);
+    mysqli_stmt_execute($stmtStructures);
+    mysqli_stmt_execute($stmtUsers);
+    mysqli_stmt_execute($stmtCompany);
 } else if ($entity == "structures") {
     $queryDepartments = "UPDATE departments 
                         SET IS_ACTIVE = 0
-                        WHERE STRUCTURE_ID = " . $id;
+                        WHERE STRUCTURE_ID = ?";
     $queryStructures = "UPDATE structures 
                         SET IS_ACTIVE = 0
-                        WHERE STRUCTURE_ID = " . $id;
+                        WHERE STRUCTURE_ID = ?";
 
-    mysqli_query($conn, $queryDepartments);
-    mysqli_query($conn, $queryStructures);
+    $stmtDepartments = mysqli_prepare($conn, $queryDepartments);
+    $stmtStructures = mysqli_prepare($conn, $queryStructures);
 
+    mysqli_stmt_bind_param($stmtDepartments, "i", $id);
+    mysqli_stmt_bind_param($stmtStructures, "i", $id);
+
+    mysqli_stmt_execute($stmtDepartments);
+    mysqli_stmt_execute($stmtStructures);
 } else if ($entity == "departments") {
     $queryDepartments = "UPDATE departments 
                         SET IS_ACTIVE = 0
-                        WHERE DEPARTMENT_ID = " . $id;
+                        WHERE DEPARTMENT_ID = ?";
 
-    mysqli_query($conn, $queryDepartments);
+    $stmtDepartments = mysqli_prepare($conn, $queryDepartments);
 
+    mysqli_stmt_bind_param($stmtDepartments, "i", $id);
+
+    mysqli_stmt_execute($stmtDepartments);
 } else if ($entity == "users") {
     $queryUsers = "UPDATE users 
                     SET IS_ACTIVE = 0
-                    WHERE USER_ID = " . $id;
-    mysqli_query($conn, $queryUsers);
+                    WHERE USER_ID = ?";
 
+    $stmtUsers = mysqli_prepare($conn, $queryUsers);
+
+    mysqli_stmt_bind_param($stmtUsers, "i", $id);
+
+    mysqli_stmt_execute($stmtUsers);
 }
 
 include 'database/closedb.php';
