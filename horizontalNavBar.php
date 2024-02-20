@@ -1,5 +1,7 @@
 <?php
 include 'nameInitials.php';
+$email = $_SESSION['email'];
+
 ?>
 
 <nav class="navbar navbar-expand navbar-light navbar-bg">
@@ -27,14 +29,44 @@ include 'nameInitials.php';
                         <?php echo $fullName; ?>
                     </span>
                 </a>
-
                 <div class="dropdown-menu dropdown-menu-end">
-                    <a class="dropdown-item" href="admin_profile.php"><i class="align-middle me-1"
-                            data-feather="user"></i> Profile</a>
+                    <a class="dropdown-item" href="admin_profile.php"><i class="align-middle me-1" data-feather="user"></i> Profile</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" onclick="confirmDelete('<?php echo $email; ?>')" href="#">
+                        <i class="align-middle me-1" data-feather="user-x"></i> Delete
+                    </a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="logout.php"><i class="align-middle me-1" data-feather="log-out"></i>Log out</a>
                 </div>
             </li>
         </ul>
     </div>
+
 </nav>
+
+<script>
+    function confirmDelete(email) {
+        Swal.fire({
+            title: "Are You Sure?",
+            text: "Yout account will be set to inactive",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: "Deleted!",
+                    text: "Action performed successfully",
+                    icon: "success",
+                    showConfirmButton: false
+                });
+                setTimeout(function() {
+                    var url = 'delete_myself.php?email=' + encodeURIComponent(email);
+                    window.location.href = url;
+                }, 2000);
+            }
+        });
+    }
+</script>

@@ -15,22 +15,15 @@ include 'database/closedb.php';
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
-    <meta name="author" content="AdminKit">
-    <meta name="keywords"
-        content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
 
-    <link rel="canonical" href="https://demo-basic.adminkit.io/pages-blank.html" />
-
-    <title>Blank Page | AdminKit Demo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Display Entities</title>
 
     <link href="css/app.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.6 .0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
@@ -39,6 +32,22 @@ include 'database/closedb.php';
             margin-left: 65%;
             width: 80%;
             display: none;
+        }
+
+        .badge-success-custom {
+            background-color: #28a745;
+            color: #fff;
+            font-size: 14px;
+            padding: 5px 10px;
+            border-radius: 999px;
+        }
+
+        .badge-danger-custom {
+            background-color: #dc3545;
+            color: #fff;
+            font-size: 14px;
+            padding: 5px 10px;
+            border-radius: 999px;
         }
     </style>
 
@@ -62,36 +71,28 @@ include 'database/closedb.php';
                                     <div class="row">
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('users')"
-                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                    style="font-weight: bold;">Display
+                                                <a onclick="fetchData('users')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Display
                                                     Users</a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('companies')"
-                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                    style="font-weight: bold;">Display
+                                                <a onclick="fetchData('companies')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Display
                                                     Companies</a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('structures')"
-                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                    style="font-weight: bold;">Display
+                                                <a onclick="fetchData('structures')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Display
                                                     Structures</a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('departments')"
-                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                    style="font-weight: bold;">Display
+                                                <a onclick="fetchData('departments')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Display
                                                     Departments</a>
                                             </div>
                                         </div>
@@ -99,8 +100,7 @@ include 'database/closedb.php';
 
                                     <div class="col-12 col-lg-12">
                                         <div class="card-header output col-md-6" id="output">
-                                            <input oninput="search()" type="text" id="searchBox"
-                                                class="form-control justify-content-center" placeholder="Search...">
+                                            <input oninput="search()" type="text" id="searchBox" class="form-control justify-content-center" placeholder="Search...">
 
                                         </div>
 
@@ -126,7 +126,7 @@ include 'database/closedb.php';
                     selected_entity = entity;
                     var searchQuery = document.getElementById('searchBox').value;
                     var xhttp = new XMLHttpRequest();
-                    xhttp.onreadystatechange = function () {
+                    xhttp.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
                             document.getElementById("tableContainer").innerHTML = this.responseText;
                         }
@@ -137,10 +137,10 @@ include 'database/closedb.php';
                 }
 
                 function search() {
-                    var entity = selected_entity; 
+                    var entity = selected_entity;
                     var searchQuery = document.getElementById('searchBox').value;
                     var xhttp = new XMLHttpRequest();
-                    xhttp.onreadystatechange = function () {
+                    xhttp.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
                             document.getElementById("tableContainer").innerHTML = this.responseText;
                         }
@@ -148,6 +148,7 @@ include 'database/closedb.php';
                     xhttp.open("GET", "fetch_data.php?entity=" + entity + "&search=" + searchQuery, true);
                     xhttp.send();
                 }
+
                 function confirmDelete(id, entity) {
                     Swal.fire({
                         title: "Are You Sure?",
@@ -165,7 +166,7 @@ include 'database/closedb.php';
                                 icon: "success",
                                 showConfirmButton: false
                             });
-                            setTimeout(function () {
+                            setTimeout(function() {
                                 var url = 'admin_delete.php?id=' + encodeURIComponent(id) + '&entity=' + encodeURIComponent(entity);
                                 window.location.href = url;
                             }, 2000);

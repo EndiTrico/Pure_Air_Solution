@@ -5,10 +5,11 @@ function validateLogin($email, $password)
     include 'database/config.php';
     include 'database/opendb.php';
 
-    $query = "SELECT * FROM users WHERE Email=? AND Password=?";
+    $query = "SELECT * FROM users WHERE Email=? AND Password=? AND IS_ACTIVE = ?";
     $stmt = mysqli_prepare($conn, $query);
-    $md5 = md5($password);
-    mysqli_stmt_bind_param($stmt, "ss", $email, $md5);
+    $hashed_password = password_hash($user_password, PASSWORD_DEFAULT);
+    $is_active = 1;
+    mysqli_stmt_bind_param($stmt, "ssi", $email, $hashed_password, $is_active);
     mysqli_stmt_execute($stmt);
     mysqli_stmt_store_result($stmt);
     $numrows = mysqli_stmt_num_rows($stmt);

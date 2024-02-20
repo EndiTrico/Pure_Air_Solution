@@ -24,12 +24,16 @@ $result = mysqli_query($conn, $query);
 if (mysqli_num_rows($result) > 0) {
     echo ' 
                 <div class="table-responsive">
-                    <table class="table">
+                    <table class="table text-center">
                         <thead>
                             <tr>';
 
     while ($fieldinfo = mysqli_fetch_field($result)) {
-        echo '<th>' . $fieldinfo->name . '</th>';
+        if($fieldinfo->name == 'PASSWORD'){
+            continue;
+        }
+        $fieldName = ucwords(str_replace('_', ' ', strtolower($fieldinfo->name)));
+        echo '<th>' . $fieldName . '</th>';
     }
 
     echo '<th>Actions</th>
@@ -43,9 +47,11 @@ if (mysqli_num_rows($result) > 0) {
         $is_admin = "Admin";
         foreach ($row as $key => $value) {
             if ($key == 'IS_ACTIVE') {
-                echo $value == 1 ? '<td><span class="badge bg-success">Active</span></td>' :
-                    '<td><span class="badge bg-danger">Inactive</span></td>';
+                echo $value == 1 ? '<td><span class="badge-success-custom">Active</span></td>' :
+                    '<td><span class="badge-danger-custom">Inactive</span></td>';
                 $is_active = $value;
+            } else if ($key =="PASSWORD"){
+                continue;
             }
             else {
                 echo '<td>' . $value . '</td>';
@@ -67,8 +73,8 @@ if (mysqli_num_rows($result) > 0) {
     echo '</table></div>';
 } else {
     echo '<div class="col-12">
-        <div class="card-header"><div style="height: 65px; font-size:20px; text-align:center; background-color: #fed48b; color: #d98b19; font-weight:bold" class="alert alert-danger" role="alert">No Data Found</div>                                                    
-        </div>
+            <div class="card-header"><div style="margin-top: -20px; padding-top: 8px; height: 40px; font-size:20px; text-align:center; background-color: #fed48b; color: #d98b19; font-weight:bold" class="alert alert-danger" role="alert">No Data Found</div>                                                    
+            </div>
         </div>';
 }
 
