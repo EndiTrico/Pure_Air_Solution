@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $user_password = mysqli_real_escape_string($conn, $_POST['user_password']);
         $user_confirm_password = mysqli_real_escape_string($conn, $_POST['user_confirm_password']);
 
-        $hashed_password = password_hash($user_password, PASSWORD_DEFAULT);
+        $hashed_password = password_hash('sha256', $user_password);
 
         if ($user_password == $user_confirm_password) {
             $sql = "UPDATE users 

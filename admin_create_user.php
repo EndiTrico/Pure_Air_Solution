@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $role = mysqli_real_escape_string($conn, $_POST['role']);
         $user_company = mysqli_real_escape_string($conn, $_POST['user_company']);
 
-        $hashed_password = password_hash($user_password, PASSWORD_DEFAULT);
+        $hashed_password = password_hash('sha256', $user_password);
 
         $queryCheck = "SELECT USER_ID FROM users 
                         WHERE EMAIL = '$user_email' 

@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $password = mysqli_query($conn, $query_user);
 
         $sql = "";
-        $hashed_password = password_hash($user_password, PASSWORD_DEFAULT);
+        $hashed_password = password_hash('sha256', $user_password);
 
         if ($hashed_password == $user_password) {
             $sql = "UPDATE users SET 

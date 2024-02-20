@@ -7,7 +7,7 @@ function validateLogin($email, $password)
 
     $query = "SELECT * FROM users WHERE Email=? AND Password=? AND IS_ACTIVE = ?";
     $stmt = mysqli_prepare($conn, $query);
-    $hashed_password = password_hash($user_password, PASSWORD_DEFAULT);
+    $hashed_password = password_hash('sha256',  $user_password);
     $is_active = 1;
     mysqli_stmt_bind_param($stmt, "ssi", $email, $hashed_password, $is_active);
     mysqli_stmt_execute($stmt);
