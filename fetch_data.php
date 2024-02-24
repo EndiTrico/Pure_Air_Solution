@@ -23,7 +23,7 @@ if (!empty($search)) {
         $query .= " AND COMPANY_ID = " . $_SESSION["company_ID"];
     }
 } else {
-    $query .= " WHERE COMPANY_ID = " . $_SESSION["company_ID"];
+    //$query .= " WHERE COMPANY_ID = " . $_SESSION["company_ID"];
 }
 
 $result = mysqli_query($conn, $query);
