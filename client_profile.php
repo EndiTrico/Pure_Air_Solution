@@ -169,9 +169,9 @@ function showForm($email)
 
 <body>
     <div class="wrapper">
-        <?php include "admin_verticalNavBar.php"; ?>
+        <?php include "client_verticalNavBar.php"; ?>
         <div class="main">
-            <?php include "admin_horizontalNavBar.php"; ?>
+            <?php include "client_horizontalNavBar.php"; ?>
 
             <main class="content">
                 <div class="container-fluid p-0">
@@ -210,7 +210,8 @@ function showForm($email)
 
                                             <div class="col-12 col-lg-6">
                                                 <div>
-                                                    <h5 class="card-title mb-0" style="text-align:center;
+                                                    <h5 class="card-title mb-0" 
+                                                        style="text-align:center;
                                                                 font-size: 50px;
                                                                 font-weight:bold;
                                                                 margin-top: 5%;">
@@ -220,7 +221,7 @@ function showForm($email)
                                                         <div style="width: 400px;
                                                                 height: 400px;
                                                                 border-radius: 50%; 
-                                                                background-color: #222e3c;
+                                                                background-color: #3f69a1;
                                                                 color: #fff; 
                                                                 display: inline-flex;
                                                                 margin-top: 10%;

@@ -129,9 +129,9 @@ function showCompaniesName()
 
 <body>
     <div class="wrapper">
-        <?php include "verticalNavBar.php"; ?>
+        <?php include "admin_verticalNavBar.php"; ?>
         <div class="main">
-            <?php include "horizontalNavBar.php"; ?>
+            <?php include "admin_horizontalNavBar.php"; ?>
 
             <main class="content">
                 <div class="container-fluid p-0">

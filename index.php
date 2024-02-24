@@ -22,10 +22,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($loginResult['success']) {
         $_SESSION['email'] = $email;
         $role = determineRole($email);
+        $_SESSION["role"] = $role;
+        
         if ($role == "Admin") {
             header('Location: admin_dashboard.php');
             exit();
         } else if ($role == "Client") {
+            include 'database/config.php';
+            include 'database/opendb.php';
+            
+            $queryCompanyID = "SELECT COMPANY_ID FROM users 
+                               WHERE EMAIL = ? 
+                               LIMIT 1";
+
+            $stmt = mysqli_prepare($conn, $queryCompanyID);
+            mysqli_stmt_bind_param($stmt, "s", $_SESSION['email']);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_store_result($stmt);
+
+            mysqli_stmt_bind_result($stmt, $company_ID);
+
+            mysqli_stmt_fetch($stmt);
+
+            $_SESSION["company_ID"] = $company_ID;
+            mysqli_stmt_close($stmt);
+
+            include 'database/closedb.php';
+
             header('Location: client_dashboard.php');
             exit();
         }

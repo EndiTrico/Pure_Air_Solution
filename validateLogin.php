@@ -17,11 +17,11 @@ function validateLogin($email, $password)
         mysqli_stmt_fetch($stmt);
 
         if ($is_active == 1) {
-       //     if (password_verify($password, $hashed_password)) {
+            if (password_verify($password, $hashed_password)) {
                 mysqli_stmt_close($stmt);
                 include 'database/closedb.php';
                 return ['success' => true];
-       //     }
+            }
         }
     }
 

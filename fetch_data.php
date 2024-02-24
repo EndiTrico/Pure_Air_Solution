@@ -2,6 +2,7 @@
 // Assuming you have already established a MySQL connection
 include 'database/config.php';
 include 'database/opendb.php';
+session_start();
 
 $entity = $_GET['entity'];
 $search = $_GET['search'];
@@ -17,6 +18,12 @@ if (!empty($search)) {
     } else if ($entity == "departures") {
         $query .= " WHERE CONCAT(name, ' ', company_ID, ' ', structure_ID) LIKE '%$search%'";
     }
+
+    if (!empty($_SESSION["company_ID"])) {
+        $query .= " AND COMPANY_ID = " . $_SESSION["company_ID"];
+    }
+} else {
+    $query .= " WHERE COMPANY_ID = " . $_SESSION["company_ID"];
 }
 
 $result = mysqli_query($conn, $query);
@@ -62,12 +69,14 @@ if (mysqli_num_rows($result) > 0) {
         }
         echo '<td><a href="admin_edit.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-warning">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
         
-        if ($is_active == 0 || ($is_admin == "Admin" && $entity == "users")) {
-            echo '<button disabled class="btn btn-danger" onclick="confirmDelete(' . reset($row) . ', \'' . $entity . '\')">Delete</button>';
-        } else {
-            echo '<button class="btn btn-danger" onclick="confirmDelete(' . reset($row) . ', \'' . $entity . '\')">Delete</button>';
+        if($_SESSION['role'] == 'Admin'){
+            if ($is_active == 0 || ($is_admin == "Admin" && $entity == "users")) {
+                echo '<button disabled class="btn btn-danger" onclick="confirmDelete(' . reset($row) . ', \'' . $entity . '\')">Delete</button>';
+            } else {
+                echo '<button class="btn btn-danger" onclick="confirmDelete(' . reset($row) . ', \'' . $entity . '\')">Delete</button>';
+            }
+            echo '</td></tr>';
         }
-        echo '</td></tr>';
     }
     echo '</tbody>';
     echo '</table></div>';
