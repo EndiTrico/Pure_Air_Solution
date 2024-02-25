@@ -64,6 +64,7 @@ if (mysqli_num_rows($result) > 0) {
     if ($_SESSION['role'] == 'Admin') {
         echo '<th>Actions</th>';
     }
+    
     echo '</tr>
             </thead>
                 <tbody>';
@@ -80,7 +81,7 @@ if (mysqli_num_rows($result) > 0) {
                 $is_active = $value;
             } else if (strpos(strtolower($key), 'id')){
                 continue;
-            }else {
+            } else {
                 echo '<td>' . $value . '</td>';
             }
 
@@ -91,14 +92,15 @@ if (mysqli_num_rows($result) > 0) {
 
         if ($_SESSION['role'] == 'Admin') {
             echo '<td><a href="admin_edit.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-warning">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-            if ($is_active == 0 || ($is_admin == "Admin" && $entity == "users")) {
-                echo '<button disabled class="btn btn-danger" onclick="confirmDelete(' . reset($row) . ', \'' . $entity . '\')">Delete</button>';
+            if ($is_active == 0) {
+                echo '<button class="btn btn-info" onclick="confirmActivation(\'' . reset($row) . '\', \'' . $entity . '\')">Active</button>';
             } else {
                 echo '<button class="btn btn-danger" onclick="confirmDelete(' . reset($row) . ', \'' . $entity . '\')">Delete</button>';
             }
             echo '</td></tr>';
         }
     }
+    
     echo '</tbody>';
     echo '</table></div>';
 } else {
