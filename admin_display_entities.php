@@ -106,7 +106,6 @@ include 'database/closedb.php';
 
                                         <div id="tableContainer" class="mt-4">
                                         </div>
-
                                     </div>
                                 </div>
                             </div>

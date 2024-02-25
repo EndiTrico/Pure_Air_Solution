@@ -4,63 +4,6 @@ include 'auth_check.php';
 include 'database/config.php';
 include 'database/opendb.php';
 
-$errorMessage = "";
-$successfulMessage = "";
-
-function showCompaniesName()
-{
-    include 'database/config.php';
-    include 'database/opendb.php';
-
-    $query = "SELECT Name FROM Companies";
-    $company = mysqli_query($conn, $query);
-
-    $companyDropDown = "";
-    $companyDropDown .= '<select class="form-select mb-3" name = "user_company" required>';
-    $companyDropDown .= '<option selected>Select Company</option>';
-
-    if ($company) {
-        while ($row = mysqli_fetch_assoc($company)) {
-            $companyDropDown .= '<option>' . htmlspecialchars($row['NAME']) . '</option>';
-        }
-    } else {
-        $companyDropDown .= "Error: " . mysqli_error($conn);
-    }
-
-    $companyDropDown .= '</select>';
-
-    include 'database/closedb.php';
-
-    return $companyDropDown;
-}
-
-function showStructuresName()
-{
-    include 'database/config.php';
-    include 'database/opendb.php';
-
-    $query2 = "SELECT Name FROM Structures";
-    $structure = mysqli_query($conn, $query2);
-
-    $structureDropDown = "";
-    $structureDropDown .= '<select name="structure_name" class="form-select mb-3" required>';
-    $structureDropDown .= '<option selected>Select Structure</option>';
-
-    if ($structure) {
-        while ($row = mysqli_fetch_assoc($structure)) {
-            $structureDropDown .= '<option>' . htmlspecialchars($row['NAME']) . '</option>';
-        }
-    } else {
-        $structureDropDown .= "Error: " . mysqli_error($conn);
-    }
-
-    $structureDropDown .= '</select>';
-
-    include 'database/closedb.php';
-
-    return $structureDropDown;
-}
-
 include 'database/closedb.php';
 ?>
 
@@ -74,7 +17,6 @@ include 'database/closedb.php';
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
-
 
     <title>Create Entities</title>
 

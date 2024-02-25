@@ -66,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $sql = "UPDATE companies 
                 SET EMAIL = ?, 
-                    NAME = ?
+                    COMPANY_NAME = ?
                 WHERE COMPANY_ID = ?";
 
         $stmt = mysqli_prepare($conn, $sql);
@@ -89,7 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $sql = "UPDATE structures 
                 SET COMPANY_ID = ?, 
-                    NAME = ?
+                    STRUCTURE_NAME = ?
                 WHERE STRUCTURE_ID = ?";
 
         $stmt = mysqli_prepare($conn, $sql);
@@ -113,7 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $sql = "UPDATE departments 
                 SET COMPANY_ID = ?, 
-                    NAME = ?,
+                    DEPARTMENT_NAME = ?,
                     STRUCTURE_ID = ?
                 WHERE DEPARTMENT_ID = ?";
 
@@ -141,7 +141,7 @@ function showStructureForDepartment($id)
     include 'database/config.php';
     include 'database/opendb.php';
 
-    $sql = "SELECT s.STRUCTURE_ID, s.NAME 
+    $sql = "SELECT s.STRUCTURE_ID, s.STRUCTURE_NAME 
             FROM structures s 
             INNER JOIN departments d ON s.STRUCTURE_ID = d.STRUCTURE_ID
             WHERE d.DEPARTMENT_ID = ?
@@ -155,7 +155,7 @@ function showStructureForDepartment($id)
 
     include 'database/closedb.php';
 
-    return '<option selected value="' . htmlspecialchars($row_retrieve["STRUCTURE_ID"]) . '">' . htmlspecialchars($row_retrieve['NAME']) . '</option>';
+    return '<option selected value="' . htmlspecialchars($row_retrieve["STRUCTURE_ID"]) . '">' . htmlspecialchars($row_retrieve['STRUCTURE_NAME']) . '</option>';
 }
 
 function showCompaniesNameDropDown($entity)
@@ -166,7 +166,7 @@ function showCompaniesNameDropDown($entity)
     $id = $_GET['id'];
 
     // Prepare the SQL query to fetch all companies
-    $query = "SELECT COMPANY_ID, NAME FROM Companies";
+    $query = "SELECT COMPANY_ID, COMPANY_NAME FROM Companies";
     $company = mysqli_query($conn, $query);
 
     $sql = "";
@@ -193,7 +193,7 @@ function showCompaniesNameDropDown($entity)
     if ($company) {
         while ($row = mysqli_fetch_assoc($company)) {
             $selected = ($row_retrieve['COMPANY_ID'] == $row['COMPANY_ID']) ? 'selected' : '';
-            $companyDropDown .= '<option ' . $selected . ' value="' . $row['COMPANY_ID'] . '">' . htmlspecialchars($row['NAME']) . '</option>';
+            $companyDropDown .= '<option ' . $selected . ' value="' . $row['COMPANY_ID'] . '">' . htmlspecialchars($row['COMPANY_NAME']) . '</option>';
         }
     } else {
         $companyDropDown .= "Error: " . mysqli_error($conn);
@@ -260,6 +260,15 @@ function showForm()
                         </div>
                     </div>
                 </div>
+
+                <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Is Active</h5>
+                </div>
+                <div class="card-body">
+                    <input type="text" class="form-control" name="is_active" placeholder="Is Active" value="' . $row["IS_ACTIVE"] . '" required>
+                </div>
+            </div>
             </div>
 
             <div class="col-12 col-lg-6">
@@ -321,7 +330,7 @@ function showForm()
                                 <h5 class="card-title mb-0">Company Name</h5>
                             </div>
                             <div class="card-body">
-                                <input type="text" class="form-control" name="company_name" placeholder="Company Name" value="' . $row['NAME'] . '"required>
+                                <input type="text" class="form-control" name="company_name" placeholder="Company Name" value="' . $row['COMPANY_NAME'] . '"required>
                             </div>
                         </div>
                     </div>
@@ -361,7 +370,7 @@ function showForm()
                     </div>
                     <div class="card-body">
                         <input type="text" class="form-control"
-                            name="structure_name" placeholder="Structure Name" value="' . $row["NAME"] . '" 
+                            name="structure_name" placeholder="Structure Name" value="' . $row["STRUCTURE_NAME"] . '" 
                             required>
                     </div>
                 </div>
@@ -402,11 +411,11 @@ function showForm()
                     <div class="col-12 col-lg-6">
                         <div class="card">
                             <div class="card-header">
-                                <h5 class="card-title mb-0">Deparment Name</h5>
+                                <h5 class="card-title mb-0">Department Name</h5>
                             </div>
                             <div class="card-body">
                                 <input type="text" class="form-control"
-                                name="department_name" value = "' . $row["NAME"] . '" 
+                                name="department_name" value = "' . $row["DEPARTMENT_NAME"] . '" 
                                 placeholder="Department Name" required>
                             </div>
                         </div>
@@ -504,7 +513,8 @@ function showForm()
                 <div class="container-fluid p-0">
                     <div class="row">
                         <div class="col-12 col-lg-1">
-                            <a class="btn transparent-btn" style="margin-top: -8px;" href="admin_display_entities.php"><img src="./images/back_button.png"></a>
+                            <a class="btn transparent-btn" style="margin-top: -8px;"
+                                href="admin_display_entities.php"><img src="./images/back_button.png"></a>
                         </div>
                         <div class="col-12 col-lg-11">
                             <h1 class="h3 mb-3">Update

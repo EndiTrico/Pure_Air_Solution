@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $structure_id = mysqli_real_escape_string($conn, $_POST['structure_name']);
 
         $queryCheck = "SELECT DEPARTMENT_ID FROM departments 
-                        WHERE NAME = ? 
+                        WHERE DEPARTMENT_NAME = ? 
                             AND COMPANY_ID = ? 
                             AND IS_ACTIVE = 0 
                             AND STRUCTURE_ID = ? 
@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $rowCheck = mysqli_fetch_assoc($resultCheck);
 
                 $sql = "UPDATE departments 
-                        SET NAME = ?, 
+                        SET DEPARTMENT_NAME = ?, 
                             COMPANY_ID = ?, 
                             STRUCTURE_ID = ?, 
                             IS_ACTIVE = 1
@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $errorMessage = $e->getMessage();
                 }
             } else {
-                $sql = "INSERT INTO departments (NAME, COMPANY_ID, STRUCTURE_ID, IS_ACTIVE) VALUES 
+                $sql = "INSERT INTO departments (DEPARTMENT_NAME, COMPANY_ID, STRUCTURE_ID, IS_ACTIVE) VALUES 
                         (?, ?, ?,  1)";
                 $stmt = mysqli_prepare($conn, $sql);
                 mysqli_stmt_bind_param($stmt, "sii", $department_name, $company_id, $structure_id);
@@ -77,7 +77,7 @@ function showCompaniesName()
     include 'database/config.php';
     include 'database/opendb.php';
 
-    $query = "SELECT COMPANY_ID, NAME FROM Companies";
+    $query = "SELECT COMPANY_ID, COMPANY_NAME FROM Companies";
     $company = mysqli_query($conn, $query);
 
     $companyDropDown = "";
@@ -87,7 +87,7 @@ function showCompaniesName()
 
     if ($company) {
         while ($row = mysqli_fetch_assoc($company)) {
-            $companyDropDown .= '<option value="' . $row['COMPANY_ID'] . '">' . htmlspecialchars($row['NAME']) . '</option>';
+            $companyDropDown .= '<option value="' . $row['COMPANY_ID'] . '">' . htmlspecialchars($row['COMPANY_NAME']) . '</option>';
         }
     } else {
         $companyDropDown .= "Error: " . mysqli_error($conn);

@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $queryCheck = "SELECT COMPANY_ID FROM companies 
         WHERE 
             IS_ACTIVE = 0 
-            AND (NAME = ? OR EMAIL = ?)
+            AND (COMPANY_NAME = ? OR EMAIL = ?)
         LIMIT 1";
 
         $stmtCheck = mysqli_prepare($conn, $queryCheck);
@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $rowCheck = mysqli_fetch_assoc($resultCheck);
 
                 $sql = "UPDATE companies 
-                        SET NAME = ?, 
+                        SET COMPANY_NAME = ?, 
                             EMAIL = ?, 
                             DATE_LEFT = NULL, 
                             IS_ACTIVE = 1 
@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $errorMessage = $e->getMessage();
                 }
             } else {
-                $sql = "INSERT INTO companies (NAME, EMAIL, DATE_JOINED, IS_ACTIVE) VALUES 
+                $sql = "INSERT INTO companies (COMPANY_NAME, EMAIL, DATE_JOINED, IS_ACTIVE) VALUES 
                 (?, ?, DATE(NOW()), 1)";
                 $stmt = mysqli_prepare($conn, $sql);
                 mysqli_stmt_bind_param($stmt, "ss", $company_name, $company_email);
