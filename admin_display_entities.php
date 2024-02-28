@@ -71,37 +71,37 @@ include 'database/closedb.php';
                                     <div class="row">
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('users')"
+                                                <a onclick="fetchData('UTENTI')"
                                                     class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
                                                     style="font-weight: bold;">Display
-                                                    Users</a>
+                                                    UTENTI</a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('companies')"
+                                                <a onclick="fetchData('AZIENDE')"
                                                     class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
                                                     style="font-weight: bold;">Display
-                                                    Companies</a>
+                                                    AZIENDE</a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('structures')"
+                                                <a onclick="fetchData('STRUTTURE')"
                                                     class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
                                                     style="font-weight: bold;">Display
-                                                    Structures</a>
+                                                    STRUTTURE</a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('departments')"
+                                                <a onclick="fetchData('REPARTI')"
                                                     class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
                                                     style="font-weight: bold;">Display
-                                                    Departments</a>
+                                                    REPARTI</a>
                                             </div>
                                         </div>
                                     </div>

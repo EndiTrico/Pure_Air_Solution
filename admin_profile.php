@@ -11,8 +11,8 @@ $successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['update_profile'])) {
-        $first_name = mysqli_real_escape_string($conn, $_POST['first_name']);
-        $last_name = mysqli_real_escape_string($conn, $_POST['last_name']);
+        $NOME = mysqli_real_escape_string($conn, $_POST['NOME']);
+        $COGNOME = mysqli_real_escape_string($conn, $_POST['COGNOME']);
         $user_email = mysqli_real_escape_string($conn, $_POST['user_email']);
         $user_password = mysqli_real_escape_string($conn, $_POST['user_password']);
         $user_confirm_password = mysqli_real_escape_string($conn, $_POST['user_confirm_password']);
@@ -20,9 +20,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($user_password == $user_confirm_password) {
             $hashed_password = password_hash($user_password, PASSWORD_BCRYPT);
 
-            $sql = "UPDATE users 
-                    SET FIRST_NAME = ?, 
-                        LAST_NAME = ?, 
+            $sql = "UPDATE UTENTI 
+                    SET NOME = ?, 
+                        COGNOME = ?, 
                         PASSWORD = ?,  
                         EMAIL = ?
                     WHERE EMAIL = ?";
@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt = mysqli_prepare($conn, $sql);
 
             if ($stmt) {
-                mysqli_stmt_bind_param($stmt, "sssss", $first_name, $last_name, $hashed_password, $user_email, $email);
+                mysqli_stmt_bind_param($stmt, "sssss", $NOME, $COGNOME, $hashed_password, $user_email, $email);
 
                 try {
                     if (mysqli_stmt_execute($stmt)) {
@@ -59,7 +59,7 @@ function showForm($email)
     include 'database/config.php';
     include 'database/opendb.php';
 
-    $query_id = "SELECT USER_ID FROM Users WHERE EMAIL = ? LIMIT 1";
+    $query_id = "SELECT UTENTE_ID FROM UTENTI WHERE EMAIL = ? LIMIT 1";
     $stmt_id = mysqli_prepare($conn, $query_id);
     if ($stmt_id) {
 
@@ -71,7 +71,7 @@ function showForm($email)
             if (mysqli_stmt_fetch($stmt_id)) {
                 mysqli_stmt_close($stmt_id);
 
-                $query = "SELECT * FROM Users WHERE USER_ID = ?";
+                $query = "SELECT * FROM UTENTI WHERE UTENTE_ID = ?";
                 $stmt = mysqli_prepare($conn, $query);
 
                 if ($stmt) {
@@ -88,7 +88,7 @@ function showForm($email)
                         <h5 class="card-title mb-0">First Name</h5>
                     </div>
                     <div class="card-body">
-                        <input type="text" class="form-control" name="first_name" placeholder="First Name" value="' . $row["FIRST_NAME"] . '" required>
+                        <input type="text" class="form-control" name="NOME" placeholder="First Name" value="' . $row["NOME"] . '" required>
                     </div>
                 </div>
 
@@ -97,7 +97,7 @@ function showForm($email)
                         <h5 class="card-title mb-0">Last Name</h5>
                     </div>
                     <div class="card-body">
-                        <input type="text" class="form-control" name="last_name" placeholder="Last Name" value="' . $row["LAST_NAME"] . '" required>
+                        <input type="text" class="form-control" name="COGNOME" placeholder="Last Name" value="' . $row["COGNOME"] . '" required>
                     </div>
                 </div>
 

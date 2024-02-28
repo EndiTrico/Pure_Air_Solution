@@ -9,17 +9,17 @@ $successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['create_company'])) {
-        $company_name = mysqli_real_escape_string($conn, $_POST['company_name']);
+        $AZIENDA_NOME = mysqli_real_escape_string($conn, $_POST['AZIENDA_NOME']);
         $company_email = mysqli_real_escape_string($conn, $_POST['company_email']);
 
-        $queryCheck = "SELECT COMPANY_ID FROM companies 
+        $queryCheck = "SELECT AZIENDA_ID FROM AZIENDE 
         WHERE 
-            IS_ACTIVE = 0 
-            AND (COMPANY_NAME = ? OR EMAIL = ?)
+            E_ATTIVO = 0 
+            AND AZIENDA_NOME = ?
         LIMIT 1";
 
         $stmtCheck = mysqli_prepare($conn, $queryCheck);
-        mysqli_stmt_bind_param($stmtCheck, "ss", $company_name, $company_email);
+        mysqli_stmt_bind_param($stmtCheck, "ss", $AZIENDA_NOME, $company_email);
         mysqli_stmt_execute($stmtCheck);
         $resultCheck = mysqli_stmt_get_result($stmtCheck);
 
@@ -27,15 +27,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (mysqli_num_rows($resultCheck) > 0) {
                 $rowCheck = mysqli_fetch_assoc($resultCheck);
 
-                $sql = "UPDATE companies 
-                        SET COMPANY_NAME = ?, 
+                $sql = "UPDATE AZIENDE 
+                        SET AZIENDA_NOME = ?, 
                             EMAIL = ?, 
-                            DATE_LEFT = NULL, 
-                            IS_ACTIVE = 1 
-                        WHERE COMPANY_ID = ?";
+                            DATA_SINISTRA = NULL, 
+                            E_ATTIVO = 1 
+                        WHERE AZIENDA_ID = ?";
 
                 $stmt = mysqli_prepare($conn, $sql);
-                mysqli_stmt_bind_param($stmt, "ssi", $company_name, $company_email, $rowCheck['COMPANY_ID']);
+                mysqli_stmt_bind_param($stmt, "ssi", $AZIENDA_NOME, $company_email, $rowCheck['AZIENDA_ID']);
 
                 try {
                     if (mysqli_stmt_execute($stmt)) {
@@ -47,10 +47,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $errorMessage = $e->getMessage();
                 }
             } else {
-                $sql = "INSERT INTO companies (COMPANY_NAME, EMAIL, DATE_JOINED, IS_ACTIVE) VALUES 
+                $sql = "INSERT INTO AZIENDE (AZIENDA_NOME, EMAIL, DATA_ISCRIZIONE, E_ATTIVO) VALUES 
                 (?, ?, DATE(NOW()), 1)";
                 $stmt = mysqli_prepare($conn, $sql);
-                mysqli_stmt_bind_param($stmt, "ss", $company_name, $company_email);
+                mysqli_stmt_bind_param($stmt, "ss", $AZIENDA_NOME, $company_email);
 
                 try {
                     if (mysqli_stmt_execute($stmt)) {
@@ -144,7 +144,7 @@ include 'database/closedb.php';
                                                                 <h5 class="card-title mb-0">Company Name</h5>
                                                             </div>
                                                             <div class="card-body">
-                                                                <input type="text" class="form-control" name="company_name" placeholder="Company Name" required>
+                                                                <input type="text" class="form-control" name="AZIENDA_NOME" placeholder="Company Name" required>
                                                             </div>
                                                         </div>
                                                     </div>

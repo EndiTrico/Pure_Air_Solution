@@ -71,7 +71,7 @@
 
 													<div class="col-auto">
 														<div class="stat text-primary">
-															<i class="align-middle" data-feather="users"></i>
+															<i class="align-middle" data-feather="UTENTI"></i>
 														</div>
 													</div>
 												</div>

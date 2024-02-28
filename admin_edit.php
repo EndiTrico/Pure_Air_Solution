@@ -10,8 +10,8 @@ $entity = $_GET['entity'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['update_user'])) {
-        $first_name = mysqli_real_escape_string($conn, $_POST['first_name']);
-        $last_name = mysqli_real_escape_string($conn, $_POST['last_name']);
+        $NOME = mysqli_real_escape_string($conn, $_POST['NOME']);
+        $COGNOME = mysqli_real_escape_string($conn, $_POST['COGNOME']);
         $user_email = mysqli_real_escape_string($conn, $_POST['user_email']);
         $user_password = mysqli_real_escape_string($conn, $_POST['user_password']);
         $role = mysqli_real_escape_string($conn, $_POST['role']);
@@ -20,26 +20,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sql = "";
 
         if (empty($user_password)) {
-            $sql = "UPDATE users SET 
-                    FIRST_NAME = ?, 
-                    LAST_NAME = ?, 
+            $sql = "UPDATE UTENTI SET 
+                    NOME = ?, 
+                    COGNOME = ?, 
                     EMAIL = ?, 
                     ROLE = ?, 
-                    COMPANY_ID = ? 
-                    WHERE USER_ID = ?";
-            $params = array($first_name, $last_name, $user_email, $role, $user_company, $id);
+                    AZIENDA_ID = ? 
+                    WHERE UTENTE_ID = ?";
+            $params = array($NOME, $COGNOME, $user_email, $role, $user_company, $id);
         } else {
             $hashed_password = password_hash($user_password, PASSWORD_BCRYPT);
 
-            $sql = "UPDATE users SET 
-                    FIRST_NAME = ?, 
-                    LAST_NAME = ?, 
+            $sql = "UPDATE UTENTI SET 
+                    NOME = ?, 
+                    COGNOME = ?, 
                     EMAIL = ?,
                     PASSWORD = ?,
                     ROLE = ?, 
-                    COMPANY_ID = ? 
-                    WHERE USER_ID = ?";
-            $params = array($first_name, $last_name, $user_email, $hashed_password, $role, $user_company, $id);
+                    AZIENDA_ID = ? 
+                    WHERE UTENTE_ID = ?";
+            $params = array($NOME, $COGNOME, $user_email, $hashed_password, $role, $user_company, $id);
         }
 
         try {
@@ -61,17 +61,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $errorMessage = "Error: " . $e->getMessage();
         }
     } else if (isset($_POST['update_company'])) {
-        $company_name = mysqli_real_escape_string($conn, $_POST['company_name']);
+        $AZIENDA_NOME = mysqli_real_escape_string($conn, $_POST['AZIENDA_NOME']);
         $company_email = mysqli_real_escape_string($conn, $_POST['company_email']);
 
-        $sql = "UPDATE companies 
+        $sql = "UPDATE AZIENDE 
                 SET EMAIL = ?, 
-                    COMPANY_NAME = ?
-                WHERE COMPANY_ID = ?";
+                    AZIENDA_NOME = ?
+                WHERE AZIENDA_ID = ?";
 
         $stmt = mysqli_prepare($conn, $sql);
         if ($stmt) {
-            mysqli_stmt_bind_param($stmt, "ssi", $company_email, $company_name, $id);
+            mysqli_stmt_bind_param($stmt, "ssi", $company_email, $AZIENDA_NOME, $id);
 
             if (mysqli_stmt_execute($stmt)) {
                 $successfulMessage = "Company Updated Successfully";
@@ -84,17 +84,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $errorMessage = "Error: Failed to prepare statement";
         }
     } else if (isset($_POST['update_structure'])) {
-        $structure_name = mysqli_real_escape_string($conn, $_POST['structure_name']);
-        $company_id = mysqli_real_escape_string($conn, $_POST['company_id']);
+        $STRUTTURA_NOME = mysqli_real_escape_string($conn, $_POST['STRUTTURA_NOME']);
+        $AZIENDA_ID = mysqli_real_escape_string($conn, $_POST['AZIENDA_ID']);
 
-        $sql = "UPDATE structures 
-                SET COMPANY_ID = ?, 
-                    STRUCTURE_NAME = ?
-                WHERE STRUCTURE_ID = ?";
+        $sql = "UPDATE STRUTTURE 
+                SET AZIENDA_ID = ?, 
+                    STRUTTURA_NOME = ?
+                WHERE STRUTTURA_ID = ?";
 
         $stmt = mysqli_prepare($conn, $sql);
         if ($stmt) {
-            mysqli_stmt_bind_param($stmt, "isi", $company_id, $structure_name, $id);
+            mysqli_stmt_bind_param($stmt, "isi", $AZIENDA_ID, $STRUTTURA_NOME, $id);
 
             if (mysqli_stmt_execute($stmt)) {
                 $successfulMessage = "Structure Updated Successfully";
@@ -107,19 +107,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $errorMessage = "Error: Failed to prepare statement";
         }
     } else if (isset($_POST['update_department'])) {
-        $department_name = mysqli_real_escape_string($conn, $_POST['department_name']);
-        $company_id = mysqli_real_escape_string($conn, $_POST['company_id']);
-        $structure_id = mysqli_real_escape_string($conn, $_POST['structure_id']);
+        $REPARTO_NOME = mysqli_real_escape_string($conn, $_POST['REPARTO_NOME']);
+        $AZIENDA_ID = mysqli_real_escape_string($conn, $_POST['AZIENDA_ID']);
+        $STRUTTURA_ID = mysqli_real_escape_string($conn, $_POST['STRUTTURA_ID']);
 
-        $sql = "UPDATE departments 
-                SET COMPANY_ID = ?, 
-                    DEPARTMENT_NAME = ?,
-                    STRUCTURE_ID = ?
-                WHERE DEPARTMENT_ID = ?";
+        $sql = "UPDATE REPARTI 
+                SET AZIENDA_ID = ?, 
+                    REPARTO_NOME = ?,
+                    STRUTTURA_ID = ?
+                WHERE REPARTO_ID = ?";
 
         $stmt = mysqli_prepare($conn, $sql);
         if ($stmt) {
-            mysqli_stmt_bind_param($stmt, "issi", $company_id, $department_name, $structure_id, $id);
+            mysqli_stmt_bind_param($stmt, "issi", $AZIENDA_ID, $REPARTO_NOME, $STRUTTURA_ID, $id);
 
             if (mysqli_stmt_execute($stmt)) {
                 $successfulMessage = "Department Updated Successfully";
@@ -141,10 +141,10 @@ function showStructureForDepartment($id)
     include 'database/config.php';
     include 'database/opendb.php';
 
-    $sql = "SELECT s.STRUCTURE_ID, s.STRUCTURE_NAME 
-            FROM structures s 
-            INNER JOIN departments d ON s.STRUCTURE_ID = d.STRUCTURE_ID
-            WHERE d.DEPARTMENT_ID = ?
+    $sql = "SELECT s.STRUTTURA_ID, s.STRUTTURA_NOME 
+            FROM STRUTTURE s 
+            INNER JOIN REPARTI d ON s.STRUTTURA_ID = d.STRUTTURA_ID
+            WHERE d.REPARTO_ID = ?
             LIMIT 1";
 
     $stmt = mysqli_prepare($conn, $sql);
@@ -155,18 +155,18 @@ function showStructureForDepartment($id)
 
     include 'database/closedb.php';
 
-    return '<option selected value="' . htmlspecialchars($row_retrieve["STRUCTURE_ID"]) . '">' . htmlspecialchars($row_retrieve['STRUCTURE_NAME']) . '</option>';
+    return '<option selected value="' . htmlspecialchars($row_retrieve["STRUTTURA_ID"]) . '">' . htmlspecialchars($row_retrieve['STRUTTURA_NOME']) . '</option>';
 }
 
-function showCompaniesNameDropDown($entity)
+function showAZIENDENameDropDown($entity)
 {
     include 'database/config.php';
     include 'database/opendb.php';
 
     $id = $_GET['id'];
 
-    // Prepare the SQL query to fetch all companies
-    $query = "SELECT COMPANY_ID, COMPANY_NAME FROM Companies";
+    // Prepare the SQL query to fetch all AZIENDE
+    $query = "SELECT AZIENDA_ID, AZIENDA_NOME FROM AZIENDE";
     $company = mysqli_query($conn, $query);
 
     $sql = "";
@@ -174,12 +174,12 @@ function showCompaniesNameDropDown($entity)
     $companyDropDown .= '<option value="" disabled selected>Select Company</option>';
 
     // Prepare and execute the SQL query based on the entity type
-    if ($entity == "users") {
-        $sql = "SELECT COMPANY_ID FROM Users WHERE USER_ID = ?";
-    } else if ($entity == "structures") {
-        $sql = "SELECT COMPANY_ID FROM Structures WHERE STRUCTURE_ID = ?";
-    } else if ($entity == "departments") {
-        $sql = "SELECT COMPANY_ID FROM Departments WHERE DEPARTMENT_ID = ?";
+    if ($entity == "UTENTI") {
+        $sql = "SELECT AZIENDA_ID FROM UTENTI WHERE UTENTE_ID = ?";
+    } else if ($entity == "STRUTTURE") {
+        $sql = "SELECT AZIENDA_ID FROM STRUTTURE WHERE STRUTTURA_ID = ?";
+    } else if ($entity == "REPARTI") {
+        $sql = "SELECT AZIENDA_ID FROM REPARTI WHERE REPARTO_ID = ?";
     }
 
     // Prepare and execute the statement
@@ -192,8 +192,8 @@ function showCompaniesNameDropDown($entity)
     // Fetch and construct dropdown options
     if ($company) {
         while ($row = mysqli_fetch_assoc($company)) {
-            $selected = ($row_retrieve['COMPANY_ID'] == $row['COMPANY_ID']) ? 'selected' : '';
-            $companyDropDown .= '<option ' . $selected . ' value="' . $row['COMPANY_ID'] . '">' . htmlspecialchars($row['COMPANY_NAME']) . '</option>';
+            $selected = ($row_retrieve['AZIENDA_ID'] == $row['AZIENDA_ID']) ? 'selected' : '';
+            $companyDropDown .= '<option ' . $selected . ' value="' . $row['AZIENDA_ID'] . '">' . htmlspecialchars($row['AZIENDA_NOME']) . '</option>';
         }
     } else {
         $companyDropDown .= "Error: " . mysqli_error($conn);
@@ -215,8 +215,8 @@ function showForm()
     $entity = $_GET['entity'];
     $id = $_GET['id'];
 
-    if ($entity == 'users') {
-        $query = "SELECT * FROM Users WHERE USER_ID = ?";
+    if ($entity == 'UTENTI') {
+        $query = "SELECT * FROM UTENTI WHERE UTENTE_ID = ?";
         $stmt = mysqli_prepare($conn, $query);
         mysqli_stmt_bind_param($stmt, "i", $id);
         mysqli_stmt_execute($stmt);
@@ -233,7 +233,7 @@ function showForm()
                         <h5 class="card-title mb-0">First Name</h5>
                     </div>
                     <div class="card-body">
-                        <input type="text" class="form-control" name="first_name" placeholder="First Name" value="' . $row["FIRST_NAME"] . '" required>
+                        <input type="text" class="form-control" name="NOME" placeholder="First Name" value="' . $row["NOME"] . '" required>
                     </div>
                 </div>
 
@@ -242,7 +242,7 @@ function showForm()
                         <h5 class="card-title mb-0">Last Name</h5>
                     </div>
                     <div class="card-body">
-                        <input type="text" class="form-control" name="last_name" placeholder="Last Name" value="' . $row["LAST_NAME"] . '" required>
+                        <input type="text" class="form-control" name="COGNOME" placeholder="Last Name" value="' . $row["COGNOME"] . '" required>
                     </div>
                 </div>
 
@@ -266,7 +266,7 @@ function showForm()
                     <h5 class="card-title mb-0">Is Active</h5>
                 </div>
                 <div class="card-body">
-                    <input type="text" class="form-control" name="is_active" placeholder="Is Active" value="' . $row["IS_ACTIVE"] . '" required>
+                    <input type="text" class="form-control" name="E_ATTIVO" placeholder="Is Active" value="' . $row["E_ATTIVO"] . '" required>
                 </div>
             </div>
             </div>
@@ -297,7 +297,7 @@ function showForm()
                         <h5 class="card-title mb-0">Company</h5>
                     </div>
                     <div class="card-body">
-                        <div>' . showCompaniesNameDropDown($entity) .
+                        <div>' . showAZIENDENameDropDown($entity) .
                 '</div>
                     </div>
                 </div>
@@ -310,8 +310,8 @@ function showForm()
         </div>
     </form>';
         }
-    } else if ($entity == 'companies') {
-        $query = "SELECT * FROM COMPANIES WHERE COMPANY_ID = ?";
+    } else if ($entity == 'AZIENDE') {
+        $query = "SELECT * FROM AZIENDE WHERE AZIENDA_ID = ?";
 
         $stmt = mysqli_prepare($conn, $query);
         mysqli_stmt_bind_param($stmt, "i", $id);
@@ -330,7 +330,7 @@ function showForm()
                                 <h5 class="card-title mb-0">Company Name</h5>
                             </div>
                             <div class="card-body">
-                                <input type="text" class="form-control" name="company_name" placeholder="Company Name" value="' . $row['COMPANY_NAME'] . '"required>
+                                <input type="text" class="form-control" name="AZIENDA_NOME" placeholder="Company Name" value="' . $row['AZIENDA_NOME'] . '"required>
                             </div>
                         </div>
                     </div>
@@ -352,8 +352,8 @@ function showForm()
                 </div>
         </form>';
         }
-    } else if ($entity == 'structures') {
-        $query = "SELECT * FROM STRUCTURES WHERE STRUCTURE_ID = ?";
+    } else if ($entity == 'STRUTTURE') {
+        $query = "SELECT * FROM STRUTTURE WHERE STRUTTURA_ID = ?";
         $stmt = mysqli_prepare($conn, $query);
         mysqli_stmt_bind_param($stmt, "i", $id);
         mysqli_stmt_execute($stmt);
@@ -370,7 +370,7 @@ function showForm()
                     </div>
                     <div class="card-body">
                         <input type="text" class="form-control"
-                            name="structure_name" placeholder="Structure Name" value="' . $row["STRUCTURE_NAME"] . '" 
+                            name="STRUTTURA_NOME" placeholder="Structure Name" value="' . $row["STRUTTURA_NOME"] . '" 
                             required>
                     </div>
                 </div>
@@ -382,7 +382,7 @@ function showForm()
                     </div>
                     <div class="card-body">
                         <div>'
-                . showCompaniesNameDropDown($entity) .
+                . showAZIENDENameDropDown($entity) .
                 '</div>
                     </div>
                 </div>
@@ -396,8 +396,8 @@ function showForm()
         </div>
         </form>';
         }
-    } else if ($entity == "departments") {
-        $query = "SELECT * FROM Departments WHERE DEPARTMENT_ID = ?";
+    } else if ($entity == "REPARTI") {
+        $query = "SELECT * FROM REPARTI WHERE REPARTO_ID = ?";
         $stmt = mysqli_prepare($conn, $query);
         mysqli_stmt_bind_param($stmt, "i", $id);
         mysqli_stmt_execute($stmt);
@@ -415,7 +415,7 @@ function showForm()
                             </div>
                             <div class="card-body">
                                 <input type="text" class="form-control"
-                                name="department_name" value = "' . $row["DEPARTMENT_NAME"] . '" 
+                                name="REPARTO_NOME" value = "' . $row["REPARTO_NOME"] . '" 
                                 placeholder="Department Name" required>
                             </div>
                         </div>
@@ -427,7 +427,7 @@ function showForm()
                             </div>
                         <div class="card-body">
                             <div>'
-                . showCompaniesNameDropDown($entity) . '
+                . showAZIENDENameDropDown($entity) . '
                             </div>
                         </div>
                     </div>
@@ -439,7 +439,7 @@ function showForm()
                                     <h5 class="card-title mb-0">Structure Name</h5>
                                 </div>
                             <div class="card-body">
-                                <select name="structure_name" id="structure_name"
+                                <select name="STRUTTURA_NOME" id="STRUTTURA_NOME"
                                     class="form-select mb-3" required>
                                         <option disable selected value="">Select Structure</option>
                                             ' . showStructureForDepartment($id) . '
@@ -465,11 +465,11 @@ function showForm()
             $.ajax
                 ({
                     type: "POST",
-                    url: "fetch_structures.php",
+                    url: "fetch_STRUTTURE.php",
                     data: post_id,
                     cache: false,
                     success: function (cities) {
-                        $("#structure_name").html(cities);
+                        $("#STRUTTURA_NOME").html(cities);
                     }
                 });
         });
@@ -519,13 +519,13 @@ function showForm()
                         <div class="col-12 col-lg-11">
                             <h1 class="h3 mb-3">Update
                                 <?php
-                                if ($entity == "users") {
+                                if ($entity == "UTENTI") {
                                     echo "User";
-                                } else if ($entity == "companies") {
+                                } else if ($entity == "AZIENDE") {
                                     echo "Company";
-                                } else if ($entity == "structures") {
+                                } else if ($entity == "STRUTTURE") {
                                     echo "Structure";
-                                } else if ($entity == "departments") {
+                                } else if ($entity == "REPARTI") {
                                     echo "Department";
                                 }
                                 ?>

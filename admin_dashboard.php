@@ -11,7 +11,7 @@ function numberOfActiveEntities($entity)
 
     $sql = "SELECT COUNT(*)
             FROM $entity
-            WHERE IS_ACTIVE = 1";
+            WHERE E_ATTIVO = 1";
 
     $stmt = mysqli_prepare($conn, $sql);
 
@@ -163,37 +163,37 @@ include 'database/closedb.php';
 										</div>
 										<div class="col-12 col-md-6 col-lg-3 text-center text-md-left">
 											<div class="containercount mx-auto">
-												<i class="fa fa-users"></i>
-												<span class="num" data-val="<?php echo numberOfActiveEntities('users'); ?>"></span>
+												<i class="fa fa-UTENTI"></i>
+												<span class="num" data-val="<?php echo numberOfActiveEntities('UTENTI'); ?>"></span>
 												<div class="text-wrapper">
-													<span class="text">Active Users</span>
+													<span class="text">Active UTENTI</span>
 												</div>
 											</div>
 										</div>
 										<div class="col-12 col-md-6 col-lg-3 text-center text-md-left">
 											<div class="containercount mx-auto">
 												<i class="fa fa-building"></i>
-												<span class="num" data-val="<?php echo numberOfActiveEntities('companies'); ?>"></span>
+												<span class="num" data-val="<?php echo numberOfActiveEntities('AZIENDE'); ?>"></span>
 												<div class="text-wrapper">
-													<span class="text">Active Companies</span>
+													<span class="text">Active AZIENDE</span>
 												</div>
 											</div>
 										</div>
 										<div class="col-12 col-md-6 col-lg-3 text-center text-md-left">
 											<div class="containercount mx-auto">
 												<i class="fa fa-cubes"></i>
-												<span class="num" data-val="<?php echo numberOfActiveEntities('structures'); ?>"></span>
+												<span class="num" data-val="<?php echo numberOfActiveEntities('STRUTTURE'); ?>"></span>
 												<div class="text-wrapper">
-													<span class="text">Active Structures</span>
+													<span class="text">Active STRUTTURE</span>
 												</div>
 											</div>
 										</div>
 										<div class="col-12 col-md-6 col-lg-3 text-center text-md-left">
 											<div class="containercount mx-auto">
 												<i class="fa fa-sitemap"></i>
-												<span class="num" data-val="<?php echo numberOfActiveEntities('departments'); ?>"></span>
+												<span class="num" data-val="<?php echo numberOfActiveEntities('REPARTI'); ?>"></span>
 												<div class="text-wrapper">
-													<span class="text">Active Departments</span>
+													<span class="text">Active REPARTI</span>
 												</div>
 											</div>
 										</div>

@@ -9,38 +9,38 @@ $search = $_GET['search'];
 
 $query = "";
 
-if ($entity == "users") {
-    $query = "SELECT u.USER_ID, u.FIRST_NAME, u.LAST_NAME, u.EMAIL, u.ROLE, u.IS_ACTIVE, c.COMPANY_NAME 
-                FROM USERS u
-                JOIN COMPANIES c ON c.COMPANY_ID = u.COMPANY_ID";
-} else if ($entity == "companies") {
-    $query = "SELECT COMPANY_ID, COMPANY_NAME, EMAIL, DATE_JOINED, DATE_LEFT, IS_ACTIVE 
-                FROM COMPANIES";
-} else if ($entity == "structures") {
-    $query = "SELECT s.STRUCTURE_ID, s.STRUCTURE_NAME, s.IS_ACTIVE, c.COMPANY_NAME
-                FROM STRUCTURES s
-                JOIN COMPANIES c on s.COMPANY_ID = c.COMPANY_ID";
-} else if ($entity == "departments") {
-    $query = "SELECT d.DEPARTMENT_ID, d.DEPARTMENT_NAME, d.IS_ACTIVE, s.STRUCTURE_NAME, c.COMPANY_NAME
-                FROM DEPARTMENTS d 
-                JOIN STRUCTURES s ON d.STRUCTURE_ID = s.STRUCTURE_ID
-                JOIN COMPANIES c on d.COMPANY_ID = c.COMPANY_ID";
+if ($entity == "UTENTI") {
+    $query = "SELECT u.UTENTE_ID, u.NOME, u.COGNOME, u.EMAIL, u.ROLE, u.E_ATTIVO, c.AZIENDA_NOME 
+                FROM UTENTI u
+                JOIN AZIENDE c ON c.AZIENDA_ID = u.AZIENDA_ID";
+} else if ($entity == "AZIENDE") {
+    $query = "SELECT AZIENDA_ID, AZIENDA_NOME, EMAIL, DATA_ISCRIZIONE, DATA_SINISTRA, E_ATTIVO 
+                FROM AZIENDE";
+} else if ($entity == "STRUTTURE") {
+    $query = "SELECT s.STRUTTURA_ID, s.STRUTTURA_NOME, s.E_ATTIVO, c.AZIENDA_NOME
+                FROM STRUTTURE s
+                JOIN AZIENDE c on s.AZIENDA_ID = c.AZIENDA_ID";
+} else if ($entity == "REPARTI") {
+    $query = "SELECT d.REPARTO_ID, d.REPARTO_NOME, d.E_ATTIVO, s.STRUTTURA_NOME, c.AZIENDA_NOME
+                FROM REPARTI d 
+                JOIN STRUTTURE s ON d.STRUTTURA_ID = s.STRUTTURA_ID
+                JOIN AZIENDE c on d.AZIENDA_ID = c.AZIENDA_ID";
 }
 
 if (!empty($search)) {
-    if ($entity == "users") {
-        $query .= " WHERE CONCAT(u.FIRST_NAME, ' ', u.LAST_NAME, ' ', u.EMAIL, ' ', u.ROLE, ' ', c.COMPANY_NAME) LIKE '%$search%'";
-    } else if ($entity == "companies") {
-        $query .= " WHERE CONCAT(COMPANY_NAME, ' ', EMAIL) LIKE '%$search%'";
-    } else if ($entity == "structures") {
-        $query .= " WHERE CONCAT(s.STRUCTURE_NAME, ' ', c.COMPANY_NAME) LIKE '%$search%'";
+    if ($entity == "UTENTI") {
+        $query .= " WHERE CONCAT(u.NOME, ' ', u.COGNOME, ' ', u.EMAIL, ' ', u.ROLE, ' ', c.AZIENDA_NOME) LIKE '%$search%'";
+    } else if ($entity == "AZIENDE") {
+        $query .= " WHERE CONCAT(AZIENDA_NOME, ' ', EMAIL) LIKE '%$search%'";
+    } else if ($entity == "STRUTTURE") {
+        $query .= " WHERE CONCAT(s.STRUTTURA_NOME, ' ', c.AZIENDA_NOME) LIKE '%$search%'";
     } else if ($entity == "departures") {
-        $query .= " WHERE CONCAT(d.DEPARTMENT_NAME, ' ', s.STRUCTURE_NAME, ' ', c.COMPANY_NAME) LIKE '%$search%'";   
+        $query .= " WHERE CONCAT(d.REPARTO_NOME, ' ', s.STRUTTURA_NOME, ' ', c.AZIENDA_NOME) LIKE '%$search%'";   
     }
 }
 
-if (!empty($_SESSION['company_ID'])) {
-    $query .= " AND COMPANY_ID = " . $_SESSION["company_ID"];
+if (!empty($_SESSION['AZIENDA_ID'])) {
+    $query .= " AND AZIENDA_ID = " . $_SESSION["AZIENDA_ID"];
 }
 
 $result = mysqli_query($conn, $query);
@@ -71,14 +71,14 @@ if (mysqli_num_rows($result) > 0) {
 
     while ($row = mysqli_fetch_assoc($result)) {
         echo '<tr>';
-        $is_active = 0;
+        $E_ATTIVO = 0;
         $is_admin = "";
 
         foreach ($row as $key => $value) {
-            if ($key == 'IS_ACTIVE') {
+            if ($key == 'E_ATTIVO') {
                 echo $value == 1 ? '<td><span class="badge-success-custom">Active</span></td>' :
                     '<td><span class="badge-danger-custom">Inactive</span></td>';
-                $is_active = $value;
+                $E_ATTIVO = $value;
             } else if (strpos(strtolower($key), 'id')){
                 continue;
             } else {
@@ -92,7 +92,7 @@ if (mysqli_num_rows($result) > 0) {
 
         if ($_SESSION['role'] == 'Admin') {
             echo '<td><a href="admin_edit.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-warning">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-            if ($is_active == 0) {
+            if ($E_ATTIVO == 0) {
                 echo '<button class="btn btn-info" onclick="confirmActivation(\'' . reset($row) . '\', \'' . $entity . '\')">Active</button>';
             } else {
                 echo '<button class="btn btn-danger" onclick="confirmDelete(' . reset($row) . ', \'' . $entity . '\')">Delete</button>';
@@ -100,7 +100,7 @@ if (mysqli_num_rows($result) > 0) {
             echo '</td></tr>';
         }
     }
-    
+
     echo '</tbody>';
     echo '</table></div>';
 } else {

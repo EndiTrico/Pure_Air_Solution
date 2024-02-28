@@ -11,13 +11,13 @@ function numberOfActiveEntitiesForClients($entity)
     
     $sql = "SELECT COUNT(*)
             FROM $entity
-            WHERE IS_ACTIVE = 1
-                AND COMPANY_ID = ?";
+            WHERE E_ATTIVO = 1
+                AND AZIENDA_ID = ?";
     
     $stmt = mysqli_prepare($conn, $sql);
         
     if ($stmt) {
-        mysqli_stmt_bind_param($stmt, "i", $_SESSION['company_ID']);
+        mysqli_stmt_bind_param($stmt, "i", $_SESSION['AZIENDA_ID']);
 
         mysqli_stmt_execute($stmt);
     
@@ -170,11 +170,11 @@ include 'database/closedb.php';
                                         </div>
                                         <div class="col-12 col-md-6 col-lg-4 text-center text-md-left">
                                             <div class="containercount mx-auto">
-                                                <i class="fa fa-users"></i>
+                                                <i class="fa fa-UTENTI"></i>
                                                 <span class="num"
-                                                    data-val="<?php echo numberOfActiveEntitiesForClients('users'); ?>"></span>
+                                                    data-val="<?php echo numberOfActiveEntitiesForClients('UTENTI'); ?>"></span>
                                                 <div class="text-wrapper">
-                                                    <span class="text">Active Users</span>
+                                                    <span class="text">Active UTENTI</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -182,9 +182,9 @@ include 'database/closedb.php';
                                             <div class="containercount mx-auto">
                                                 <i class="fa fa-cubes"></i>
                                                 <span class="num"
-                                                    data-val="<?php echo numberOfActiveEntitiesForClients('structures'); ?>"></span>
+                                                    data-val="<?php echo numberOfActiveEntitiesForClients('STRUTTURE'); ?>"></span>
                                                 <div class="text-wrapper">
-                                                    <span class="text">Active Structures</span>
+                                                    <span class="text">Active STRUTTURE</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -192,9 +192,9 @@ include 'database/closedb.php';
                                             <div class="containercount mx-auto">
                                                 <i class="fa fa-sitemap"></i>
                                                 <span class="num"
-                                                    data-val="<?php echo numberOfActiveEntitiesForClients('departments'); ?>"></span>
+                                                    data-val="<?php echo numberOfActiveEntitiesForClients('REPARTI'); ?>"></span>
                                                 <div class="text-wrapper">
-                                                    <span class="text">Active Departments</span>
+                                                    <span class="text">Active REPARTI</span>
                                                 </div>
                                             </div>
                                         </div>

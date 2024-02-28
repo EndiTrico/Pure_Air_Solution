@@ -6,11 +6,11 @@ $entity = $_GET['entity'];
 include 'database/config.php';
 include 'database/opendb.php';
 
-if ($entity == 'users') {
-    $sql = "SELECT c.IS_ACTIVE 
-        FROM USERS u
-        JOIN COMPANIES c on u.COMPANY_ID = c.COMPANY_ID
-        WHERE u.USER_ID = ?
+if ($entity == 'utenti') {
+    $sql = "SELECT c.E_ATTIVO 
+        FROM UTENTI u
+        JOIN AZIENDE c on u.AZIENDA_ID = c.AZIENDA_ID
+        WHERE u.UTENTE_ID = ?
         LIMIT 1";
 
     $stmt = $conn->prepare($sql);
@@ -23,13 +23,13 @@ if ($entity == 'users') {
     $stmt->close();
 
     $update = "UPDATE " . $entity .
-        " SET IS_ACTIVE = 1 
-                    WHERE USER_ID = ?";
-} else if ($entity == "structures") {
-    $sql = "SELECT c.IS_ACTIVE 
-                FROM STRUCTURES s
-                JOIN COMPANIES c on s.COMPANY_ID = c.COMPANY_ID
-                WHERE s.STRUCTURE_ID = ?
+        " SET E_ATTIVO = 1 
+                    WHERE UTENTE_ID = ?";
+} else if ($entity == "strutture") {
+    $sql = "SELECT c.E_ATTIVO 
+                FROM STRUTTURE s
+                JOIN AZIENDE c on s.AZIENDA_ID = c.AZIENDA_ID
+                WHERE s.STRUTTURA_ID = ?
                 LIMIT 1";
 
     $stmt = $conn->prepare($sql);
@@ -42,13 +42,13 @@ if ($entity == 'users') {
     $stmt->close();
 
     $update = "UPDATE " . $entity .
-        " SET IS_ACTIVE = 1 
-                    WHERE STRUCTURE_ID = ?";
-} else if ($entity == "departments") {
-    $sql = "SELECT c.IS_ACTIVE 
-                FROM DEPARTMENTS d
-                JOIN COMPANIES c on d.COMPANY_ID = c.COMPANY_ID
-                WHERE d.DEPARTMENT_ID = ?
+        " SET E_ATTIVO = 1 
+                    WHERE STRUTTURA_ID = ?";
+} else if ($entity == "reparti") {
+    $sql = "SELECT c.E_ATTIVO 
+                FROM REPARTI d
+                JOIN AZIENDE c on d.AZIENDA_ID = c.AZIENDA_ID
+                WHERE d.REPARTO_ID = ?
                 LIMIT 1";
 
     $stmt = $conn->prepare($sql);
@@ -60,10 +60,10 @@ if ($entity == 'users') {
     $stmt->fetch();
     $stmt->close();
 
-    $sql = "SELECT c.IS_ACTIVE 
-                FROM DEPARTMENTS d
-                JOIN STRUCTURES s on s.COMPANY_ID = d.COMPANY_ID
-                WHERE d.DEPARTMENT_ID = ?
+    $sql = "SELECT c.E_ATTIVO 
+                FROM REPARTI d
+                JOIN STRUTTURE s on s.AZIENDA_ID = d.AZIENDA_ID
+                WHERE d.REPARTO_ID = ?
                 LIMIT 1";
 
     $stmt = $conn->prepare($sql);
@@ -78,16 +78,16 @@ if ($entity == 'users') {
     if ($isActive1 == 1 && $isActive2 == 1) {
         $isActive = 1;
         $update = "UPDATE " . $entity .
-            " SET IS_ACTIVE = 1 
-                        WHERE DEPARTMENT_ID = ?";
+            " SET E_ATTIVO = 1 
+                        WHERE REPARTO_ID = ?";
     } else {
         $isActive = 0;
     }
 } else {
     $isActive = 1;
     $update = "UPDATE " . $entity .
-                " SET IS_ACTIVE = 1 
-                WHERE COMPANY_ID = ?";
+                " SET E_ATTIVO = 1 
+                WHERE AZIENDA_ID = ?";
 }
 
 if ($isActive == 0) {

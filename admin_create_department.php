@@ -9,19 +9,19 @@ $successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['create_department'])) {
-        $department_name = mysqli_real_escape_string($conn, $_POST['department_name']);
-        $company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
-        $structure_id = mysqli_real_escape_string($conn, $_POST['structure_name']);
+        $REPARTO_NOME = mysqli_real_escape_string($conn, $_POST['REPARTO_NOME']);
+        $AZIENDA_ID = mysqli_real_escape_string($conn, $_POST['AZIENDA_NOME']);
+        $STRUTTURA_ID = mysqli_real_escape_string($conn, $_POST['STRUTTURA_NOME']);
 
-        $queryCheck = "SELECT DEPARTMENT_ID FROM departments 
-                        WHERE DEPARTMENT_NAME = ? 
-                            AND COMPANY_ID = ? 
-                            AND IS_ACTIVE = 0 
-                            AND STRUCTURE_ID = ? 
+        $queryCheck = "SELECT REPARTO_ID FROM REPARTI 
+                        WHERE REPARTO_NOME = ? 
+                            AND AZIENDA_ID = ? 
+                            AND E_ATTIVO = 0 
+                            AND STRUTTURA_ID = ? 
                         LIMIT 1";
 
         $stmt = mysqli_prepare($conn, $queryCheck);
-        mysqli_stmt_bind_param($stmt, "sii", $department_name, $company_id, $structure_id);
+        mysqli_stmt_bind_param($stmt, "sii", $REPARTO_NOME, $AZIENDA_ID, $STRUTTURA_ID);
         mysqli_stmt_execute($stmt);
         $resultCheck = mysqli_stmt_get_result($stmt);
 
@@ -29,15 +29,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (mysqli_num_rows($resultCheck) > 0) {
                 $rowCheck = mysqli_fetch_assoc($resultCheck);
 
-                $sql = "UPDATE departments 
-                        SET DEPARTMENT_NAME = ?, 
-                            COMPANY_ID = ?, 
-                            STRUCTURE_ID = ?, 
-                            IS_ACTIVE = 1
-                        WHERE DEPARTMENT_ID = ?";
+                $sql = "UPDATE REPARTI 
+                        SET REPARTO_NOME = ?, 
+                            AZIENDA_ID = ?, 
+                            STRUTTURA_ID = ?, 
+                            E_ATTIVO = 1
+                        WHERE REPARTO_ID = ?";
 
                 $stmt = mysqli_prepare($conn, $sql);
-                mysqli_stmt_bind_param($stmt, "siii", $department_name, $company_id, $structure_id, $rowCheck['DEPARTMENT_ID']);
+                mysqli_stmt_bind_param($stmt, "siii", $REPARTO_NOME, $AZIENDA_ID, $STRUTTURA_ID, $rowCheck['REPARTO_ID']);
 
                 try {
                     if (mysqli_stmt_execute($stmt)) {
@@ -49,10 +49,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $errorMessage = $e->getMessage();
                 }
             } else {
-                $sql = "INSERT INTO departments (DEPARTMENT_NAME, COMPANY_ID, STRUCTURE_ID, IS_ACTIVE) VALUES 
+                $sql = "INSERT INTO REPARTI (REPARTO_NOME, AZIENDA_ID, STRUTTURA_ID, E_ATTIVO) VALUES 
                         (?, ?, ?,  1)";
                 $stmt = mysqli_prepare($conn, $sql);
-                mysqli_stmt_bind_param($stmt, "sii", $department_name, $company_id, $structure_id);
+                mysqli_stmt_bind_param($stmt, "sii", $REPARTO_NOME, $AZIENDA_ID, $STRUTTURA_ID);
 
                 try {
                     if (mysqli_stmt_execute($stmt)) {
@@ -72,22 +72,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 include 'database/closedb.php';
 
-function showCompaniesName()
+function showAZIENDEName()
 {
     include 'database/config.php';
     include 'database/opendb.php';
 
-    $query = "SELECT COMPANY_ID, COMPANY_NAME FROM Companies";
+    $query = "SELECT AZIENDA_ID, AZIENDA_NOME FROM AZIENDE";
     $company = mysqli_query($conn, $query);
 
     $companyDropDown = "";
 
-    $companyDropDown .= '<select class="form-select mb-3" name = "company_name" id="company-dropdown" required>';
+    $companyDropDown .= '<select class="form-select mb-3" name = "AZIENDA_NOME" id="company-dropdown" required>';
     $companyDropDown .= '<option value="" disabled selected>Select Company</option>';
 
     if ($company) {
         while ($row = mysqli_fetch_assoc($company)) {
-            $companyDropDown .= '<option value="' . $row['COMPANY_ID'] . '">' . htmlspecialchars($row['COMPANY_NAME']) . '</option>';
+            $companyDropDown .= '<option value="' . $row['AZIENDA_ID'] . '">' . htmlspecialchars($row['AZIENDA_NOME']) . '</option>';
         }
     } else {
         $companyDropDown .= "Error: " . mysqli_error($conn);
@@ -175,7 +175,7 @@ function showCompaniesName()
                                                                     <h5 class="card-title mb-0">Deparment Name</h5>
                                                                 </div>
                                                                 <div class="card-body">
-                                                                    <input type="text" class="form-control" name="department_name" placeholder="Department Name" required>
+                                                                    <input type="text" class="form-control" name="REPARTO_NOME" placeholder="Department Name" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -186,7 +186,7 @@ function showCompaniesName()
                                                                 </div>
                                                                 <div class="card-body">
                                                                     <div>
-                                                                        <?php echo showCompaniesName() ?>
+                                                                        <?php echo showAZIENDEName() ?>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -200,7 +200,7 @@ function showCompaniesName()
                                                                     <h5 class="card-title mb-0">Structure Name</h5>
                                                                 </div>
                                                                 <div class="card-body">
-                                                                    <select name="structure_name" id="structure_name" class="form-select mb-3" required>
+                                                                    <select name="STRUTTURA_NOME" id="STRUTTURA_NOME" class="form-select mb-3" required>
                                                                         <option disable selected value="">Select
                                                                             Structure</option>
                                                                     </select>
@@ -243,11 +243,11 @@ function showCompaniesName()
                 var post_id = 'id=' + companyID;
                 $.ajax({
                     type: "POST",
-                    url: "fetch_structures.php",
+                    url: "fetch_STRUTTURE.php",
                     data: post_id,
                     cache: false,
                     success: function(cities) {
-                        $("#structure_name").html(cities);
+                        $("#STRUTTURA_NOME").html(cities);
                     }
                 });
             });

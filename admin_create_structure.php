@@ -9,31 +9,31 @@ $successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['create_structure'])) {
-        $structure_name = mysqli_real_escape_string($conn, $_POST['structure_name']);
-        $company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
+        $STRUTTURA_NOME = mysqli_real_escape_string($conn, $_POST['STRUTTURA_NOME']);
+        $AZIENDA_ID = mysqli_real_escape_string($conn, $_POST['AZIENDA_NOME']);
 
-        $queryCheck = "SELECT STRUCTURE_ID FROM structures 
-                       WHERE STRUCTURE_NAME = ? 
-                            AND COMPANY_ID = ? 
-                            AND IS_ACTIVE = 0 
+        $queryCheck = "SELECT STRUTTURA_ID FROM STRUTTURE 
+                       WHERE STRUTTURA_NOME = ? 
+                            AND AZIENDA_ID = ? 
+                            AND E_ATTIVO = 0 
                        LIMIT 1";
         $stmtCheck = mysqli_prepare($conn, $queryCheck);
         if ($stmtCheck) {
-            mysqli_stmt_bind_param($stmtCheck, "si", $structure_name, $company_id);
+            mysqli_stmt_bind_param($stmtCheck, "si", $STRUTTURA_NOME, $AZIENDA_ID);
 
             if (mysqli_stmt_execute($stmtCheck)) {
                 $resultCheck = mysqli_stmt_get_result($stmtCheck);
                 if (mysqli_num_rows($resultCheck) > 0) {
                     $rowCheck = mysqli_fetch_assoc($resultCheck);
 
-                    $sql = "UPDATE structures 
-                            SET STRUCTURE_NAME = ?, 
-                                IS_ACTIVE = 1, 
-                                COMPANY_ID = ?
-                            WHERE STRUCTURE_ID = ?";
+                    $sql = "UPDATE STRUTTURE 
+                            SET STRUTTURA_NOME = ?, 
+                                E_ATTIVO = 1, 
+                                AZIENDA_ID = ?
+                            WHERE STRUTTURA_ID = ?";
                     $stmt = mysqli_prepare($conn, $sql);
                     if ($stmt) {
-                        mysqli_stmt_bind_param($stmt, "sii", $structure_name, $company_id, $rowCheck['STRUCTURE_ID']);
+                        mysqli_stmt_bind_param($stmt, "sii", $STRUTTURA_NOME, $AZIENDA_ID, $rowCheck['STRUTTURA_ID']);
 
                         try {
                             if (mysqli_stmt_execute($stmt)) {
@@ -50,10 +50,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $errorMessage = "Error: Failed to prepare statement";
                     }
                 } else {
-                    $sql = "INSERT INTO structures (STRUCTURE_NAME, COMPANY_ID, IS_ACTIVE) VALUES (?, ?, 1)";
+                    $sql = "INSERT INTO STRUTTURE (STRUTTURA_NOME, AZIENDA_ID, E_ATTIVO) VALUES (?, ?, 1)";
                     $stmt = mysqli_prepare($conn, $sql);
                     if ($stmt) {
-                        mysqli_stmt_bind_param($stmt, "si", $structure_name, $company_id);
+                        mysqli_stmt_bind_param($stmt, "si", $STRUTTURA_NOME, $AZIENDA_ID);
 
                         try {
                             if (mysqli_stmt_execute($stmt)) {
@@ -83,21 +83,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 include 'database/closedb.php';
 
-function showCompaniesName()
+function showAZIENDEName()
 {
     include 'database/config.php';
     include 'database/opendb.php';
 
-    $query = "SELECT COMPANY_ID, COMPANY_NAME FROM Companies";
+    $query = "SELECT AZIENDA_ID, AZIENDA_NOME FROM AZIENDE";
     $company = mysqli_query($conn, $query);
 
     $companyDropDown = "";
-    $companyDropDown .= '<select class="form-select mb-3" name = "company_name" required>';
+    $companyDropDown .= '<select class="form-select mb-3" name = "AZIENDA_NOME" required>';
     $companyDropDown .= '<option value="" disabled selected>Select Company</option>';
 
     if ($company) {
         while ($row = mysqli_fetch_assoc($company)) {
-            $companyDropDown .= '<option value="' . $row['COMPANY_ID'] . '">' . htmlspecialchars($row['COMPANY_NAME']) . '</option>';
+            $companyDropDown .= '<option value="' . $row['AZIENDA_ID'] . '">' . htmlspecialchars($row['AZIENDA_NOME']) . '</option>';
         }
     } else {
         $companyDropDown .= "Error: " . mysqli_error($conn);
@@ -184,7 +184,7 @@ function showCompaniesName()
                                                                 <h5 class="card-title mb-0">Structure Name</h5>
                                                             </div>
                                                             <div class="card-body">
-                                                                <input type="text" class="form-control" name="structure_name" placeholder="Structure Name" required>
+                                                                <input type="text" class="form-control" name="STRUTTURA_NOME" placeholder="Structure Name" required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -195,7 +195,7 @@ function showCompaniesName()
                                                             </div>
                                                             <div class="card-body">
                                                                 <div>
-                                                                    <?php echo showCompaniesName() ?>
+                                                                    <?php echo showAZIENDEName() ?>
                                                                 </div>
                                                             </div>
                                                         </div>

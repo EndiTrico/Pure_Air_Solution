@@ -9,18 +9,18 @@ $successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['create_user'])) {
-        $first_name = mysqli_real_escape_string($conn, $_POST['first_name']);
-        $last_name = mysqli_real_escape_string($conn, $_POST['last_name']);
+        $NOME = mysqli_real_escape_string($conn, $_POST['NOME']);
+        $COGNOME = mysqli_real_escape_string($conn, $_POST['COGNOME']);
         $user_email = mysqli_real_escape_string($conn, $_POST['user_email']);
         $user_password = mysqli_real_escape_string($conn, $_POST['user_password']);
         $role = mysqli_real_escape_string($conn, $_POST['role']);
-        $user_company = mysqli_real_escape_string($conn, $_POST['user_company']);
+      //  $user_company = mysqli_real_escape_string($conn, $_POST['user_company']);
 
         $hashed_password = password_hash($user_password, PASSWORD_BCRYPT);
 
-        $queryCheck = "SELECT USER_ID FROM users 
+        $queryCheck = "SELECT UTENTE_ID FROM UTENTI 
                         WHERE EMAIL = ? 
-                            AND IS_ACTIVE = 0 
+                            AND E_ATTIVO = 0 
                         LIMIT 1";
 
         $stmt = mysqli_prepare($conn, $queryCheck);
@@ -29,21 +29,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         mysqli_stmt_store_result($stmt);
 
         if (mysqli_stmt_num_rows($stmt) > 0) {
-            mysqli_stmt_bind_result($stmt, $user_id);
+            mysqli_stmt_bind_result($stmt, $UTENTE_ID);
             mysqli_stmt_fetch($stmt);
 
-            $sql = "UPDATE users 
-                    SET FIRST_NAME = ?, 
-                        LAST_NAME = ?, 
+            $sql = "UPDATE UTENTI 
+                    SET NOME = ?, 
+                        COGNOME = ?, 
                         PASSWORD = ?, 
                         ROLE = ?, 
-                        IS_ACTIVE = 1, 
+                        E_ATTIVO = 1, 
                         EMAIL = ?,
-                        COMPANY_ID = ? 
-                    WHERE USER_ID = ?";
+                        AZIENDA_ID = ? 
+                    WHERE UTENTE_ID = ?";
 
             $stmt = mysqli_prepare($conn, $sql);
-            mysqli_stmt_bind_param($stmt, "ssssiii", $first_name, $last_name, $hashed_password, $role, $user_email, $user_company, $user_id);
+            mysqli_stmt_bind_param($stmt, "ssssii", $NOME, $COGNOME, $hashed_password, $role, $user_email, $UTENTE_ID);
 
             try {
                 if (mysqli_stmt_execute($stmt)) {
@@ -55,11 +55,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $errorMessage = $e->getMessage();
             }
         } else {
-            $sql = "INSERT INTO users (FIRST_NAME, LAST_NAME, EMAIL, PASSWORD, ROLE, IS_ACTIVE, COMPANY_ID) VALUES 
-                (?, ?, ?, ?, ?, 1, ?)";
+            $sql = "INSERT INTO UTENTI (NOME, COGNOME, EMAIL, PASSWORD, ROLE, E_ATTIVO) VALUES 
+                (?, ?, ?, ?, ?, 1)";
 
             $stmt = mysqli_prepare($conn, $sql);
-            mysqli_stmt_bind_param($stmt, "sssssi", $first_name, $last_name, $user_email, $hashed_password, $role, $user_company);
+            mysqli_stmt_bind_param($stmt, "sssss", $NOME, $COGNOME, $user_email, $hashed_password, $role);
 
             try {
                 if (mysqli_stmt_execute($stmt)) {
@@ -77,12 +77,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 include 'database/closedb.php';
 
-function showCompaniesName()
+function showAZIENDEName()
 {
     include 'database/config.php';
     include 'database/opendb.php';
 
-    $query = "SELECT COMPANY_ID, NAME FROM Companies";
+    $query = "SELECT AZIENDA_ID, NAME FROM AZIENDE";
     $company = mysqli_query($conn, $query);
 
     $companyDropDown = "";
@@ -91,7 +91,7 @@ function showCompaniesName()
 
     if ($company) {
         while ($row = mysqli_fetch_assoc($company)) {
-            $companyDropDown .= '<option value="' . $row['COMPANY_ID'] . '">' . htmlspecialchars($row['NAME']) . '</option>';
+            $companyDropDown .= '<option value="' . $row['AZIENDA_ID'] . '">' . htmlspecialchars($row['NAME']) . '</option>';
         }
     } else {
         $companyDropDown .= "Error: " . mysqli_error($conn);
@@ -177,7 +177,7 @@ function showCompaniesName()
                                                         <h5 class="card-title mb-0">First Name</h5>
                                                     </div>
                                                     <div class="card-body">
-                                                        <input type="text" class="form-control" name="first_name" placeholder="First Name" required>
+                                                        <input type="text" class="form-control" name="NOME" placeholder="First Name" required>
                                                     </div>
                                                 </div>
 
@@ -186,7 +186,7 @@ function showCompaniesName()
                                                         <h5 class="card-title mb-0">Last Name</h5>
                                                     </div>
                                                     <div class="card-body">
-                                                        <input type="text" class="form-control" name="last_name" placeholder="Last Name" required>
+                                                        <input type="text" class="form-control" name="COGNOME" placeholder="Last Name" required>
                                                     </div>
                                                 </div>
 
@@ -228,17 +228,16 @@ function showCompaniesName()
                                                     </div>
                                                 </div>
 
-                                                <div class="card">
+                                  <!--              <div class="card">
                                                     <div class="card-header">
                                                         <h5 class="card-title mb-0">Company</h5>
                                                     </div>
                                                     <div class="card-body">
                                                         <div>
-                                                            <?php echo showCompaniesName() ?>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div>-->
                                             <div class="row">
                                                 <div class="col-12 d-flex justify-content-center">
                                                     <button type="submit" name="create_user" class="btn btn-success btn-lg">Create User</button>

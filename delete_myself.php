@@ -4,11 +4,11 @@ include 'database/opendb.php';
 
 $email = $_GET['email'];
 
-$queryUsers = "UPDATE users 
-               SET IS_ACTIVE = 0
+$queryUTENTI = "UPDATE UTENTI 
+               SET E_ATTIVO = 0
                WHERE EMAIL = ?";
 
-$stmt = mysqli_prepare($conn, $queryUsers);
+$stmt = mysqli_prepare($conn, $queryUTENTI);
 mysqli_stmt_bind_param($stmt, "s", $email);
 mysqli_stmt_execute($stmt);
 

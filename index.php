@@ -8,8 +8,11 @@ if (isset($_SESSION['email'])) {
     $role = determineRole($_SESSION['email']);
     if ($role === "Admin") {
         header('Location: admin_dashboard.php');
-    } elseif ($role === "Client") {
+    } else if ($role === "Client") {
         header('Location: client_dashboard.php');
+    } else {
+        header('Location: admin_create_user.php');
+
     }
     exit();
 }
@@ -23,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['email'] = $email;
         $role = determineRole($email);
         $_SESSION["role"] = $role;
-        
+
         if ($role == "Admin") {
             header('Location: admin_dashboard.php');
             exit();
@@ -31,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             include 'database/config.php';
             include 'database/opendb.php';
             
-            $queryCompanyID = "SELECT COMPANY_ID FROM users 
+            $queryCompanyID = "SELECT AZIENDA_ID FROM UTENTI 
                                WHERE EMAIL = ? 
                                LIMIT 1";
 
@@ -40,11 +43,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             mysqli_stmt_execute($stmt);
             mysqli_stmt_store_result($stmt);
 
-            mysqli_stmt_bind_result($stmt, $company_ID);
+            mysqli_stmt_bind_result($stmt, $AZIENDA_ID);
 
             mysqli_stmt_fetch($stmt);
 
-            $_SESSION["company_ID"] = $company_ID;
+            $_SESSION["AZIENDA_ID"] = $AZIENDA_ID;
             mysqli_stmt_close($stmt);
 
             include 'database/closedb.php';
