@@ -71,7 +71,7 @@ include 'database/closedb.php';
                                     <div class="row">
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('UTENTI')"
+                                                <a onclick="fetchData('utenti')"
                                                     class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
                                                     style="font-weight: bold;">Display
                                                     UTENTI</a>
@@ -80,7 +80,7 @@ include 'database/closedb.php';
 
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('AZIENDE')"
+                                                <a onclick="fetchData('aziende')"
                                                     class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
                                                     style="font-weight: bold;">Display
                                                     AZIENDE</a>
@@ -89,7 +89,7 @@ include 'database/closedb.php';
 
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('STRUTTURE')"
+                                                <a onclick="fetchData('strutture')"
                                                     class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
                                                     style="font-weight: bold;">Display
                                                     STRUTTURE</a>
@@ -98,7 +98,7 @@ include 'database/closedb.php';
 
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('REPARTI')"
+                                                <a onclick="fetchData('reparti')"
                                                     class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
                                                     style="font-weight: bold;">Display
                                                     REPARTI</a>
@@ -126,23 +126,23 @@ include 'database/closedb.php';
 
             <script>
                 var selected_entity = "";
-
+      
                 function fetchData(entity) {
 
                     document.getElementById("searchBox").style.display = "block";
-
+                   
                     selected_entity = entity;
                     var searchQuery = document.getElementById('searchBox').value;
                     var xhttp = new XMLHttpRequest();
-                    xhttp.onreadystatechange = function () {
-                        if (this.readyState == 4 && this.status == 200) {
-                            document.getElementById("tableContainer").innerHTML = this.responseText;
-                        }
-                    };
-                    xhttp.open("GET", "fetch_data.php?entity=" + entity + "&search=" + searchQuery, true);
-                    xhttp.send();
-
-                }
+                    xhttp.onreadystatechange = function () {        
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("tableContainer").innerHTML = this.responseText;
+                    }
+            };
+            xhttp.open("GET", "fetch_data.php?entity=" + entity + "&search=" + searchQuery, true);
+            xhttp.send();
+            
+        }
 
                 function search() {
                     var entity = selected_entity;
