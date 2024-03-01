@@ -9,18 +9,17 @@ $search = $_GET['search'];
 
 $query = "";
 
-if ($entity == "UTENTI") {
-    $query = "SELECT u.UTENTE_ID, u.NOME, u.COGNOME, u.EMAIL, u.ROLE, u.E_ATTIVO, c.AZIENDA_NOME 
-                FROM UTENTI u
-                JOIN AZIENDE c ON c.AZIENDA_ID = u.AZIENDA_ID";
-} else if ($entity == "AZIENDE") {
-    $query = "SELECT AZIENDA_ID, AZIENDA_NOME, EMAIL, DATA_ISCRIZIONE, DATA_SINISTRA, E_ATTIVO 
+if ($entity == "utenti") {
+    $query = "SELECT u.UTENTE_ID, u.NOME, u.COGNOME, u.EMAIL, u.NUMERO, u.RUOLO, u.AZIENDA_POSIZIONE, u.E_ATTIVO 
+                FROM UTENTI u";
+} else if ($entity == "aziende") {
+    $query = "SELECT AZIENDA_ID, AZIENDA_NOME, PARTITA_IVA, CODICE_FISCALE, CONTATTO_1, CONTATTO_2, CONTATTO_3, EMAIL_1, EMAIL_2, EMAIL_3, TELEFONO_1, TELEFONO_2, TELEFONO_3, INDIRIZZO, CITTA, INDIRIZZO_PEC, WEBSITE, DATA_ISCRIZIONE, DATA_SINISTRA, INFORMAZIONI, E_ATTIVO
                 FROM AZIENDE";
-} else if ($entity == "STRUTTURE") {
+} else if ($entity == "strutture") {
     $query = "SELECT s.STRUTTURA_ID, s.STRUTTURA_NOME, s.E_ATTIVO, c.AZIENDA_NOME
                 FROM STRUTTURE s
                 JOIN AZIENDE c on s.AZIENDA_ID = c.AZIENDA_ID";
-} else if ($entity == "REPARTI") {
+} else if ($entity == "reparti") {
     $query = "SELECT d.REPARTO_ID, d.REPARTO_NOME, d.E_ATTIVO, s.STRUTTURA_NOME, c.AZIENDA_NOME
                 FROM REPARTI d 
                 JOIN STRUTTURE s ON d.STRUTTURA_ID = s.STRUTTURA_ID
@@ -29,7 +28,7 @@ if ($entity == "UTENTI") {
 
 if (!empty($search)) {
     if ($entity == "UTENTI") {
-        $query .= " WHERE CONCAT(u.NOME, ' ', u.COGNOME, ' ', u.EMAIL, ' ', u.ROLE, ' ', c.AZIENDA_NOME) LIKE '%$search%'";
+        $query .= " WHERE CONCAT(u.NOME, ' ', u.COGNOME, ' ', u.EMAIL, ' ', u.RUOLO) LIKE '%$search%'";
     } else if ($entity == "AZIENDE") {
         $query .= " WHERE CONCAT(AZIENDA_NOME, ' ', EMAIL) LIKE '%$search%'";
     } else if ($entity == "STRUTTURE") {
@@ -85,17 +84,17 @@ if (mysqli_num_rows($result) > 0) {
                 echo '<td>' . $value . '</td>';
             }
 
-            if ($key == 'ROLE') {
+            if ($key == 'RUOLE') {
                 $is_admin = $value;
             }
         }
 
         if ($_SESSION['role'] == 'Admin') {
-            echo '<td><a href="admin_edit.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-warning">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+            echo '<td><a href="admin_edit.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-warning">Modifica</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
             if ($E_ATTIVO == 0) {
-                echo '<button class="btn btn-info" onclick="confirmActivation(\'' . reset($row) . '\', \'' . $entity . '\')">Active</button>';
+                echo '<button class="btn btn-info" onclick="confirmActivation(\'' . reset($row) . '\', \'' . $entity . '\')"> Attiva </button>';
             } else {
-                echo '<button class="btn btn-danger" onclick="confirmDelete(' . reset($row) . ', \'' . $entity . '\')">Delete</button>';
+                echo '<button class="btn btn-danger" onclick="confirmDelete(' . reset($row) . ', \'' . $entity . '\')">Elimina</button>';
             }
             echo '</td></tr>';
         }
@@ -103,6 +102,8 @@ if (mysqli_num_rows($result) > 0) {
 
     echo '</tbody>';
     echo '</table></div>';
+
+  
 } else {
     echo '<div class="col-12">
             <div class="card-header"><div style="margin-top: -20px; padding-top: 8px; height: 40px; font-size:20px; text-align:center; background-color: #fed48b; color: #d98b19; font-weight:bold" class="alert alert-danger" role="alert">No Data Found</div>                                                    

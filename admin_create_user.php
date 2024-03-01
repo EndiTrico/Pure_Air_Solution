@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     SET NOME = ?, 
                         COGNOME = ?, 
                         PASSWORD = ?, 
-                        ROLE = ?, 
+                        RUOLO = ?, 
                         E_ATTIVO = 1, 
                         EMAIL = ?,
                         AZIENDA_ID = ? 
@@ -55,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $errorMessage = $e->getMessage();
             }
         } else {
-            $sql = "INSERT INTO UTENTI (NOME, COGNOME, EMAIL, PASSWORD, ROLE, E_ATTIVO) VALUES 
+            $sql = "INSERT INTO UTENTI (NOME, COGNOME, EMAIL, PASSWORD, RUOLO, E_ATTIVO) VALUES 
                 (?, ?, ?, ?, ?, 1)";
 
             $stmt = mysqli_prepare($conn, $sql);

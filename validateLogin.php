@@ -38,7 +38,7 @@ function determineRole($email)
     include 'database/config.php';
     include 'database/opendb.php';
 
-    $query = "SELECT Role FROM UTENTI WHERE Email=?";
+    $query = "SELECT RUOLO FROM UTENTI WHERE Email=?";
     $stmt = mysqli_prepare($conn, $query);
     mysqli_stmt_bind_param($stmt, "s", $email);
     mysqli_stmt_execute($stmt);
@@ -46,6 +46,7 @@ function determineRole($email)
     mysqli_stmt_bind_result($stmt, $role);
     mysqli_stmt_fetch($stmt);
     mysqli_stmt_close($stmt);
+    
     include 'database/closedb.php';
 
     return $role;
