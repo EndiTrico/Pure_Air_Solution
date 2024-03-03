@@ -9,18 +9,19 @@ $successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['create_user'])) {
-        $NOME = mysqli_real_escape_string($conn, $_POST['NOME']);
-        $COGNOME = mysqli_real_escape_string($conn, $_POST['COGNOME']);
+        $user_first_name = mysqli_real_escape_string($conn, $_POST['user_first_name']);
+        $user_last_name = mysqli_real_escape_string($conn, $_POST['user_last_name']);
         $user_email = mysqli_real_escape_string($conn, $_POST['user_email']);
         $user_password = mysqli_real_escape_string($conn, $_POST['user_password']);
-        $role = mysqli_real_escape_string($conn, $_POST['role']);
-        //  $user_company = mysqli_real_escape_string($conn, $_POST['user_company']);
+        $user_role = mysqli_real_escape_string($conn, $_POST['user_role']);
+        $user_position = mysqli_real_escape_string($conn, $_POST['user_position']);
+        $user_numero = mysqli_real_escape_string($conn, $_POST['user_number']);
+        $user_companies = $_POST['user_companies'];
 
         $hashed_password = password_hash($user_password, PASSWORD_BCRYPT);
 
         $queryCheck = "SELECT UTENTE_ID FROM UTENTI 
                         WHERE EMAIL = ? 
-                            AND E_ATTIVO = 0 
                         LIMIT 1";
 
         $stmt = mysqli_prepare($conn, $queryCheck);
@@ -29,43 +30,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         mysqli_stmt_store_result($stmt);
 
         if (mysqli_stmt_num_rows($stmt) > 0) {
-            mysqli_stmt_bind_result($stmt, $UTENTE_ID);
-            mysqli_stmt_fetch($stmt);
-
-            $sql = "UPDATE UTENTI 
-                    SET NOME = ?, 
-                        COGNOME = ?, 
-                        PASSWORD = ?, 
-                        RUOLO = ?, 
-                        E_ATTIVO = 1, 
-                        EMAIL = ?,
-                        AZIENDA_ID = ? 
-                    WHERE UTENTE_ID = ?";
-
-            $stmt = mysqli_prepare($conn, $sql);
-            mysqli_stmt_bind_param($stmt, "ssssii", $NOME, $COGNOME, $hashed_password, $role, $user_email, $UTENTE_ID);
-
-            try {
-                if (mysqli_stmt_execute($stmt)) {
-                    $successfulMessage = "User Activated Successfully";
-                } else {
-                    $errorMessage = "Error: Failed to Activate User";
-                }
-            } catch (Exception $e) {
-                $errorMessage = $e->getMessage();
-            }
+            $errorMessage = "Errore: C'è un Utente con Quell'E-mail";
         } else {
-            $sql = "INSERT INTO UTENTI (NOME, COGNOME, EMAIL, PASSWORD, RUOLO, E_ATTIVO) VALUES 
-                (?, ?, ?, ?, ?, 1)";
+            $sql = "INSERT INTO UTENTI (NOME, COGNOME, EMAIL, PASSWORD, NUMERO, RUOLO, AZIENDA_POSIZIONE, E_ATTIVO) VALUES 
+                (?, ?, ?, ?, ?, ?, ?, 1)";
 
             $stmt = mysqli_prepare($conn, $sql);
-            mysqli_stmt_bind_param($stmt, "sssss", $NOME, $COGNOME, $user_email, $hashed_password, $role);
-
+            mysqli_stmt_bind_param($stmt, "ssssiss", $user_first_name, $user_last_name, $user_email, $hashed_password, $user_numero, $user_role, $user_position);
             try {
                 if (mysqli_stmt_execute($stmt)) {
-                    $successfulMessage = "User Created Successfully";
+                    if (!empty($user_companies)) {
+                        $sql = "SELECT UTENTE_ID
+                                FROM UTENTI
+                                WHERE EMAIL = ?
+                                LIMIT 1";
+
+                        $stmt1 = mysqli_prepare($conn, $sql);
+                        mysqli_stmt_bind_param($stmt1, "s", $user_email);
+                        mysqli_stmt_execute($stmt1);
+                        mysqli_stmt_store_result($stmt1);
+
+                        mysqli_stmt_bind_result($stmt1, $user_id);
+                        mysqli_stmt_fetch($stmt1);
+
+                        foreach ($user_companies as $company_id) {
+                            $sql2 = "INSERT INTO UTENTI_AZIENDE (UTENTE_ID, AZIENDA_ID) VALUES (?, ?)";
+
+                            $company_id = (int) $company_id;
+
+                            $stmt2 = mysqli_prepare($conn, $sql2);
+                            mysqli_stmt_bind_param($stmt2, "ii", $user_id, $company_id);
+                            mysqli_stmt_execute($stmt2);
+                        }
+                    }
+                    $successfulMessage = "Utente Creato con Successo";
                 } else {
-                    $errorMessage = "Error: Failed to Create User";
+                    $errorMessage = "Errore: Impossibile Creare l'Utente";
                 }
             } catch (Exception $e) {
                 $errorMessage = $e->getMessage();
@@ -85,9 +85,8 @@ function showAllCompanies()
     $company = mysqli_query($conn, $query);
 
     $companyDropDown = "";
-    $companyDropDown .= '';
-    $companyDropDown .= '<option value="" disabled selected>Seleziona Azienda</option>';
 
+    echo "<script>alert(Hello)</script>";
     if ($company) {
         while ($row = mysqli_fetch_assoc($company)) {
             $companyDropDown .= '<option value="' . $row['AZIENDA_ID'] . '">' . htmlspecialchars($row['AZIENDA_NOME']) . '</option>';
@@ -96,7 +95,6 @@ function showAllCompanies()
         $companyDropDown .= "Error: " . mysqli_error($conn);
     }
 
-    $companyDropDown .= '</select>';
 
     include 'database/closedb.php';
 
@@ -116,7 +114,7 @@ function showAllCompanies()
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
 
-    <title>Create User</title>
+    <title>Crea un Utente</title>
 
     <link href="css/app.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -124,10 +122,13 @@ function showAllCompanies()
     <script src="https://code.jquery.com/jquery-3.6 .0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@2.0.1/dist/css/multi-select-tag.css">
-    <script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@2.0.1/dist/js/multi-select-tag.js"></script>
 
+    <!-- select2 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+
+    <!-- select2-bootstrap4-theme -->
+    <link href="https://raw.githack.com/ttskch/select2-bootstrap4-theme/master/dist/select2-bootstrap4.css"
+        rel="stylesheet"> <!-- for live demo page -->
 
 </head>
 
@@ -153,7 +154,6 @@ function showAllCompanies()
                                 <div class="card-body">
                                     <form id="userForm" method="post">
                                         <div class="row">
-
                                             <?php
                                             if (!empty($errorMessage)) {
                                                 echo '<div class="col-12">
@@ -213,15 +213,16 @@ function showAllCompanies()
                                                     </div>
                                                     <div class="card-body">
                                                         <div>
-                                                            <select name="role" class="form-select mb-3" required>
-                                                                <option value="" disabled selected>Select Role</option>
-                                                                <option>Admin</option>
-                                                                <option>Cliente</option>
+                                                            <select data-allow-clear="1" name="user_role"
+                                                                class="form-select mb-3" required>
+                                                                <option value="" style="margin-right:20px !important;"
+                                                                    disabled selected hidden>Seleciona Ruole</option>
+                                                                <option value="Admin">Admin</option>
+                                                                <option value="Cliente">Cliente</option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                 </div>
-
                                             </div>
 
                                             <div class="col-12 col-lg-6">
@@ -237,7 +238,7 @@ function showAllCompanies()
 
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        <h5 class="card-title mb-0">Email *</h5>
+                                                        <h5 class="card-title mb-0">E-mail *</h5>
                                                     </div>
                                                     <div class="card-body">
                                                         <div>
@@ -263,55 +264,47 @@ function showAllCompanies()
                                                         <h5 class="card-title mb-0">Aziende</h5>
                                                     </div>
                                                     <div class="card-body">
-                                                        <select name="companies" id="companies" multiple>
-                                                            <?php
-                                                            include 'database/config.php';
-                                                            include 'database/opendb.php';
-
-                                                            $query = "SELECT AZIENDA_ID, AZIENDA_NOME FROM AZIENDE";
-                                                            $company = mysqli_query($conn, $query);
-
-                                                            if ($company) {
-                                                                while ($row = mysqli_fetch_assoc($company)) {
-                                                                    echo '<option value="' . $row['AZIENDA_ID'] . '">' . htmlspecialchars($row['AZIENDA_NOME']) . '</option>';
-                                                                }
-                                                            } else {
-                                                                $companyDropDown .= "Error: " . mysqli_error($conn);
-                                                            }
-
-
-                                                            include 'database/closedb.php'; ?>
+                                                        <select multiple placeholder="Seleciona Azienda"
+                                                            name="user_companies[]" id= "select" data-allow-clear="1">
+                                                            <?php echo showAllCompanies(); ?>
                                                         </select>
                                                     </div>
                                                 </div>
-
-
-                                                <!--              <div class="card">
-                                                    <div class="card-header">
-                                                        <h5 class="card-title mb-0">Company</h5>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>-->
-                                                <div class="row">
-                                                    <div class="col-12 d-flex justify-content-center">
-                                                        <button type="submit" name="create_user"
-                                                            class="btn btn-success btn-lg">Create User</button>
-                                                    </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12 d-flex justify-content-center">
+                                                    <button type="submit" name="create_user"
+                                                        class="btn btn-success btn-lg">Crea un Utente</button>
                                                 </div>
                                             </div>
+                                        </div>
                                     </form>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+                    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+                    crossorigin="anonymous"></script>
+
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
                 <script>
-                    new MultiSelectTag('companies')  // id
+                    $(function () {
+                        $('select').each(function () {
+                            $(this).select2({
+                                theme: 'bootstrap4',
+                                width: 'style',
+                                placeholder: $(this).attr('placeholder'),
+                                allowClear: Boolean($(this).data('allow-clear')),
+                            });
+                        });
+                    });
+
                 </script>
+
             </main>
             <?php
             include "footer.php";
