@@ -23,15 +23,28 @@ include 'database/closedb.php';
 
     <link href="css/app.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!--    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.1/css/dataTables.dataTables.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/2.0.1/js/dataTables.js"></script>
+
     <style>
-        #searchBox {
+        /* #searchBox {
             border-radius: 50px;
             margin-left: 65%;
             width: 80%;
             display: none;
+        }
+*/
+        .current {
+            background-color: whitesmoke !important;
+            border: none !important;
+        }
+
+        th {
+            text-align: center !important;
         }
 
         .badge-success-custom {
@@ -73,8 +86,8 @@ include 'database/closedb.php';
                                             <div class="card-header">
                                                 <a onclick="fetchData('utenti')"
                                                     class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                    style="font-weight: bold;">Display
-                                                    UTENTI</a>
+                                                    style="font-weight: bold;">Mostra Utenti
+                                                </a>
                                             </div>
                                         </div>
 
@@ -82,8 +95,8 @@ include 'database/closedb.php';
                                             <div class="card-header">
                                                 <a onclick="fetchData('aziende')"
                                                     class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                    style="font-weight: bold;">Display
-                                                    AZIENDE</a>
+                                                    style="font-weight: bold;">Mostra Aziende
+                                                </a>
                                             </div>
                                         </div>
 
@@ -91,8 +104,8 @@ include 'database/closedb.php';
                                             <div class="card-header">
                                                 <a onclick="fetchData('strutture')"
                                                     class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                    style="font-weight: bold;">Display
-                                                    STRUTTURE</a>
+                                                    style="font-weight: bold;">Display Strutture
+                                                </a>
                                             </div>
                                         </div>
 
@@ -100,18 +113,47 @@ include 'database/closedb.php';
                                             <div class="card-header">
                                                 <a onclick="fetchData('reparti')"
                                                     class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                    style="font-weight: bold;">Display
-                                                    REPARTI</a>
+                                                    style="font-weight: bold;">Mostra reparti
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
 
+                                    <div class="row">
+                                        <div class="col-12 col-lg-4">
+                                            <div class="card-header">
+                                                <a onclick="fetchData('banca conti')"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Mostra Banca Conti</a>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12 col-lg-4">
+                                            <div class="card-header">
+                                                <a onclick="fetchData('fatture')"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Mostra Fatture
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12 col-lg-4">
+                                            <div class="card-header">
+                                                <a onclick="fetchData('impianti')"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Mostra Impianti
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
                                     <div class="col-12 col-lg-12">
-                                        <div class="card-header output col-md-6" id="output">
+                                        <!--    <div class="card-header output col-md-6" id="output">
                                             <input oninput="search()" type="text" id="searchBox"
                                                 class="form-control justify-content-center" placeholder="Search...">
 
-                                        </div>
+                                        </div>-->
 
                                         <div id="tableContainer" class="mt-4">
                                         </div>
@@ -126,25 +168,42 @@ include 'database/closedb.php';
 
             <script>
                 var selected_entity = "";
-      
+
+
+
+
+                /*    function sortData(column) {
+                        var searchQuery = document.getElementById('searchBox').value;
+                        var xhttp = new XMLHttpRequest();
+                        xhttp.onreadystatechange = function () {
+                            if (this.readyState == 4 && this.status == 200) {
+                                document.getElementById("tableContainer").innerHTML = this.responseText;
+                            }
+                        };
+    
+                        xhttp.open("GET", "fetch_data.php?entity=" + selected_entity + "&search=" + searchQuery + "&sort=" + column, true);
+                        xhttp.send();
+                    }
+    */
                 function fetchData(entity) {
 
-                    document.getElementById("searchBox").style.display = "block";
-                   
-                    selected_entity = entity;
-                    var searchQuery = document.getElementById('searchBox').value;
-                    var xhttp = new XMLHttpRequest();
-                    xhttp.onreadystatechange = function () {        
-                    if (this.readyState == 4 && this.status == 200) {
-                        document.getElementById("tableContainer").innerHTML = this.responseText;
-                    }
-            };
-            xhttp.open("GET", "fetch_data.php?entity=" + entity + "&search=" + searchQuery, true);
-            xhttp.send();
-            
-        }
+                    //                  document.getElementById("searchBox").style.display = "block";
 
-                function search() {
+                    selected_entity = entity;
+                    //                 var searchQuery = document.getElementById('searchBox').value;
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function () {
+                        if (this.readyState == 4 && this.status == 200) {
+                            document.getElementById("tableContainer").innerHTML = this.responseText;
+                            new DataTable('#example');
+                        }
+                    };
+                    xhttp.open("GET", "fetch_data.php?entity=" + entity);
+                    xhttp.send();
+
+                }
+
+                /*function search() {
                     var entity = selected_entity;
                     var searchQuery = document.getElementById('searchBox').value;
                     var xhttp = new XMLHttpRequest();
@@ -155,7 +214,7 @@ include 'database/closedb.php';
                     };
                     xhttp.open("GET", "fetch_data.php?entity=" + entity + "&search=" + searchQuery, true);
                     xhttp.send();
-                }
+                }*/
 
                 function confirmDelete(id, entity) {
                     Swal.fire({

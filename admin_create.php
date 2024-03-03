@@ -43,13 +43,22 @@ include 'database/closedb.php';
                             <div class="card">
                                 <div class="card-header">
                                     <div class="row">
-                                        <div class="col-12 col-lg-6">
+                                        <div class="col-12 col-lg-4">
                                             <div class="card w-100">
                                                 <div class="card-header">
                                                     <a href="admin_create_user.php"
                                                         class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                        style="font-size: 28px; height: 200px; font-weight: bold;">Create
-                                                        User</a>
+                                                        style="font-size: 28px; height: 200px; font-weight: bold;">Crea un Utente
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <div class="card w-100">
+                                                <div class="card-header">
+                                                    <a href="admin_create_company.php"
+                                                        class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                        style="font-size: 28px; height: 200px; font-weight: bold;">Crea un Azienda
+                                                    </a>
                                                 </div>
                                             </div>
 
@@ -61,9 +70,30 @@ include 'database/closedb.php';
                                                         Company</a>
                                                 </div>
                                             </div>
+
                                         </div>
 
-                                        <div class=" col-12 col-lg-6">
+                                        <div class=" col-12 col-lg-4">
+                                            <div class="card w-100">
+                                                <div class="card-header">
+                                                    <a href="admin_create_structure.php"
+                                                        class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                        style="font-size: 28px; height: 200px; font-weight: bold;">Create
+                                                        Structure</a>
+                                                </div>
+                                            </div>
+
+                                            <div class=" card w-100">
+                                                <div class="card-header">
+                                                    <a href="admin_create_department.php"
+                                                        class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                        style="font-size: 28px; height: 200px; font-weight: bold;">Create
+                                                        REPARTI</a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class=" col-12 col-lg-4">
                                             <div class="card w-100">
                                                 <div class="card-header">
                                                     <a href="admin_create_structure.php"
