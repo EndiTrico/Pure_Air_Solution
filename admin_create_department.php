@@ -9,56 +9,38 @@ $successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['create_department'])) {
-        $REPARTO_NOME = mysqli_real_escape_string($conn, $_POST['REPARTO_NOME']);
-        $AZIENDA_ID = mysqli_real_escape_string($conn, $_POST['AZIENDA_NOME']);
-        $STRUTTURA_ID = mysqli_real_escape_string($conn, $_POST['STRUTTURA_NOME']);
+        $department_name = mysqli_real_escape_string($conn, $_POST['department_name']);
+        $department_company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
+        $department_structure_id = mysqli_real_escape_string($conn, $_POST['structure_name']);
+        $department_address = mysqli_real_escape_string($conn, $_POST['department_address']);
+        $department_city = mysqli_real_escape_string($conn, $_POST['department_city']);
+        $department_information = mysqli_real_escape_string($conn, $_POST['department_information']);
 
         $queryCheck = "SELECT REPARTO_ID FROM REPARTI 
                         WHERE REPARTO_NOME = ? 
                             AND AZIENDA_ID = ? 
-                            AND E_ATTIVO = 0 
                             AND STRUTTURA_ID = ? 
                         LIMIT 1";
 
         $stmt = mysqli_prepare($conn, $queryCheck);
-        mysqli_stmt_bind_param($stmt, "sii", $REPARTO_NOME, $AZIENDA_ID, $STRUTTURA_ID);
+        mysqli_stmt_bind_param($stmt, "sii", $department_name, $department_company_id, $department_structure_id);
         mysqli_stmt_execute($stmt);
         $resultCheck = mysqli_stmt_get_result($stmt);
 
         if ($resultCheck) {
             if (mysqli_num_rows($resultCheck) > 0) {
-                $rowCheck = mysqli_fetch_assoc($resultCheck);
-
-                $sql = "UPDATE REPARTI 
-                        SET REPARTO_NOME = ?, 
-                            AZIENDA_ID = ?, 
-                            STRUTTURA_ID = ?, 
-                            E_ATTIVO = 1
-                        WHERE REPARTO_ID = ?";
-
-                $stmt = mysqli_prepare($conn, $sql);
-                mysqli_stmt_bind_param($stmt, "siii", $REPARTO_NOME, $AZIENDA_ID, $STRUTTURA_ID, $rowCheck['REPARTO_ID']);
-
-                try {
-                    if (mysqli_stmt_execute($stmt)) {
-                        $successfulMessage = "Department Activated Successfully";
-                    } else {
-                        $errorMessage = "Error: Failed to Activate Department";
-                    }
-                } catch (Exception $e) {
-                    $errorMessage = $e->getMessage();
-                }
+                $errorMessage = "C'è un Reparto con Quel Nome in Quella Struttura e Agenzia";
             } else {
-                $sql = "INSERT INTO REPARTI (REPARTO_NOME, AZIENDA_ID, STRUTTURA_ID, E_ATTIVO) VALUES 
-                        (?, ?, ?,  1)";
+                $sql = "INSERT INTO REPARTI (REPARTO_NOME, AZIENDA_ID, STRUTTURA_ID, INDIRIZZO, CITTA, INFORMAZIONI, E_ATTIVO) VALUES 
+                        (?, ?, ?, ?, ?, ?, 1)";
                 $stmt = mysqli_prepare($conn, $sql);
-                mysqli_stmt_bind_param($stmt, "sii", $REPARTO_NOME, $AZIENDA_ID, $STRUTTURA_ID);
+                mysqli_stmt_bind_param($stmt, "siisss", $department_name, $department_company_id, $department_structure_id, $department_address, $department_city, $department_information);
 
                 try {
                     if (mysqli_stmt_execute($stmt)) {
-                        $successfulMessage = "Department Created Successfully";
+                        $successfulMessage = "Reparto Creato con Successo";
                     } else {
-                        $errorMessage = "Error: Failed to Create Department";
+                        $errorMessage = "Errore: Impossibile Creare il Reparto";
                     }
                 } catch (Exception $e) {
                     $errorMessage = $e->getMessage();
@@ -72,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 include 'database/closedb.php';
 
-function showAZIENDEName()
+function showCompanyName()
 {
     include 'database/config.php';
     include 'database/opendb.php';
@@ -82,8 +64,8 @@ function showAZIENDEName()
 
     $companyDropDown = "";
 
-    $companyDropDown .= '<select class="form-select mb-3" name = "AZIENDA_NOME" id="company-dropdown" required>';
-    $companyDropDown .= '<option value="" disabled selected>Select Company</option>';
+    $companyDropDown .= '<select class="form-select mb-3" name = "company_name" id="company-dropdown" required>';
+    $companyDropDown .= '<option value="" disabled selected>Seleziona un\'Azienda</option>';
 
     if ($company) {
         while ($row = mysqli_fetch_assoc($company)) {
@@ -136,7 +118,7 @@ function showAZIENDEName()
                             </a>
                         </div>
                         <div class="col-12 col-lg-11">
-                            <h1 class="h3 mb-3">Create Department</h1>
+                            <h1 class="h3 mb-3">Crea un Reparto</h1>
                         </div>
                         <div class="row">
                             <div class="col-12">
@@ -169,51 +151,73 @@ function showAZIENDEName()
                                                     ?>
 
                                                     <div class="row">
-                                                        <div class="col-12 col-lg-6">
+                                                        <div class="col-12 col-lg-12">
                                                             <div class="card">
                                                                 <div class="card-header">
-                                                                    <h5 class="card-title mb-0">Deparment Name</h5>
+                                                                    <h5 class="card-title mb-0">Nome</h5>
                                                                 </div>
                                                                 <div class="card-body">
-                                                                    <input type="text" class="form-control" name="REPARTO_NOME" placeholder="Department Name" required>
+                                                                    <input type="text" class="form-control" name="department_name" placeholder="Nome" required>
                                                                 </div>
                                                             </div>
                                                         </div>
+
                                                         <div class="col-12 col-lg-6">
                                                             <div class="card">
                                                                 <div class="card-header">
-                                                                    <h5 class="card-title mb-0">Company</h5>
+                                                                    <h5 class="card-title mb-0">Azienda</h5>
                                                                 </div>
                                                                 <div class="card-body">
                                                                     <div>
-                                                                        <?php echo showAZIENDEName() ?>
+                                                                        <?php echo showCompanyName() ?>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </div>
+                                                            <div class="card">
+                                                                <div class="card-header">
+                                                                    <h5 class="card-title mb-0">Indirizzo</h5>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <input type="text" class="form-control" name="department_address" placeholder="Indirizzo">
+                                                                </div>
+                                                            </div>
 
-                                                    <div class="row">
+                                                        </div>
                                                         <div class="col-12 col-lg-6">
                                                             <div class="card">
                                                                 <div class="card-header">
-                                                                    <h5 class="card-title mb-0">Structure Name</h5>
+                                                                    <h5 class="card-title mb-0">Struttura</h5>
                                                                 </div>
                                                                 <div class="card-body">
-                                                                    <select name="STRUTTURA_NOME" id="STRUTTURA_NOME" class="form-select mb-3" required>
-                                                                        <option disable selected value="">Select
-                                                                            Structure</option>
+                                                                    <select name="structure_name" id="structure_name" class="form-select mb-3" required>
+                                                                        <option disable selected value="">Seleziona una Struttura</option>
                                                                     </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card">
+                                                                <div class="card-header">
+                                                                    <h5 class="card-title mb-0">Citta</h5>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <input type="text" class="form-control" name="department_city" placeholder="Citta">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-12 col-lg-12">
+                                                            <div class="card">
+                                                                <div class="card-header">
+                                                                    <h5 class="card-title mb-0">Informazioni</h5>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <textarea class="form-control" name="department_information" rows="3" placeholder="Informazioni"></textarea>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-
-
                                                     <div class="row">
                                                         <div class="col-12 d-flex justify-content-center">
-                                                            <button name="create_department" id="createDepartmentButton" class="btn btn-success btn-lg">Create
-                                                                Department</button>
+                                                            <button name="create_department" id="createDepartmentButton" class="btn btn-success btn-lg">Crea un Reparto</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -243,11 +247,11 @@ function showAZIENDEName()
                 var post_id = 'id=' + companyID;
                 $.ajax({
                     type: "POST",
-                    url: "fetch_STRUTTURE.php",
+                    url: "fetch_structures.php",
                     data: post_id,
                     cache: false,
                     success: function(cities) {
-                        $("#STRUTTURA_NOME").html(cities);
+                        $("#structure_name").html(cities);
                     }
                 });
             });

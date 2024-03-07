@@ -55,9 +55,9 @@ include 'database/closedb.php';
 
                                             <div class="card w-100">
                                                 <div class="card-header">
-                                                    <a href="admin_create_company.php"
+                                                    <a href="admin_create_department.php"
                                                         class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                        style="font-size: 28px; height: 200px; font-weight: bold;">
+                                                        style="font-size: 28px; height: 200px; font-weight: bold;">Crea un Reparto
                                                     </a>
                                                 </div>
                                             </div>
@@ -85,10 +85,10 @@ include 'database/closedb.php';
 
                                             <div class=" card w-100">
                                                 <div class="card-header">
-                                                    <a href="admin_create_department.php"
+                                                    <a href="admin_create_bank_account.php"
                                                         class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                        style="font-size: 28px; height: 200px; font-weight: bold;">Create
-                                                        REPARTI</a>
+                                                        style="font-size: 28px; height: 200px; font-weight: bold;">Crea un Conto Bancario
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
@@ -98,8 +98,8 @@ include 'database/closedb.php';
                                                 <div class="card-header">
                                                     <a href="admin_create_structure.php"
                                                         class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                        style="font-size: 28px; height: 200px; font-weight: bold;">Create
-                                                        Structure</a>
+                                                        style="font-size: 28px; height: 200px; font-weight: bold;">Crea una Struttura
+                                                    </a>
                                                 </div>
                                             </div>
 
