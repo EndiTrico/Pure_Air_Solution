@@ -105,10 +105,10 @@ include 'database/closedb.php';
 
                                             <div class=" card w-100">
                                                 <div class="card-header">
-                                                    <a href="admin_create_department.php"
+                                                    <a href="admin_create_bill.php"
                                                         class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
                                                         style="font-size: 28px; height: 200px; font-weight: bold;">Create
-                                                        REPARTI</a>
+                                                REPARTI</a>
                                                 </div>
                                             </div>
                                         </div>

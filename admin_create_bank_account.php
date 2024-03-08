@@ -8,18 +8,17 @@ $errorMessage = "";
 $successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['create_structure'])) {
-        $structure_name = mysqli_real_escape_string($conn, $_POST['structure_name']);
-        $structure_company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
-        $structure_address = mysqli_real_escape_string($conn, $_POST['structure_address']);
-        $structure_city = mysqli_real_escape_string($conn, $_POST['structure_city']);
-        $structure_information = mysqli_real_escape_string($conn, $_POST['structure_information']);
+    if (isset($_POST['create_bank_account'])) {
+        $bank_name = mysqli_real_escape_string($conn, $_POST['bank_name']);
+        $bank_company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
+        $bank_IBAN = mysqli_real_escape_string($conn, $_POST['bank_iban']);
+
 
         $queryCheck = "SELECT STRUTTURA_ID FROM STRUTTURE 
                        WHERE STRUTTURA_NOME = ? 
                             AND AZIENDA_ID = ? 
                        LIMIT 1";
-        
+
         $stmtCheck = mysqli_prepare($conn, $queryCheck);
         if ($stmtCheck) {
             mysqli_stmt_bind_param($stmtCheck, "si", $structure_name, $structure_company_id);
@@ -73,7 +72,7 @@ function showCompanyName()
 
     $companyDropDown = "";
     $companyDropDown .= '<select class="form-select mb-3" name = "company_name" required>';
-    $companyDropDown .= '<option value="" disabled selected>Select Company</option>';
+    $companyDropDown .= '<option value="" disabled selected>Seleziona un\'Azienda</option>';
 
     if ($company) {
         while ($row = mysqli_fetch_assoc($company)) {
@@ -104,7 +103,7 @@ function showCompanyName()
     <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
 
 
-    <title>Crea una Struttura</title>
+    <title>Crea un Conto Bancario</title>
 
     <link href="css/app.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -127,7 +126,7 @@ function showCompanyName()
                             <a class="btn transparent-btn" style="margin-top: -8px;" href="admin_create.php"><img src="./images/back_button.png"></a>
                         </div>
                         <div class="col-12 col-lg-11">
-                            <h1 class="h3 mb-3">Crea una Struttura</h1>
+                            <h1 class="h3 mb-3">Crea un Conto Bancario</h1>
                         </div>
                         <div class="col-12">
                             <div class="card">
@@ -159,28 +158,18 @@ function showCompanyName()
 
                                                 <div class="row">
                                                     <div class="col-12 col-lg-6">
+
                                                         <div class="card">
                                                             <div class="card-header">
-                                                                <h5 class="card-title mb-0">Nome della Struttura <span style = "color:red;">*</span></h5>
-                                                            </div>
-                                                            <div class="card-body" style="height: 88px !important;">
-                                                                <input type="text" class="form-control" name="structure_name" placeholder="Nome" required>
-                                                            </div>
-                                                        </div>
-                                                        <div class="card">
-                                                            <div class="card-header">
-                                                                <h5 class="card-title mb-0">Indirizzo</h5>
+                                                                <h5 class="card-title mb-0">Il Nome Della Banca <span style="color:red;">*</span></h5>
                                                             </div>
                                                             <div class="card-body">
-                                                                <input type="text" class="form-control"
-                                                                    name="structure_address" placeholder="Indirizzo">
+                                                                <input type="text" class="form-control" name="bank_name" placeholder="Il Nome Della Banca" required>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-12 col-lg-6">
                                                         <div class="card">
                                                             <div class="card-header">
-                                                                <h5 class="card-title mb-0">Aziende <span style = "color:red;">*</span></h5>
+                                                                <h5 class="card-title mb-0">Aziende <span style="color:red;">*</span></h5>
                                                             </div>
                                                             <div class="card-body">
                                                                 <div>
@@ -188,32 +177,22 @@ function showCompanyName()
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="card">
-                                                            <div class="card-header">
-                                                                <h5 class="card-title mb-0">Citta</h5>
-                                                            </div>
-                                                            <div class="card-body">
-                                                                <input type="text" class="form-control"
-                                                                    name="structure_city" placeholder="Citta">
-                                                            </div>
-                                                        </div>
                                                     </div>
-                                                    <div class="col-12 col-lg-12">
+                                                    <div class="col-12 col-lg-6">
+
                                                         <div class="card">
                                                             <div class="card-header">
-                                                                <h5 class="card-title mb-0">Informazioni</h5>
+                                                                <h5 class="card-title mb-0">IBAN <span style="color:red;">*</span></h5>
                                                             </div>
                                                             <div class="card-body">
-                                                                <textarea class="form-control"
-                                                                    name="structure_information" rows="3"
-                                                                    placeholder="Informazioni"></textarea>
+                                                                <input type="text" class="form-control" name="bank_iban" placeholder="IBAN" required>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-12 d-flex justify-content-center">
-                                                        <button name="create_structure" id="createStructureButton" class="btn btn-success btn-lg">Crea una Struttura</button>
+                                                        <button name="create_bank_account" id="createBankAccountButton" class="btn btn-success btn-lg">Crea un Conto Bancario</button>
                                                     </div>
                                                 </div>
                                             </div>
