@@ -36,9 +36,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                         try {
                             if (mysqli_stmt_execute($stmt)) {
-                                $successfulMessage = "Struttura Creata con Successo";
+                                $successfulMessage = "Il Conto Bancario è Stato Creato con Successo";
                             } else {
-                                $errorMessage = "Errore: Impossibile Creare la Struttura";
+                                $errorMessage = "Errore: Impossibile Creare un Conto Bancario";
                             }
                         } catch (mysqli_sql_exception $e) {
                             $errorMessage = "Error: " . $e->getMessage();
