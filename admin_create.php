@@ -18,7 +18,7 @@ include 'database/closedb.php';
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
 
-    <title>Create Entities</title>
+    <title>Crea Entità</title>
 
     <link href="css/app.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -37,7 +37,7 @@ include 'database/closedb.php';
             <main class="content">
                 <div class="container-fluid p-0">
 
-                    <h1 class="h3 mb-3">Create Entities</h1>
+                    <h1 class="h3 mb-3">Crea Entità</h1>
                     <div class="row">
                         <div class="col-12">
                             <div class="card">
@@ -107,8 +107,8 @@ include 'database/closedb.php';
                                                 <div class="card-header">
                                                     <a href="admin_create_bill.php"
                                                         class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                        style="font-size: 28px; height: 200px; font-weight: bold;">Create
-                                                REPARTI</a>
+                                                        style="font-size: 28px; height: 200px; font-weight: bold;">Crea una Fattura
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>

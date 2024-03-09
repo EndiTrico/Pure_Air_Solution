@@ -13,16 +13,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $bill_company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
         $bill_value = ROUND(($_POST['bill_value']), 2);
         $bill_billing_date = mysqli_real_escape_string($conn, $_POST['bill_billing_date']);
-        $bill_status = mysqli_real_escape_string($conn, $_POST['bill_status']);
         $bill_VAT = ROUND($_POST['bill_VAT'], 2);
         $bill_currency = mysqli_real_escape_string($conn, $_POST['bill_currency']);
         $bill_payment_date = mysqli_real_escape_string($conn, $_POST['bill_payment_date']);
         $bill_information = mysqli_real_escape_string($conn, $_POST['bill_information']);
         $bill_paid = mysqli_real_escape_string($conn, $_POST["bill_paid"]);
 
-        $bill_value_without_VAT = ROUND($bill_value / (1 + ($bill_vat / 100)), 2);
+        $bill_value_without_VAT = ROUND($bill_value / (1 + ($bill_VAT / 100)), 2);
 
-        $sql = "INSERT INTO FATTURE (AZIENDA_ID, FATTURA_NOME, DESCRIZIONE, VALORE, VALORE_IVA_INCLUSA, IVA, MONETA, DATTA_FATURAZIONE, DATA_PAGAMENTO, E_PAGATO) 
+        $sql = "INSERT INTO FATTURE (AZIENDA_ID, FATTURA_NOME, DESCRIZIONE, VALORE, VALORE_IVA_INCLUSA, IVA, MONETA, DATA_FATTURAZIONE, DATA_PAGAMENTO, E_PAGATO) 
                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = mysqli_prepare($conn, $sql);
         if ($stmt) {
@@ -174,7 +173,7 @@ function showCompanyName()
                                                             </div>
                                                             <div class="card-body">
                                                                 <input type="number" class="form-control"
-                                                                    name="bill_value" placeholder="Value" required>
+                                                                    name="bill_value" placeholder="Value" step="any" required>
                                                             </div>
                                                         </div>
                                                         <div class="card">
@@ -242,8 +241,8 @@ function showCompanyName()
                                                             </div>
                                                             <div class="card-body">
                                                                 <input type="number" class="form-control"
-                                                                    name="bill_VAT" placeholder="IVA" min="0" max="100"
-                                                                    step="0.5" required>
+                                                                    name="bill_VAT" placeholder="IVA" min="0" max="100" step="any"
+                                                                    required>
                                                             </div>
                                                         </div>
                                                         <div class="card">
@@ -298,7 +297,7 @@ function showCompanyName()
                                                             <div class="card-body">
                                                                 <div class="form-group mb-4">
                                                                     <input type="text" class="form-control with-svg"
-                                                                        id="datePicker" name="bill_payment_date"
+                                                                        id="datePicker1" name="bill_payment_date"
                                                                         placeholder="Data di Pagamento"
                                                                         style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px;">
                                                                 </div>
@@ -350,6 +349,21 @@ function showCompanyName()
 
         var picker = new Pikaday({
             field: document.getElementById('datePicker'),
+            format: 'YYYY-MM-DD',
+            i18n: {
+                previousMonth: 'Mese Precedente',
+                nextMonth: 'Mese Successivo',
+                months: moment.localeData().months().map(capitalizeFirstLetter), // Capitalize months
+                weekdays: moment.localeData().weekdays().map(capitalizeFirstLetter), // Capitalize weekdays
+                weekdaysShort: moment.localeData().weekdaysShort().map(capitalizeFirstLetter) // Capitalize weekdaysShort
+            },
+            onSelect: function () {
+                console.log(this.getMoment().format('Do MMMM YYYY'));
+            }
+        });
+
+        var picker = new Pikaday({
+            field: document.getElementById('datePicker1'),
             format: 'YYYY-MM-DD',
             i18n: {
                 previousMonth: 'Mese Precedente',

@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             VALUES (?, ?, ?, 1)";
                     $stmt = mysqli_prepare($conn, $sql);
                     if ($stmt) {
-                        mysqli_stmt_bind_param($stmt, "iss", $bank_name, $bank_name, $bank_IBAN);
+                        mysqli_stmt_bind_param($stmt, "iss", $bank_company_id, $bank_name, $bank_IBAN);
 
                         try {
                             if (mysqli_stmt_execute($stmt)) {
@@ -179,7 +179,6 @@ function showCompanyName()
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-lg-6">
-
                                                         <div class="card">
                                                             <div class="card-header">
                                                                 <h5 class="card-title mb-0">IBAN <span style="color:red;">*</span></h5>
