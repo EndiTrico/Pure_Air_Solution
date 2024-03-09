@@ -14,25 +14,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $bank_IBAN = mysqli_real_escape_string($conn, $_POST['bank_iban']);
 
 
-        $queryCheck = "SELECT STRUTTURA_ID FROM STRUTTURE 
-                       WHERE STRUTTURA_NOME = ? 
-                            AND AZIENDA_ID = ? 
+        $queryCheck = "SELECT BANCA_CONTO_ID FROM BANCA_CONTI 
+                       WHERE BANCA_NOME = ? 
+                            AND IBAN = ?
                        LIMIT 1";
 
         $stmtCheck = mysqli_prepare($conn, $queryCheck);
         if ($stmtCheck) {
-            mysqli_stmt_bind_param($stmtCheck, "si", $structure_name, $structure_company_id);
+            mysqli_stmt_bind_param($stmtCheck, "ss", $bank_name, $bank_IBAN);
 
             if (mysqli_stmt_execute($stmtCheck)) {
                 $resultCheck = mysqli_stmt_get_result($stmtCheck);
                 if (mysqli_num_rows($resultCheck) > 0) {
                     echo 'C\'è una Struttura con Quel nome in Quell\'Agenzia';
                 } else {
-                    $sql = "INSERT INTO STRUTTURE (AZIENDA_ID, STRUTTURA_NOME, INDIRIZZO, CITTA, INFORMAZIONI, E_ATTIVO) 
-                            VALUES (?, ?, ?, ?, ?, 1)";
+                    $sql = "INSERT INTO BANCA_CONTI (AZIENDA_ID, BANCA_NOME, IBAN, E_ATTIVO) 
+                            VALUES (?, ?, ?, 1)";
                     $stmt = mysqli_prepare($conn, $sql);
                     if ($stmt) {
-                        mysqli_stmt_bind_param($stmt, "issss", $structure_company_id, $structure_name, $structure_address, $structure_city, $structure_information);
+                        mysqli_stmt_bind_param($stmt, "iss", $bank_name, $bank_name, $bank_IBAN);
 
                         try {
                             if (mysqli_stmt_execute($stmt)) {
