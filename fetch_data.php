@@ -1,11 +1,9 @@
 <?php
-// Assuming you have already established a MySQL connection
 include 'database/config.php';
 include 'database/opendb.php';
 session_start();
 
 $entity = $_GET['entity'];
-//$search = $_GET['search'];
 
 $query = "";
 
@@ -38,43 +36,10 @@ if ($entity == "utenti") {
                 FROM IMPIANTI";
 }
 
-/*
-if (!empty($search)) {
-    if ($entity == "UTENTI") {
-        $query .= " WHERE CONCAT(u.NOME, ' ', u.COGNOME, ' ', u.EMAIL, ' ', u.RUOLO) LIKE '%$search%'";
-    } else if ($entity == "AZIENDE") {
-        $query .= " WHERE CONCAT(AZIENDA_NOME, ' ', EMAIL) LIKE '%$search%'";
-    } else if ($entity == "STRUTTURE") {
-        $query .= " WHERE CONCAT(s.STRUTTURA_NOME, ' ', c.AZIENDA_NOME) LIKE '%$search%'";
-    } else if ($entity == "departures") {
-        $query .= " WHERE CONCAT(d.REPARTO_NOME, ' ', s.STRUTTURA_NOME, ' ', c.AZIENDA_NOME) LIKE '%$search%'";   
-    }
-}
-*/
+
 if (!empty($_SESSION['AZIENDA_ID'])) {
     $query .= " WHERE AZIENDA_ID = " . $_SESSION["AZIENDA_ID"];
 }
-/*
-// Get sorting parameters
-$sortColumn = isset($_GET['sort']) ? $_GET['sort'] : '';
-$sortDirection = 'ASC'; // Default sorting direction
-
-if (!empty($sortColumn)) {
-    $sortDirection = 'ASC'; // Initial sorting direction
-    // Toggle sorting direction if the same column is clicked again
-    if (isset($_SESSION['sort_column']) && $_SESSION['sort_column'] == $sortColumn) {
-        $sortDirection = ($_SESSION['sort_direction'] == 'ASC') ? 'DESC' : 'ASC';
-    }
-    $_SESSION['sort_column'] = $sortColumn;
-    $_SESSION['sort_direction'] = $sortDirection;
-}
-
-// Modify your SQL query according to the sorting parameters
-
-if (!empty($sortColumn)) {
-    $query .= " ORDER BY $sortColumn $sortDirection";
-}
-*/
 
 $result = mysqli_query($conn, $query);
 echo '<div class="table-responsive">

@@ -173,7 +173,7 @@ function showCompanyName()
                                                             </div>
                                                             <div class="card-body">
                                                                 <input type="number" class="form-control"
-                                                                    name="bill_value" placeholder="Value" step="any" required>
+                                                                    name="bill_value" placeholder="Value" min = 0  max = 100000000000000000000000000 step="any" required>
                                                             </div>
                                                         </div>
                                                         <div class="card">
@@ -193,7 +193,7 @@ function showCompanyName()
                                                             </div>
                                                             <div class="card-body">
                                                                 <div class="form-group mb-4">
-                                                                    <input type="text" class="form-control with-svg"
+                                                                    <input type="text" class="form-control"
                                                                         id="datePicker" name="bill_billing_date"
                                                                         placeholder="Data di Fatturazione"
                                                                         style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px;">
@@ -296,7 +296,7 @@ function showCompanyName()
                                                             </div>
                                                             <div class="card-body">
                                                                 <div class="form-group mb-4">
-                                                                    <input type="text" class="form-control with-svg"
+                                                                    <input type="text" class="form-control"
                                                                         id="datePicker1" name="bill_payment_date"
                                                                         placeholder="Data di Pagamento"
                                                                         style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px;">
@@ -318,7 +318,7 @@ function showCompanyName()
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-12 d-flex justify-content-center">
-                                                        <button name="create_bill" id="createBillButton"
+                                                        <button name="create_bill" id="createBillButton" 
                                                             class="btn btn-success btn-lg">Crea una Fattura</button>
                                                     </div>
                                                 </div>

@@ -4,7 +4,7 @@
 
 <nav id="sidebar" class="sidebar js-sidebar">
 	<div class="sidebar-content js-simplebar">
-		<a class="sidebar-brand" href = "admin_dashboard.php">
+		<a class="sidebar-brand" href="admin_dashboard.php">
 			<span class="align-middle">Pure Air Solutions</span>
 		</a>
 
@@ -18,10 +18,10 @@
 					<i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
 				</a>
 			</li>
-
+ 
 			<li class="sidebar-item">
 				<a class="sidebar-link" href="admin_profile.php">
-					<i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
+					<i class="align-middle" data-feather="user"></i> <span class="align-middle">Profilo</span>
 				</a>
 			</li>
 
@@ -37,14 +37,13 @@
 
 			<li class="sidebar-item">
 				<a class="sidebar-link" href="admin_create.php">
-					<i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">Create</span>
+					<i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">Crea Entità</span>
 				</a>
 			</li>
 
 			<li class="sidebar-item">
 				<a class="sidebar-link" href="admin_display_entities.php">
-					<i class="align-middle" data-feather="book"></i> <span class="align-middle">Display and
-						Modify</span>
+					<i class="align-middle" data-feather="book"></i> <span class="align-middle">Visualizza Entità</span>
 				</a>
 			</li>
 
@@ -103,25 +102,25 @@
 	</div>
 </nav>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const sidebarItems = document.querySelectorAll('.sidebar-item');
-        const currentPage = window.location.pathname.split('/').pop(); // Get the current page name
+	document.addEventListener('DOMContentLoaded', function () {
+		const sidebarItems = document.querySelectorAll('.sidebar-item');
+		const currentPage = window.location.pathname.split('/').pop(); // Get the current page name
 
-        sidebarItems.forEach(item => {
-            const link = item.querySelector('.sidebar-link');
-            const href = link.getAttribute('href');
+		sidebarItems.forEach(item => {
+			const link = item.querySelector('.sidebar-link');
+			const href = link.getAttribute('href');
 
-            if (currentPage === href) {
-                item.classList.add('active');
-            }
+			if (currentPage === href) {
+				item.classList.add('active');
+			}
 
-            link.addEventListener('click', () => {
-                sidebarItems.forEach(otherItem => {
-                    otherItem.classList.remove('active');
-                });
+			link.addEventListener('click', () => {
+				sidebarItems.forEach(otherItem => {
+					otherItem.classList.remove('active');
+				});
 
-                item.classList.add('active');
-            });
-        });
-    });
+				item.classList.add('active');
+			});
+		});
+	});
 </script>

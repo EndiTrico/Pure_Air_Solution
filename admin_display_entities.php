@@ -19,7 +19,7 @@ include 'database/closedb.php';
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
 
-    <title>Display Entities</title>
+    <title>Visualizza Entità</title>
 
     <link href="css/app.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -30,14 +30,9 @@ include 'database/closedb.php';
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.0.1/js/dataTables.js"></script>
 
+
+
     <style>
-        /* #searchBox {
-            border-radius: 50px;
-            margin-left: 65%;
-            width: 80%;
-            display: none;
-        }
-*/
         .current {
             background-color: whitesmoke !important;
             border: none !important;
@@ -75,7 +70,7 @@ include 'database/closedb.php';
             <main class="content">
                 <div class="container-fluid p-0">
 
-                    <h1 class="h3 mb-3">Display Entities</h1>
+                    <h1 class="h3 mb-3">Visualizza Entità</h1>
 
                     <div class="row">
                         <div class="col-12">
@@ -104,7 +99,7 @@ include 'database/closedb.php';
                                             <div class="card-header">
                                                 <a onclick="fetchData('strutture')"
                                                     class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                    style="font-weight: bold;">Display Strutture
+                                                    style="font-weight: bold;">Mostra Strutture
                                                 </a>
                                             </div>
                                         </div>
@@ -113,7 +108,7 @@ include 'database/closedb.php';
                                             <div class="card-header">
                                                 <a onclick="fetchData('reparti')"
                                                     class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                    style="font-weight: bold;">Mostra reparti
+                                                    style="font-weight: bold;">Mostra Reparti
                                                 </a>
                                             </div>
                                         </div>
@@ -149,12 +144,6 @@ include 'database/closedb.php';
 
 
                                     <div class="col-12 col-lg-12">
-                                        <!--    <div class="card-header output col-md-6" id="output">
-                                            <input oninput="search()" type="text" id="searchBox"
-                                                class="form-control justify-content-center" placeholder="Search...">
-
-                                        </div>-->
-
                                         <div id="tableContainer" class="mt-4">
                                         </div>
                                     </div>
@@ -169,67 +158,48 @@ include 'database/closedb.php';
             <script>
                 var selected_entity = "";
 
+                $(document).ready(function () {
+                    $('#example').DataTable({
+                        language: {
+                            "url": "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Italian.json"
+                        }
+                    });
+                });
 
-
-
-                /*    function sortData(column) {
-                        var searchQuery = document.getElementById('searchBox').value;
-                        var xhttp = new XMLHttpRequest();
-                        xhttp.onreadystatechange = function () {
-                            if (this.readyState == 4 && this.status == 200) {
-                                document.getElementById("tableContainer").innerHTML = this.responseText;
-                            }
-                        };
-    
-                        xhttp.open("GET", "fetch_data.php?entity=" + selected_entity + "&search=" + searchQuery + "&sort=" + column, true);
-                        xhttp.send();
-                    }
-    */
                 function fetchData(entity) {
-
-                    //                  document.getElementById("searchBox").style.display = "block";
-
                     selected_entity = entity;
-                    //                 var searchQuery = document.getElementById('searchBox').value;
                     var xhttp = new XMLHttpRequest();
                     xhttp.onreadystatechange = function () {
                         if (this.readyState == 4 && this.status == 200) {
                             document.getElementById("tableContainer").innerHTML = this.responseText;
-                            new DataTable('#example');
+                            $('#example').DataTable({
+                                language: {
+                                    "url": "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Italian.json"
+                                },
+                                destroy: true
+                            });
                         }
                     };
-                    xhttp.open("GET", "fetch_data.php?entity=" + entity);
+                    xhttp.open("GET", "fetch_data.php?entity=" + entity, true);
                     xhttp.send();
-
                 }
 
-                /*function search() {
-                    var entity = selected_entity;
-                    var searchQuery = document.getElementById('searchBox').value;
-                    var xhttp = new XMLHttpRequest();
-                    xhttp.onreadystatechange = function () {
-                        if (this.readyState == 4 && this.status == 200) {
-                            document.getElementById("tableContainer").innerHTML = this.responseText;
-                        }
-                    };
-                    xhttp.open("GET", "fetch_data.php?entity=" + entity + "&search=" + searchQuery, true);
-                    xhttp.send();
-                }*/
 
                 function confirmDelete(id, entity) {
                     Swal.fire({
-                        title: "Are You Sure?",
-                        text: "All the dependent entities will be set to inactive",
+                        title: "Sei Sicuro?",
+                        text: "Tutte le entità dipendenti verranno impostate su inattive",
                         icon: "warning",
                         showCancelButton: true,
+                        cancelButtonText: "No",
                         confirmButtonColor: "#3085d6",
                         cancelButtonColor: "#d33",
-                        confirmButtonText: "Yes"
+                        confirmButtonText: "Si"
                     }).then((result) => {
                         if (result.isConfirmed) {
                             Swal.fire({
-                                title: "Deleted!",
-                                text: "Action performed successfully",
+                                title: "Eliminato!",
+                                text: "Azione eseguita con successo",
                                 icon: "success",
                                 showConfirmButton: false
                             });
@@ -243,17 +213,26 @@ include 'database/closedb.php';
 
                 function confirmActivation(id, entity) {
                     Swal.fire({
-                        title: "Are You Sure?",
-                        text: "All the parent entities needs to active",
+                        title: "Sei Sicuro?",
+                        text: "Tutte le entità principali verranno impostate come attive",
                         icon: "warning",
                         showCancelButton: true,
+                        cancelButtonText: "No",
                         confirmButtonColor: "#3085d6",
                         cancelButtonColor: "#d33",
-                        confirmButtonText: "Yes"
+                        confirmButtonText: "Si"
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            var url = 'admin_activization.php?id=' + encodeURIComponent(id) + '&entity=' + encodeURIComponent(entity);
-                            window.location.href = url;
+                            Swal.fire({
+                                title: "Attivato!",
+                                text: "Azione eseguita con successo",
+                                icon: "success",
+                                showConfirmButton: false
+                            });
+                            setTimeout(function () {
+                                var url = 'admin_activization.php?id=' + encodeURIComponent(id) + '&entity=' + encodeURIComponent(entity);
+                                window.location.href = url;
+                            }, 2000);
                         }
                     });
                 }
