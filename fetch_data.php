@@ -79,10 +79,10 @@ if (mysqli_num_rows($result) > 0) {
                 echo $value == 1 ? '<td><span class="badge-success-custom">Attivo</span></td>' :
                     '<td><span class="badge-danger-custom">Inattivo</span></td>';
                 $E_ATTIVO = $value;
-            } else if ($key == 'E_PAGATO'){
+            } else if ($key == 'E_PAGATO') {
                 echo $value == 1 ? '<td><span class="badge-success-custom">Pagato</span></td>' :
-                '<td><span class="badge-danger-custom">Non&nbsp;Pagato</span></td>';
-            }else if (strpos(strtolower($key), 'id')) {
+                    '<td><span class="badge-danger-custom">Non&nbsp;Pagato</span></td>';
+            } else if (strpos(strtolower($key), 'id')) {
                 continue;
             } else {
                 echo '<td>' . $value . '</td>';
@@ -95,9 +95,9 @@ if (mysqli_num_rows($result) > 0) {
 
 
         if ($_SESSION['role'] == 'Admin') {
-           
-            echo '<td>                    <div class="btn-group">
-            <a href="admin_edit.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-warning">Modifica</a>&nbsp&nbsp&nbsp';
+            echo '<td>
+                    <div class="btn-group">
+                        <a href="admin_edit.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-warning">Modifica</a>&nbsp&nbsp&nbsp';
             if ($E_ATTIVO == 0) {
                 echo '<button class="btn btn-success" onclick="confirmActivation(' . reset($row) .  ', \'' . $entity . '\')">Attivalo</button>&nbsp&nbsp&nbsp';
             } else {
@@ -108,12 +108,11 @@ if (mysqli_num_rows($result) > 0) {
             }
             echo '</div></td></tr>';
         } else if ($entity == "utenti" || $entity == "aziende") {
-                echo '<td><a href="admin_edit.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-info">Dettagli</a>';
-                echo '</td></tr>';
+            echo '<td>
+            <div class="btn-group">
+                 <a href="admin_edit.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-info">Dettagli</a>
+                 </div></td></tr>';
         }
-
-
-
     }
 }
 

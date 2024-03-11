@@ -215,7 +215,7 @@ function showForm()
     $entity = $_GET['entity'];
     $id = $_GET['id'];
 
-    if ($entity == 'UTENTI') {
+    if ($entity == 'utenti') {
         $query = "SELECT * FROM UTENTI WHERE UTENTE_ID = ?";
         $stmt = mysqli_prepare($conn, $query);
         mysqli_stmt_bind_param($stmt, "i", $id);
@@ -479,6 +479,115 @@ function showForm()
     }
     include 'database/closedb.php';
 }
+
+
+function showUsers($row){
+    return '
+<form id="userForm" method="post">
+    <div class="row">
+        <div class="col-12 col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Nome <span style = "color:red;">*</span></h5>
+                </div>
+                <div class="card-body">
+                    <input type="text" class="form-control" name="user_first_name" value = "'. $row["NOME"] . '" 
+                        placeholder="Nome" required>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Cognome <span style = "color:red;">*</span></h5>
+                </div>
+                <div class="card-body">
+                    <input type="text" class="form-control" name="user_last_name" value = "' .  $row["COGNOME"] . '"
+                        placeholder="Cognome" required> 
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Azienda Posizione</h5>
+                </div>
+                <div class="card-body">
+                    <input type="text" placeholder="Azienda Posizione"
+                        name="user_position" class="form-control" value="' . $row["AZIENDA_POSIZIONE"] . '" /> 
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Ruole <span style = "color:red;">*</span></h5>
+                </div>
+                <div class="card-body">
+                    <div>
+                        <select data-allow-clear="1" name="user_role"
+                            class="form-select mb-3" required>
+                            <option value="" style="margin-right:20px !important;"
+                                disabled selected hidden>Seleciona Ruole</option>
+                            <option value="Admin" ' . ($row["RUOLE"] == "Admin" ? 'selected' : '') . '>Admin</option>
+                            <option value="Cliente" ' . ($row["RUOLE"] == "Cliente" ? 'selected' : '') . '>Cliente</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Numero <span style = "color:red;">*</span></h5>
+                </div>
+                <div class="card-body">
+                    <input type="text" placeholder="Numero" name="user_number"
+                        class="form-control" value="'. $row[]" required />
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">E-mail <span style = "color:red;">*</span></h5>
+                </div>
+                <div class="card-body">
+                    <div>
+                        <input type="email" placeholder="Email" name="user_email"
+                            value="" class="form-control" required />
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Password <span style = "color:red;">*</span></h5>
+                </div>
+                <div class="card-body">
+                    <input type="password" placeholder="Password"
+                        name="user_password" class="form-control" value=""
+                        required />
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Aziende</h5>
+                </div>
+                <div class="card-body">
+                    <select multiple placeholder="Seleciona Azienda"
+                        name="user_companies[]" id= "select" data-allow-clear="1">
+                        <?php echo showAllCompanies(); ?>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center">
+                <button type="submit" name="create_user"
+                    class="btn btn-success btn-lg">Crea un Utente</button>
+            </div>
+        </div>
+    </div>
+</form>';
+}
 ?>
 
 
@@ -519,13 +628,13 @@ function showForm()
                         <div class="col-12 col-lg-11">
                             <h1 class="h3 mb-3">Update
                                 <?php
-                                if ($entity == "UTENTI") {
+                                if ($entity == "utenti") {
                                     echo "User";
-                                } else if ($entity == "AZIENDE") {
+                                } else if ($entity == "aziende") {
                                     echo "Company";
-                                } else if ($entity == "STRUTTURE") {
+                                } else if ($entity == "strutture") {
                                     echo "Structure";
-                                } else if ($entity == "REPARTI") {
+                                } else if ($entity == "reparti") {
                                     echo "Department";
                                 }
                                 ?>
