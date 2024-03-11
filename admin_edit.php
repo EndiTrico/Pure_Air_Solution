@@ -158,7 +158,7 @@ function showStructureForDepartment($id)
     return '<option selected value="' . htmlspecialchars($row_retrieve["STRUTTURA_ID"]) . '">' . htmlspecialchars($row_retrieve['STRUTTURA_NOME']) . '</option>';
 }
 
-function showAZIENDENameDropDown($entity)
+function showCompaniesNameDropDown($entity)
 {
     include 'database/config.php';
     include 'database/opendb.php';
@@ -170,15 +170,14 @@ function showAZIENDENameDropDown($entity)
     $company = mysqli_query($conn, $query);
 
     $sql = "";
-    $companyDropDown = '<select class="form-select mb-3" name="user_company" id="company-dropdown" required>';
-    $companyDropDown .= '<option value="" disabled selected>Select Company</option>';
+    $companyDropDown = '';
 
     // Prepare and execute the SQL query based on the entity type
-    if ($entity == "UTENTI") {
-        $sql = "SELECT AZIENDA_ID FROM UTENTI WHERE UTENTE_ID = ?";
-    } else if ($entity == "STRUTTURE") {
+    if ($entity == "utenti") {
+        $sql = "SELECT ua.AZIENDA_ID FROM UTENTI u JOIN UTENTI_AZIENDE ua WHERE ua.UTENTE_ID = ?";
+    } else if ($entity == "strutture") {
         $sql = "SELECT AZIENDA_ID FROM STRUTTURE WHERE STRUTTURA_ID = ?";
-    } else if ($entity == "REPARTI") {
+    } else if ($entity == "reparti") {
         $sql = "SELECT AZIENDA_ID FROM REPARTI WHERE REPARTO_ID = ?";
     }
 
@@ -199,14 +198,11 @@ function showAZIENDENameDropDown($entity)
         $companyDropDown .= "Error: " . mysqli_error($conn);
     }
 
-    $companyDropDown .= '</select>';
 
     include 'database/closedb.php';
 
     return $companyDropDown;
 }
-
-
 
 function showForm()
 {
@@ -224,93 +220,9 @@ function showForm()
 
         if ($result) {
             $row = mysqli_fetch_assoc($result);
-
-            echo '<form id="userForm" method="post">
-        <div class="row">
-        <div class="col-12 col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">First Name</h5>
-                    </div>
-                    <div class="card-body">
-                        <input type="text" class="form-control" name="NOME" placeholder="First Name" value="' . $row["NOME"] . '" required>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Last Name</h5>
-                    </div>
-                    <div class="card-body">
-                        <input type="text" class="form-control" name="COGNOME" placeholder="Last Name" value="' . $row["COGNOME"] . '" required>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Role</h5>
-                    </div>
-                    <div class="card-body">
-                        <div>
-                            <select name="role" class="form-select mb-3" required>
-                                <option value="" disabled selected>Select Role</option> 
-                                <option ' . ($row["ROLE"] == "Admin" ? 'selected' : '') . '>Admin</option>
-                                <option ' . ($row["ROLE"] == "Client" ? 'selected' : '') . '>Client</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Is Active</h5>
-                </div>
-                <div class="card-body">
-                    <input type="text" class="form-control" name="E_ATTIVO" placeholder="Is Active" value="' . $row["E_ATTIVO"] . '" required>
-                </div>
-            </div>
-            </div>
-
-            <div class="col-12 col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Email</h5>
-                    </div>
-                    <div class="card-body">
-                        <div>
-                            <input type="email" placeholder="Email" name="user_email" class="form-control" value="' . $row["EMAIL"] . '"  required>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Password</h5>
-                    </div>
-                    <div class="card-body">
-                        <input type="password" placeholder="Password" name="user_password" class="form-control"/>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Company</h5>
-                    </div>
-                    <div class="card-body">
-                        <div>' . showAZIENDENameDropDown($entity) .
-                '</div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12 d-flex justify-content-center">
-                    <button type="submit" name="update_user" class="btn btn-success btn-lg">Update User</button>
-                </div>
-            </div>
-        </div>
-    </form>';
+            showUsers($row);
         }
-    } else if ($entity == 'AZIENDE') {
+    } else if ($entity == 'aziende') {
         $query = "SELECT * FROM AZIENDE WHERE AZIENDA_ID = ?";
 
         $stmt = mysqli_prepare($conn, $query);
@@ -320,39 +232,9 @@ function showForm()
 
         if ($result) {
             $row = mysqli_fetch_assoc($result);
-
-            echo '<form id="companyForm" method="post">
-            <div class="row">
-                <div class="row">
-                    <div class="col-12 col-lg-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">Company Name</h5>
-                            </div>
-                            <div class="card-body">
-                                <input type="text" class="form-control" name="AZIENDA_NOME" placeholder="Company Name" value="' . $row['AZIENDA_NOME'] . '"required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">Email</h5>
-                            </div>
-                            <div class="card-body">
-                                <input type="email" class="form-control" name="company_email" placeholder="Email" value="' . $row['EMAIL'] . '"required>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 d-flex justify-content-center">
-                        <button name="update_company" id="update_company" class="btn btn-success btn-lg">Update Company</button>
-                    </div>
-                </div>
-        </form>';
+            showCompanies($row);                                         
         }
-    } else if ($entity == 'STRUTTURE') {
+    } else if ($entity == 'strutture') {
         $query = "SELECT * FROM STRUTTURE WHERE STRUTTURA_ID = ?";
         $stmt = mysqli_prepare($conn, $query);
         mysqli_stmt_bind_param($stmt, "i", $id);
@@ -362,39 +244,7 @@ function showForm()
         if ($result) {
             $row = mysqli_fetch_assoc($result);
 
-            echo '<div class="row">
-            <div class="col-12 col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Structure Name</h5>
-                    </div>
-                    <div class="card-body">
-                        <input type="text" class="form-control"
-                            name="STRUTTURA_NOME" placeholder="Structure Name" value="' . $row["STRUTTURA_NOME"] . '" 
-                            required>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Company</h5>
-                    </div>
-                    <div class="card-body">
-                        <div>'
-                . showAZIENDENameDropDown($entity) .
-                '</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12 d-flex justify-content-center">
-                <button name="update_structure" id="updateStructureButton"
-                    class="btn btn-success btn-lg">Update Structure</button>
-            </div>
-        </div>
-        </form>';
+            showStructures($row);
         }
     } else if ($entity == "REPARTI") {
         $query = "SELECT * FROM REPARTI WHERE REPARTO_ID = ?";
@@ -427,7 +277,7 @@ function showForm()
                             </div>
                         <div class="card-body">
                             <div>'
-                . showAZIENDENameDropDown($entity) . '
+                . ($entity) . '
                             </div>
                         </div>
                     </div>
@@ -482,7 +332,7 @@ function showForm()
 
 
 function showUsers($row){
-    return '
+    echo  '
 <form id="userForm" method="post">
     <div class="row">
         <div class="col-12 col-lg-6">
@@ -525,8 +375,8 @@ function showUsers($row){
                             class="form-select mb-3" required>
                             <option value="" style="margin-right:20px !important;"
                                 disabled selected hidden>Seleciona Ruole</option>
-                            <option value="Admin" ' . ($row["RUOLE"] == "Admin" ? 'selected' : '') . '>Admin</option>
-                            <option value="Cliente" ' . ($row["RUOLE"] == "Cliente" ? 'selected' : '') . '>Cliente</option>
+                            <option value="Admin" ' . ($row["RUOLO"] == "Admin" ? 'selected' : '') . '>Admin</option>
+                            <option value="Cliente" ' . ($row["RUOLO"] == "Cliente" ? 'selected' : '') . '>Cliente</option>
                         </select>
                     </div>
                 </div>
@@ -540,7 +390,7 @@ function showUsers($row){
                 </div>
                 <div class="card-body">
                     <input type="text" placeholder="Numero" name="user_number"
-                        class="form-control" value="'. $row[]" required />
+                        class="form-control" value="'. $row["NUMERO"] . '" required />
                 </div>
             </div>
 
@@ -551,7 +401,7 @@ function showUsers($row){
                 <div class="card-body">
                     <div>
                         <input type="email" placeholder="Email" name="user_email"
-                            value="" class="form-control" required />
+                            value="' . $row["EMAIL"] .'" class="form-control" required />
                     </div>
                 </div>
             </div>
@@ -563,7 +413,7 @@ function showUsers($row){
                 <div class="card-body">
                     <input type="password" placeholder="Password"
                         name="user_password" class="form-control" value=""
-                        required />
+                        />
                 </div>
             </div>
 
@@ -573,8 +423,8 @@ function showUsers($row){
                 </div>
                 <div class="card-body">
                     <select multiple placeholder="Seleciona Azienda"
-                        name="user_companies[]" id= "select" data-allow-clear="1">
-                        <?php echo showAllCompanies(); ?>
+                        name="user_companies[]" id= "select" data-allow-clear="1">'.
+                        showCompaniesNameDropDown("utenti") . '
                     </select>
                 </div>
             </div>
@@ -586,8 +436,315 @@ function showUsers($row){
             </div>
         </div>
     </div>
-</form>';
+</form>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script>
+$(function () {
+    $(\'select\').each(function () {
+        $(this).select2({
+            theme: \'bootstrap4\',
+            width: \'style\',
+            placeholder: $(this).attr(\'placeholder\'),
+            allowClear: Boolean($(this).data(\'allow-clear\')),
+        });
+    });
+});
+
+</script>';
 }
+
+function showCompanies($row){
+    echo ' <form id="companyForm" method="post">
+    <div class="row">
+        <div class="row">
+            <div class="col-12 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Nome <span
+                                style="color:red;">*</span></h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" class="form-control"
+                            name="company_name" placeholder="Nome" value = "'.$row["AZIENDA_NOME"] .'"                                  required>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Codice Fiscale <span
+                                style="color:red;">*</span></h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" class="form-control"
+                            name="company_codice_fiscale" value = "'. $row["CODICE_FISCALE"] .'"
+                            placeholder="Codice Fiscale" required>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Contatto 1</h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" class="form-control" value = "'. $row["CONTATTO_1"] .'"
+                            name="company_contact1" placeholder="Contatto 1">
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Contatto 2</h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" class="form-control" value = "'. $row["CONTATTO_2"] .'"
+                            name="company_contact2" placeholder="Contatto 2">
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Contatto 3</h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" class="form-control" value = "'. $row["CONTATTO_1"] .'"
+                            name="company_contact3" placeholder="Contatto 3">
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Numero di Telefono 1</h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="number" class="form-control" value = "'. $row["TELEFONO_1"] .'"
+                            name="company_telephone1"
+                            placeholder="Numero di Telefono 1">
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Numero di Telefono 2</h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="number" class="form-control" value = "'. $row["TELEFONO_2"] .'"
+                            name="company_telephone2"
+                            placeholder="Numero di Telefono 2">
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Numero di Telefono 3</h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="number" class="form-control" value = "'. $row["TELEFONO_3"] .'"
+                            name="company_telephone3"
+                            placeholder="Numero di Telefono 3">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Partita Iva <span
+                                style="color:red;">*</span></h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" class="form-control" value ="'. $row["PARTITA_IVA"] . '"
+                            name="company_nipt" placeholder="Partita Iva"
+                            required>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Website </h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" class="form-control" value = "' . $row["WEBSITE"] . '"
+                            name="company_website" placeholder="Website">
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Email 1 <span
+                                style="color:red;">*</span></h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" class="form-control" value = "' . $row['EMAIL_1'] . '"
+                            name="company_email1" placeholder="Email 1"
+                            required>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Email 2</h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" class="form-control" value = "' . $row['EMAIL_2'] . '"
+                            name="company_email2" placeholder="Email 2">
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Email 3</h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" class="form-control" value = "' . $row['EMAIL_3'] . '"
+                            name="company_email3" placeholder="Email 3">
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Indirizzo</h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" class="form-control" value = "' . $row['INDIRIZZO'] . '"
+                            name="company_address" placeholder="Indirizzo">
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Citta</h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" class="form-control" value = "' . $row['CITTA'] . '" 
+                            name="company_city" placeholder="Citta">
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Indirizzo Pec <span
+                                style="color:red;">*</span></h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="email" class="form-control"  value = "' . $row['INDIRIZZO_PEC'] . '"
+                            name="company_address_pec" placeholder="Indirizzo"
+                            required>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Informazioni</h5>
+                    </div>
+                    <div class="card-body">
+                        <textarea class="form-control"
+                            name="company_information" rows="3"
+                            placeholder="Informazioni">' . $row['INFORMAZIONI'] . '</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center">
+                <button name="create_company" id="createUserButton"
+                    class="btn btn-success btn-lg">Crea un Azienda</button>
+            </div>
+        </div>
+    </div>
+</form>
+';
+}
+
+function showStructures($row){
+    echo '
+<form id="structureForm" method="post">
+    <div class="row">
+        <div class="row">
+            <div class="col-12 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Nome <span style = "color:red;">*</span></h5>
+                    </div>
+                    <div class="card-body" style="height: 88px !important;">
+                        <input type="text" class="form-control" name="structure_name" placeholder="Nome" value = "' . $row["STRUTTURA_NOME"] . '" required>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Indirizzo</h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" class="form-control" value = "' . $row["INDIRIZZO"] . '"
+                            name="structure_address" placeholder="Indirizzo">
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Aziende <span style = "color:red;">*</span></h5>
+                    </div>
+                    <div class="card-body">
+                        <div> <select multiple placeholder="Seleciona Azienda"
+                        name="structure_companies[]" id= "select" data-allow-clear="1">' .
+                        showCompaniesNameDropDown("strutture") . '</select>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Citta</h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" class="form-control" value = "' . $row["CITTA"] . '"
+                            name="structure_city" placeholder="Citta">
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Informazioni</h5>
+                    </div>
+                    <div class="card-body">
+                        <textarea class="form-control"
+                            name="structure_information" rows="3"
+                            placeholder="Informazioni"> ' . $row["INFORMAZIONI"] . '</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center">
+                <button name="create_structure" id="createStructureButton" class="btn btn-success btn-lg">Crea una Struttura</button>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script>
+$(function () {
+    $(\'select\').each(function () {
+        $(this).select2({
+            theme: \'bootstrap4\',
+            width: \'style\',
+            placeholder: $(this).attr(\'placeholder\'),
+            allowClear: Boolean($(this).data(\'allow-clear\')),
+        });
+    });
+});
+
+</script>';
+}
+
+function showDepartments($row){
+
+
+
+
+
+
+}
+
+
+
+
+
 ?>
 
 
@@ -610,6 +767,12 @@ function showUsers($row){
     <script src="https://code.jquery.com/jquery-3.6 .0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+
+<!-- select2-bootstrap4-theme -->
+<link href="https://raw.githack.com/ttskch/select2-bootstrap4-theme/master/dist/select2-bootstrap4.css"
+    rel="stylesheet">
 </head>
 
 <body>
@@ -626,12 +789,12 @@ function showUsers($row){
                                 href="admin_display_entities.php"><img src="./images/back_button.png"></a>
                         </div>
                         <div class="col-12 col-lg-11">
-                            <h1 class="h3 mb-3">Update
+                            <h1 class="h3 mb-3">
                                 <?php
                                 if ($entity == "utenti") {
-                                    echo "User";
+                                    echo "Aggiorna Utente";
                                 } else if ($entity == "aziende") {
-                                    echo "Company";
+                                    echo "Aggiorna Aziende";
                                 } else if ($entity == "strutture") {
                                     echo "Structure";
                                 } else if ($entity == "reparti") {

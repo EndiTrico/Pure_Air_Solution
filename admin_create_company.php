@@ -190,7 +190,7 @@ include 'database/closedb.php';
                                                                 <h5 class="card-title mb-0">Numero di Telefono 1</h5>
                                                             </div>
                                                             <div class="card-body">
-                                                                <input type="text" class="form-control"
+                                                                <input type="number" class="form-control"
                                                                     name="company_telephone1"
                                                                     placeholder="Numero di Telefono 1">
                                                             </div>
@@ -200,7 +200,7 @@ include 'database/closedb.php';
                                                                 <h5 class="card-title mb-0">Numero di Telefono 2</h5>
                                                             </div>
                                                             <div class="card-body">
-                                                                <input type="text" class="form-control"
+                                                                <input type="number" class="form-control"
                                                                     name="company_telephone2"
                                                                     placeholder="Numero di Telefono 2">
                                                             </div>
@@ -210,7 +210,7 @@ include 'database/closedb.php';
                                                                 <h5 class="card-title mb-0">Numero di Telefono 3</h5>
                                                             </div>
                                                             <div class="card-body">
-                                                                <input type="text" class="form-control"
+                                                                <input type="number" class="form-control"
                                                                     name="company_telephone3"
                                                                     placeholder="Numero di Telefono 3">
                                                             </div>

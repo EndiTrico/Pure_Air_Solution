@@ -87,7 +87,6 @@ function showAllCompanies()
 
     $companyDropDown = "";
 
-    echo "<script>alert(Hello)</script>";
     if ($company) {
         while ($row = mysqli_fetch_assoc($company)) {
             $companyDropDown .= '<option value="' . $row['AZIENDA_ID'] . '">' . htmlspecialchars($row['AZIENDA_NOME']) . '</option>';
