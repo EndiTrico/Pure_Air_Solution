@@ -57,6 +57,18 @@ include 'database/closedb.php';
             padding: 5px 10px;
             border-radius: 999px;
         }
+
+        .button-row {
+            display: flex;
+            flex-direction: row;
+            margin-bottom: 10px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            margin: 0 5px;
+
+        }
     </style>
 
 </head>
@@ -159,7 +171,7 @@ include 'database/closedb.php';
                 var selected_entity = "";
 
                 $(document).ready(function () {
-                    $('#example').DataTable({
+                    $('#fetchTable').DataTable({
                         language: {
                             "url": "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Italian.json"
                         }
@@ -172,7 +184,7 @@ include 'database/closedb.php';
                     xhttp.onreadystatechange = function () {
                         if (this.readyState == 4 && this.status == 200) {
                             document.getElementById("tableContainer").innerHTML = this.responseText;
-                            $('#example').DataTable({
+                            $('#fetchTable').DataTable({
                                 language: {
                                     "url": "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Italian.json"
                                 },

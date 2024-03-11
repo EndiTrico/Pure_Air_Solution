@@ -11,14 +11,14 @@ if ($entity == "utenti") {
     $query = "SELECT u.UTENTE_ID, u.NOME, u.COGNOME, u.EMAIL, u.NUMERO, u.RUOLO, u.AZIENDA_POSIZIONE, u.E_ATTIVO 
                 FROM UTENTI u";
 } else if ($entity == "aziende") {
-    $query = "SELECT AZIENDA_ID, AZIENDA_NOME, PARTITA_IVA, CODICE_FISCALE, INDIRIZZO, CITTA, INDIRIZZO_PEC, WEBSITE, DATA_ISCRIZIONE, DATA_SINISTRA, INFORMAZIONI, E_ATTIVO
+    $query = "SELECT AZIENDA_ID, AZIENDA_NOME, PARTITA_IVA, CODICE_FISCALE, INDIRIZZO, CITTA, INDIRIZZO_PEC, WEBSITE, DATA_ISCRIZIONE, DATA_SINISTRA, E_ATTIVO
                 FROM AZIENDE";
 } else if ($entity == "strutture") {
-    $query = "SELECT s.STRUTTURA_ID, s.STRUTTURA_NOME, c.AZIENDA_NOME, s.INDIRIZZO, s.CITTA, s.INFORMAZIONI, s.E_ATTIVO
+    $query = "SELECT s.STRUTTURA_ID, s.STRUTTURA_NOME, c.AZIENDA_NOME, s.E_ATTIVO
                 FROM STRUTTURE s
                 JOIN AZIENDE c on s.AZIENDA_ID = c.AZIENDA_ID";
 } else if ($entity == "reparti") {
-    $query = "SELECT d.REPARTO_ID, d.REPARTO_NOME, s.STRUTTURA_NOME, c.AZIENDA_NOME, d.INDIRIZZO, d.CITTA, d.INFORMAZIONI, d.E_ATTIVO
+    $query = "SELECT d.REPARTO_ID, d.REPARTO_NOME, s.STRUTTURA_NOME, c.AZIENDA_NOME, d.E_ATTIVO
                 FROM REPARTI d 
                 JOIN STRUTTURE s ON d.STRUTTURA_ID = s.STRUTTURA_ID
                 JOIN AZIENDE c on d.AZIENDA_ID = c.AZIENDA_ID";
@@ -27,7 +27,7 @@ if ($entity == "utenti") {
                 FROM BANCA_CONTI b
                 JOIN AZIENDE a ON a.AZIENDA_ID = b.AZIENDA_ID";
 } else if ($entity == "fatture") {
-    $query = "SELECT f.FATTURA_ID, a.AZIENDA_NOME, f.DESCRIZIONE, f.VALORE, f.VALORE_IVA_INCLUSA, f.IVA, f.MONETA, 
+    $query = "SELECT f.FATTURA_ID, f.FATTURA_NOME, a.AZIENDA_NOME, f.VALORE, f.VALORE_IVA_INCLUSA, f.IVA, f.MONETA, 
                 f.DATA_FATTURAZIONE, f.DATA_PAGAMENTO, f.E_PAGATO
                 FROM FATTURE f
                 JOIN AZIENDE a ON a.AZIENDA_ID = f.AZIENDA_ID";
@@ -43,7 +43,7 @@ if (!empty($_SESSION['AZIENDA_ID'])) {
 
 $result = mysqli_query($conn, $query);
 echo '<div class="table-responsive">
-            <table id = "example" class="table text-center">';
+            <table id = "fetchTable" class="table text-center">';
 
 echo '<thead>
             <tr>';
@@ -60,7 +60,7 @@ while ($fieldinfo = mysqli_fetch_field($result)) {
 }
 
 if ($_SESSION['role'] == 'Admin' || $entity == 'utenti' || $entity == 'aziende') {
-    echo '<th style = "width: auto">Azioni</th>';
+    echo '<th>Azioni</th>';
 }
 
 echo '</tr>
@@ -75,11 +75,14 @@ if (mysqli_num_rows($result) > 0) {
         $is_admin = "";
 
         foreach ($row as $key => $value) {
-            if ($key == 'E_ATTIVO' || $key == 'E_PAGATO') {
-                echo $value == 1 ? '<td><span class="badge-success-custom">Active</span></td>' :
-                    '<td><span class="badge-danger-custom">Inactive</span></td>';
+            if ($key == 'E_ATTIVO') {
+                echo $value == 1 ? '<td><span class="badge-success-custom">Attivo</span></td>' :
+                    '<td><span class="badge-danger-custom">Inattivo</span></td>';
                 $E_ATTIVO = $value;
-            } else if (strpos(strtolower($key), 'id')) {
+            } else if ($key == 'E_PAGATO'){
+                echo $value == 1 ? '<td><span class="badge-success-custom">Pagato</span></td>' :
+                '<td><span class="badge-danger-custom">Non&nbsp;Pagato</span></td>';
+            }else if (strpos(strtolower($key), 'id')) {
                 continue;
             } else {
                 echo '<td>' . $value . '</td>';
@@ -92,16 +95,24 @@ if (mysqli_num_rows($result) > 0) {
 
 
         if ($_SESSION['role'] == 'Admin') {
-            echo '<td><a href="admin_edit.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-warning">Modifica</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+           echo '<td><a href="admin_edit.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-warning">Modifica</a>';
             if ($E_ATTIVO == 0) {
-                echo '<button class="btn btn-success" onclick="confirmActivation(\'' . reset($row) . '\', \'' . $entity . '\')">Attivalo</button>';
+                echo '<button class="btn btn-success" onclick="confirmActivation(' . reset($row) .  ', \'' . $entity . '\')">Attivalo</button>';
             } else {
                 echo '<button class="btn btn-danger" onclick="confirmDelete(' . reset($row) . ', \'' . $entity . '\')">Elimina</button>';
             }
             if ($entity == "utenti" || $entity == "aziende") {
-                echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp<a href="admin_edit.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-info">Dettagli</a>';
+                echo '<a href="admin_edit.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-info">Dettagli</a>';
             }
             echo '</td></tr>';
+            
+            echo "<script>
+            $('#fetchTable').DataTable( {
+                // ... other options
+                buttons: [
+                  'edit', 'delete', 'details' // Replace with your button names
+                ]
+              });</script>";
         } else if ($entity == "utenti" || $entity == "aziende") {
                 echo '<td><a href="admin_edit.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-info">Dettagli</a>';
                 echo '</td></tr>';
