@@ -105,14 +105,6 @@ if (mysqli_num_rows($result) > 0) {
                 echo '<a href="admin_edit.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-info">Dettagli</a>';
             }
             echo '</td></tr>';
-            
-            echo "<script>
-            $('#fetchTable').DataTable( {
-                // ... other options
-                buttons: [
-                  'edit', 'delete', 'details' // Replace with your button names
-                ]
-              });</script>";
         } else if ($entity == "utenti" || $entity == "aziende") {
                 echo '<td><a href="admin_edit.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-info">Dettagli</a>';
                 echo '</td></tr>';
