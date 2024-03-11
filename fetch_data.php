@@ -95,16 +95,18 @@ if (mysqli_num_rows($result) > 0) {
 
 
         if ($_SESSION['role'] == 'Admin') {
-           echo '<td><a href="admin_edit.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-warning">Modifica</a>';
+           
+            echo '<td>                    <div class="btn-group">
+            <a href="admin_edit.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-warning">Modifica</a>&nbsp&nbsp&nbsp';
             if ($E_ATTIVO == 0) {
-                echo '<button class="btn btn-success" onclick="confirmActivation(' . reset($row) .  ', \'' . $entity . '\')">Attivalo</button>';
+                echo '<button class="btn btn-success" onclick="confirmActivation(' . reset($row) .  ', \'' . $entity . '\')">Attivalo</button>&nbsp&nbsp&nbsp';
             } else {
-                echo '<button class="btn btn-danger" onclick="confirmDelete(' . reset($row) . ', \'' . $entity . '\')">Elimina</button>';
+                echo '<button class="btn btn-danger" onclick="confirmDelete(' . reset($row) . ', \'' . $entity . '\')">Elimina</button>&nbsp&nbsp&nbsp';
             }
             if ($entity == "utenti" || $entity == "aziende") {
                 echo '<a href="admin_edit.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-info">Dettagli</a>';
             }
-            echo '</td></tr>';
+            echo '</div></td></tr>';
         } else if ($entity == "utenti" || $entity == "aziende") {
                 echo '<td><a href="admin_edit.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-info">Dettagli</a>';
                 echo '</td></tr>';
