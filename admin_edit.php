@@ -1035,7 +1035,7 @@ function showBills($row){
                                     echo "Structure";
                                 } else if ($entity == "reparti") {
                                     echo "Department";
-                                }
+                                } 
                                 ?>
                             </h1>
                         </div>
