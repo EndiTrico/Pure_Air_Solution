@@ -132,7 +132,7 @@ function showCompanyName()
                             <div class="card">
                                 <div class="card-body">
                                     <div class="card-body">
-                                        <form id="structureForm" method="post">
+                                        <form id="bankAccountForm" method="post">
                                             <div class="row">
                                                 <?php
                                                 if (!empty($errorMessage)) {

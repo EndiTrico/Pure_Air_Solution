@@ -179,6 +179,10 @@ function showCompaniesNameDropDown($entity)
         $sql = "SELECT AZIENDA_ID FROM STRUTTURE WHERE STRUTTURA_ID = ?";
     } else if ($entity == "reparti") {
         $sql = "SELECT AZIENDA_ID FROM REPARTI WHERE REPARTO_ID = ?";
+    } else if ($entity == "banca conti") {
+        $sql = "SELECT AZIENDA_ID FROM BANCA_CONTI WHERE BANCA_CONTO_ID = ?";
+    } else if ($entity == "fatture") {
+        $sql = "SELECT AZIENDA_ID FROM FATTURE WHERE FATTURA_ID = ?";
     }
 
     // Prepare and execute the statement
@@ -232,7 +236,7 @@ function showForm()
 
         if ($result) {
             $row = mysqli_fetch_assoc($result);
-            showCompanies($row);                                         
+            showCompanies($row);
         }
     } else if ($entity == 'strutture') {
         $query = "SELECT * FROM STRUTTURE WHERE STRUTTURA_ID = ?";
@@ -246,7 +250,7 @@ function showForm()
 
             showStructures($row);
         }
-    } else if ($entity == "REPARTI") {
+    } else if ($entity == "reparti") {
         $query = "SELECT * FROM REPARTI WHERE REPARTO_ID = ?";
         $stmt = mysqli_prepare($conn, $query);
         mysqli_stmt_bind_param($stmt, "i", $id);
@@ -255,83 +259,39 @@ function showForm()
 
         if ($result) {
             $row = mysqli_fetch_assoc($result);
-            echo '    
-            <form id="departmentForm" method="post">
-                <div class="row">
-                    <div class="col-12 col-lg-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">Department Name</h5>
-                            </div>
-                            <div class="card-body">
-                                <input type="text" class="form-control"
-                                name="REPARTO_NOME" value = "' . $row["REPARTO_NOME"] . '" 
-                                placeholder="Department Name" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">Company</h5>
-                            </div>
-                        <div class="card-body">
-                            <div>'
-                . ($entity) . '
-                            </div>
-                        </div>
-                    </div>
-</div>
-                    <div class="row">
-                        <div class="col-12 col-lg-6">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5 class="card-title mb-0">Structure Name</h5>
-                                </div>
-                            <div class="card-body">
-                                <select name="STRUTTURA_NOME" id="STRUTTURA_NOME"
-                                    class="form-select mb-3" required>
-                                        <option disable selected value="">Select Structure</option>
-                                            ' . showStructureForDepartment($id) . '
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-            
-                    <div class="row">
-                        <div class="col-12 d-flex justify-content-center">
-                            <button name="update_department" id="updateDepartmentButton"
-                                class="btn btn-success btn-lg">Update Department</button>
-                        </div>
-                    </div>
-</form>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
-</script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#company-dropdown").change(function () {
-            var companyID = $(this).val();
-            var post_id = "id=" + companyID;
-            $.ajax
-                ({
-                    type: "POST",
-                    url: "fetch_STRUTTURE.php",
-                    data: post_id,
-                    cache: false,
-                    success: function (cities) {
-                        $("#STRUTTURA_NOME").html(cities);
-                    }
-                });
-        });
-    });
-</script>';
+            showDepartments($row, $id);
+        }
+    } else if ($entity == "banca conti") {
+        $query = "SELECT * FROM BANCA_CONTI WHERE BANCA_CONTO_ID = ?";
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, "i", $id);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        if ($result) {
+            $row = mysqli_fetch_assoc($result);
+            showBankAccounts($row);
+        }
+    } else if ($entity == "fatture") {
+        $query = "SELECT * FROM FATTURE WHERE FATTURA_ID = ?";
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, "i", $id);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        if ($result) {
+            $row = mysqli_fetch_assoc($result);
+            showBills($row);
         }
     }
+
+
     include 'database/closedb.php';
 }
 
 
-function showUsers($row){
+function showUsers($row)
+{
     echo  '
 <form id="userForm" method="post">
     <div class="row">
@@ -341,7 +301,7 @@ function showUsers($row){
                     <h5 class="card-title mb-0">Nome <span style = "color:red;">*</span></h5>
                 </div>
                 <div class="card-body">
-                    <input type="text" class="form-control" name="user_first_name" value = "'. $row["NOME"] . '" 
+                    <input type="text" class="form-control" name="user_first_name" value = "' . $row["NOME"] . '" 
                         placeholder="Nome" required>
                 </div>
             </div>
@@ -390,7 +350,7 @@ function showUsers($row){
                 </div>
                 <div class="card-body">
                     <input type="text" placeholder="Numero" name="user_number"
-                        class="form-control" value="'. $row["NUMERO"] . '" required />
+                        class="form-control" value="' . $row["NUMERO"] . '" required />
                 </div>
             </div>
 
@@ -401,7 +361,7 @@ function showUsers($row){
                 <div class="card-body">
                     <div>
                         <input type="email" placeholder="Email" name="user_email"
-                            value="' . $row["EMAIL"] .'" class="form-control" required />
+                            value="' . $row["EMAIL"] . '" class="form-control" required />
                     </div>
                 </div>
             </div>
@@ -423,8 +383,8 @@ function showUsers($row){
                 </div>
                 <div class="card-body">
                     <select multiple placeholder="Seleciona Azienda"
-                        name="user_companies[]" id= "select" data-allow-clear="1">'.
-                        showCompaniesNameDropDown("utenti") . '
+                        name="user_companies[]" id= "select" data-allow-clear="1">' .
+        showCompaniesNameDropDown("utenti") . '
                     </select>
                 </div>
             </div>
@@ -457,7 +417,8 @@ $(function () {
 </script>';
 }
 
-function showCompanies($row){
+function showCompanies($row)
+{
     echo ' <form id="companyForm" method="post">
     <div class="row">
         <div class="row">
@@ -469,7 +430,7 @@ function showCompanies($row){
                     </div>
                     <div class="card-body">
                         <input type="text" class="form-control"
-                            name="company_name" placeholder="Nome" value = "'.$row["AZIENDA_NOME"] .'"                                  required>
+                            name="company_name" placeholder="Nome" value = "' . $row["AZIENDA_NOME"] . '"                                  required>
                     </div>
                 </div>
                 <div class="card">
@@ -479,7 +440,7 @@ function showCompanies($row){
                     </div>
                     <div class="card-body">
                         <input type="text" class="form-control"
-                            name="company_codice_fiscale" value = "'. $row["CODICE_FISCALE"] .'"
+                            name="company_codice_fiscale" value = "' . $row["CODICE_FISCALE"] . '"
                             placeholder="Codice Fiscale" required>
                     </div>
                 </div>
@@ -488,7 +449,7 @@ function showCompanies($row){
                         <h5 class="card-title mb-0">Contatto 1</h5>
                     </div>
                     <div class="card-body">
-                        <input type="text" class="form-control" value = "'. $row["CONTATTO_1"] .'"
+                        <input type="text" class="form-control" value = "' . $row["CONTATTO_1"] . '"
                             name="company_contact1" placeholder="Contatto 1">
                     </div>
                 </div>
@@ -497,7 +458,7 @@ function showCompanies($row){
                         <h5 class="card-title mb-0">Contatto 2</h5>
                     </div>
                     <div class="card-body">
-                        <input type="text" class="form-control" value = "'. $row["CONTATTO_2"] .'"
+                        <input type="text" class="form-control" value = "' . $row["CONTATTO_2"] . '"
                             name="company_contact2" placeholder="Contatto 2">
                     </div>
                 </div>
@@ -506,7 +467,7 @@ function showCompanies($row){
                         <h5 class="card-title mb-0">Contatto 3</h5>
                     </div>
                     <div class="card-body">
-                        <input type="text" class="form-control" value = "'. $row["CONTATTO_1"] .'"
+                        <input type="text" class="form-control" value = "' . $row["CONTATTO_1"] . '"
                             name="company_contact3" placeholder="Contatto 3">
                     </div>
                 </div>
@@ -515,7 +476,7 @@ function showCompanies($row){
                         <h5 class="card-title mb-0">Numero di Telefono 1</h5>
                     </div>
                     <div class="card-body">
-                        <input type="number" class="form-control" value = "'. $row["TELEFONO_1"] .'"
+                        <input type="number" class="form-control" value = "' . $row["TELEFONO_1"] . '"
                             name="company_telephone1"
                             placeholder="Numero di Telefono 1">
                     </div>
@@ -525,7 +486,7 @@ function showCompanies($row){
                         <h5 class="card-title mb-0">Numero di Telefono 2</h5>
                     </div>
                     <div class="card-body">
-                        <input type="number" class="form-control" value = "'. $row["TELEFONO_2"] .'"
+                        <input type="number" class="form-control" value = "' . $row["TELEFONO_2"] . '"
                             name="company_telephone2"
                             placeholder="Numero di Telefono 2">
                     </div>
@@ -535,7 +496,7 @@ function showCompanies($row){
                         <h5 class="card-title mb-0">Numero di Telefono 3</h5>
                     </div>
                     <div class="card-body">
-                        <input type="number" class="form-control" value = "'. $row["TELEFONO_3"] .'"
+                        <input type="number" class="form-control" value = "' . $row["TELEFONO_3"] . '"
                             name="company_telephone3"
                             placeholder="Numero di Telefono 3">
                     </div>
@@ -549,7 +510,7 @@ function showCompanies($row){
                                 style="color:red;">*</span></h5>
                     </div>
                     <div class="card-body">
-                        <input type="text" class="form-control" value ="'. $row["PARTITA_IVA"] . '"
+                        <input type="text" class="form-control" value ="' . $row["PARTITA_IVA"] . '"
                             name="company_nipt" placeholder="Partita Iva"
                             required>
                     </div>
@@ -646,7 +607,8 @@ function showCompanies($row){
 ';
 }
 
-function showStructures($row){
+function showStructures($row)
+{
     echo '
 <form id="structureForm" method="post">
     <div class="row">
@@ -678,7 +640,7 @@ function showStructures($row){
                     <div class="card-body">
                         <div> <select multiple placeholder="Seleciona Azienda"
                         name="structure_companies[]" id= "select" data-allow-clear="1">' .
-                        showCompaniesNameDropDown("strutture") . '</select>
+        showCompaniesNameDropDown("strutture") . '</select>
                         </div>
                     </div>
                 </div>
@@ -732,17 +694,293 @@ $(function () {
 </script>';
 }
 
-function showDepartments($row){
+function showDepartments($row, $id)
+{
+    echo '
+    <form id="departmentForm" method="post">
+    <div class="row">
+        <div class="row">
+            <div class="col-12 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Nome</h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" class="form-control" name="department_name" 
+                        value = "' . $row["REPARTO_NOME"] . '"placeholder="Nome" required>
+                    </div>
+                </div>
+            </div>
 
+            <div class="col-12 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Azienda</h5>
+                    </div>
+                    <div class="card-body">
+                        <div><select class="form-select mb-3" name = "company_name" id="company-dropdown" required>'
+        . showCompaniesNameDropDown('reparti') . '</select>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Indirizzo</h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" class="form-control" 
+                        value = "' . $row["INDIRIZZO"] . ' "name="department_address" placeholder="Indirizzo">
+                    </div>
+                </div>
 
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Struttura</h5>
+                    </div>
+                    <div class="card-body">
+                        <select name="structure_name" id="structure_name" class="form-select mb-3" required>
+                            <option disable selected value="">Seleziona una Struttura</option> ' . showStructureForDepartment($id) . '
+                        </select>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Citta</h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" class="form-control" name="department_city" 
+                        value = "' . $row["CITTA"] . '" placeholder="Citta">
+                    </div>
+                </div>
+            </div>
 
+            <div class="col-12 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Informazioni</h5>
+                    </div>
+                    <div class="card-body">
+                        <textarea class="form-control" name="department_information" rows="3" placeholder="Informazioni">
+                        ' . $row["INFORMAZIONI"] . '"</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center">
+                <button name="create_department" id="createDepartmentButton" class="btn btn-success btn-lg">Crea un Reparto</button>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+crossorigin="anonymous"></script>
 
-
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#company-dropdown").change(function() {
+                var companyID = $(this).val();
+                var post_id = \'id=\' + companyID;
+                $.ajax({
+                    type: "POST",
+                    url: "fetch_structures.php",
+                    data: post_id,
+                    cache: false,
+                    success: function(cities) {
+                        $("#structure_name").html(cities);
+                    }
+                });
+            });
+        });
+    </script>';
 }
 
+function showBankAccounts($row)
+{
+    echo '
+<form id="bankAccountForm" method="post">
+    <div class="row">
+        <div class="row">
+            <div class="col-12 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Il Nome Della Banca <span style="color:red;">*</span></h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" class="form-control" name="bank_name" placeholder="Il Nome Della Banca" 
+                        value = "' . $row["BANCA_NOME"] . '" required>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Aziende <span style="color:red;">*</span></h5>
+                    </div>
+                    <div class="card-body">
+                        <div> <select class="form-select mb-3" name = "company_name" required> ' .
+                            showCompaniesNameDropDown("banca conti") . '</select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">IBAN <span style="color:red;">*</span></h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" class="form-control" name="bank_iban" 
+                        value = "' . $row["IBAN"] . '" placeholder="IBAN" required>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center">
+                <button name="create_bank_account" id="createBankAccountButton" class="btn btn-success btn-lg">Crea un Conto Bancario</button>
+            </div>
+        </div>
+    </div>
+</form>';
+}
 
+function showBills($row){
+    echo '
+<form id="billForm" method="post">
+    <div class="row">                    
+        <div class="row">
+            <div class="col-12 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Il Nome Della Fattura <span
+                            style="color:red;">*</span></h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" class="form-control" name="bill_name"
+                            placeholder="Il Nome Della Fattura" value = "' . $row["FATTURA_NOME"]  . '" required>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Valore <span
+                            style="color:red;">*</span></h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="number" class="form-control"
+                            name="bill_value" placeholder="Valore" 
+                            value = "' . $row["VALORE"] .'"min = 0  max = 100000000000000000000000000 step="any" required>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Aziende <span
+                            style="color:red;">*</span></h5>
+                        </div>
+                    <div class="card-body">
+                         <select class="form-select mb-3" name = "company_name" required>' . 
+                            showCompaniesNameDropDown("fatture") .'</select>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Data di Fatturazione</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group mb-4">
+                            <input type="text" class="form-control"
+                                    id="datePicker" name="bill_billing_date"
+                                    placeholder="Data di Fatturazione" value = "' . $row["DATA_FATTURAZIONE"] . '"
+                                    style="background: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E") no-repeat right 10px center; background-size: 16px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">IVA (%) <span
+                            style="color:red;">*</span></h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="number" class="form-control"
+                            name="bill_VAT" placeholder="IVA" min="0" max="100" step="any" value = "' . $row["IVA"] . '"
+                            required>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Moneta <span
+                            style="color:red;">*</span></h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <select class="form-select mb-3" name="bill_currency" required>
+                                <option value="USD" <?php if ($row["MONETA"] == "USD") echo "selected"; ?>United States Dollar (USD)</option>
+                                <option value="EUR" <?php if ($row["MONETA"] == "EUR") echo "selected"; ?>Euro (EUR)</option>
+                                <option value="JPY" <?php if ($row["MONETA"] == "JPY") echo "selected"; ?>Japanese Yen (JPY)</option>
+                                <option value="GBP" <?php if ($row["MONETA"] == "GBP") echo "selected"; ?>British Pound Sterling (GBP)</option>
+                                <option value="AUD" <?php if ($row["MONETA"] == "AUD") echo "selected"; ?>Australian Dollar (AUD)</option>
+                                <option value="CAD" <?php if ($row["MONETA"] == "CAD") echo "selected"; ?>Canadian Dollar (CAD)</option>
+                                <option value="CHF" <?php if ($row["MONETA"] == "CHF") echo "selected"; ?>Swiss Franc (CHF)</option>
+                                <option value="CNY" <?php if ($row["MONETA"] == "CNY") echo "selected"; ?>Chinese Yuan (CNY)</option>
+                                <option value="SEK" <?php if ($row["MONETA"] == "SEK") echo "selected"; ?>Swedish Krona (SEK)</option>
+                                <option value="NZD" <?php if ($row["MONETA"] == "NZD") echo "selected"; ?>New Zealand Dollar (NZD)</option>
+                                <option value="KRW" <?php if ($row["MONETA"] == "KRW") echo "selected"; ?>South Korean Won (KRW)</option>
+                                <option value="SGD" <?php if ($row["MONETA"] == "SGD") echo "selected"; ?>Singapore Dollar (SGD)</option>
+                                <option value="NOK" <?php if ($row["MONETA"] == "NOK") echo "selected"; ?>Norwegian Krone (NOK)</option>
+                                <option value="MXN" <?php if ($row["MONETA"] == "MXN") echo "selected"; ?>Mexican Peso (MXN)</option>
+                                <option value="INR" <?php if ($row["MONETA"] == "INR") echo "selected"; ?>Indian Rupee (INR)</option>
+                                <option value="RUB" <?php if ($row["MONETA"] == "RUB") echo "selected"; ?>Russian Ruble (RUB)</option>
+                                <option value="ZAR" <?php if ($row["MONETA"] == "ZAR") echo "selected"; ?>South African Rand (ZAR)</option>
+                                <option value="BRL" <?php if ($row["MONETA"] == "BRL") echo "selected"; ?>Brazilian Real (BRL)</option>
+                                <option value="TRY" <?php if ($row["MONETA"] == "TRY") echo "selected"; ?>Turkish Lira (TRY)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Data di Pagamento</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group mb-4">
+                            <input type="text" class="form-control"
+                                id="datePicker1" name="bill_payment_date"
+                                placeholder="Data di Pagamento" value = "' . $row["DATA_PAGAMENTO"] . '"
+                                style="background: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E") no-repeat right 10px center; background-size: 16px;">
+                        </div>
+                    </div>
+               </div>
+            </div>
+            <div class="col-12 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Descrizione</h5>
+                    </div>
+                    <div class="card-body">
+                        <textarea class="form-control" name="bill_information"
+                            rows="3" placeholder="Descrizione"> ' . $row["DESCRIZIONE"] . '</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>   
 
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center">
+                <button name="create_bill" id="createBillButton" 
+                    class="btn btn-success btn-lg">Crea una Fattura</button>
+            </div>
+        </div>
+    </div>
+</form>';
+}
 
 
 ?>
@@ -767,12 +1005,11 @@ function showDepartments($row){
     <script src="https://code.jquery.com/jquery-3.6 .0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
 
-<!-- select2-bootstrap4-theme -->
-<link href="https://raw.githack.com/ttskch/select2-bootstrap4-theme/master/dist/select2-bootstrap4.css"
-    rel="stylesheet">
+    <!-- select2-bootstrap4-theme -->
+    <link href="https://raw.githack.com/ttskch/select2-bootstrap4-theme/master/dist/select2-bootstrap4.css" rel="stylesheet">
 </head>
 
 <body>
@@ -785,8 +1022,7 @@ function showDepartments($row){
                 <div class="container-fluid p-0">
                     <div class="row">
                         <div class="col-12 col-lg-1">
-                            <a class="btn transparent-btn" style="margin-top: -8px;"
-                                href="admin_display_entities.php"><img src="./images/back_button.png"></a>
+                            <a class="btn transparent-btn" style="margin-top: -8px;" href="admin_display_entities.php"><img src="./images/back_button.png"></a>
                         </div>
                         <div class="col-12 col-lg-11">
                             <h1 class="h3 mb-3">

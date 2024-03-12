@@ -17,7 +17,7 @@ if (!empty($id)) {
             echo '<option value="' . $row['STRUTTURA_ID'] . '">' . $row['STRUTTURA_NOME'] . '</option>';
         }
     } else {
-        echo '<option disabled selected value="">STRUTTURE Not Available</option>';
+        echo '<option disabled selected value="">Non Esiste Alcuna Struttura per Quell\'Agenzia</option>';
     }
 }
 

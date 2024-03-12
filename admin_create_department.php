@@ -125,7 +125,7 @@ function showCompanyName()
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="card-body">
-                                            <form id="companyForm" method="post">
+                                            <form id="departmentForm" method="post">
                                                 <div class="row">
 
                                                     <?php

@@ -129,7 +129,7 @@ function showCompanyName()
                             <div class="card">
                                 <div class="card-body">
                                     <div class="card-body">
-                                        <form id="structureForm" method="post">
+                                        <form id="billForm" method="post">
                                             <div class="row">
                                                 <?php
                                                 if (!empty($errorMessage)) {
@@ -173,7 +173,7 @@ function showCompanyName()
                                                             </div>
                                                             <div class="card-body">
                                                                 <input type="number" class="form-control"
-                                                                    name="bill_value" placeholder="Value" min = 0  max = 100000000000000000000000000 step="any" required>
+                                                                    name="bill_value" placeholder="Valore" min = 0  max = 100000000000000000000000000 step="any" required>
                                                             </div>
                                                         </div>
                                                         <div class="card">
