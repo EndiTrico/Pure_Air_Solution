@@ -1035,7 +1035,11 @@ function showBills($row){
                                     echo "Structure";
                                 } else if ($entity == "reparti") {
                                     echo "Department";
-                                } 
+                                } else if ($entity == "banca conti") {
+                                    echo "Department";
+                                } else if ($entity == "fatture") {
+                                    echo "Department";
+                                }
                                 ?>
                             </h1>
                         </div>
