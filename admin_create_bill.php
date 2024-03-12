@@ -19,7 +19,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $bill_information = mysqli_real_escape_string($conn, $_POST['bill_information']);
         $bill_paid = mysqli_real_escape_string($conn, $_POST["bill_paid"]);
 
-        $bill_value_without_VAT = ROUND($bill_value / (1 + ($bill_VAT / 100)), 2);
+        if($bill_VAT == 0){
+            $bill_value_without_VAT = $bill_value;
+        } else {
+            $bill_value_without_VAT = ROUND($bill_value / (1 + ($bill_VAT / 100)), 2);
+        }
 
         $sql = "INSERT INTO FATTURE (AZIENDA_ID, FATTURA_NOME, DESCRIZIONE, VALORE, VALORE_IVA_INCLUSA, IVA, MONETA, DATA_FATTURAZIONE, DATA_PAGAMENTO, E_PAGATO) 
                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -29,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             try {
                 if (mysqli_stmt_execute($stmt)) {
-                    $successfulMessage = "Fattura è Stato Creato con Successo";
+                    $successfulMessage = "Fattura è Stata Creata con Successo";
                 } else {
                     $errorMessage = "Errore: Impossibile Creare la Fattura";
                 }

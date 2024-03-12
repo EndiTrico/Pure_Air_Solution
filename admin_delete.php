@@ -65,7 +65,7 @@ if ($entity == "AZIENDE") {
     mysqli_stmt_bind_param($stmtREPARTI, "i", $id);
 
     mysqli_stmt_execute($stmtREPARTI);
-} else if ($entity == "UTENTI") {
+} else if ($entity == "utenti") {
     $queryUTENTI = "UPDATE UTENTI 
                     SET E_ATTIVO = 0
                     WHERE UTENTE_ID = ?";

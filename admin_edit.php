@@ -10,36 +10,40 @@ $entity = $_GET['entity'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['update_user'])) {
-        $NOME = mysqli_real_escape_string($conn, $_POST['NOME']);
-        $COGNOME = mysqli_real_escape_string($conn, $_POST['COGNOME']);
+        $user_first_name = mysqli_real_escape_string($conn, $_POST['user_first_name']);
+        $user_last_name = mysqli_real_escape_string($conn, $_POST['user_last_name']);
         $user_email = mysqli_real_escape_string($conn, $_POST['user_email']);
         $user_password = mysqli_real_escape_string($conn, $_POST['user_password']);
-        $role = mysqli_real_escape_string($conn, $_POST['role']);
-        $user_company = mysqli_real_escape_string($conn, $_POST['user_company']);
+        $user_role = mysqli_real_escape_string($conn, $_POST['user_role']);
+        $user_position = mysqli_real_escape_string($conn, $_POST['user_position']);
+        $user_number = mysqli_real_escape_string($conn, $_POST['user_number']);
+        $user_companies = $_POST['user_companies'];
 
         $sql = "";
 
         if (empty($user_password)) {
-            $sql = "UPDATE UTENTI SET 
-                    NOME = ?, 
-                    COGNOME = ?, 
-                    EMAIL = ?, 
-                    ROLE = ?, 
-                    AZIENDA_ID = ? 
+            $sql = "UPDATE UTENTI 
+                    SET NOME = ?, 
+                        COGNOME = ?, 
+                        EMAIL = ?, 
+                        RUOLE = ?, 
+                        NUMERO = ?,
+                        AZIENDA_POSIZIONE = ?
                     WHERE UTENTE_ID = ?";
-            $params = array($NOME, $COGNOME, $user_email, $role, $user_company, $id);
+            $params = array($user_first_name, $user_last_name, $user_email, $user_role,  $user_number, $user_position, $id);
         } else {
             $hashed_password = password_hash($user_password, PASSWORD_BCRYPT);
 
-            $sql = "UPDATE UTENTI SET 
-                    NOME = ?, 
-                    COGNOME = ?, 
-                    EMAIL = ?,
-                    PASSWORD = ?,
-                    ROLE = ?, 
-                    AZIENDA_ID = ? 
-                    WHERE UTENTE_ID = ?";
-            $params = array($NOME, $COGNOME, $user_email, $hashed_password, $role, $user_company, $id);
+            $sql = "UPDATE UTENTI 
+                    SET NOME = ?, 
+                        COGNOME = ?, 
+                        EMAIL = ?, 
+                        RUOLE = ?, 
+                        NUMERO = ?,
+                        AZIENDA_POSIZIONE = ?,
+                        PASSWORD = ?
+                        WHERE UTENTE_ID = ?";
+            $params = array($user_first_name, $user_last_name, $user_email, $user_role,  $user_number, $user_position, $hashed_password, $id);
         }
 
         try {
@@ -48,88 +52,255 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 mysqli_stmt_bind_param($stmt, "ssssii", ...$params);
 
                 if (mysqli_stmt_execute($stmt)) {
-                    $successfulMessage = "User Updated Successfully";
-                } else {
-                    $errorMessage = "Error: Failed to Update User";
-                }
+                    mysqli_stmt_close($stmt);
 
-                mysqli_stmt_close($stmt);
+                    $sql1 = "DELETE 
+                            FROM UTENTI_AZIENDE
+                            WHERE USER_ID = ? ";
+                    $stmt1 = mysqli_prepare($conn, $sql1);
+                    mysqli_stmt_bind_param($stmt, "i", $id);
+                    mysqli_stmt_close($stmt1);
+
+                    foreach ($user_companies as $company_id) {
+                        $sql2 = "INSERT INTO UTENTI_AZIENDE (UTENTE_ID, AZIENDA_ID) VALUES (?, ?)";
+
+                        $company_id = (int) $company_id;
+
+                        $stmt2 = mysqli_prepare($conn, $sql2);
+                        mysqli_stmt_bind_param($stmt2, "ii", $id, $company_id);
+                        mysqli_stmt_execute($stmt2);
+                    }
+                    mysqli_stmt_close($stmt2);
+
+                    $successfulMessage = "Utente Aggiornato con Successo";
+                } else {
+                    mysqli_stmt_close($stmt);
+                    $errorMessage = "Errore: Impossibile Aggiornare l'Utente";
+                }
             } else {
-                $errorMessage = "Error: Failed to prepare statement";
+                $errorMessage = "Errore: Impossibile Preparare l'Istruzione";
             }
         } catch (mysqli_sql_exception $e) {
             $errorMessage = "Error: " . $e->getMessage();
         }
     } else if (isset($_POST['update_company'])) {
-        $AZIENDA_NOME = mysqli_real_escape_string($conn, $_POST['AZIENDA_NOME']);
-        $company_email = mysqli_real_escape_string($conn, $_POST['company_email']);
+        $company_name = mysqli_real_escape_string($conn, $_POST['company_name']);
+        $company_codice_fiscale = mysqli_real_escape_string($conn, $_POST['company_codice_fiscale']);
+        $company_contact1 = mysqli_real_escape_string($conn, $_POST['company_contact1']);
+        $company_contact2 = mysqli_real_escape_string($conn, $_POST['company_contact2']);
+        $company_contact3 = mysqli_real_escape_string($conn, $_POST['company_contact3']);
+        $company_telephone1 = mysqli_real_escape_string($conn, $_POST['company_telephone1']);
+        $company_telephone2 = mysqli_real_escape_string($conn, $_POST['company_telephone2']);
+        $company_telephone3 = mysqli_real_escape_string($conn, $_POST['company_telephone3']);
+        $company_nipt = mysqli_real_escape_string($conn, $_POST['company_nipt']);
+        $company_website = mysqli_real_escape_string($conn, $_POST['company_website']);
+        $company_email1 = mysqli_real_escape_string($conn, $_POST['company_email1']);
+        $company_email2 = mysqli_real_escape_string($conn, $_POST['company_email2']);
+        $company_email3 = mysqli_real_escape_string($conn, $_POST['company_email3']);
+        $company_address = mysqli_real_escape_string($conn, $_POST['company_address']);
+        $company_city = mysqli_real_escape_string($conn, $_POST['company_city']);
+        $company_address_pec = mysqli_real_escape_string($conn, $_POST['company_address_pec']);
+        $company_information = mysqli_real_escape_string($conn, $_POST['company_information']);
+        $company_date_joined = mysqli_real_escape_string($conn, $_POST['company_date_joined']);
+        $company_date_left = mysqli_real_escape_string($conn, $_POST['company_date_left']);
 
         $sql = "UPDATE AZIENDE 
-                SET EMAIL = ?, 
-                    AZIENDA_NOME = ?
-                WHERE AZIENDA_ID = ?";
+                SET AZIENDA_NOME = ?,
+                    PARTITA_IVA = ?,
+                    CODICE_FISCALE = ?,
+                    CONTATTO_1 = ?,
+                    CONTATTO_2 = ?,
+                    CONTATTO_3 = ?,
+                    EMAIL_1 = ?,
+                    EMAIL_2 = ?,
+                    EMAIL_3 = ?,
+                    TELEFONO_1 = ?,
+                    TELEFONO_2 = ?,
+                    TELEFONO_3 = ?,
+                    INDIRIZZO = ?,
+                    CITTA = ?,
+                    INDIRIZZO_PEC = ?,
+                    WEBSITE = ?,
+                    INFORMAZIONI = ?,
+                    DATA_ISCRIZIONE = ?,
+                    DATA_SINISTRA = ?
+                WHERE 
+                    AZIENDA_ID = ?;";
 
         $stmt = mysqli_prepare($conn, $sql);
+
         if ($stmt) {
-            mysqli_stmt_bind_param($stmt, "ssi", $company_email, $AZIENDA_NOME, $id);
+            mysqli_stmt_bind_param(
+                $stmt,
+                "sssssssssiiisssssssi",
+                $company_name,
+                $company_nipt,
+                $company_codice_fiscale,
+                $company_contact1,
+                $company_contact2,
+                $company_contact3,
+                $company_email1,
+                $company_email2,
+                $company_email3,
+                $company_telephone1,
+                $company_telephone2,
+                $company_telephone3,
+                $company_address,
+                $company_city,
+                $company_address_pec,
+                $company_website,
+                $company_information,
+                $company_date_joined,
+                $company_date_left,
+                $id
+            );
 
             if (mysqli_stmt_execute($stmt)) {
-                $successfulMessage = "Company Updated Successfully";
+                $successfulMessage = "Azienda Aggiornata con Successo";
             } else {
-                $errorMessage = "Error: Failed to Update Company";
+                $errorMessage = "Errore: Impossibile Aggiornare la Azienda";
             }
 
             mysqli_stmt_close($stmt);
         } else {
-            $errorMessage = "Error: Failed to prepare statement";
+            $errorMessage = "Errore: Impossibile Preparare l'Istruzione";
         }
     } else if (isset($_POST['update_structure'])) {
-        $STRUTTURA_NOME = mysqli_real_escape_string($conn, $_POST['STRUTTURA_NOME']);
-        $AZIENDA_ID = mysqli_real_escape_string($conn, $_POST['AZIENDA_ID']);
+        $structure_name = mysqli_real_escape_string($conn, $_POST['structure_name']);
+        $structure_company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
+        $structure_address = mysqli_real_escape_string($conn, $_POST['structure_address']);
+        $structure_city = mysqli_real_escape_string($conn, $_POST['structure_city']);
+        $structure_information = mysqli_real_escape_string($conn, $_POST['structure_information']);
 
         $sql = "UPDATE STRUTTURE 
-                SET AZIENDA_ID = ?, 
-                    STRUTTURA_NOME = ?
+                SET AZIENDA_ID = ?
+                    STRUTTURA_NOME = ?, 
+                    INDIRIZZO = ?, 
+                    CITTA = ?, 
+                    INFORMAZIONI = ? 
                 WHERE STRUTTURA_ID = ?";
 
         $stmt = mysqli_prepare($conn, $sql);
         if ($stmt) {
-            mysqli_stmt_bind_param($stmt, "isi", $AZIENDA_ID, $STRUTTURA_NOME, $id);
+            mysqli_stmt_bind_param($stmt, "issssi", $structure_company_id, $structure_name, $structure_address, $structure_city, $structure_information, $id);
 
-            if (mysqli_stmt_execute($stmt)) {
-                $successfulMessage = "Structure Updated Successfully";
-            } else {
-                $errorMessage = "Error: Failed to Update Structure";
+            try {
+                if (mysqli_stmt_execute($stmt)) {
+                    $successfulMessage = "Struttura Aggiornata con Successo";
+                } else {
+                    $errorMessage = "Errore: Impossibile Aggiornare la Struttura";
+                }
+            } catch (mysqli_sql_exception $e) {
+                $errorMessage = "Error: " . $e->getMessage();
             }
-
-            mysqli_stmt_close($stmt);
         } else {
-            $errorMessage = "Error: Failed to prepare statement";
+            $errorMessage = "Errore: Impossibile Eseguire l'Istruzione";
         }
     } else if (isset($_POST['update_department'])) {
-        $REPARTO_NOME = mysqli_real_escape_string($conn, $_POST['REPARTO_NOME']);
-        $AZIENDA_ID = mysqli_real_escape_string($conn, $_POST['AZIENDA_ID']);
-        $STRUTTURA_ID = mysqli_real_escape_string($conn, $_POST['STRUTTURA_ID']);
+        $department_name = mysqli_real_escape_string($conn, $_POST['department_name']);
+        $department_company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
+        $department_structure_id = mysqli_real_escape_string($conn, $_POST['structure_name']);
+        $department_address = mysqli_real_escape_string($conn, $_POST['department_address']);
+        $department_city = mysqli_real_escape_string($conn, $_POST['department_city']);
+        $department_information = mysqli_real_escape_string($conn, $_POST['department_information']);
 
         $sql = "UPDATE REPARTI 
-                SET AZIENDA_ID = ?, 
-                    REPARTO_NOME = ?,
-                    STRUTTURA_ID = ?
+                SET REPARTO_NOME = ?, 
+                    AZIENDA_ID = ?, 
+                    STRUTTURA_ID = ?, 
+                    INDIRIZZO = ?, 
+                    CITTA = ?, 
+                    INFORMAZIONI = ? 
                 WHERE REPARTO_ID = ?";
 
         $stmt = mysqli_prepare($conn, $sql);
         if ($stmt) {
-            mysqli_stmt_bind_param($stmt, "issi", $AZIENDA_ID, $REPARTO_NOME, $STRUTTURA_ID, $id);
+            mysqli_stmt_bind_param($stmt, "siisssi", $department_name, $department_company_id, $department_structure_id, $department_address, $department_city, $department_information, $id);
 
             if (mysqli_stmt_execute($stmt)) {
-                $successfulMessage = "Department Updated Successfully";
+                $successfulMessage = "Dipartimento Aggiornato con Successo";
             } else {
-                $errorMessage = "Error: Failed to Update Department";
+                $errorMessage = "Errore: Impossibile Aggiornare il Reparto";
             }
 
             mysqli_stmt_close($stmt);
         } else {
-            $errorMessage = "Error: Failed to prepare statement";
+            $errorMessage = "Errore: Impossibile Preparare l'Istruzione";
+        }
+    } else if (isset($_POST['update_bank_account'])) {
+        $bank_name = mysqli_real_escape_string($conn, $_POST['bank_name']);
+        $bank_company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
+        $bank_IBAN = mysqli_real_escape_string($conn, $_POST['bank_iban']);
+
+        $sql = "UPDATE BANCA_CONTI 
+                SET AZIENDA_ID = ?, 
+                    BANCA_NOME = ?, 
+                    IBAN = ? 
+                WHERE BANCA_CONTO_ID = ?";
+
+        $stmt = mysqli_prepare($conn, $sql);
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, "issi", $bank_company_id, $bank_name, $bank_IBAN, $id);
+
+            try {
+                if (mysqli_stmt_execute($stmt)) {
+                    $successfulMessage = "Il Conto Bancario è Stato Aggiornato con Successo";
+                } else {
+                    $errorMessage = "Errore: Impossibile Aggiornare  un Conto Bancario";
+                }
+            } catch (mysqli_sql_exception $e) {
+                $errorMessage = "Error: " . $e->getMessage();
+            }
+
+            mysqli_stmt_close($stmt);
+        } else {
+            $errorMessage = "Errore: Impossibile Preparare l'Istruzione";
+        }
+    } else if (isset($_POST['update_bank_account'])) {
+        $bill_name = mysqli_real_escape_string($conn, $_POST['bill_name']);
+        $bill_company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
+        $bill_value = ROUND(($_POST['bill_value']), 2);
+        $bill_billing_date = mysqli_real_escape_string($conn, $_POST['bill_billing_date']);
+        $bill_VAT = ROUND($_POST['bill_VAT'], 2);
+        $bill_currency = mysqli_real_escape_string($conn, $_POST['bill_currency']);
+        $bill_payment_date = mysqli_real_escape_string($conn, $_POST['bill_payment_date']);
+        $bill_information = mysqli_real_escape_string($conn, $_POST['bill_information']);
+
+        if ($bill_VAT == 0) {
+            $bill_value_without_VAT = $bill_value;
+        } else {
+            $bill_value_without_VAT = ROUND($bill_value / (1 + ($bill_VAT / 100)), 2);
+        }
+
+        $sql = "UPDATE FATTURE 
+                SET AZIENDA_ID = ?, 
+                    FATTURA_NOME = ?, 
+                    DESCRIZIONE = ?, 
+                    VALORE = ?, 
+                    VALORE_IVA_INCLUSA = ?, 
+                    IVA = ?, 
+                    MONETA = ?, 
+                    DATA_FATTURAZIONE = ?, 
+                    DATA_PAGAMENTO = ?
+        WHERE FATTURA_ID = ?";
+
+        $stmt = mysqli_prepare($conn, $sql);
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, "issdddsssi", $bill_company_id, $bill_name, $bill_information, $bill_value, $bill_value_without_VAT, $bill_VAT, $bill_currency, $bill_billing_date, $bill_payment_date, $id);
+
+            try {
+                if (mysqli_stmt_execute($stmt)) {
+                    $successfulMessage = "Fattura è Stata Aggiornata con Successo";
+                } else {
+                    $errorMessage = "Errore: Impossibile Aggiornata la Fattura";
+                }
+            } catch (mysqli_sql_exception $e) {
+                $errorMessage = "Error: " . $e->getMessage();
+            }
+
+            mysqli_stmt_close($stmt);
+        } else {
+            $errorMessage = "Errore: Impossibile Preparare l'Istruzione";
         }
     }
 }
@@ -368,7 +539,7 @@ function showUsers($row)
 
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-title mb-0">Password <span style = "color:red;">*</span></h5>
+                    <h5 class="card-title mb-0">Password</h5>
                 </div>
                 <div class="card-body">
                     <input type="password" placeholder="Password"
@@ -391,8 +562,8 @@ function showUsers($row)
         </div>
         <div class="row">
             <div class="col-12 d-flex justify-content-center">
-                <button type="submit" name="create_user"
-                    class="btn btn-success btn-lg">Crea un Utente</button>
+                <button name="update_user" id="updateUserButton"
+                    class="btn btn-success btn-lg">Aggiorna</button>
             </div>
         </div>
     </div>
@@ -501,6 +672,19 @@ function showCompanies($row)
                             placeholder="Numero di Telefono 3">
                     </div>
                 </div>
+                <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Data di Fatturazione</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-group mb-4">
+                        <input type="text" class="form-control"
+                                id="datePicker" name="company_date_joined"
+                                placeholder="Data d\'Inizio" value = "' . $row["DATA_ISCRIZIONE"] . '"
+                                style="background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat right 10px center; background-size: 16px;">
+                    </div>
+                </div>
+            </div>
             </div>
 
             <div class="col-12 col-lg-6">
@@ -582,6 +766,19 @@ function showCompanies($row)
                             required>
                     </div>
                 </div>
+                <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Data di Fatturazione</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-group mb-4">
+                        <input type="text" class="form-control"
+                                id="datePicker1" name="company_date_left"
+                                placeholder="Data di Partenza" value = "' . $row["DATA_SINISTRA"] . '"
+                                style="background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat right 10px center; background-size: 16px;">
+                    </div>
+                </div>
+            </div>
             </div>
             <div class="col-12 col-lg-12">
                 <div class="card">
@@ -598,8 +795,8 @@ function showCompanies($row)
         </div>
         <div class="row">
             <div class="col-12 d-flex justify-content-center">
-                <button name="create_company" id="createUserButton"
-                    class="btn btn-success btn-lg">Crea un Azienda</button>
+                <button name="update_company" id="updateCompanyButton"
+                    class="btn btn-success btn-lg">Aggiorna</button>
             </div>
         </div>
     </div>
@@ -662,14 +859,14 @@ function showStructures($row)
                     <div class="card-body">
                         <textarea class="form-control"
                             name="structure_information" rows="3"
-                            placeholder="Informazioni"> ' . $row["INFORMAZIONI"] . '</textarea>
+                            placeholder="Informazioni">' . $row["INFORMAZIONI"] . '</textarea>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-12 d-flex justify-content-center">
-                <button name="create_structure" id="createStructureButton" class="btn btn-success btn-lg">Crea una Struttura</button>
+                <button name="update_structure" id="updateStructureButton" class="btn btn-success btn-lg">Aggiorna</button>
             </div>
         </div>
     </div>
@@ -762,15 +959,15 @@ function showDepartments($row, $id)
                         <h5 class="card-title mb-0">Informazioni</h5>
                     </div>
                     <div class="card-body">
-                        <textarea class="form-control" name="department_information" rows="3" placeholder="Informazioni">
-                        ' . $row["INFORMAZIONI"] . '"</textarea>
+                        <textarea class="form-control" name="department_information" rows="3" 
+                        placeholder="Informazioni">' . $row["INFORMAZIONI"] . '"</textarea>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-12 d-flex justify-content-center">
-                <button name="create_department" id="createDepartmentButton" class="btn btn-success btn-lg">Crea un Reparto</button>
+                <button name="update_department" id="updateDepartmentButton" class="btn btn-success btn-lg">Aggiorna</button>
             </div>
         </div>
     </div>
@@ -823,7 +1020,7 @@ function showBankAccounts($row)
                     </div>
                     <div class="card-body">
                         <div> <select class="form-select mb-3" name = "company_name" required> ' .
-                            showCompaniesNameDropDown("banca conti") . '</select>
+        showCompaniesNameDropDown("banca conti") . '</select>
                         </div>
                     </div>
                 </div>
@@ -842,14 +1039,15 @@ function showBankAccounts($row)
         </div>
         <div class="row">
             <div class="col-12 d-flex justify-content-center">
-                <button name="create_bank_account" id="createBankAccountButton" class="btn btn-success btn-lg">Crea un Conto Bancario</button>
+                <button name="update_bank_account" id="updateBankAccountButton" class="btn btn-success btn-lg">Aggiorna</button>
             </div>
         </div>
     </div>
 </form>';
 }
 
-function showBills($row){
+function showBills($row)
+{
     echo '
 <form id="billForm" method="post">
     <div class="row">                    
@@ -875,7 +1073,7 @@ function showBills($row){
                     <div class="card-body">
                         <input type="number" class="form-control"
                             name="bill_value" placeholder="Valore" 
-                            value = "' . $row["VALORE"] .'"min = 0  max = 100000000000000000000000000 step="any" required>
+                            value = "' . $row["VALORE"] . '"min = 0  max = 100000000000000000000000000 step="any" required>
                     </div>
                 </div>
                 <div class="card">
@@ -884,8 +1082,8 @@ function showBills($row){
                             style="color:red;">*</span></h5>
                         </div>
                     <div class="card-body">
-                         <select class="form-select mb-3" name = "company_name" required>' . 
-                            showCompaniesNameDropDown("fatture") .'</select>
+                         <select class="form-select mb-3" name = "company_name" required>' .
+        showCompaniesNameDropDown("fatture") . '</select>
                     </div>
                 </div>
                 <div class="card">
@@ -897,7 +1095,7 @@ function showBills($row){
                             <input type="text" class="form-control"
                                     id="datePicker" name="bill_billing_date"
                                     placeholder="Data di Fatturazione" value = "' . $row["DATA_FATTURAZIONE"] . '"
-                                    style="background: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E") no-repeat right 10px center; background-size: 16px;">
+                                    style="background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat right 10px center; background-size: 16px;">
                         </div>
                     </div>
                 </div>
@@ -954,7 +1152,7 @@ function showBills($row){
                             <input type="text" class="form-control"
                                 id="datePicker1" name="bill_payment_date"
                                 placeholder="Data di Pagamento" value = "' . $row["DATA_PAGAMENTO"] . '"
-                                style="background: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E") no-repeat right 10px center; background-size: 16px;">
+                                style="background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat right 10px center; background-size: 16px;">
                         </div>
                     </div>
                </div>
@@ -966,7 +1164,7 @@ function showBills($row){
                     </div>
                     <div class="card-body">
                         <textarea class="form-control" name="bill_information"
-                            rows="3" placeholder="Descrizione"> ' . $row["DESCRIZIONE"] . '</textarea>
+                            rows="3" placeholder="Descrizione">' . $row["DESCRIZIONE"] . '</textarea>
                     </div>
                 </div>
             </div>
@@ -974,8 +1172,8 @@ function showBills($row){
 
         <div class="row">
             <div class="col-12 d-flex justify-content-center">
-                <button name="create_bill" id="createBillButton" 
-                    class="btn btn-success btn-lg">Crea una Fattura</button>
+                <button name="update_bill" id="updateBillButton" 
+                    class="btn btn-success btn-lg">Aggiorna</button>
             </div>
         </div>
     </div>
@@ -1010,6 +1208,16 @@ function showBills($row){
 
     <!-- select2-bootstrap4-theme -->
     <link href="https://raw.githack.com/ttskch/select2-bootstrap4-theme/master/dist/select2-bootstrap4.css" rel="stylesheet">
+
+
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css">
+    <script src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment/locale/it.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-BTBZNOArLzKrjzlkrMgXw0S51oBnuy0/HWkCARN0aSUSnt5N6VX/9n6tsQwnPVK68OzI6KARmxx3AeeBfM2y+g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 </head>
 
 <body>
@@ -1028,17 +1236,17 @@ function showBills($row){
                             <h1 class="h3 mb-3">
                                 <?php
                                 if ($entity == "utenti") {
-                                    echo "Aggiorna Utente";
+                                    echo "Aggiorna l'Utente";
                                 } else if ($entity == "aziende") {
-                                    echo "Aggiorna Aziende";
+                                    echo "Aggiorna l'Agenzia";
                                 } else if ($entity == "strutture") {
-                                    echo "Structure";
+                                    echo "Aggiorna la Struttura";
                                 } else if ($entity == "reparti") {
-                                    echo "Department";
+                                    echo "Aggiorna il Reparto";
                                 } else if ($entity == "banca conti") {
-                                    echo "Department";
+                                    echo "Aggiorna il Conto Bancario";
                                 } else if ($entity == "fatture") {
-                                    echo "Department";
+                                    echo "Aggiorna la Fattura";
                                 }
                                 ?>
                             </h1>
@@ -1082,7 +1290,44 @@ function showBills($row){
     </div>
 
     <script src="js/app.js"></script>
+    <script>
+        moment.locale('it');
 
+        function capitalizeFirstLetter(word) {
+            return word.charAt(0).toUpperCase() + word.slice(1);
+        }
+
+
+        var picker = new Pikaday({
+            field: document.getElementById('datePicker'),
+            format: 'YYYY-MM-DD',
+            i18n: {
+                previousMonth: 'Mese Precedente',
+                nextMonth: 'Mese Successivo',
+                months: moment.localeData().months().map(capitalizeFirstLetter), // Capitalize months
+                weekdays: moment.localeData().weekdays().map(capitalizeFirstLetter), // Capitalize weekdays
+                weekdaysShort: moment.localeData().weekdaysShort().map(capitalizeFirstLetter) // Capitalize weekdaysShort
+            },
+            onSelect: function() {
+                console.log(this.getMoment().format('Do MMMM YYYY'));
+            }
+        });
+
+        var picker = new Pikaday({
+            field: document.getElementById('datePicker1'),
+            format: 'YYYY-MM-DD',
+            i18n: {
+                previousMonth: 'Mese Precedente',
+                nextMonth: 'Mese Successivo',
+                months: moment.localeData().months().map(capitalizeFirstLetter), // Capitalize months
+                weekdays: moment.localeData().weekdays().map(capitalizeFirstLetter), // Capitalize weekdays
+                weekdaysShort: moment.localeData().weekdaysShort().map(capitalizeFirstLetter) // Capitalize weekdaysShort
+            },
+            onSelect: function() {
+                console.log(this.getMoment().format('Do MMMM YYYY'));
+            }
+        });
+    </script>
 </body>
 
 </html>

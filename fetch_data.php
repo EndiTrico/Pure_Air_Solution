@@ -56,7 +56,7 @@ while ($fieldinfo = mysqli_fetch_field($result)) {
     }
 
     $fieldName = ucwords(str_replace('_', ' ', strtolower($fieldinfo->name)));
-    echo '<th onclick="sortData(\'' . $fieldinfo->name . '\')">' . $fieldName . '</th>';
+    echo '<th>' . $fieldName . '</th>';
 }
 
 if ($_SESSION['role'] == 'Admin' || $entity == 'utenti' || $entity == 'aziende') {

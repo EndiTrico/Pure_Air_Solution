@@ -38,7 +38,7 @@ include 'database/closedb.php';
             border: none !important;
         }
 
-        th {
+        th, td, tr{
             text-align: center !important;
         }
 
