@@ -7,30 +7,16 @@ include 'database/config.php';
 include 'database/opendb.php';
 
 if ($entity == 'utenti') {
-    $sql = "SELECT c.E_ATTIVO 
-        FROM UTENTI u
-        JOIN AZIENDE c on u.AZIENDA_ID = c.AZIENDA_ID
-        WHERE u.UTENTE_ID = ?
-        LIMIT 1";
-
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $id);
-
-    $stmt->execute();
-    $stmt->bind_result($isActive);
-
-    $stmt->fetch();
-    $stmt->close();
-
+    $isActive = 1;
     $update = "UPDATE " . $entity .
         " SET E_ATTIVO = 1 
-                    WHERE UTENTE_ID = ?";
+                WHERE UTENTE_ID = ?";
 } else if ($entity == "strutture") {
     $sql = "SELECT c.E_ATTIVO 
-                FROM STRUTTURE s
-                JOIN AZIENDE c on s.AZIENDA_ID = c.AZIENDA_ID
-                WHERE s.STRUTTURA_ID = ?
-                LIMIT 1";
+            FROM STRUTTURE s
+            JOIN AZIENDE c on s.AZIENDA_ID = c.AZIENDA_ID
+            WHERE s.STRUTTURA_ID = ?
+            LIMIT 1";
 
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $id);
@@ -43,13 +29,13 @@ if ($entity == 'utenti') {
 
     $update = "UPDATE " . $entity .
         " SET E_ATTIVO = 1 
-                    WHERE STRUTTURA_ID = ?";
+                WHERE STRUTTURA_ID = ?";
 } else if ($entity == "reparti") {
     $sql = "SELECT c.E_ATTIVO 
-                FROM REPARTI d
-                JOIN AZIENDE c on d.AZIENDA_ID = c.AZIENDA_ID
-                WHERE d.REPARTO_ID = ?
-                LIMIT 1";
+            FROM REPARTI d
+            JOIN AZIENDE c on d.AZIENDA_ID = c.AZIENDA_ID
+            WHERE d.REPARTO_ID = ?
+            LIMIT 1";
 
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $id);
@@ -60,11 +46,11 @@ if ($entity == 'utenti') {
     $stmt->fetch();
     $stmt->close();
 
-    $sql = "SELECT c.E_ATTIVO 
-                FROM REPARTI d
-                JOIN STRUTTURE s on s.AZIENDA_ID = d.AZIENDA_ID
-                WHERE d.REPARTO_ID = ?
-                LIMIT 1";
+    $sql = "SELECT s.E_ATTIVO 
+            FROM REPARTI d
+            JOIN STRUTTURE s on s.AZIENDA_ID = d.AZIENDA_ID
+            WHERE d.REPARTO_ID = ?
+            LIMIT 1";
 
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $id);
@@ -79,15 +65,41 @@ if ($entity == 'utenti') {
         $isActive = 1;
         $update = "UPDATE " . $entity .
             " SET E_ATTIVO = 1 
-                        WHERE REPARTO_ID = ?";
+                    WHERE REPARTO_ID = ?";
     } else {
         $isActive = 0;
     }
-} else {
+} else if ($entity == "aziende") {
     $isActive = 1;
+
     $update = "UPDATE " . $entity .
-                " SET E_ATTIVO = 1 
-                WHERE AZIENDA_ID = ?";
+        " SET E_ATTIVO = 1 
+                WHERE AIENDA_ID = ?";
+} else if ($entity == "banca conti") {
+    $sql = "SELECT c.E_ATTIVO 
+            FROM BANCA_CONTI s
+            JOIN AZIENDE c on s.AZIENDA_ID = c.AZIENDA_ID
+            WHERE s.BANCA_CONTO_ID = ?
+            LIMIT 1";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $id);
+
+    $stmt->execute();
+    $stmt->bind_result($isActive);
+
+    $stmt->fetch();
+    $stmt->close();
+
+    $update = "UPDATE " . $entity .
+        " SET E_ATTIZVO = 1 
+        WHERE BANCA_CONTO_ID = ?";
+} else if ($entity == "fatture") {
+    $isActive = 1;
+
+    $update = "UPDATE " . $entity .
+        " SET E_PAGATO = 1 
+                WHERE FATTURA_ID = ?";
 }
 
 if ($isActive == 0) {
@@ -100,7 +112,7 @@ if ($isActive == 0) {
                 icon: "error",
                 showCancelButton: false,
                 confirmButtonColor: "#3085d6",
-                confirmButtonText: "Yes"
+                confirmButtonText: "Si"
             }).then((result) => {
                 if (result.isConfirmed) {
                     var url = "admin_display_entities.php";
@@ -123,7 +135,7 @@ if ($isActive == 0) {
         icon: "success",
         showCancelButton: false,
         confirmButtonColor: "#3085d6",
-        confirmButtonText: "Yes"
+        confirmButtonText: "Si"
     }).then((result) => {
         if (result.isConfirmed) {
             var url = "admin_display_entities.php";
@@ -133,3 +145,6 @@ if ($isActive == 0) {
 </script>
 ';
 }
+
+header('Location: admin_display_entities.php');
+exit();

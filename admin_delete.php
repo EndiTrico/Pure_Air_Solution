@@ -5,76 +5,109 @@ include 'database/opendb.php';
 $id = $_GET['id'];
 $entity = $_GET['entity'];
 
-$queryREPARTI = "";
-$querySTRUTTURE = "";
-$queryUTENTI = "";
+$queryDepartment = "";
+$queryStructure = "";
+$queryUser = "";
 $queryCompany = "";
+$queryBankAccount = "";
+$queryBills = "";
 
-if ($entity == "AZIENDE") {
-    $queryREPARTI = "UPDATE REPARTI 
+
+if ($entity == "aziende") {
+    $queryDepartment = "UPDATE REPARTI 
                         SET E_ATTIVO = 0
                         WHERE AZIENDA_ID = ?";
-    $querySTRUTTURE = "UPDATE STRUTTURE 
+    $queryStructure = "UPDATE STRUTTURE 
                         SET E_ATTIVO = 0
                         WHERE AZIENDA_ID = ?";
-    $queryUTENTI = "UPDATE UTENTI 
-                    SET E_ATTIVO = 0
+    $queryUser = "DELETE FROM UTENTI_AZIENDE 
                     WHERE AZIENDA_ID = ?";
     $queryCompany = "UPDATE AZIENDE
                     SET E_ATTIVO = 0,
-                    DATA_SINISTRA = DATE(NOW())
+                        DATA_SINISTRA = DATE(NOW())
                     WHERE AZIENDA_ID = ?";
+    $queryBankAccount = "UPDATE BANCA_CONTI
+                        SET E_ATTIVO = 0
+                        WHERE AZIENDA_ID = ?";
 
-    $stmtREPARTI = mysqli_prepare($conn, $queryREPARTI);
-    $stmtSTRUTTURE = mysqli_prepare($conn, $querySTRUTTURE);
-    $stmtUTENTI = mysqli_prepare($conn, $queryUTENTI);
+
+    $stmtDepartment = mysqli_prepare($conn, $queryDepartment);
+    $stmtStructure = mysqli_prepare($conn, $queryStructure);
+    $stmtUser = mysqli_prepare($conn, $queryUser);
     $stmtCompany = mysqli_prepare($conn, $queryCompany);
+    $stmtBankAccount = mysqli_prepare($conn, $queryBankAccount);
 
-    mysqli_stmt_bind_param($stmtREPARTI, "i", $id);
-    mysqli_stmt_bind_param($stmtSTRUTTURE, "i", $id);
-    mysqli_stmt_bind_param($stmtUTENTI, "i", $id);
+
+    mysqli_stmt_bind_param($stmtDepartment, "i", $id);
+    mysqli_stmt_bind_param($stmtStructure, "i", $id);
+    mysqli_stmt_bind_param($stmtUser, "i", $id);
     mysqli_stmt_bind_param($stmtCompany, "i", $id);
+    mysqli_stmt_bind_param($stmtBankAccount, "i", $id);
 
-    mysqli_stmt_execute($stmtREPARTI);
-    mysqli_stmt_execute($stmtSTRUTTURE);
-    mysqli_stmt_execute($stmtUTENTI);
+
+    mysqli_stmt_execute($stmtDepartment);
+    mysqli_stmt_execute($stmtStructure);
+    mysqli_stmt_execute($stmtUser);
     mysqli_stmt_execute($stmtCompany);
-} else if ($entity == "STRUTTURE") {
-    $queryREPARTI = "UPDATE REPARTI 
+    mysqli_stmt_execute($stmtBankAccount);
+
+} else if ($entity == "strutture") {
+    $queryDepartment = "UPDATE REPARTI 
                         SET E_ATTIVO = 0
                         WHERE STRUTTURA_ID = ?";
-    $querySTRUTTURE = "UPDATE STRUTTURE 
+    $queryStructure = "UPDATE STRUTTURE 
                         SET E_ATTIVO = 0
                         WHERE STRUTTURA_ID = ?";
 
-    $stmtREPARTI = mysqli_prepare($conn, $queryREPARTI);
-    $stmtSTRUTTURE = mysqli_prepare($conn, $querySTRUTTURE);
+    $stmtDepartment = mysqli_prepare($conn, $queryDepartment);
+    $stmtStructure = mysqli_prepare($conn, $queryStructure);
 
-    mysqli_stmt_bind_param($stmtREPARTI, "i", $id);
-    mysqli_stmt_bind_param($stmtSTRUTTURE, "i", $id);
+    mysqli_stmt_bind_param($stmtDepartment, "i", $id);
+    mysqli_stmt_bind_param($stmtStructure, "i", $id);
 
-    mysqli_stmt_execute($stmtREPARTI);
-    mysqli_stmt_execute($stmtSTRUTTURE);
-} else if ($entity == "REPARTI") {
-    $queryREPARTI = "UPDATE REPARTI 
+    mysqli_stmt_execute($stmtDepartment);
+    mysqli_stmt_execute($stmtStructure);
+
+
+} else if ($entity == "reparti") {
+    $queryDepartment = "UPDATE REPARTI 
                         SET E_ATTIVO = 0
                         WHERE REPARTO_ID = ?";
 
-    $stmtREPARTI = mysqli_prepare($conn, $queryREPARTI);
+    $stmtDepartment = mysqli_prepare($conn, $queryDepartment);
 
-    mysqli_stmt_bind_param($stmtREPARTI, "i", $id);
+    mysqli_stmt_bind_param($stmtDepartment, "i", $id);
 
-    mysqli_stmt_execute($stmtREPARTI);
+    mysqli_stmt_execute($stmtDepartment);
 } else if ($entity == "utenti") {
-    $queryUTENTI = "UPDATE UTENTI 
+    $queryUser = "UPDATE UTENTI 
                     SET E_ATTIVO = 0
                     WHERE UTENTE_ID = ?";
 
-    $stmtUTENTI = mysqli_prepare($conn, $queryUTENTI);
+    $stmtUser = mysqli_prepare($conn, $queryUser);
 
-    mysqli_stmt_bind_param($stmtUTENTI, "i", $id);
+    mysqli_stmt_bind_param($stmtUser, "i", $id);
 
-    mysqli_stmt_execute($stmtUTENTI);
+    mysqli_stmt_execute($stmtUser);
+} else if ($entity == "banca conti") {
+    $queryBankAccount = "UPDATE BANCA_CONTI 
+                        SET E_ATTIVO = 0
+                        WHERE BANCA_CONTI = ?";
+
+    $stmtBankAccount = mysqli_prepare($conn, $queryBankAccount);
+
+    mysqli_stmt_bind_param($stmtBankAccount, "i", $id);
+
+    mysqli_stmt_execute($stmtBankAccount);
+} else if ($entity == "fatture") {
+    $queryBills = "UPDATE FATTURE 
+                    SET E_PAGATO = 0
+                    WHERE FATTURA_ID = ?";
+
+    $stmtBills = mysqli_prepare($conn, $queryBills);
+
+    mysqli_stmt_bind_param($stmtBills, "i", $id);
+    mysqli_stmt_execute($stmtBills);
 }
 
 include 'database/closedb.php';

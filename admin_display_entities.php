@@ -235,16 +235,10 @@ include 'database/closedb.php';
                         confirmButtonText: "Si"
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            Swal.fire({
-                                title: "Attivato!",
-                                text: "Azione eseguita con successo",
-                                icon: "success",
-                                showConfirmButton: false
-                            });
-                            setTimeout(function () {
+                           
                                 var url = 'admin_activization.php?id=' + encodeURIComponent(id) + '&entity=' + encodeURIComponent(entity);
                                 window.location.href = url;
-                            }, 2000);
+                          
                         }
                     });
                 }

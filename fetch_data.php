@@ -71,17 +71,18 @@ if (mysqli_num_rows($result) > 0) {
 
     while ($row = mysqli_fetch_assoc($result)) {
         echo '<tr>';
-        $E_ATTIVO = 0;
+        $badge = 0;
         $is_admin = "";
 
         foreach ($row as $key => $value) {
             if ($key == 'E_ATTIVO') {
                 echo $value == 1 ? '<td><span class="badge-success-custom">Attivo</span></td>' :
                     '<td><span class="badge-danger-custom">Inattivo</span></td>';
-                $E_ATTIVO = $value;
+                $badge = $value;
             } else if ($key == 'E_PAGATO') {
                 echo $value == 1 ? '<td><span class="badge-success-custom">Pagato</span></td>' :
                     '<td><span class="badge-danger-custom">Non&nbsp;Pagato</span></td>';
+                $badge = $value;
             } else if (strpos(strtolower($key), 'id')) {
                 continue;
             } else {
@@ -98,11 +99,21 @@ if (mysqli_num_rows($result) > 0) {
             echo '<td>
                     <div class="btn-group">
                         <a href="admin_edit.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-warning">Modifica</a>&nbsp&nbsp&nbsp';
-            if ($E_ATTIVO == 0) {
-                echo '<button class="btn btn-success" onclick="confirmActivation(' . reset($row) .  ', \'' . $entity . '\')">Attivalo</button>&nbsp&nbsp&nbsp';
+
+            if ($entity == 'fatture'){
+                if ($badge == 0) {
+                    echo '<button class="btn btn-success" onclick="confirmActivation(' . reset($row) .  ', \'' . $entity . '\')">Pagato</button>&nbsp&nbsp&nbsp';
+                } else {
+                    echo '<button class="btn btn-danger" onclick="confirmDelete(' . reset($row) . ', \'' . $entity . '\')">Non&nbsp;Pagato</button>&nbsp&nbsp&nbsp';
+                }
             } else {
-                echo '<button class="btn btn-danger" onclick="confirmDelete(' . reset($row) . ', \'' . $entity . '\')">Elimina</button>&nbsp&nbsp&nbsp';
+                if ($badge == 0) {
+                    echo '<button class="btn btn-success" onclick="confirmActivation(' . reset($row) .  ', \'' . $entity . '\')">Attivalo</button>&nbsp&nbsp&nbsp';
+                } else {
+                    echo '<button class="btn btn-danger" onclick="confirmDelete(' . reset($row) . ', \'' . $entity . '\')">Elimina</button>&nbsp&nbsp&nbsp';
+                }
             }
+          
             if ($entity == "utenti" || $entity == "aziende") {
                 echo '<a href="admin_edit.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-info">Dettagli</a>';
             }
