@@ -105,21 +105,7 @@ if ($entity == 'utenti') {
 if ($isActive == 0) {
     include 'database/closedb.php';
 
-    echo '<script>
-            Swal.fire({
-                title: "Error",
-                text: "The parent entity is inactive. You need to make the parent entity active to use this command.",
-                icon: "error",
-                showCancelButton: false,
-                confirmButtonColor: "#3085d6",
-                confirmButtonText: "Si"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    var url = "admin_display_entities.php";
-                    window.location.href = url;   
-                }
-            });
-    </script>';
+    echo json_encode(array('status' => 'error'));
 } else {
     $stmt = $conn->prepare($update);
     $stmt->bind_param("s", $id);
@@ -128,23 +114,6 @@ if ($isActive == 0) {
 
     include 'database/closedb.php';
 
-    echo '<script>
-    Swal.fire({
-        title: "Activated!",
-        text: "The entity is set to active",
-        icon: "success",
-        showCancelButton: false,
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: "Si"
-    }).then((result) => {
-        if (result.isConfirmed) {
-            var url = "admin_display_entities.php";
-            window.location.href = url;        
-        }
-    });
-</script>
-';
+    echo json_encode(array('status' => 'success'));
 }
 
-header('Location: admin_display_entities.php');
-exit();

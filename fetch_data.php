@@ -100,7 +100,7 @@ if (mysqli_num_rows($result) > 0) {
                     <div class="btn-group">
                         <a href="admin_edit.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-warning">Modifica</a>&nbsp&nbsp&nbsp';
 
-            if ($entity == 'fatture'){
+            if ($entity == 'fatture') {
                 if ($badge == 0) {
                     echo '<button class="btn btn-success" onclick="confirmActivation(' . reset($row) .  ', \'' . $entity . '\')">Pagato</button>&nbsp&nbsp&nbsp';
                 } else {
@@ -113,9 +113,13 @@ if (mysqli_num_rows($result) > 0) {
                     echo '<button class="btn btn-danger" onclick="confirmDelete(' . reset($row) . ', \'' . $entity . '\')">Elimina</button>&nbsp&nbsp&nbsp';
                 }
             }
-          
-            if ($entity == "utenti" || $entity == "aziende") {
-                echo '<a href="admin_edit.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-info">Dettagli</a>';
+
+            if ($entity == "utenti" || $entity == "aziende" || $entity == "strutture" || $entity == "reparti" || $entity == "fatture") {
+                $modalButtonID = "#" . $entity . "ModalScrollable";
+                $buttonID = $entity . "ButtonID";
+
+                echo '<button id = "mybtn"  onclick="tryy()" type="button" class="btn btn-primary modal-toggle" data-toggle="modal" data-target="#myModal">
+                Dettagli</button>';
             }
             echo '</div></td></tr>';
         } else if ($entity == "utenti" || $entity == "aziende") {
