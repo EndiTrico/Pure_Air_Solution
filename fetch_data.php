@@ -108,26 +108,14 @@ if (mysqli_num_rows($result) > 0) {
                 }
             } else {
                 if ($badge == 0) {
-                    echo '<button class="btn btn-success" onclick="confirmActivation(' . reset($row) .  ', \'' . $entity . '\')">Attivalo</button>&nbsp&nbsp&nbsp';
+                    echo '<button class="btn btn-success" onclick="confirmActivation(' . reset($row) .  ', \'' . $entity . '\')">Attivare</button>&nbsp&nbsp&nbsp';
                 } else {
                     echo '<button class="btn btn-danger" onclick="confirmDelete(' . reset($row) . ', \'' . $entity . '\')">Elimina</button>&nbsp&nbsp&nbsp';
                 }
             }
 
-            if ($entity == "utenti" || $entity == "aziende" || $entity == "strutture" || $entity == "reparti" || $entity == "fatture") {
-                $modalButtonID = "#" . $entity . "ModalScrollable";
-                $buttonID = $entity . "ButtonID";
-
-                echo '<button id = "mybtn"  onclick="tryy()" type="button" class="btn btn-primary modal-toggle" data-toggle="modal" data-target="#myModal">
-                Dettagli</button>';
-            }
             echo '</div></td></tr>';
-        } else if ($entity == "utenti" || $entity == "aziende") {
-            echo '<td>
-            <div class="btn-group">
-                 <a href="admin_edit.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-info">Dettagli</a>
-                 </div></td></tr>';
-        }
+        } 
     }
 }
 
@@ -137,13 +125,6 @@ echo '</tbody>';
 
 echo '</table></div>';
 
-
-/*else {
-    echo '<div class="col-12">
-            <div class="card-header"><div style="margin-top: -20px; padding-top: 8px; height: 40px; font-size:20px; text-align:center; background-color: #fed48b; color: #d98b19; font-weight:bold" class="alert alert-danger" role="alert">No Data Found</div>                                                    
-            </div>
-        </div>';
-}*/
 
 mysqli_free_result($result);
 include 'database/closedb.php';

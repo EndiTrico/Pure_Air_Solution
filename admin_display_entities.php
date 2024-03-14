@@ -196,28 +196,36 @@ include 'database/closedb.php';
                                     <div class="row">
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('utenti')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Mostra Utenti
+                                                <a onclick="fetchData('utenti')"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Mostra Utenti
                                                 </a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('aziende')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Mostra Aziende
+                                                <a onclick="fetchData('aziende')"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Mostra Aziende
                                                 </a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('strutture')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Mostra Strutture
+                                                <a onclick="fetchData('strutture')"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Mostra Strutture
                                                 </a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('reparti')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Mostra Reparti
+                                                <a onclick="fetchData('reparti')"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Mostra Reparti
                                                 </a>
                                             </div>
                                         </div>
@@ -226,20 +234,26 @@ include 'database/closedb.php';
                                     <div class="row">
                                         <div class="col-12 col-lg-4">
                                             <div class="card-header">
-                                                <a onclick="fetchData('banca conti')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Mostra Banca Conti</a>
+                                                <a onclick="fetchData('banca conti')"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Mostra Banca Conti</a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-4">
                                             <div class="card-header">
-                                                <a onclick="fetchData('fatture')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Mostra Fatture
+                                                <a onclick="fetchData('fatture')"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Mostra Fatture
                                                 </a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-4">
                                             <div class="card-header">
-                                                <a id="mybtn" onclick="fetchData('impianti')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Mostra Impianti
+                                                <a id="mybtn" onclick="fetchData('impianti')"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Mostra Impianti
                                                 </a>
                                             </div>
                                         </div>
@@ -257,29 +271,11 @@ include 'database/closedb.php';
                 </div>
             </main>
 
-            <div class="modal">
-                <div class="modal-overlay modal-toggle"></div>
-                <div class="modal-wrapper modal-transition">
-                    <div class="modal-header">
-                    <button class="modal-close modal-toggle" onclick="tryy()"><svg class="icon-close icon" viewBox="0 0 32 32"><use xlink:href="#icon-close"></use></svg></button>
-                        <h2 class="modal-heading">This is a modal</h2>
-                    </div>
 
-                    <div class="modal-body">
-                        <div class="modal-content">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Impedit eum delectus, libero, accusantium dolores inventore obcaecati placeat cum sapiente vel laboriosam similique totam id ducimus aperiam, ratione fuga blanditiis maiores.</p>
-                            <button class="modal-toggle">Update</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
 
             <script>
-                var selected_entity = "";
-
-
-                $(document).ready(function() {
+                $(document).ready(function () {
                     $('#fetchTable').DataTable({
                         language: {
                             "url": "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Italian.json"
@@ -287,18 +283,9 @@ include 'database/closedb.php';
                     });
                 });
 
-
-                function tryy() {
-                    $('.modal').toggleClass('is-visible');
-                }
-
-
-               
-
                 function fetchData(entity) {
-                    selected_entity = entity;
                     var xhttp = new XMLHttpRequest();
-                    xhttp.onreadystatechange = function() {
+                    xhttp.onreadystatechange = function () {
                         if (this.readyState == 4 && this.status == 200) {
                             document.getElementById("tableContainer").innerHTML = this.responseText;
                             $('#fetchTable').DataTable({
@@ -332,7 +319,7 @@ include 'database/closedb.php';
                                 icon: "success",
                                 showConfirmButton: false
                             });
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 var url = 'admin_delete.php?id=' + encodeURIComponent(id) + '&entity=' + encodeURIComponent(entity);
                                 window.location.href = url;
                             }, 2000);
@@ -356,7 +343,7 @@ include 'database/closedb.php';
 
                             xhr.open('GET', 'admin_activization.php?id=' + encodeURIComponent(id) + '&entity=' + encodeURIComponent(entity));
 
-                            xhr.onload = function() {
+                            xhr.onload = function () {
                                 if (xhr.status === 200) {
                                     var response = JSON.parse(xhr.responseText);
 
@@ -367,7 +354,7 @@ include 'database/closedb.php';
                                             icon: "success",
                                             showConfirmButton: false
                                         });
-                                        setTimeout(function() {
+                                        setTimeout(function () {
                                             var url = "admin_display_entities.php";
                                             window.location.href = url;
                                         }, 2000);
@@ -378,7 +365,7 @@ include 'database/closedb.php';
                                             icon: "error",
                                             showConfirmButton: false
                                         });
-                                        setTimeout(function() {
+                                        setTimeout(function () {
                                             var url = "admin_display_entities.php";
                                             window.location.href = url;
                                         }, 2000);

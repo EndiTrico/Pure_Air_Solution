@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         NUMERO = ?,
                         AZIENDA_POSIZIONE = ?
                     WHERE UTENTE_ID = ?";
-            $params = array($user_first_name, $user_last_name, $user_email, $user_role,  $user_number, $user_position, $id);
+            $params = array($user_first_name, $user_last_name, $user_email, $user_role, $user_number, $user_position, $id);
         } else {
             $hashed_password = password_hash($user_password, PASSWORD_BCRYPT);
 
@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         AZIENDA_POSIZIONE = ?,
                         PASSWORD = ?
                         WHERE UTENTE_ID = ?";
-            $params = array($user_first_name, $user_last_name, $user_email, $user_role,  $user_number, $user_position, $hashed_password, $id);
+            $params = array($user_first_name, $user_last_name, $user_email, $user_role, $user_number, $user_position, $hashed_password, $id);
         }
 
         try {
@@ -256,7 +256,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             $errorMessage = "Errore: Impossibile Preparare l'Istruzione";
         }
-    } else if (isset($_POST['update_bank_account'])) {
+    } else if (isset($_POST['update_bill'])) {
         $bill_name = mysqli_real_escape_string($conn, $_POST['bill_name']);
         $bill_company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
         $bill_value = ROUND(($_POST['bill_value']), 2);
@@ -265,12 +265,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $bill_currency = mysqli_real_escape_string($conn, $_POST['bill_currency']);
         $bill_payment_date = mysqli_real_escape_string($conn, $_POST['bill_payment_date']);
         $bill_information = mysqli_real_escape_string($conn, $_POST['bill_information']);
-
-        if ($bill_VAT == 0) {
-            $bill_value_without_VAT = $bill_value;
-        } else {
-            $bill_value_without_VAT = ROUND($bill_value / (1 + ($bill_VAT / 100)), 2);
-        }
+        $bill_value_with_VAT = ROUND($_POST['bill_withVAT'], 2);
 
         $sql = "UPDATE FATTURE 
                 SET AZIENDA_ID = ?, 
@@ -286,7 +281,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $stmt = mysqli_prepare($conn, $sql);
         if ($stmt) {
-            mysqli_stmt_bind_param($stmt, "issdddsssi", $bill_company_id, $bill_name, $bill_information, $bill_value, $bill_value_without_VAT, $bill_VAT, $bill_currency, $bill_billing_date, $bill_payment_date, $id);
+            mysqli_stmt_bind_param($stmt, "issdddsssi", $bill_company_id, $bill_name, $bill_information, $bill_value, $bill_value_with_VAT, $bill_VAT, $bill_currency, $bill_billing_date, $bill_payment_date, $id);
 
             try {
                 if (mysqli_stmt_execute($stmt)) {
@@ -336,14 +331,12 @@ function showCompaniesNameDropDown($entity)
 
     $id = $_GET['id'];
 
-    // Prepare the SQL query to fetch all AZIENDE
     $query = "SELECT AZIENDA_ID, AZIENDA_NOME FROM AZIENDE";
     $company = mysqli_query($conn, $query);
 
     $sql = "";
     $companyDropDown = '';
 
-    // Prepare and execute the SQL query based on the entity type
     if ($entity == "utenti") {
         $sql = "SELECT ua.AZIENDA_ID FROM UTENTI u JOIN UTENTI_AZIENDE ua WHERE ua.UTENTE_ID = ?";
     } else if ($entity == "strutture") {
@@ -356,14 +349,12 @@ function showCompaniesNameDropDown($entity)
         $sql = "SELECT AZIENDA_ID FROM FATTURE WHERE FATTURA_ID = ?";
     }
 
-    // Prepare and execute the statement
     $stmt = mysqli_prepare($conn, $sql);
     mysqli_stmt_bind_param($stmt, "i", $id);
     mysqli_stmt_execute($stmt);
     $execute = mysqli_stmt_get_result($stmt);
     $row_retrieve = mysqli_fetch_assoc($execute);
 
-    // Fetch and construct dropdown options
     if ($company) {
         while ($row = mysqli_fetch_assoc($company)) {
             $selected = ($row_retrieve['AZIENDA_ID'] == $row['AZIENDA_ID']) ? 'selected' : '';
@@ -372,7 +363,6 @@ function showCompaniesNameDropDown($entity)
     } else {
         $companyDropDown .= "Error: " . mysqli_error($conn);
     }
-
 
     include 'database/closedb.php';
 
@@ -463,7 +453,7 @@ function showForm()
 
 function showUsers($row)
 {
-    echo  '
+    echo '
 <form id="userForm" method="post">
     <div class="row">
         <div class="col-12 col-lg-6">
@@ -481,7 +471,7 @@ function showUsers($row)
                     <h5 class="card-title mb-0">Cognome <span style = "color:red;">*</span></h5>
                 </div>
                 <div class="card-body">
-                    <input type="text" class="form-control" name="user_last_name" value = "' .  $row["COGNOME"] . '"
+                    <input type="text" class="form-control" name="user_last_name" value = "' . $row["COGNOME"] . '"
                         placeholder="Cognome" required> 
                 </div>
             </div>
@@ -1052,28 +1042,26 @@ function showBills($row)
 <form id="billForm" method="post">
     <div class="row">                    
         <div class="row">
-            <div class="col-12 col-lg-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Il Nome Della Fattura <span
-                            style="color:red;">*</span></h5>
-                    </div>
-                    <div class="card-body">
-                        <input type="text" class="form-control" name="bill_name"
-                            placeholder="Il Nome Della Fattura" value = "' . $row["FATTURA_NOME"]  . '" required>
-                    </div>
-                </div>
-            </div>
             <div class="col-12 col-lg-6">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title mb-0">Valore <span
+                        <h5 class="card-title mb-0">Il Nome Della Fattura <span
+                        style="color:red;">*</span></h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" class="form-control" name="bill_name"
+                            placeholder="Il Nome Della Fattura" value = "' . $row["FATTURA_NOME"] . '" required>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">IVA (%) <span
                             style="color:red;">*</span></h5>
                     </div>
                     <div class="card-body">
-                        <input type="number" class="form-control"
-                            name="bill_value" placeholder="Valore" 
-                            value = "' . $row["VALORE"] . '"min = 0  max = 100000000000000000000000000 step="any" required>
+                        <input type="number" class="form-control" id="VAT" oninput="calculateValueWithVAT()"
+                            name="bill_VAT" placeholder="IVA" min="0" max="100" step="any" value = "' . $row["IVA"] . '"
+                            required>
                     </div>
                 </div>
                 <div class="card">
@@ -1103,13 +1091,23 @@ function showBills($row)
             <div class="col-12 col-lg-6">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title mb-0">IVA (%) <span
-                            style="color:red;">*</span></h5>
+                        <h5 class="card-title mb-0">Valore Iva Inclusa</h5>
                     </div>
                     <div class="card-body">
-                        <input type="number" class="form-control"
-                            name="bill_VAT" placeholder="IVA" min="0" max="100" step="any" value = "' . $row["IVA"] . '"
-                            required>
+                        <input type="number" class="form-control" id="bill_withVAT" 
+                            name="bill_withVAT" placeholder="Valore Iva Inclusa" 
+                            value = "' . $row["VALORE_IVA_INCLUSA"] . '" min = 0  max = 100000000000000000000000000 step="any" readonly>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Valore <span
+                        style="color:red;">*</span></h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="number" class="form-control" id="value" oninput="calculateValueWithVAT()"
+                            name="bill_value" placeholder="Valore" 
+                            value = "' . $row["VALORE"] . '"min = 0  max = 100000000000000000000000000 step="any" required>
                     </div>
                 </div>
                 <div class="card">
@@ -1177,7 +1175,26 @@ function showBills($row)
             </div>
         </div>
     </div>
-</form>';
+</form>
+
+<script>
+    function calculateValueWithVAT() {
+        var value = parseFloat(document.getElementById("value").value);
+        var billVAT = parseFloat(document.getElementById("VAT").value);
+
+        if (isNaN(value)) {
+            value = 0;
+        }  
+        if (isNaN(billVAT)) {
+            billVAT = 0;
+        }
+    
+        var valueWithVAT = (value * (1 + (billVAT / 100))).toFixed(2);
+
+        document.getElementById("bill_withVAT").value = valueWithVAT;
+    }
+</script>
+';
 }
 
 
@@ -1207,7 +1224,8 @@ function showBills($row)
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
 
     <!-- select2-bootstrap4-theme -->
-    <link href="https://raw.githack.com/ttskch/select2-bootstrap4-theme/master/dist/select2-bootstrap4.css" rel="stylesheet">
+    <link href="https://raw.githack.com/ttskch/select2-bootstrap4-theme/master/dist/select2-bootstrap4.css"
+        rel="stylesheet">
 
 
 
@@ -1216,7 +1234,9 @@ function showBills($row)
     <script src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment/locale/it.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-BTBZNOArLzKrjzlkrMgXw0S51oBnuy0/HWkCARN0aSUSnt5N6VX/9n6tsQwnPVK68OzI6KARmxx3AeeBfM2y+g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        integrity="sha512-BTBZNOArLzKrjzlkrMgXw0S51oBnuy0/HWkCARN0aSUSnt5N6VX/9n6tsQwnPVK68OzI6KARmxx3AeeBfM2y+g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 </head>
 
@@ -1230,7 +1250,8 @@ function showBills($row)
                 <div class="container-fluid p-0">
                     <div class="row">
                         <div class="col-12 col-lg-1">
-                            <a class="btn transparent-btn" style="margin-top: -8px;" href="admin_display_entities.php"><img src="./images/back_button.png"></a>
+                            <a class="btn transparent-btn" style="margin-top: -8px;"
+                                href="admin_display_entities.php"><img src="./images/back_button.png"></a>
                         </div>
                         <div class="col-12 col-lg-11">
                             <h1 class="h3 mb-3">
@@ -1308,7 +1329,7 @@ function showBills($row)
                 weekdays: moment.localeData().weekdays().map(capitalizeFirstLetter), // Capitalize weekdays
                 weekdaysShort: moment.localeData().weekdaysShort().map(capitalizeFirstLetter) // Capitalize weekdaysShort
             },
-            onSelect: function() {
+            onSelect: function () {
                 console.log(this.getMoment().format('Do MMMM YYYY'));
             }
         });
@@ -1323,10 +1344,9 @@ function showBills($row)
                 weekdays: moment.localeData().weekdays().map(capitalizeFirstLetter), // Capitalize weekdays
                 weekdaysShort: moment.localeData().weekdaysShort().map(capitalizeFirstLetter) // Capitalize weekdaysShort
             },
-            onSelect: function() {
+            onSelect: function () {
                 console.log(this.getMoment().format('Do MMMM YYYY'));
-            }
-        });
+            }     });
     </script>
 </body>
 
