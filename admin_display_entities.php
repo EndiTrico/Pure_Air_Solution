@@ -30,6 +30,14 @@ include 'database/closedb.php';
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.0.1/js/dataTables.js"></script>
 
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js">
+    </script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.1.7/js/dataTables.fixedHeader.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.1.7/css/fixedHeader.dataTables.min.css">
     <style>
         .current {
             background-color: whitesmoke !important;
@@ -196,36 +204,28 @@ include 'database/closedb.php';
                                     <div class="row">
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('utenti')"
-                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                    style="font-weight: bold;">Mostra Utenti
+                                                <a onclick="fetchData('utenti')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Mostra Utenti
                                                 </a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('aziende')"
-                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                    style="font-weight: bold;">Mostra Aziende
+                                                <a onclick="fetchData('aziende')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Mostra Aziende
                                                 </a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('strutture')"
-                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                    style="font-weight: bold;">Mostra Strutture
+                                                <a onclick="fetchData('strutture')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Mostra Strutture
                                                 </a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('reparti')"
-                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                    style="font-weight: bold;">Mostra Reparti
+                                                <a onclick="fetchData('reparti')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Mostra Reparti
                                                 </a>
                                             </div>
                                         </div>
@@ -234,26 +234,20 @@ include 'database/closedb.php';
                                     <div class="row">
                                         <div class="col-12 col-lg-4">
                                             <div class="card-header">
-                                                <a onclick="fetchData('banca conti')"
-                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                    style="font-weight: bold;">Mostra Banca Conti</a>
+                                                <a onclick="fetchData('banca conti')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Mostra Banca Conti</a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-4">
                                             <div class="card-header">
-                                                <a onclick="fetchData('fatture')"
-                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                    style="font-weight: bold;">Mostra Fatture
+                                                <a onclick="fetchData('fatture')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Mostra Fatture
                                                 </a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-4">
                                             <div class="card-header">
-                                                <a id="mybtn" onclick="fetchData('impianti')"
-                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                    style="font-weight: bold;">Mostra Impianti
+                                                <a id="mybtn" onclick="fetchData('impianti')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Mostra Impianti
                                                 </a>
                                             </div>
                                         </div>
@@ -273,29 +267,116 @@ include 'database/closedb.php';
 
 
 
-
             <script>
-                $(document).ready(function () {
-                    $('#fetchTable').DataTable({
-                        language: {
-                            "url": "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Italian.json"
-                        }
-                    });
-                });
-
-                function fetchData(entity) {
+                /* function fetchData(entity) {
                     var xhttp = new XMLHttpRequest();
-                    xhttp.onreadystatechange = function () {
+                    var table;
+
+                    xhttp.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
                             document.getElementById("tableContainer").innerHTML = this.responseText;
-                            $('#fetchTable').DataTable({
+                            table = $('#fetchTable').DataTable({
                                 language: {
                                     "url": "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Italian.json"
                                 },
-                                destroy: true
+                                destroy: true,
+                                orderCellsTop: true,
+                                fixedHeader: true,
+                                columnDefs: [{
+                                    targets: 0,
+                                    visible: true
+                                }]
+                            });
+
+                            $('#fetchTable thead tr').clone(true).appendTo('#fetchTable thead');
+                            $('#fetchTable thead tr:eq(1) th').each(function(i) {
+                                var headerCell = $(this);
+                                if (!headerCell.hasClass("noFilter")) {
+                                    var title = headerCell.text();
+                                    headerCell.html('<input type="text" placeholder="Cerca ' + title + '" />');
+
+                                    $('input', this).on('keyup change', function() {
+                                        if (table.column(i).search() !== this.value) {
+                                            table
+                                                .column(i)
+                                                .search(this.value)
+                                                .draw();
+                                        }
+                                    });
+                                } else {
+                                    headerCell.html('<span></span>');
+                                }
                             });
                         }
                     };
+
+                    xhttp.open("GET", "fetch_data.php?entity=" + entity, true);
+                    xhttp.send();
+                }*/
+                function fetchData(entity) {
+                    var xhttp = new XMLHttpRequest();
+                    var table;
+
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            document.getElementById("tableContainer").innerHTML = this.responseText;
+                            table = $('#fetchTable').DataTable({
+                                language: {
+                                    "url": "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Italian.json"
+                                },
+                                destroy: true,
+                                orderCellsTop: true,
+                                fixedHeader: true,
+                                columnDefs: [{
+                                    targets: 0,
+                                    visible: true
+                                }]
+                            });
+
+                            // Clone the table header
+                            $('#fetchTable thead tr').clone(true).appendTo('#fetchTable thead');
+
+                            // Add individual column searching (input and select)
+                            $('#fetchTable thead tr:eq(1) th').each(function(i) {
+                                var headerCell = $(this);
+                                if (!headerCell.hasClass("noFilter")) {
+                                    var title = headerCell.text();
+                                    // Create input for text searching
+                                    headerCell.html('<input type="text" placeholder="Cerca ' + title + '" />');
+
+                                    // Create select input for individual column searching
+                                    var select = $('<select><option value=""></option></select>')
+                                        .appendTo($(headerCell).empty())
+                                        .on('change', function() {
+                                            var val = $.fn.dataTable.util.escapeRegex(
+                                                $(this).val()
+                                            );
+                                            table.column(i)
+                                                .search(val ? '^' + val + '$' : '', true, false)
+                                                .draw();
+                                        });
+
+                                    // Add options to the select input
+                                    table.column(i).data().unique().sort().each(function(d, j) {
+                                        select.append('<option value="' + d + '">' + d + '</option>')
+                                    });
+
+                                    // Bind keyup and change event for input searching
+                                    $('input', this).on('keyup change', function() {
+                                        if (table.column(i).search() !== this.value) {
+                                            table
+                                                .column(i)
+                                                .search(this.value)
+                                                .draw();
+                                        }
+                                    });
+                                } else {
+                                    headerCell.html('<span></span>');
+                                }
+                            });
+                        }
+                    };
+
                     xhttp.open("GET", "fetch_data.php?entity=" + entity, true);
                     xhttp.send();
                 }
@@ -319,7 +400,7 @@ include 'database/closedb.php';
                                 icon: "success",
                                 showConfirmButton: false
                             });
-                            setTimeout(function () {
+                            setTimeout(function() {
                                 var url = 'admin_delete.php?id=' + encodeURIComponent(id) + '&entity=' + encodeURIComponent(entity);
                                 window.location.href = url;
                             }, 2000);
@@ -343,7 +424,7 @@ include 'database/closedb.php';
 
                             xhr.open('GET', 'admin_activization.php?id=' + encodeURIComponent(id) + '&entity=' + encodeURIComponent(entity));
 
-                            xhr.onload = function () {
+                            xhr.onload = function() {
                                 if (xhr.status === 200) {
                                     var response = JSON.parse(xhr.responseText);
 
@@ -354,7 +435,7 @@ include 'database/closedb.php';
                                             icon: "success",
                                             showConfirmButton: false
                                         });
-                                        setTimeout(function () {
+                                        setTimeout(function() {
                                             var url = "admin_display_entities.php";
                                             window.location.href = url;
                                         }, 2000);
@@ -365,7 +446,7 @@ include 'database/closedb.php';
                                             icon: "error",
                                             showConfirmButton: false
                                         });
-                                        setTimeout(function () {
+                                        setTimeout(function() {
                                             var url = "admin_display_entities.php";
                                             window.location.href = url;
                                         }, 2000);

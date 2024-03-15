@@ -60,7 +60,7 @@ while ($fieldinfo = mysqli_fetch_field($result)) {
 }
 
 if ($_SESSION['role'] == 'Admin' || $entity == 'utenti' || $entity == 'aziende') {
-    echo '<th>Azioni</th>';
+    echo '<th class="noFilter">Azioni</th>';
 }
 
 echo '</tr>
