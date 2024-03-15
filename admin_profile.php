@@ -11,8 +11,8 @@ $successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['update_profile'])) {
-        $NOME = mysqli_real_escape_string($conn, $_POST['NOME']);
-        $COGNOME = mysqli_real_escape_string($conn, $_POST['COGNOME']);
+        $NOME = mysqli_real_escape_string($conn, $_POST['user_first_name']);
+        $COGNOME = mysqli_real_escape_string($conn, $_POST['user_last_name']);
         $user_email = mysqli_real_escape_string($conn, $_POST['user_email']);
         $user_password = mysqli_real_escape_string($conn, $_POST['user_password']);
         $user_confirm_password = mysqli_real_escape_string($conn, $_POST['user_confirm_password']);
@@ -202,7 +202,7 @@ function showLeftForm($email)
         </div>
         <div class="card-body">
             <input type="text" placeholder=""
-                name="user_ruole" class="form-control" value="' . $row["RUOLO"] . '"  readonly />
+                name="user_role" class="form-control" value="' . $row["RUOLO"] . '"  readonly />
         </div>
     </div>
     ';
