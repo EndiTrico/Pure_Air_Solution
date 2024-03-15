@@ -26,11 +26,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     SET NOME = ?, 
                         COGNOME = ?, 
                         EMAIL = ?, 
-                        RUOLO = ?, 
+                        RUOLE = ?, 
                         NUMERO = ?,
                         AZIENDA_POSIZIONE = ?
                     WHERE UTENTE_ID = ?";
-            $params = array($user_first_name, $user_last_name, $user_email, $user_role, $user_position, $user_number, $id);
+            $params = array($user_first_name, $user_last_name, $user_email, $user_role, $user_number, $user_position, $id);
         } else {
             $hashed_password = password_hash($user_password, PASSWORD_BCRYPT);
 
@@ -38,29 +38,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     SET NOME = ?, 
                         COGNOME = ?, 
                         EMAIL = ?, 
-                        RUOLO = ?, 
+                        RUOLE = ?, 
                         NUMERO = ?,
                         AZIENDA_POSIZIONE = ?,
                         PASSWORD = ?
                         WHERE UTENTE_ID = ?";
-            $params = array($user_first_name, $user_last_name, $user_email, $user_role, $user_position, $hashed_password, $user_number, $id);
+            $params = array($user_first_name, $user_last_name, $user_email, $user_role, $user_number, $user_position, $hashed_password, $id);
         }
 
         try {
             $stmt = mysqli_prepare($conn, $sql);
             if ($stmt) {
-                if (empty($user_password)) {
-                    mysqli_stmt_bind_param($stmt, "sssssii", ...$params);
-                } else {
-                    mysqli_stmt_bind_param($stmt, "ssssssii", ...$params);
-                }
+                mysqli_stmt_bind_param($stmt, "ssssii", ...$params);
+
                 if (mysqli_stmt_execute($stmt)) {
                     mysqli_stmt_close($stmt);
+
                     $sql1 = "DELETE 
                             FROM UTENTI_AZIENDE
-                            WHERE UTENTE_ID = ? ";
+                            WHERE USER_ID = ? ";
                     $stmt1 = mysqli_prepare($conn, $sql1);
-                    mysqli_stmt_bind_param($stmt1, "i", $id);
+                    mysqli_stmt_bind_param($stmt, "i", $id);
                     mysqli_stmt_close($stmt1);
 
                     foreach ($user_companies as $company_id) {
@@ -71,7 +69,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $stmt2 = mysqli_prepare($conn, $sql2);
                         mysqli_stmt_bind_param($stmt2, "ii", $id, $company_id);
                         mysqli_stmt_execute($stmt2);
-                        mysqli_stmt_close($stmt2);
                     }
                     mysqli_stmt_close($stmt2);
 
@@ -333,8 +330,6 @@ function showCompaniesNameDropDown($entity)
     include 'database/opendb.php';
 
     $id = $_GET['id'];
-    echo $id;
-    echo $entity;
 
     $query = "SELECT AZIENDA_ID, AZIENDA_NOME FROM AZIENDE";
     $company = mysqli_query($conn, $query);
@@ -343,7 +338,7 @@ function showCompaniesNameDropDown($entity)
     $companyDropDown = '';
 
     if ($entity == "utenti") {
-        $sql = "SELECT ua.AZIENDA_ID FROM UTENTI u JOIN UTENTI_AZIENDE ua ON u.UTENTE_ID = ua.UTENTE_ID WHERE ua.UTENTE_ID = ?";
+        $sql = "SELECT ua.AZIENDA_ID FROM UTENTI u JOIN UTENTI_AZIENDE ua WHERE ua.UTENTE_ID = ?";
     } else if ($entity == "strutture") {
         $sql = "SELECT AZIENDA_ID FROM STRUTTURE WHERE STRUTTURA_ID = ?";
     } else if ($entity == "reparti") {
@@ -353,23 +348,18 @@ function showCompaniesNameDropDown($entity)
     } else if ($entity == "fatture") {
         $sql = "SELECT AZIENDA_ID FROM FATTURE WHERE FATTURA_ID = ?";
     }
-    $stmt3 = mysqli_prepare($conn, $sql);
-    mysqli_stmt_bind_param($stmt3, "i", $id);
-    mysqli_stmt_execute($stmt3);
-    $execute = mysqli_stmt_get_result($stmt3);
+
+    $stmt = mysqli_prepare($conn, $sql);
+    mysqli_stmt_bind_param($stmt, "i", $id);
+    mysqli_stmt_execute($stmt);
+    $execute = mysqli_stmt_get_result($stmt);
     $row_retrieve = mysqli_fetch_assoc($execute);
 
-    if ($company && $stmt3) {
-        //if ($row_retrieve) {
-            while ($row = mysqli_fetch_assoc($company)) {
-                $selected = ($row_retrieve['AZIENDA_ID'] == $row['AZIENDA_ID']) ? 'selected' : '';
-                $companyDropDown .= '<option ' . $selected . ' value="' . $row['AZIENDA_ID'] . '">' . htmlspecialchars($row['AZIENDA_NOME']) . '</option>';
-            }
-        //} else {
-         //   while ($row = mysqli_fetch_assoc($company)) {
-           //     $companyDropDown .= '<option value="' . $row['AZIENDA_ID'] . '">' . htmlspecialchars($row['AZIENDA_NOME']) . '</option>';
-           // }
-       // }
+    if ($company) {
+        while ($row = mysqli_fetch_assoc($company)) {
+            $selected = ($row_retrieve['AZIENDA_ID'] == $row['AZIENDA_ID']) ? 'selected' : '';
+            $companyDropDown .= '<option ' . $selected . ' value="' . $row['AZIENDA_ID'] . '">' . htmlspecialchars($row['AZIENDA_NOME']) . '</option>';
+        }
     } else {
         $companyDropDown .= "Error: " . mysqli_error($conn);
     }
@@ -498,14 +488,14 @@ function showUsers($row)
 
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-title mb-0">Ruolo <span style = "color:red;">*</span></h5>
+                    <h5 class="card-title mb-0">Ruole <span style = "color:red;">*</span></h5>
                 </div>
                 <div class="card-body">
                     <div>
                         <select data-allow-clear="1" name="user_role"
                             class="form-select mb-3" required>
                             <option value="" style="margin-right:20px !important;"
-                                disabled selected hidden>Seleciona Ruolo</option>
+                                disabled selected hidden>Seleciona Ruole</option>
                             <option value="Admin" ' . ($row["RUOLO"] == "Admin" ? 'selected' : '') . '>Admin</option>
                             <option value="Cliente" ' . ($row["RUOLO"] == "Cliente" ? 'selected' : '') . '>Cliente</option>
                         </select>
@@ -555,7 +545,7 @@ function showUsers($row)
                 <div class="card-body">
                     <select multiple placeholder="Seleciona Azienda"
                         name="user_companies[]" id= "select" data-allow-clear="1">' .
-    showCompaniesNameDropDown("utenti") . '
+        showCompaniesNameDropDown("utenti") . '
                     </select>
                 </div>
             </div>
@@ -837,7 +827,7 @@ function showStructures($row)
                     <div class="card-body">
                         <div> <select multiple placeholder="Seleciona Azienda"
                         name="structure_companies[]" id= "select" data-allow-clear="1">' .
-    showCompaniesNameDropDown("strutture") . '</select>
+        showCompaniesNameDropDown("strutture") . '</select>
                         </div>
                     </div>
                 </div>
@@ -1020,7 +1010,7 @@ function showBankAccounts($row)
                     </div>
                     <div class="card-body">
                         <div> <select class="form-select mb-3" name = "company_name" required> ' .
-    showCompaniesNameDropDown("banca conti") . '</select>
+        showCompaniesNameDropDown("banca conti") . '</select>
                         </div>
                     </div>
                 </div>
@@ -1081,7 +1071,7 @@ function showBills($row)
                         </div>
                     <div class="card-body">
                          <select class="form-select mb-3" name = "company_name" required>' .
-    showCompaniesNameDropDown("fatture") . '</select>
+        showCompaniesNameDropDown("fatture") . '</select>
                     </div>
                 </div>
                 <div class="card">
@@ -1357,8 +1347,7 @@ function showBills($row)
             },
             onSelect: function () {
                 console.log(this.getMoment().format('Do MMMM YYYY'));
-            }
-        });
+            }     });
     </script>
 </body>
 

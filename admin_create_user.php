@@ -209,14 +209,14 @@ function showAllCompanies()
 
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        <h5 class="card-title mb-0">Ruolo <span style = "color:red;">*</span></h5>
+                                                        <h5 class="card-title mb-0">Ruole <span style = "color:red;">*</span></h5>
                                                     </div>
                                                     <div class="card-body">
                                                         <div>
                                                             <select data-allow-clear="1" name="user_role"
                                                                 class="form-select mb-3" required>
                                                                 <option value="" style="margin-right:20px !important;"
-                                                                    disabled selected hidden>Seleciona Ruolo</option>
+                                                                    disabled selected hidden>Seleciona Ruole</option>
                                                                 <option value="Admin">Admin</option>
                                                                 <option value="Cliente">Cliente</option>
                                                             </select>

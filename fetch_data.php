@@ -56,7 +56,6 @@ while ($fieldinfo = mysqli_fetch_field($result)) {
     }
 
     $fieldName = ucwords(str_replace('_', ' ', strtolower($fieldinfo->name)));
-
     echo '<th>' . $fieldName . '</th>';
 }
 
@@ -77,12 +76,12 @@ if (mysqli_num_rows($result) > 0) {
 
         foreach ($row as $key => $value) {
             if ($key == 'E_ATTIVO') {
-                echo $value == 1 ? '<td><span class="badge-success-custom myBadge">Attivo</span></td>' :
-                    '<td><span class="badge-danger-custom myBadge">Inattivo</span></td>';
+                echo $value == 1 ? '<td><span class="badge-success-custom">Attivo</span></td>' :
+                    '<td><span class="badge-danger-custom">Inattivo</span></td>';
                 $badge = $value;
             } else if ($key == 'E_PAGATO') {
-                echo $value == 1 ? '<td><span class="badge-success-custom myBadge">Pagato</span></td>' :
-                    '<td><span class="badge-danger-custom myBadge">Non&nbsp;Pagato</span></td>';
+                echo $value == 1 ? '<td><span class="badge-success-custom">Pagato</span></td>' :
+                    '<td><span class="badge-danger-custom">Non&nbsp;Pagato</span></td>';
                 $badge = $value;
             } else if (strpos(strtolower($key), 'id')) {
                 continue;
@@ -90,7 +89,7 @@ if (mysqli_num_rows($result) > 0) {
                 echo '<td>' . $value . '</td>';
             }
 
-            if ($key == 'RUOLO') {
+            if ($key == 'RUOLE') {
                 $is_admin = $value;
             }
         }
