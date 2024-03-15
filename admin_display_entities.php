@@ -30,16 +30,6 @@ include 'database/closedb.php';
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.0.1/js/dataTables.js"></script>
 
-
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js">
-    </script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript"
-        src="https://cdn.datatables.net/fixedheader/3.1.7/js/dataTables.fixedHeader.min.js"></script>
-
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" type="text/css"
-        href="https://cdn.datatables.net/fixedheader/3.1.7/css/fixedHeader.dataTables.min.css">
     <style>
         .current {
             background-color: whitesmoke !important;
@@ -287,126 +277,29 @@ include 'database/closedb.php';
 
 
 
+
             <script>
-                /* function fetchData(entity) {
-                    var xhttp = new XMLHttpRequest();
-                    var table;
-
-                    xhttp.onreadystatechange = function() {
-                        if (this.readyState == 4 && this.status == 200) {
-                            document.getElementById("tableContainer").innerHTML = this.responseText;
-                            table = $('#fetchTable').DataTable({
-                                language: {
-                                    "url": "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Italian.json"
-                                },
-                                destroy: true,
-                                orderCellsTop: true,
-                                fixedHeader: true,
-                                columnDefs: [{
-                                    targets: 0,
-                                    visible: true
-                                }]
-                            });
-
-                            $('#fetchTable thead tr').clone(true).appendTo('#fetchTable thead');
-                            $('#fetchTable thead tr:eq(1) th').each(function(i) {
-                                var headerCell = $(this);
-                                if (!headerCell.hasClass("noFilter")) {
-                                    var title = headerCell.text();
-                                    headerCell.html('<input type="text" placeholder="Cerca ' + title + '" />');
-
-                                    $('input', this).on('keyup change', function() {
-                                        if (table.column(i).search() !== this.value) {
-                                            table
-                                                .column(i)
-                                                .search(this.value)
-                                                .draw();
-                                        }
-                                    });
-                                } else {
-                                    headerCell.html('<span></span>');
-                                }
-                            });
+                $(document).ready(function () {
+                    $('#fetchTable').DataTable({
+                        language: {
+                            "url": "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Italian.json"
                         }
-                    };
+                    });
+                });
 
-                    xhttp.open("GET", "fetch_data.php?entity=" + entity, true);
-                    xhttp.send();
-                }*/
                 function fetchData(entity) {
                     var xhttp = new XMLHttpRequest();
-                    var table;
-
                     xhttp.onreadystatechange = function () {
                         if (this.readyState == 4 && this.status == 200) {
                             document.getElementById("tableContainer").innerHTML = this.responseText;
-                            table = $('#fetchTable').DataTable({
+                            $('#fetchTable').DataTable({
                                 language: {
                                     "url": "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Italian.json"
                                 },
-                                destroy: true,
-                                orderCellsTop: true,
-                                fixedHeader: true,
-                                columnDefs: [{
-                                    targets: 0,
-                                    visible: true
-                                }]
-                            });
-
-                            // Clone the table header
-                            $('#fetchTable thead tr').clone(true).appendTo('#fetchTable thead');
-
-                            // Add individual column searching (input and select)
-                            $('#fetchTable thead tr:eq(1) th').each(function (i) {
-                                var headerCell = $(this);
-                                if (!headerCell.hasClass("noFilter")) {
-                                    var title = headerCell.text();
-
-                                    headerCell.html('<input type="text" placeholder="Cerca ' + title + '" />');
-
-                                    var select = $('<select><option value="">Tutti</option></select>')
-                                        .appendTo($(headerCell).empty())
-                                        .on('change', function () {
-                                            var val = $.fn.dataTable.util.escapeRegex(
-                                                $(this).val()
-                                            );
-                                            table.column(i)
-                                                .search(val ? '^' + val + '$' : '', true, false)
-                                                .draw();
-                                        });
-
-                                    var blankAppended = false;
-
-                                    table.column(i).data().unique().sort().each(function (d, j) {
-                                        var span = $('<div>').html(d).find('.myBadge');
-                                        if (span.length > 0) {
-                                            var value = span.text();
-                                            select.append('<option value="' + value + '">' + value + '</option>');
-                                        } else {
-                                            if (d.trim() === "" && !blankAppended) {
-                                                select.append('<option value="Vuoto"> Vuoto</option>');
-                                                blankAppended = true;
-                                            } else {
-                                                select.append('<option  value="' + d + '">' + d + '</option>');
-                                            }
-                                        }
-                                    });
-
-                                    $('input', this).on('keyup change', function () {
-                                        if (table.column(i).search() !== this.value) {
-                                            table
-                                                .column(i)
-                                                .search(this.value)
-                                                .draw();
-                                        }
-                                    });
-                                } else {
-                                    headerCell.html('<span></span>');
-                                }
+                                destroy: true
                             });
                         }
                     };
-
                     xhttp.open("GET", "fetch_data.php?entity=" + entity, true);
                     xhttp.send();
                 }
