@@ -30,13 +30,13 @@ $email = $_SESSION['email'];
                     </span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end">
-                    <a class="dropdown-item" href="admin_profile.php"><i class="align-middle me-1" data-feather="user"></i> Profile</a>
+                    <a class="dropdown-item" href="admin_profile.php"><i class="align-middle me-1" data-feather="user"></i>Profilo</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" onclick="confirmDelete('<?php echo $email; ?>')" href="#">
-                        <i class="align-middle me-1" data-feather="user-x"></i> Delete
+                        <i class="align-middle me-1" data-feather="user-x"></i>Eliminare
                     </a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="logout.php"><i class="align-middle me-1" data-feather="log-out"></i>Log out</a>
+                    <a class="dropdown-item" href="logout.php"><i class="align-middle me-1" data-feather="log-out"></i>Disconnettersi</a>
                 </div>
             </li>
         </ul>

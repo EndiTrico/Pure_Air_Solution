@@ -61,16 +61,6 @@ include 'database/closedb.php';
                                                     </a>
                                                 </div>
                                             </div>
-
-                                            <div class="card w-100">
-                                                <div class="card-header">
-                                                    <a href="admin_create_company.php"
-                                                        class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                        style="font-size: 28px; height: 200px; font-weight: bold;">Create
-                                                        Company</a>
-                                                </div>
-                                            </div>
-
                                         </div>
 
                                         <div class=" col-12 col-lg-4">
@@ -89,6 +79,15 @@ include 'database/closedb.php';
                                                         class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
                                                         style="font-size: 28px; height: 200px; font-weight: bold;">Crea un Conto Bancario
                                                     </a>
+                                                </div>
+                                            </div>
+
+                                            <div class="card w-100">
+                                                <div class="card-header">
+                                                    <a href="admin_create_company.php"
+                                                        class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                        style="font-size: 28px; height: 200px; font-weight: bold;">Create
+                                                        Company</a>
                                                 </div>
                                             </div>
                                         </div>

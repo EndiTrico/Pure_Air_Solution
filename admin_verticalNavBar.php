@@ -10,7 +10,7 @@
 
 		<ul class="sidebar-nav">
 			<li class="sidebar-header">
-				Main
+			Principale
 			</li>
 
 			<li class="sidebar-item">
@@ -27,12 +27,12 @@
 
 			<li class="sidebar-item">
 				<a class="sidebar-link" href="logout.php">
-					<i class="align-middle" data-feather="log-out"></i> <span class="align-middle">Log Out</span>
+					<i class="align-middle" data-feather="log-out"></i> <span class="align-middle">Disconnettersi</span>
 				</a>
 			</li>
 
 			<li class="sidebar-header">
-				Entities
+				Entità
 			</li>
 
 			<li class="sidebar-item">

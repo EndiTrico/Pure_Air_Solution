@@ -30,25 +30,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($role == "Admin") {
             header('Location: admin_dashboard.php');
             exit();
-        } else if ($role == "Client") {
+        } else if ($role == "Cliente") {
             include 'database/config.php';
             include 'database/opendb.php';
             
-            $queryCompanyID = "SELECT AZIENDA_ID FROM UTENTI 
-                               WHERE EMAIL = ? 
-                               LIMIT 1";
+            $queryCompanyID = "SELECT ua.AZIENDA_ID 
+                               FROM UTENTI_AZIENDE ua
+                               JOIN UTENTI u ON ua.UTENTE_ID = u.UTENTE_ID
+                               WHERE u.EMAIL = ? ";
 
             $stmt = mysqli_prepare($conn, $queryCompanyID);
             mysqli_stmt_bind_param($stmt, "s", $_SESSION['email']);
             mysqli_stmt_execute($stmt);
             mysqli_stmt_store_result($stmt);
 
-            mysqli_stmt_bind_result($stmt, $AZIENDA_ID);
+            mysqli_stmt_bind_result($stmt, $company_ID);
+            $company_IDs = array();
 
-            mysqli_stmt_fetch($stmt);
+            while (mysqli_stmt_fetch($stmt)) {
+                $company_IDs[] = $company_ID;
+            }
 
-            $_SESSION["AZIENDA_ID"] = $AZIENDA_ID;
-            mysqli_stmt_close($stmt);
+            $_SESSION["company_ID"] = $company_IDs;
 
             include 'database/closedb.php';
 

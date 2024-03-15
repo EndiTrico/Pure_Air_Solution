@@ -30,13 +30,13 @@ $email = $_SESSION['email'];
                     </span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end">
-                    <a class="dropdown-item" href="client_profile.php"><i class="align-middle me-1" data-feather="user"></i> Profile</a>
+                    <a class="dropdown-item" href="client_profile.php"><i class="align-middle me-1" data-feather="user"></i>Profilo</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" onclick="confirmDelete('<?php echo $email; ?>')" href="#">
-                        <i class="align-middle me-1" data-feather="user-x"></i> Delete
+                        <i class="align-middle me-1" data-feather="user-x"></i>Eliminare
                     </a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="logout.php"><i class="align-middle me-1" data-feather="log-out"></i>Log out</a>
+                    <a class="dropdown-item" href="logout.php"><i class="align-middle me-1" data-feather="log-out"></i>Disconnettersi</a>
                 </div>
             </li>
         </ul>
@@ -47,8 +47,8 @@ $email = $_SESSION['email'];
 <script>
     function confirmDelete(email) {
         Swal.fire({
-            title: "Are You Sure?",
-            text: "Yout account will be set to inactive",
+            title: "Sei Sicuro",
+            text: "Il Tuo Account Verrà Impostato su Inattivo",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
@@ -57,8 +57,8 @@ $email = $_SESSION['email'];
         }).then((result) => {
             if (result.isConfirmed) {
                 Swal.fire({
-                    title: "Deleted!",
-                    text: "Action performed successfully",
+                    title: "Eliminato!",
+                    text: "Azione Eseguita con Successo",
                     icon: "success",
                     showConfirmButton: false
                 });

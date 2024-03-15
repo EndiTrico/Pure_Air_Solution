@@ -122,7 +122,6 @@ function showForm($email)
                         value = "' . $row["EMAIL"] . '" class="form-control" required />
                 </div>
             </div>
-
     
             <div class="card">
                 <div class="card-header">
@@ -214,7 +213,6 @@ function showLeftForm($email)
         }
     }
     include 'database/closedb.php';
-
 }
 ?>
 
@@ -280,40 +278,36 @@ function showLeftForm($email)
                                             }
                                             ?>
 
-
                                             <div class="col-12 col-lg-6">
-                                                <div>
-                                                    <h5 class="card-title mb-0" style="text-align:center;
+                                                <h5 class="card-title mb-0" style="text-align:center;
                                                                 font-size: 50px;
                                                                 font-weight:bold;
-                                                                margin-top: 5%;">
-                                                        <?php echo fullName() ?>
-                                                    </h5>
-                                                    <div
-                                                        style="display: flex; justify-content: center; align-items: center;">
-                                                        <div style="width: 400px;
+                                                                margin-top: 37px;">
+                                                    <?php echo fullName() ?>
+                                                </h5>
+
+                                                <div style="display: flex; justify-content: center; align-items: center;">
+                                                    <div style="width: 400px;
                                                                 height: 400px;
                                                                 border-radius: 50%; 
                                                                 background-color: #222e3c;
                                                                 color: #fff; 
                                                                 display: inline-flex;
-                                                                margin-top: 10%;
+                                                                margin-top: 46px;
                                                                 justify-content: center;
                                                                 align-items: center;
                                                                 font-size: 200px;
-                                                                font-weight: bold;"
-                                                            class="avatar img-fluid me-1 avatar-circle">
-                                                            <?php echo initials(); ?>
-                                                        </div>
+                                                                font-weight: bold;
+                                                                margin-bottom: 47px;
+                                                                " class="avatar img-fluid me-1 avatar-circle">
+                                                        <?php echo initials(); ?>
+                                                        <br>
                                                     </div>
                                                 </div>
-                                                <div style = "margin-top: 45px;">
                                                 <?php echo showLeftForm($email); ?>
-                                                </div>
                                             </div>
 
                                             <?php showForm($email); ?>
-                                        </div>
                                     </form>
                                 </div>
                             </div>

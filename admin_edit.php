@@ -1055,13 +1055,13 @@ function showBills($row)
                 </div>
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title mb-0">IVA (%) <span
+                        <h5 class="card-title mb-0">Valore <span
                             style="color:red;">*</span></h5>
                     </div>
                     <div class="card-body">
-                        <input type="number" class="form-control" id="VAT" oninput="calculateValueWithVAT()"
-                            name="bill_VAT" placeholder="IVA" min="0" max="100" step="any" value = "' . $row["IVA"] . '"
-                            required>
+                        <input type="number" class="form-control" id="value" oninput="calculateValueWithVAT()"
+                            name="bill_value" placeholder="Valore" 
+                            value = "' . $row["VALORE"] . '"min = 0  max = 100000000000000000000000000 step="any" required>
                     </div>
                 </div>
                 <div class="card">
@@ -1101,15 +1101,16 @@ function showBills($row)
                 </div>
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title mb-0">Valore <span
-                        style="color:red;">*</span></h5>
+                        <h5 class="card-title mb-0">IVA (%) <span
+                            style="color:red;">*</span></h5>
                     </div>
-                    <div class="card-body">
-                        <input type="number" class="form-control" id="value" oninput="calculateValueWithVAT()"
-                            name="bill_value" placeholder="Valore" 
-                            value = "' . $row["VALORE"] . '"min = 0  max = 100000000000000000000000000 step="any" required>
+                    div class="card-body">
+                        <input type="number" class="form-control" id="VAT" oninput="calculateValueWithVAT()"
+                            name="bill_VAT" placeholder="IVA" min="0" max="100" step="any" value = "' . $row["IVA"] . '"
+                            required>
                     </div>
                 </div>
+                
                 <div class="card">
                     <div class="card-header">
                         <h5 class="card-title mb-0">Moneta <span
