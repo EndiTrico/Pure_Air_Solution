@@ -19,19 +19,41 @@ include 'database/closedb.php';
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
 
-    <title>Display Entities</title>
+    <title>Visualizza Entità</title>
 
     <link href="css/app.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!--    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.1/css/dataTables.dataTables.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/2.0.1/js/dataTables.js"></script>
+
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js">
+    </script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript"
+        src="https://cdn.datatables.net/fixedheader/3.1.7/js/dataTables.fixedHeader.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/fixedheader/3.1.7/css/fixedHeader.dataTables.min.css">
     <style>
-        #searchBox {
-            border-radius: 50px;
-            margin-left: 65%;
-            width: 80%;
-            display: none;
+        .current {
+            background-color: whitesmoke !important;
+            border: none !important;
+        }
+
+        option {
+            text-align: center;
+        }
+
+        th,
+        td,
+        tr {
+            text-align: center !important;
         }
 
         .badge-success-custom {
@@ -49,6 +71,123 @@ include 'database/closedb.php';
             padding: 5px 10px;
             border-radius: 999px;
         }
+
+        .button-row {
+            display: flex;
+            flex-direction: row;
+            margin-bottom: 10px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            margin: 0 5px;
+
+        }
+
+
+        *,
+        *:before,
+        *:after {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .modal {
+            position: absolute;
+            z-index: 10000;
+            top: 0;
+            left: 0;
+            visibility: hidden;
+            width: 100%;
+            height: 100%;
+        }
+
+        .modal.is-visible {
+            visibility: visible;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            z-index: 10;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: hsla(0, 0%, 0%, 0.5);
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s linear 0.3s, opacity 0.3s;
+        }
+
+        .modal.is-visible .modal-overlay {
+            opacity: 1;
+            visibility: visible;
+            transition-delay: 0s;
+        }
+
+        .modal-wrapper {
+            position: absolute;
+            z-index: 9999;
+            top: 6em;
+            left: 50%;
+            width: 32em;
+            margin-left: -16em;
+            background-color: #fff;
+            box-shadow: 0 0 1.5em hsla(0, 0%, 0%, 0.35);
+        }
+
+        .modal-transition {
+            transition: all 0.3s 0.12s;
+            transform: translateY(-10%);
+            opacity: 0;
+        }
+
+        .modal.is-visible .modal-transition {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-header,
+        .modal-content {
+            padding: 1em;
+        }
+
+        .modal-header {
+            position: relative;
+            background-color: #fff;
+            box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.06);
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 1em;
+            color: #aaa;
+            background: none;
+            border: 0;
+        }
+
+        .modal-close:hover {
+            color: #777;
+        }
+
+        .modal-heading {
+            font-size: 1.125em;
+            margin: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .modal-content>*:first-child {
+            margin-top: 0;
+        }
+
+        .modal-content>*:last-child {
+            margin-bottom: 0;
+        }
     </style>
 
 </head>
@@ -62,50 +201,82 @@ include 'database/closedb.php';
             <main class="content">
                 <div class="container-fluid p-0">
 
-                    <h1 class="h3 mb-3">Display Entities</h1>
+                    <h1 class="h3 mb-3">Visualizza Entità</h1>
 
                     <div class="row">
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
                                     <div class="row">
-                                        <div class="col-12 col-lg-4">
+                                        <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('UTENTI')"
+                                                <a onclick="fetchData('utenti')"
                                                     class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                    style="font-weight: bold;">Display
-                                                    UTENTI</a>
+                                                    style="font-weight: bold;">Mostra Utenti
+                                                </a>
                                             </div>
                                         </div>
 
-                                        <div class="col-12 col-lg-4">
+                                        <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('STRUTTURE')"
+                                                <a onclick="fetchData('aziende')"
                                                     class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                    style="font-weight: bold;">Display
-                                                    STRUTTURE</a>
+                                                    style="font-weight: bold;">Mostra Aziende
+                                                </a>
                                             </div>
                                         </div>
 
-                                        <div class="col-12 col-lg-4">
+                                        <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('REPARTI')"
+                                                <a onclick="fetchData('strutture')"
                                                     class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                    style="font-weight: bold;">Display
-                                                    REPARTI</a>
+                                                    style="font-weight: bold;">Mostra Strutture
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12 col-lg-3">
+                                            <div class="card-header">
+                                                <a onclick="fetchData('reparti')"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Mostra Reparti
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="col-12 col-lg-12">
-                                        <div class="card-header output col-md-6" id="output">
-                                            <input oninput="search()" type="text" id="searchBox"
-                                                class="form-control justify-content-center" placeholder="Search...">
+                                    <div class="row">
+                                        <div class="col-12 col-lg-4">
+                                            <div class="card-header">
+                                                <a onclick="fetchData('banca conti')"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Mostra Banca Conti</a>
+                                            </div>
                                         </div>
 
+                                        <div class="col-12 col-lg-4">
+                                            <div class="card-header">
+                                                <a onclick="fetchData('fatture')"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Mostra Fatture
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12 col-lg-4">
+                                            <div class="card-header">
+                                                <a id="mybtn" onclick="fetchData('impianti')"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Mostra Impianti
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-12 col-lg-12">
                                         <div id="tableContainer" class="mt-4">
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -115,36 +286,126 @@ include 'database/closedb.php';
             </main>
 
 
+
             <script>
-                var selected_entity = "";
-
-                function fetchData(entity) {
-
-                    document.getElementById("searchBox").style.display = "block";
-
-                    selected_entity = entity;
-                    var searchQuery = document.getElementById('searchBox').value;
+                /* function fetchData(entity) {
                     var xhttp = new XMLHttpRequest();
-                    xhttp.onreadystatechange = function () {
+                    var table;
+
+                    xhttp.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
                             document.getElementById("tableContainer").innerHTML = this.responseText;
+                            table = $('#fetchTable').DataTable({
+                                language: {
+                                    "url": "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Italian.json"
+                                },
+                                destroy: true,
+                                orderCellsTop: true,
+                                fixedHeader: true,
+                                columnDefs: [{
+                                    targets: 0,
+                                    visible: true
+                                }]
+                            });
+
+                            $('#fetchTable thead tr').clone(true).appendTo('#fetchTable thead');
+                            $('#fetchTable thead tr:eq(1) th').each(function(i) {
+                                var headerCell = $(this);
+                                if (!headerCell.hasClass("noFilter")) {
+                                    var title = headerCell.text();
+                                    headerCell.html('<input type="text" placeholder="Cerca ' + title + '" />');
+
+                                    $('input', this).on('keyup change', function() {
+                                        if (table.column(i).search() !== this.value) {
+                                            table
+                                                .column(i)
+                                                .search(this.value)
+                                                .draw();
+                                        }
+                                    });
+                                } else {
+                                    headerCell.html('<span></span>');
+                                }
+                            });
                         }
                     };
 
-                    xhttp.open("GET", "fetch_data.php?entity=" + entity + "&search=" + searchQuery, true);
+                    xhttp.open("GET", "fetch_data.php?entity=" + entity, true);
                     xhttp.send();
-                }
-
-                function search() {
-                    var entity = selected_entity;
-                    var searchQuery = document.getElementById('searchBox').value;
+                }*/
+                function fetchData(entity) {
                     var xhttp = new XMLHttpRequest();
+                    var table;
+
                     xhttp.onreadystatechange = function () {
                         if (this.readyState == 4 && this.status == 200) {
                             document.getElementById("tableContainer").innerHTML = this.responseText;
+                            table = $('#fetchTable').DataTable({
+                                language: {
+                                    "url": "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Italian.json"
+                                },
+                                destroy: true,
+                                orderCellsTop: true,
+                                fixedHeader: true,
+                                columnDefs: [{
+                                    targets: 0,
+                                    visible: true
+                                }]
+                            });
+
+                            $('#fetchTable thead tr').clone(true).appendTo('#fetchTable thead');
+
+                            $('#fetchTable thead tr:eq(1) th').each(function (i) {
+                                var headerCell = $(this);
+                                if (!headerCell.hasClass("noFilter")) {
+                                    var title = headerCell.text();
+
+                                    headerCell.html('<input type="text" placeholder="Cerca ' + title + '" />');
+
+                                    var select = $('<select><option value="">Tutti</option></select>')
+                                        .appendTo($(headerCell).empty())
+                                        .on('change', function () {
+                                            var val = $.fn.dataTable.util.escapeRegex(
+                                                $(this).val()
+                                            );
+                                            table.column(i)
+                                                .search(val ? '^' + val + '$' : '', true, false)
+                                                .draw();
+                                        });
+
+                                    var blankAppended = false;
+
+                                    table.column(i).data().unique().sort().each(function (d, j) {
+                                        var span = $('<div>').html(d).find('.myBadge');
+                                        if (span.length > 0) {
+                                            var value = span.text();
+                                            select.append('<option value="' + value + '">' + value + '</option>');
+                                        } else {
+                                            if (d.trim() === "" && !blankAppended) {
+                                                select.append('<option value="Vuoto"> Vuoto</option>');
+                                                blankAppended = true;
+                                            } else {
+                                                select.append('<option  value="' + d + '">' + d + '</option>');
+                                            }
+                                        }
+                                    });
+
+                                    $('input', this).on('keyup change', function () {
+                                        if (table.column(i).search() !== this.value) {
+                                            table
+                                                .column(i)
+                                                .search(this.value)
+                                                .draw();
+                                        }
+                                    });
+                                } else {
+                                    headerCell.html('<span></span>');
+                                }
+                            });
                         }
                     };
-                    xhttp.open("GET", "fetch_data.php?entity=" + entity + "&search=" + searchQuery, true);
+
+                    xhttp.open("GET", "fetch_data.php?entity=" + entity, true);
                     xhttp.send();
                 }
             </script>
@@ -155,6 +416,10 @@ include 'database/closedb.php';
     </div>
 
     <script src="js/app.js"></script>
+
+
+
+
 
 </body>
 

@@ -21,18 +21,18 @@
 
 			<li class="sidebar-item">
 				<a class="sidebar-link" href="client_profile.php">
-					<i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
+					<i class="align-middle" data-feather="user"></i> <span class="align-middle">Profilo</span>
 				</a>
 			</li>
 
 			<li class="sidebar-item">
 				<a class="sidebar-link" href="logout.php">
-					<i class="align-middle" data-feather="log-out"></i> <span class="align-middle">Log Out</span>
+					<i class="align-middle" data-feather="log-out"></i> <span class="align-middle">Disconnettersi</span>
 				</a>
 			</li>
 
 			<li class="sidebar-header">
-				Entities
+			Entità
 			</li>
 <!--
 			<li class="sidebar-item">
@@ -43,7 +43,7 @@
 -->
 			<li class="sidebar-item">
 				<a class="sidebar-link" href="client_display_entities.php">
-					<i class="align-middle" data-feather="book"></i> <span class="align-middle">Display</span>
+					<i class="align-middle" data-feather="book"></i> <span class="align-middle">Visualizza Entità</span>
 				</a>
 			</li>
 

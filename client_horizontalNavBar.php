@@ -17,7 +17,7 @@ $email = $_SESSION['email'];
                     <div style="width: 40px;
                                 height: 40px;
                                 border-radius: 50%; 
-                                background-color: #3f69a1; 
+                                background-color: #0275d8; 
                                 color: #fff; 
                                 display: inline-flex;
                                 justify-content: center;

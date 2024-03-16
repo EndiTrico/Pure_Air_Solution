@@ -8,20 +8,21 @@ $entity = $_GET['entity'];
 $query = "";
 
 if ($entity == "utenti") {
-    $query = "SELECT u.UTENTE_ID, u.NOME, u.COGNOME, u.EMAIL, u.NUMERO, u.RUOLO, u.AZIENDA_POSIZIONE, u.E_ATTIVO 
-                FROM UTENTI u";
+    $query = "SELECT DISTINCT u.UTENTE_ID, u.NOME, u.COGNOME, u.EMAIL, u.NUMERO, u.RUOLO, u.AZIENDA_POSIZIONE, u.E_ATTIVO 
+                FROM UTENTI u
+                JOIN UTENTI_AZIENDE a ON u.UTENTE_ID = a.UTENTE_ID";
 } else if ($entity == "aziende") {
-    $query = "SELECT AZIENDA_ID, AZIENDA_NOME, PARTITA_IVA, CODICE_FISCALE, INDIRIZZO, CITTA, INDIRIZZO_PEC, WEBSITE, DATA_ISCRIZIONE, DATA_SINISTRA, E_ATTIVO
-                FROM AZIENDE";
+    $query = "SELECT DISTINCT a.AZIENDA_ID, a.AZIENDA_NOME, a.PARTITA_IVA, a.CODICE_FISCALE, a.INDIRIZZO, a.CITTA, a.INDIRIZZO_PEC, a.WEBSITE, a.DATA_ISCRIZIONE, a.DATA_SINISTRA, a.E_ATTIVO
+                FROM AZIENDE a";
 } else if ($entity == "strutture") {
-    $query = "SELECT s.STRUTTURA_ID, s.STRUTTURA_NOME, c.AZIENDA_NOME, s.E_ATTIVO
+    $query = "SELECT s.STRUTTURA_ID, s.STRUTTURA_NOME, a.AZIENDA_NOME, s.E_ATTIVO
                 FROM STRUTTURE s
-                JOIN AZIENDE c on s.AZIENDA_ID = c.AZIENDA_ID";
+                JOIN AZIENDE a on s.AZIENDA_ID = a.AZIENDA_ID";
 } else if ($entity == "reparti") {
-    $query = "SELECT d.REPARTO_ID, d.REPARTO_NOME, s.STRUTTURA_NOME, c.AZIENDA_NOME, d.E_ATTIVO
+    $query = "SELECT d.REPARTO_ID, d.REPARTO_NOME, s.STRUTTURA_NOME, a.AZIENDA_NOME, d.E_ATTIVO
                 FROM REPARTI d 
                 JOIN STRUTTURE s ON d.STRUTTURA_ID = s.STRUTTURA_ID
-                JOIN AZIENDE c on d.AZIENDA_ID = c.AZIENDA_ID";
+                JOIN AZIENDE a on d.AZIENDA_ID = a.AZIENDA_ID";
 } else if ($entity == "banca conti") {
     $query = "SELECT b.BANCA_CONTO_ID, a.AZIENDA_NOME, b.BANCA_NOME, b.IBAN, b.E_ATTIVO
                 FROM BANCA_CONTI b
@@ -37,9 +38,23 @@ if ($entity == "utenti") {
 }
 
 
-if (!empty($_SESSION['AZIENDA_ID'])) {
-    $query .= " WHERE AZIENDA_ID = " . $_SESSION["AZIENDA_ID"];
+if (!empty($_SESSION['company_ID'])) {
+    $sanitizedIDs = array_map('intval', $_SESSION['company_ID']);
+    $idList = implode(',', $sanitizedIDs);
+    $query .= " WHERE a.AZIENDA_ID IN ($idList)";
+    if ($entity === 'utenti'){
+        $query .= " GROUP BY 
+                    u.UTENTE_ID, 
+                    u.NOME, 
+                    u.COGNOME, 
+                    u.EMAIL, 
+                    u.NUMERO, 
+                    u.RUOLO, 
+                    u.AZIENDA_POSIZIONE, 
+                    u.E_ATTIVO";
+    }
 }
+
 
 $result = mysqli_query($conn, $query);
 echo '<div class="table-responsive">
@@ -60,9 +75,8 @@ while ($fieldinfo = mysqli_fetch_field($result)) {
     echo '<th>' . $fieldName . '</th>';
 }
 
-if ($_SESSION['role'] == 'Admin' || $entity == 'utenti' || $entity == 'aziende') {
     echo '<th class="noFilter">Azioni</th>';
-}
+
 
 echo '</tr>
         </thead>
@@ -103,20 +117,25 @@ if (mysqli_num_rows($result) > 0) {
 
             if ($entity == 'fatture') {
                 if ($badge == 0) {
-                    echo '<button class="btn btn-success" onclick="confirmActivation(' . reset($row) .  ', \'' . $entity . '\')">Pagato</button>&nbsp&nbsp&nbsp';
+                    echo '<button class="btn btn-success" onclick="confirmActivation(' . reset($row) . ', \'' . $entity . '\')">Pagato</button>&nbsp&nbsp&nbsp';
                 } else {
                     echo '<button class="btn btn-danger" onclick="confirmDelete(' . reset($row) . ', \'' . $entity . '\')">Non&nbsp;Pagato</button>&nbsp&nbsp&nbsp';
                 }
             } else {
                 if ($badge == 0) {
-                    echo '<button class="btn btn-success" onclick="confirmActivation(' . reset($row) .  ', \'' . $entity . '\')">Attivare</button>&nbsp&nbsp&nbsp';
+                    echo '<button class="btn btn-success" onclick="confirmActivation(' . reset($row) . ', \'' . $entity . '\')">Attivare</button>&nbsp&nbsp&nbsp';
                 } else {
                     echo '<button class="btn btn-danger" onclick="confirmDelete(' . reset($row) . ', \'' . $entity . '\')">Elimina</button>&nbsp&nbsp&nbsp';
                 }
             }
 
             echo '</div></td></tr>';
-        } 
+        } else {
+            echo '<td>
+            <div class="btn-group">
+                <a href="client_details.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-info">Dettagli</a>&nbsp&nbsp&nbsp';
+            echo '</div></td></tr>';
+        }
     }
 }
 

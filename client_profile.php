@@ -11,8 +11,8 @@ $successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['update_profile'])) {
-        $NOME = mysqli_real_escape_string($conn, $_POST['NOME']);
-        $COGNOME = mysqli_real_escape_string($conn, $_POST['COGNOME']);
+        $NOME = mysqli_real_escape_string($conn, $_POST['user_first_name']);
+        $COGNOME = mysqli_real_escape_string($conn, $_POST['user_last_name']);
         $user_email = mysqli_real_escape_string($conn, $_POST['user_email']);
         $user_password = mysqli_real_escape_string($conn, $_POST['user_password']);
         $user_confirm_password = mysqli_real_escape_string($conn, $_POST['user_confirm_password']);
@@ -34,21 +34,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 try {
                     if (mysqli_stmt_execute($stmt)) {
-                        $successfulMessage = "Profile Updated Successfully";
+                        $successfulMessage = "Profilo Aggiornato con Successo";
                         $_SESSION['email'] = $user_email;
                     } else {
-                        $errorMessage = "Error: Failed to Update Profile";
+                        $errorMessage = "Errore: Impossibile Aggiornare il Profilo";
                     }
                 } catch (mysqli_sql_exception $e) {
                     $errorMessage = "Error: " . $e->getMessage();
-                } finally{
+                } finally {
                     mysqli_stmt_close($stmt);
                 }
             } else {
-                $errorMessage = "Error: Failed to prepare statement";
+                $errorMessage = "Errore: Impossibile Preparare l'Istruzione";
             }
         } else {
-            $errorMessage = "Passwords Do Not Match!";
+            $errorMessage = "Le Password Non Corrispondono!";
         }
     }
 }
@@ -85,64 +85,135 @@ function showForm($email)
             <div class="col-12 col-lg-6">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title mb-0">First Name</h5>
+                        <h5 class="card-title mb-0">Nome <span style = "color:red;">*</span></h5>
                     </div>
-                    <div class="card-body">
-                        <input type="text" class="form-control" name="NOME" placeholder="First Name" value="' . $row["NOME"] . '" required>
-                    </div>
+                <div class="card-body">
+                    <input type="text" class="form-control" name="user_first_name" value = "' . $row["NOME"] . '"
+                        placeholder="Nome" required>
                 </div>
+            </div>
 
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Last Name</h5>
-                    </div>
-                    <div class="card-body">
-                        <input type="text" class="form-control" name="COGNOME" placeholder="Last Name" value="' . $row["COGNOME"] . '" required>
-                    </div>
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Cognome <span style = "color:red;">*</span></h5>
                 </div>
+                <div class="card-body">
+                    <input type="text" class="form-control" name="user_last_name" value = "' . $row["COGNOME"] . '"
+                        placeholder="Cognome" required>
+                </div>
+            </div>
 
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Email</h5>
-                    </div>
-                    <div class="card-body">
-                        <input type="email" placeholder="Email" name="user_email" class="form-control" value="' . $row["EMAIL"] . '"  required>
-                    </div>
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Numero <span style = "color:red;">*</span></h5>
                 </div>
+                <div class="card-body">
+                    <input type="text" placeholder="Numero" name="user_number"
+                        class="form-control" value = "' . $row["NUMERO"] . '" required />
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">E-mail <span style = "color:red;">*</span></h5>
+                </div>
+                <div class="card-body">
+                    <input type="email" placeholder="Email" name="user_email"
+                        value = "' . $row["EMAIL"] . '" class="form-control" required />
+                </div>
+            </div>
     
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Password</h5>
-                    </div>
-                    <div class="card-body">
-                        <input type="password" placeholder="Password" name="user_password" class="form-control"/>
-                    </div>
-                    
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Password</h5>
                 </div>
+                <div class="card-body">
+                    <input type="password" placeholder="Password" name="user_password" class="form-control"/>
+                </div>
+            </div>
 
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Confirm Password</h5>
-                    </div>
-                    <div class="card-body">
-                        <input type="password" placeholder="Confirm Password" name="user_confirm_password" class="form-control"/>
-                    </div>
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Confirm Password</h5>
                 </div>
+                <div class="card-body">
+                    <input type="password" placeholder="Confirm Password" name="user_confirm_password" class="form-control"/>
+                </div>
+            </div>
 
-                <div class="row">
-                    <div class="col-12 d-flex justify-content-center">
-                        <button type="submit" name="update_profile" class="btn btn-success btn-lg">Save</button>
-                    </div>
+            <div class="row">
+                <div class="col-12 d-flex justify-content-center">
+                    <button type="submit" name="update_profile" class="btn btn-success btn-lg">Salva</button>
                 </div>
-            </div>';
+            </div>
+        </div>';
                         }
                     }
                 }
             }
         }
     }
+
+    include 'database/closedb.php';
 }
 
+
+function showLeftForm($email)
+{
+    include 'database/config.php';
+    include 'database/opendb.php';
+
+    $query_id = "SELECT UTENTE_ID FROM UTENTI WHERE EMAIL = ? LIMIT 1";
+    $stmt_id = mysqli_prepare($conn, $query_id);
+    if ($stmt_id) {
+
+        mysqli_stmt_bind_param($stmt_id, "s", $email);
+
+        if (mysqli_stmt_execute($stmt_id)) {
+            mysqli_stmt_bind_result($stmt_id, $id);
+
+            if (mysqli_stmt_fetch($stmt_id)) {
+                mysqli_stmt_close($stmt_id);
+
+                $query = "SELECT * FROM UTENTI WHERE UTENTE_ID = ?";
+                $stmt = mysqli_prepare($conn, $query);
+
+                if ($stmt) {
+                    mysqli_stmt_bind_param($stmt, "i", $id);
+
+                    if (mysqli_stmt_execute($stmt)) {
+                        $result = mysqli_stmt_get_result($stmt);
+                        if ($result) {
+                            $row = mysqli_fetch_assoc($result);
+                            echo '
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Azienda Posizione</h5>
+        </div>
+        <div class="card-body">
+            <input type="text" placeholder=""
+                name="user_position" class="form-control" value="' . $row["AZIENDA_POSIZIONE"] . '" readonly />
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Ruolo</h5>
+        </div>
+        <div class="card-body">
+            <input type="text" placeholder=""
+                name="user_role" class="form-control" value="' . $row["RUOLO"] . '"  readonly />
+        </div>
+    </div>
+    ';
+                        }
+                    }
+                }
+            }
+        }
+    }
+    include 'database/closedb.php';
+}
 ?>
 
 
@@ -157,7 +228,7 @@ function showForm($email)
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
 
-    <title>My Profile</title>
+    <title>Il Mio Profilo</title>
 
     <link href="css/app.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -177,7 +248,7 @@ function showForm($email)
                 <div class="container-fluid p-0">
                     <div class="row">
                         <div class="col-12 col-lg-12">
-                            <h1 class="h3 mb-3">My Profile</h1>
+                            <h1 class="h3 mb-3">Il Mio Profilo</h1>
                         </div>
 
                         <div class="col-12">
@@ -207,36 +278,36 @@ function showForm($email)
                                             }
                                             ?>
 
-
                                             <div class="col-12 col-lg-6">
-                                                <div>
-                                                    <h5 class="card-title mb-0" 
-                                                        style="text-align:center;
+                                                <h5 class="card-title mb-0" style="text-align:center;
                                                                 font-size: 50px;
                                                                 font-weight:bold;
-                                                                margin-top: 5%;">
-                                                        <?php echo fullName() ?>
-                                                    </h5>
-                                                    <div style="display: flex; justify-content: center; align-items: center;">
-                                                        <div style="width: 400px;
+                                                                margin-top: 37px;">
+                                                    <?php echo fullName() ?>
+                                                </h5>
+
+                                                <div style="display: flex; justify-content: center; align-items: center;">
+                                                    <div style="width: 400px;
                                                                 height: 400px;
                                                                 border-radius: 50%; 
-                                                                background-color: #3f69a1;
+                                                                background-color: #0275d8;
                                                                 color: #fff; 
                                                                 display: inline-flex;
-                                                                margin-top: 10%;
+                                                                margin-top: 46px;
                                                                 justify-content: center;
                                                                 align-items: center;
                                                                 font-size: 200px;
-                                                                font-weight: bold;" class="avatar img-fluid me-1 avatar-circle">
-                                                            <?php echo initials(); ?>
-                                                        </div>
+                                                                font-weight: bold;
+                                                                margin-bottom: 45px;
+                                                                " class="avatar img-fluid me-1 avatar-circle">
+                                                        <?php echo initials(); ?>
+                                                        <br>
                                                     </div>
                                                 </div>
+                                                <?php echo showLeftForm($email); ?>
                                             </div>
 
                                             <?php showForm($email); ?>
-                                        </div>
                                     </form>
                                 </div>
                             </div>

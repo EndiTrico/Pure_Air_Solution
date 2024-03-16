@@ -16,7 +16,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $user_role = mysqli_real_escape_string($conn, $_POST['user_role']);
         $user_position = mysqli_real_escape_string($conn, $_POST['user_position']);
         $user_numero = mysqli_real_escape_string($conn, $_POST['user_number']);
-        $user_companies = $_POST['user_companies'];
+        if(!empty($_POST['user_companies'])){
+            $user_companies = $_POST['user_companies'];
+        }
 
         $hashed_password = password_hash($user_password, PASSWORD_BCRYPT);
 
@@ -54,14 +56,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         mysqli_stmt_bind_result($stmt1, $user_id);
                         mysqli_stmt_fetch($stmt1);
 
-                        foreach ($user_companies as $company_id) {
-                            $sql2 = "INSERT INTO UTENTI_AZIENDE (UTENTE_ID, AZIENDA_ID) VALUES (?, ?)";
+                        if (!empty($user_companies)) {
+                            foreach ($user_companies as $company_id) {
+                                $sql2 = "INSERT INTO UTENTI_AZIENDE (UTENTE_ID, AZIENDA_ID) VALUES (?, ?)";
 
-                            $company_id = (int) $company_id;
+                                $company_id = (int) $company_id;
 
-                            $stmt2 = mysqli_prepare($conn, $sql2);
-                            mysqli_stmt_bind_param($stmt2, "ii", $user_id, $company_id);
-                            mysqli_stmt_execute($stmt2);
+                                $stmt2 = mysqli_prepare($conn, $sql2);
+                                mysqli_stmt_bind_param($stmt2, "ii", $user_id, $company_id);
+                                mysqli_stmt_execute($stmt2);
+                            }
                         }
                     }
                     $successfulMessage = "Utente Creato con Successo";
@@ -179,7 +183,8 @@ function showAllCompanies()
                                             <div class="col-12 col-lg-6">
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        <h5 class="card-title mb-0">Nome <span style = "color:red;">*</span></h5>
+                                                        <h5 class="card-title mb-0">Nome <span
+                                                                style="color:red;">*</span></h5>
                                                     </div>
                                                     <div class="card-body">
                                                         <input type="text" class="form-control" name="user_first_name"
@@ -189,7 +194,8 @@ function showAllCompanies()
 
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        <h5 class="card-title mb-0">Cognome <span style = "color:red;">*</span></h5>
+                                                        <h5 class="card-title mb-0">Cognome <span
+                                                                style="color:red;">*</span></h5>
                                                     </div>
                                                     <div class="card-body">
                                                         <input type="text" class="form-control" name="user_last_name"
@@ -209,7 +215,8 @@ function showAllCompanies()
 
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        <h5 class="card-title mb-0">Ruolo <span style = "color:red;">*</span></h5>
+                                                        <h5 class="card-title mb-0">Ruolo <span
+                                                                style="color:red;">*</span></h5>
                                                     </div>
                                                     <div class="card-body">
                                                         <div>
@@ -228,7 +235,8 @@ function showAllCompanies()
                                             <div class="col-12 col-lg-6">
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        <h5 class="card-title mb-0">Numero <span style = "color:red;">*</span></h5>
+                                                        <h5 class="card-title mb-0">Numero <span
+                                                                style="color:red;">*</span></h5>
                                                     </div>
                                                     <div class="card-body">
                                                         <input type="text" placeholder="Numero" name="user_number"
@@ -238,7 +246,8 @@ function showAllCompanies()
 
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        <h5 class="card-title mb-0">E-mail <span style = "color:red;">*</span></h5>
+                                                        <h5 class="card-title mb-0">E-mail <span
+                                                                style="color:red;">*</span></h5>
                                                     </div>
                                                     <div class="card-body">
                                                         <div>
@@ -250,7 +259,8 @@ function showAllCompanies()
 
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        <h5 class="card-title mb-0">Password <span style = "color:red;">*</span></h5>
+                                                        <h5 class="card-title mb-0">Password <span
+                                                                style="color:red;">*</span></h5>
                                                     </div>
                                                     <div class="card-body">
                                                         <input type="password" placeholder="Password"
@@ -265,7 +275,7 @@ function showAllCompanies()
                                                     </div>
                                                     <div class="card-body">
                                                         <select multiple placeholder="Seleciona Azienda"
-                                                            name="user_companies[]" id= "select" data-allow-clear="1">
+                                                            name="user_companies[]" id="select" data-allow-clear="1">
                                                             <?php echo showAllCompanies(); ?>
                                                         </select>
                                                     </div>

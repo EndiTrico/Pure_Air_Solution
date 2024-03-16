@@ -298,7 +298,7 @@ function showLeftForm($email)
                                                                 align-items: center;
                                                                 font-size: 200px;
                                                                 font-weight: bold;
-                                                                margin-bottom: 47px;
+                                                                margin-bottom: 45px;
                                                                 " class="avatar img-fluid me-1 avatar-circle">
                                                         <?php echo initials(); ?>
                                                         <br>
