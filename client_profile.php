@@ -192,7 +192,7 @@ function showLeftForm($email)
         </div>
         <div class="card-body">
             <input type="text" placeholder=""
-                name="user_position" class="form-control" value="' . $row["AZIENDA_POSIZIONE"] . '" readonly />
+                name="user_position" class="form-control" value="' . $row["AZIENDA_POSIZIONE"] . '" disabled />
         </div>
     </div>
 
@@ -202,7 +202,7 @@ function showLeftForm($email)
         </div>
         <div class="card-body">
             <input type="text" placeholder=""
-                name="user_role" class="form-control" value="' . $row["RUOLO"] . '"  readonly />
+                name="user_role" class="form-control" value="' . $row["RUOLO"] . '"  disabled />
         </div>
     </div>
     ';
@@ -286,7 +286,8 @@ function showLeftForm($email)
                                                     <?php echo fullName() ?>
                                                 </h5>
 
-                                                <div style="display: flex; justify-content: center; align-items: center;">
+                                                <div
+                                                    style="display: flex; justify-content: center; align-items: center;">
                                                     <div style="width: 400px;
                                                                 height: 400px;
                                                                 border-radius: 50%; 
