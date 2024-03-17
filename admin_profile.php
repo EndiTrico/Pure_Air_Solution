@@ -10,7 +10,7 @@ $errorMessage = "";
 $successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['update_profile'])) {
+    if (isset ($_POST['update_profile'])) {
         $NOME = mysqli_real_escape_string($conn, $_POST['user_first_name']);
         $COGNOME = mysqli_real_escape_string($conn, $_POST['user_last_name']);
         $user_email = mysqli_real_escape_string($conn, $_POST['user_email']);
@@ -128,7 +128,12 @@ function showForm($email)
                     <h5 class="card-title mb-0">Password</h5>
                 </div>
                 <div class="card-body">
-                    <input type="password" onkeyup="check()" id="password" placeholder="Password" name="user_password" class="form-control"/>
+                    <div class="input-group">
+                        <input type="password" onkeyup="check()" id="password" placeholder="Password" name="user_password" class="form-control"/>
+                        <div class="input-group-append">
+                            <button type="button" onclick="togglePassword()" id="btnToggle" class="btn btn-outline btn-xs btn-xs btn-2x"><i id="eyeIconPassword" class="fa fa-eye fa-xs"></i></button>        
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -136,12 +141,17 @@ function showForm($email)
                 <div class="card-header">
                     <div class="col">
                         <h5 class="card-title mb-0 d-inline">Confirm Password</h5>
-                        <p id="alertPassword" class="alert d-inline text-center"></p>
+                        <p id="alertPassword" class="alert d-inline"></p>
                     </div>
                 </div>
                 <div class="card-body">
-                    <input type="password" onkeyup="check()" id="checkPassword" placeholder="Confirm Password" name="user_confirm_password" class="form-control"/>
+                <div class="input-group">
+                    <input type="password" onkeyup="check()" id="confirmPassword" placeholder="Confirm Password" name="user_confirm_password" class="form-control"/>
+                    <div class="input-group-append">
+                        <button type="button" onclick="toggleConfirmPassword()" id="btnToggle" class="btn btn-outline btn-xs btn-xs btn-2x"><i id="eyeIconConfirmPassword" class="fa fa-eye fa-xs"></i></button>
+                    </div>
                 </div>
+            </div>
             </div>
 
             <div class="row">
@@ -239,11 +249,6 @@ function showLeftForm($email)
     <script src="https://code.jquery.com/jquery-3.6 .0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-
-
-
-    <script src="https://cdn.rawgit.com/mladenilic/pwd_toggle/d5db69ce/dist/pwd_toggle.js"></script>
-
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
         integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 
@@ -253,9 +258,18 @@ function showLeftForm($email)
             margin-left: 20px
         }
 
-        i,
-        .far {
-            margin-right: 10px
+        .passwordCheck {
+            margin-right: 10px;
+        }
+
+        .fa {
+            font-size: 1rem;
+            margin-left: 1px;
+            border-color: lightgray;
+        }
+
+        #btnToggle {
+            border-color: darkgray;
         }
     </style>
 </head>
@@ -279,7 +293,7 @@ function showLeftForm($email)
                                     <form id="userForm" method="post">
                                         <div class="row">
                                             <?php
-                                            if (!empty($errorMessage)) {
+                                            if (!empty ($errorMessage)) {
                                                 echo '<div class="col-12">
                                                         <div class="card">
                                                             <div class="card-header">
@@ -288,7 +302,7 @@ function showLeftForm($email)
                                                             </div>                                                    
                                                         </div>
                                                     </div>';
-                                            } else if (!empty($successfulMessage)) {
+                                            } else if (!empty ($successfulMessage)) {
                                                 echo '<div class="col-12">
                                                         <div class="card">
                                                             <div class="card-header">
@@ -348,23 +362,49 @@ function showLeftForm($email)
     <script>
         function check() {
             var password = document.getElementById('password');
-            var checkPassword = document.getElementById('checkPassword');
+            var confirmPassword = document.getElementById('confirmPassword');
             var alertPassword = document.getElementById('alertPassword');
 
-            if (password.value === '' && checkPassword.value === '') {
+            if (password.value === '' && confirmPassword.value === '') {
                 alertPassword.style.visibility = 'hidden';
             } else {
                 alertPassword.style.visibility = 'visible';
 
-                if (password.value === checkPassword.value) {
+                if (password.value === confirmPassword.value) {
                     alertPassword.style.color = '#8CC63E';
-                    alertPassword.innerHTML = '<span><i class="fas fa-check-circle"></i>Corrisponde</span>';
+                    alertPassword.innerHTML = '<span style="font-weight: bold;"><i class="fas fa-check-circle passwordCheck"></i>Corrisponde</span>';
                 } else {
                     alertPassword.style.color = '#EE2B39';
-                    alertPassword.innerHTML = '<span><i class="fas fa-exclamation-triangle"></i>Non Corrisponde</span>';
+                    alertPassword.innerHTML = '<span style="font-weight: bold;"><i class="fas fa-exclamation-triangle passwordCheck"></i>Non Corrisponde</span>';
                 }
             }
         }
+
+        let confirmPasswordInput = document.getElementById('confirmPassword'),
+            passwordInput = document.getElementById('password');
+            iconPassword = document.getElementById('eyeIconPassword');
+            iconConfirmPassword = document.getElementById('eyeIconConfirmPassword');
+
+        function toggleConfirmPassword() {
+            if (confirmPasswordInput.type === 'password') {
+                confirmPasswordInput.type = 'text';
+                iconConfirmPassword.classList.add("fa-eye-slash");
+            } else {
+                confirmPasswordInput.type = 'password';
+                iconConfirmPassword.classList.remove("fa-eye-slash");
+            }
+        }
+
+        function togglePassword() {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                iconPassword.classList.add("fa-eye-slash");
+            } else {
+                passwordInput.type = 'password';
+                iconPassword.classList.remove("fa-eye-slash");
+            }
+        }
+
     </script>
 
 </body>

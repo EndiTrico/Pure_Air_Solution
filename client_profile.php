@@ -124,25 +124,35 @@ function showForm($email)
             </div>
     
             <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Password</h5>
-                </div>
-                <div class="card-body">
-                    <input type="password" onkeyup="check()" id="password" placeholder="Password" name="user_password" class="form-control"/>
-                </div>
+            <div class="card-header">
+                <h5 class="card-title mb-0">Password</h5>
             </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <div class="col">
-                        <h5 class="card-title mb-0 d-inline">Confirm Password</h5>
-                        <p id="alertPassword" class="alert d-inline text-center"></p>
+            <div class="card-body">
+                <div class="input-group">
+                    <input type="password" onkeyup="check()" id="password" placeholder="Password" name="user_password" class="form-control"/>
+                    <div class="input-group-append">
+                        <button type="button" onclick="togglePassword()" id="btnToggle" class="btn btn-outline btn-xs btn-xs btn-2x"><i id="eyeIconPassword" class="fa fa-eye fa-xs"></i></button>        
                     </div>
                 </div>
-                <div class="card-body">
-                    <input type="password" onkeyup="check()" id="checkPassword" placeholder="Confirm Password" name="user_confirm_password" class="form-control"/>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="col">
+                    <h5 class="card-title mb-0 d-inline">Confirm Password</h5>
+                    <p id="alertPassword" class="alert d-inline"></p>
                 </div>
             </div>
+            <div class="card-body">
+            <div class="input-group">
+                <input type="password" onkeyup="check()" id="confirmPassword" placeholder="Confirm Password" name="user_confirm_password" class="form-control"/>
+                <div class="input-group-append">
+                    <button type="button" onclick="toggleConfirmPassword()" id="btnToggle" class="btn btn-outline btn-xs btn-xs btn-2x"><i id="eyeIconConfirmPassword" class="fa fa-eye fa-xs"></i></button>
+                </div>
+            </div>
+        </div>
+        </div>
 
             <div class="row">
                 <div class="col-12 d-flex justify-content-center">
@@ -238,6 +248,30 @@ function showLeftForm($email)
 
     <script src="https://code.jquery.com/jquery-3.6 .0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+        integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+
+
+    <style>
+        .alert {
+            margin-left: 20px
+        }
+
+        .passwordCheck {
+            margin-right: 10px;
+        }
+
+        .fa {
+            font-size: 1rem;
+            margin-left: 1px;
+            border-color: lightgray;
+        }
+
+        #btnToggle {
+            border-color: darkgray;
+        }
+    </style>
 
 </head>
 
@@ -346,6 +380,33 @@ function showLeftForm($email)
                 }
             }
         }
+
+        
+        let confirmPasswordInput = document.getElementById('confirmPassword'),
+            passwordInput = document.getElementById('password');
+            iconPassword = document.getElementById('eyeIconPassword');
+            iconConfirmPassword = document.getElementById('eyeIconConfirmPassword');
+
+        function toggleConfirmPassword() {
+            if (confirmPasswordInput.type === 'password') {
+                confirmPasswordInput.type = 'text';
+                iconConfirmPassword.classList.add("fa-eye-slash");
+            } else {
+                confirmPasswordInput.type = 'password';
+                iconConfirmPassword.classList.remove("fa-eye-slash");
+            }
+        }
+
+        function togglePassword() {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                iconPassword.classList.add("fa-eye-slash");
+            } else {
+                passwordInput.type = 'password';
+                iconPassword.classList.remove("fa-eye-slash");
+            }
+        }
+
 
     </script>
 

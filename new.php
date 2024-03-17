@@ -1,3 +1,5 @@
-<?php $hash = password_hash($password, PASSWORD_BCRYPT);
+<?php 
+
+$hash = password_hash($password, PASSWORD_BCRYPT);
 
 echo $hash;

@@ -8,7 +8,7 @@ $errorMessage = "";
 $successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['create_user'])) {
+    if (isset ($_POST['create_user'])) {
         $user_first_name = mysqli_real_escape_string($conn, $_POST['user_first_name']);
         $user_last_name = mysqli_real_escape_string($conn, $_POST['user_last_name']);
         $user_email = mysqli_real_escape_string($conn, $_POST['user_email']);
@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $user_role = mysqli_real_escape_string($conn, $_POST['user_role']);
         $user_position = mysqli_real_escape_string($conn, $_POST['user_position']);
         $user_numero = mysqli_real_escape_string($conn, $_POST['user_number']);
-        if(!empty($_POST['user_companies'])){
+        if (!empty ($_POST['user_companies'])) {
             $user_companies = $_POST['user_companies'];
         }
 
@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             mysqli_stmt_bind_param($stmt, "ssssiss", $user_first_name, $user_last_name, $user_email, $hashed_password, $user_numero, $user_role, $user_position);
             try {
                 if (mysqli_stmt_execute($stmt)) {
-                    if (!empty($user_companies)) {
+                    if (!empty ($user_companies)) {
                         $sql = "SELECT UTENTE_ID
                                 FROM UTENTI
                                 WHERE EMAIL = ?
@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         mysqli_stmt_bind_result($stmt1, $user_id);
                         mysqli_stmt_fetch($stmt1);
 
-                        if (!empty($user_companies)) {
+                        if (!empty ($user_companies)) {
                             foreach ($user_companies as $company_id) {
                                 $sql2 = "INSERT INTO UTENTI_AZIENDE (UTENTE_ID, AZIENDA_ID) VALUES (?, ?)";
 
@@ -134,6 +134,29 @@ function showAllCompanies()
     <link href="https://raw.githack.com/ttskch/select2-bootstrap4-theme/master/dist/select2-bootstrap4.css"
         rel="stylesheet"> <!-- for live demo page -->
 
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+        integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+
+
+    <style>
+        .alert {
+            margin-left: 20px
+        }
+
+        .passwordCheck {
+            margin-right: 10px;
+        }
+
+        .fa {
+            font-size: 1rem;
+            margin-left: 1px;
+            border-color: lightgray;
+        }
+
+        #btnToggle {
+            border-color: darkgray;
+        }
+    </style>
 </head>
 
 <body>
@@ -159,7 +182,7 @@ function showAllCompanies()
                                     <form id="userForm" method="post">
                                         <div class="row">
                                             <?php
-                                            if (!empty($errorMessage)) {
+                                            if (!empty ($errorMessage)) {
                                                 echo '<div class="col-12">
                                                             <div class="card">
                                                                 <div class="card-header">
@@ -168,7 +191,7 @@ function showAllCompanies()
                                                                 </div>                                                    
                                                             </div>
                                                         </div>';
-                                            } else if (!empty($successfulMessage)) {
+                                            } else if (!empty ($successfulMessage)) {
                                                 echo '<div class="col-12">
                                                             <div class="card">
                                                                 <div class="card-header">
@@ -263,9 +286,17 @@ function showAllCompanies()
                                                                 style="color:red;">*</span></h5>
                                                     </div>
                                                     <div class="card-body">
-                                                        <input type="password" placeholder="Password"
-                                                            name="user_password" class="form-control" value=""
-                                                            required />
+                                                        <div class="input-group">
+                                                            <input type="password" id="password" placeholder="Password"
+                                                                name="user_password" class="form-control" required />
+                                                            <div class="input-group-append">
+                                                                <button type="button" onclick="togglePassword()"
+                                                                    id="btnToggle"
+                                                                    class="btn btn-outline btn-xs btn-xs btn-2x"><i
+                                                                        id="eyeIconPassword"
+                                                                        class="fa fa-eye fa-xs"></i></button>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
 
@@ -312,6 +343,20 @@ function showAllCompanies()
                             });
                         });
                     });
+
+                    let 
+                        passwordInput = document.getElementById('password');
+                        iconPassword = document.getElementById('eyeIconPassword');
+
+                    function togglePassword() {
+                        if (passwordInput.type === 'password') {
+                            passwordInput.type = 'text';
+                            iconPassword.classList.add("fa-eye-slash");
+                        } else {
+                            passwordInput.type = 'password';
+                            iconPassword.classList.remove("fa-eye-slash");
+                        }
+                    }
 
                 </script>
 
