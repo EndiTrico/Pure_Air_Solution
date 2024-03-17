@@ -128,16 +128,19 @@ function showForm($email)
                     <h5 class="card-title mb-0">Password</h5>
                 </div>
                 <div class="card-body">
-                    <input type="password" placeholder="Password" name="user_password" class="form-control"/>
+                    <input type="password" onkeyup="check()" id="password" placeholder="Password" name="user_password" class="form-control"/>
                 </div>
             </div>
 
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-title mb-0">Confirm Password</h5>
+                    <div class="col">
+                        <h5 class="card-title mb-0 d-inline">Confirm Password</h5>
+                        <p id="alertPassword" class="alert d-inline text-center"></p>
+                    </div>
                 </div>
                 <div class="card-body">
-                    <input type="password" placeholder="Confirm Password" name="user_confirm_password" class="form-control"/>
+                    <input type="password" onkeyup="check()" id="checkPassword" placeholder="Confirm Password" name="user_confirm_password" class="form-control"/>
                 </div>
             </div>
 
@@ -323,6 +326,28 @@ function showLeftForm($email)
     </div>
 
     <script src="js/app.js"></script>
+    <script>
+        function check() {
+            var password = document.getElementById('password');
+            var checkPassword = document.getElementById('checkPassword');
+            var alertPassword = document.getElementById('alertPassword');
+
+            if (password.value === '' && checkPassword.value === '') {
+                alertPassword.style.visibility = 'hidden';
+            } else {
+                alertPassword.style.visibility = 'visible';
+
+                if (password.value === checkPassword.value) {
+                    alertPassword.style.color = '#8CC63E';
+                    alertPassword.innerHTML = '<span><i class="fas fa-check-circle"></i>Corrisponde</span>';
+                } else {
+                    alertPassword.style.color = '#EE2B39';
+                    alertPassword.innerHTML = '<span><i class="fas fa-exclamation-triangle"></i>Non Corrisponde</span>';
+                }
+            }
+        }
+
+    </script>
 
 </body>
 

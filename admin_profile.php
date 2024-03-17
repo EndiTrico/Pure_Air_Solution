@@ -128,16 +128,19 @@ function showForm($email)
                     <h5 class="card-title mb-0">Password</h5>
                 </div>
                 <div class="card-body">
-                    <input type="password" placeholder="Password" name="user_password" class="form-control"/>
+                    <input type="password" onkeyup="check()" id="password" placeholder="Password" name="user_password" class="form-control"/>
                 </div>
             </div>
 
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-title mb-0">Confirm Password</h5>
+                    <div class="col">
+                        <h5 class="card-title mb-0 d-inline">Confirm Password</h5>
+                        <p id="alertPassword" class="alert d-inline text-center"></p>
+                    </div>
                 </div>
                 <div class="card-body">
-                    <input type="password" placeholder="Confirm Password" name="user_confirm_password" class="form-control"/>
+                    <input type="password" onkeyup="check()" id="checkPassword" placeholder="Confirm Password" name="user_confirm_password" class="form-control"/>
                 </div>
             </div>
 
@@ -236,6 +239,25 @@ function showLeftForm($email)
     <script src="https://code.jquery.com/jquery-3.6 .0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+
+
+
+    <script src="https://cdn.rawgit.com/mladenilic/pwd_toggle/d5db69ce/dist/pwd_toggle.js"></script>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+        integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+
+
+    <style>
+        .alert {
+            margin-left: 20px
+        }
+
+        i,
+        .far {
+            margin-right: 10px
+        }
+    </style>
 </head>
 
 <body>
@@ -286,7 +308,8 @@ function showLeftForm($email)
                                                     <?php echo fullName() ?>
                                                 </h5>
 
-                                                <div style="display: flex; justify-content: center; align-items: center;">
+                                                <div
+                                                    style="display: flex; justify-content: center; align-items: center;">
                                                     <div style="width: 400px;
                                                                 height: 400px;
                                                                 border-radius: 50%; 
@@ -322,6 +345,27 @@ function showLeftForm($email)
     </div>
 
     <script src="js/app.js"></script>
+    <script>
+        function check() {
+            var password = document.getElementById('password');
+            var checkPassword = document.getElementById('checkPassword');
+            var alertPassword = document.getElementById('alertPassword');
+
+            if (password.value === '' && checkPassword.value === '') {
+                alertPassword.style.visibility = 'hidden';
+            } else {
+                alertPassword.style.visibility = 'visible';
+
+                if (password.value === checkPassword.value) {
+                    alertPassword.style.color = '#8CC63E';
+                    alertPassword.innerHTML = '<span><i class="fas fa-check-circle"></i>Corrisponde</span>';
+                } else {
+                    alertPassword.style.color = '#EE2B39';
+                    alertPassword.innerHTML = '<span><i class="fas fa-exclamation-triangle"></i>Non Corrisponde</span>';
+                }
+            }
+        }
+    </script>
 
 </body>
 
