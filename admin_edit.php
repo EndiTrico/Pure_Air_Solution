@@ -682,7 +682,7 @@ function showCompanies($row)
                 <div class="card-body">
                     <div class="form-group mb-4">
                         <input type="text" class="form-control"
-                                id="datePicker" name="company_date_joined"
+                                id="datePicker" name="company_date_joined" readonly
                                 placeholder="Data Iscrizione" value = "' . $row["DATA_ISCRIZIONE"] . '"
                                 style="background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat right 10px center; background-size: 16px;">
                     </div>
@@ -776,7 +776,7 @@ function showCompanies($row)
                 <div class="card-body">
                     <div class="form-group mb-4">
                         <input type="text" class="form-control"
-                                id="datePicker1" name="company_date_left"
+                                id="datePicker1" name="company_date_left" readonly
                                 placeholder="Data Sinistra" value = "' . $row["DATA_SINISTRA"] . '"
                                 style="background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat right 10px center; background-size: 16px;">
                     </div>
@@ -1094,7 +1094,7 @@ function showBills($row)
                     <div class="card-body">
                         <div class="form-group mb-4">
                             <input type="text" class="form-control"
-                                    id="datePicker" name="bill_billing_date"
+                                    id="datePicker" name="bill_billing_date" readonly
                                     placeholder="Data di Fatturazione" value = "' . $row["DATA_FATTURAZIONE"] . '"
                                     style="background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat right 10px center; background-size: 16px;">
                         </div>
@@ -1162,7 +1162,7 @@ function showBills($row)
                     <div class="card-body">
                         <div class="form-group mb-4">
                             <input type="text" class="form-control"
-                                id="datePicker1" name="bill_payment_date"
+                                id="datePicker1" name="bill_payment_date" readonly
                                 placeholder="Data di Pagamento" value = "' . $row["DATA_PAGAMENTO"] . '"
                                 style="background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat right 10px center; background-size: 16px;">
                         </div>
@@ -1332,16 +1332,15 @@ function showBills($row)
             return word.charAt(0).toUpperCase() + word.slice(1);
         }
 
-
         var picker = new Pikaday({
             field: document.getElementById('datePicker'),
             format: 'YYYY-MM-DD',
             i18n: {
                 previousMonth: 'Mese Precedente',
                 nextMonth: 'Mese Successivo',
-                months: moment.localeData().months().map(capitalizeFirstLetter), // Capitalize months
-                weekdays: moment.localeData().weekdays().map(capitalizeFirstLetter), // Capitalize weekdays
-                weekdaysShort: moment.localeData().weekdaysShort().map(capitalizeFirstLetter) // Capitalize weekdaysShort
+                months: moment.localeData().months().map(capitalizeFirstLetter), 
+                weekdays: moment.localeData().weekdays().map(capitalizeFirstLetter), 
+                weekdaysShort: moment.localeData().weekdaysShort().map(capitalizeFirstLetter)
             },
             onSelect: function () {
                 console.log(this.getMoment().format('Do MMMM YYYY'));
@@ -1354,9 +1353,9 @@ function showBills($row)
             i18n: {
                 previousMonth: 'Mese Precedente',
                 nextMonth: 'Mese Successivo',
-                months: moment.localeData().months().map(capitalizeFirstLetter), // Capitalize months
-                weekdays: moment.localeData().weekdays().map(capitalizeFirstLetter), // Capitalize weekdays
-                weekdaysShort: moment.localeData().weekdaysShort().map(capitalizeFirstLetter) // Capitalize weekdaysShort
+                months: moment.localeData().months().map(capitalizeFirstLetter), 
+                weekdays: moment.localeData().weekdays().map(capitalizeFirstLetter), 
+                weekdaysShort: moment.localeData().weekdaysShort().map(capitalizeFirstLetter)
             },
             onSelect: function () {
                 console.log(this.getMoment().format('Do MMMM YYYY'));
