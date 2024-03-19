@@ -8,7 +8,7 @@ $errorMessage = "";
 $successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['create_impianto'])) {
+    if (isset ($_POST['create_impianto'])) {
         $department_name = mysqli_real_escape_string($conn, $_POST['department_name']);
         $department_company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
         $department_structure_id = mysqli_real_escape_string($conn, $_POST['structure_name']);
@@ -101,6 +101,12 @@ function showCompanyName()
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css">
+    <script src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment/locale/it.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-BTBZNOArLzKrjzlkrMgXw0S51oBnuy0/HWkCARN0aSUSnt5N6VX/9n6tsQwnPVK68OzI6KARmxx3AeeBfM2y+g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 </head>
 
 <body>
@@ -114,7 +120,8 @@ function showCompanyName()
 
                     <div class="row">
                         <div class="col-12 col-lg-1">
-                            <a class="btn transparent-btn" style="margin-top: -8px;" href="admin_create.php"><img src="./images/back_button.png">
+                            <a class="btn transparent-btn" style="margin-top: -8px;" href="admin_create.php"><img
+                                    src="./images/back_button.png">
                             </a>
                         </div>
                         <div class="col-12 col-lg-11">
@@ -129,7 +136,7 @@ function showCompanyName()
                                                 <div class="row">
 
                                                     <?php
-                                                    if (!empty($errorMessage)) {
+                                                    if (!empty ($errorMessage)) {
                                                         echo '<div class="col-12">
                                                             <div class="card">
                                                                 <div class="card-header">
@@ -138,7 +145,7 @@ function showCompanyName()
                                                                 </div>                                                    
                                                             </div>
                                                         </div>';
-                                                    } else if (!empty($successfulMessage)) {
+                                                    } else if (!empty ($successfulMessage)) {
                                                         echo '<div class="col-12">
                                                             <div class="card">
                                                                 <div class="card-header">
@@ -151,16 +158,93 @@ function showCompanyName()
                                                     ?>
 
                                                     <div class="row">
-                                                        <div class="col-12 col-lg-12">
+                                                        <div class="col-12 col-lg-6">
                                                             <div class="card">
                                                                 <div class="card-header">
                                                                     <h5 class="card-title mb-0">Nome Uta</h5>
                                                                 </div>
-                                                                <div class="card-body">
-                                                                    <input type="text" class="form-control" name="impianto_nome" placeholder="Nome" required>
+                                                                <div class="card-body"
+                                                                    style="margin-bottom: 15px !important;">
+                                                                    <input type="text" class="form-control"
+                                                                        name="impianto_nome" placeholder="Nome"
+                                                                        required>
                                                                 </div>
                                                             </div>
-                                                        
+
+                                                            <div class="card">
+                                                                <div class="card-header">
+                                                                    <h5 class="card-title mb-0">Struttura</h5>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <select name="structure_name" id="structure_name"
+                                                                        class="form-select mb-3" required>
+                                                                        <option disable selected value="">Seleziona una
+                                                                            Struttura</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="card">
+                                                                <div class="card-header">
+                                                                    <h5 class="card-title mb-0">Capacita Uta <span
+                                                                            style="color:red;">*</span></h5>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <input type="number" class="form-control"
+                                                                        id="impianto_capacita_uta"
+                                                                        name="impianto_capacita_uta"
+                                                                        placeholder="Capacita Uta" min=0
+                                                                        max=100000000000000000000000000 step="any"
+                                                                        required>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="card">
+                                                                <div class="card-header">
+                                                                    <h5 class="card-title mb-0">Ripresa <span
+                                                                            style="color:red;">*</span></h5>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <input type="number" class="form-control"
+                                                                        id="impianto_ripresa" name="impianto_ripresa"
+                                                                        placeholder="Ripresa" min=0
+                                                                        max=100000000000000000000000000 step="any"
+                                                                        required>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="card">
+                                                                <div class="card-header">
+                                                                    <h5 class="card-title mb-0">Espulsione <span
+                                                                            style="color:red;">*</span></h5>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <input type="number" class="form-control"
+                                                                        id="impianto_espulsione"
+                                                                        name="impianto_Espulsione"
+                                                                        placeholder="Espulsione" min=0
+                                                                        max=100000000000000000000000000 step="any"
+                                                                        required>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="card">
+                                                                <div class="card-header">
+                                                                    <h5 class="card-title mb-0">Data di Fatturazione
+                                                                    </h5>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <div class="form-group mb-4">
+                                                                        <input readonly type="text" class="form-control"
+                                                                            id="datePicker" name="bill_billing_date"
+                                                                            placeholder="Data di Fatturazione"
+                                                                            style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px;">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-12 col-lg-6">
                                                             <div class="card">
                                                                 <div class="card-header">
                                                                     <h5 class="card-title mb-0">Azienda</h5>
@@ -171,71 +255,105 @@ function showCompanyName()
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="card">
-                                                                <div class="card-header">
-                                                                    <h5 class="card-title mb-0">Indirizzo</h5>
-                                                                </div>
-                                                                <div class="card-body">
-                                                                    <input type="text" class="form-control" name="department_address" placeholder="Indirizzo">
-                                                                </div>
-                                                            </div>
-                                                        </div>
 
-                                                        <div class="col-12 col-lg-6">
                                                             <div class="card">
                                                                 <div class="card-header">
-                                                                    <h5 class="card-title mb-0">Struttura</h5>
+                                                                    <h5 class="card-title mb-0">Reparto</h5>
                                                                 </div>
                                                                 <div class="card-body">
-                                                                    <select name="structure_name" id="structure_name" class="form-select mb-3" required>
-                                                                        <option disable selected value="">Seleziona una Struttura</option>
+                                                                    <select name="department_name" id="department_name"
+                                                                        class="form-select mb-3" required>
+                                                                        <option disable selected value="">Seleziona un
+                                                                            Reparto</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="card">
                                                                 <div class="card-header">
-                                                                    <h5 class="card-title mb-0">Struttura</h5>
+                                                                    <h5 class="card-title mb-0">Mandata <span
+                                                                            style="color:red;">*</span></h5>
                                                                 </div>
                                                                 <div class="card-body">
-                                                                    <select name="structure_name" id="department_name" class="form-select mb-3" required>
-                                                                        <option disable selected value="">Seleziona un Reparto</option>
-                                                                    </select>
+                                                                    <input type="number" class="form-control"
+                                                                        id="impianto_mandata" name="impianto_mandata"
+                                                                        placeholder="Mandata" min=0
+                                                                        max=100000000000000000000000000 step="any"
+                                                                        required>
                                                                 </div>
                                                             </div>
-                                                            <div class="card">
-                                                                <div class="card-header">
-                                                                    <h5 class="card-title mb-0">Citta</h5>
-                                                                </div>
-                                                                <div class="card-body">
-                                                                    <input type="text" class="form-control" name="department_city" placeholder="Citta">
-                                                                </div>
-                                                            </div>
-                                                        </div>
 
-                                                        <div class="col-12 col-lg-12">
                                                             <div class="card">
                                                                 <div class="card-header">
-                                                                    <h5 class="card-title mb-0">Informazioni</h5>
+                                                                    <h5 class="card-title mb-0">Presa Aria Esterna <span
+                                                                            style="color:red;">*</span></h5>
                                                                 </div>
                                                                 <div class="card-body">
-                                                                    <textarea class="form-control" name="department_information" rows="3" placeholder="Informazioni"></textarea>
+                                                                    <input type="number" class="form-control"
+                                                                        id="impianto_presa_ariae_esterna"
+                                                                        name="impianto_presa_ariae_esterna"
+                                                                        placeholder="Presa Aria Esterna" min=0
+                                                                        max=100000000000000000000000000 step="any"
+                                                                        required>
                                                                 </div>
                                                             </div>
+
+
+                                                            <div class="card">
+                                                                <div class="card-header">
+                                                                    <h5 class="card-title mb-0">Ultima Attivita</h5>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <input type="text" class="form-control"
+                                                                        name="impianto_ultima_attivita"
+                                                                        placeholder="Ultima Attivita">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="card">
+                                                                <div class="card-header">
+                                                                    <h5 class="card-title mb-0">Data di Fatturazione
+                                                                    </h5>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <div class="form-group mb-4">
+                                                                        <input readonly type="text" class="form-control"
+                                                                            id="datePicker1" name="bill_billing_date"
+                                                                            placeholder="Data di Fatturazione"
+                                                                            style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px;">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
                                                         </div>
                                                     </div>
-                                                    <div class="row">
-                                                        <div class="col-12 d-flex justify-content-center">
-                                                            <button name="create_department" id="createDepartmentButton" class="btn btn-success btn-lg">Crea un Reparto</button>
+
+                                                    <div class="col-12 col-lg-12">
+                                                        <div class="card">
+                                                            <div class="card-header">
+                                                                <h5 class="card-title mb-0">Informazioni</h5>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <textarea class="form-control"
+                                                                    name="department_information" rows="3"
+                                                                    placeholder="Informazioni"></textarea>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </form>
+                                                <div class="row">
+                                                    <div class="col-12 d-flex justify-content-center">
+                                                        <button name="create_department" id="createDepartmentButton"
+                                                            class="btn btn-success btn-lg">Crea un Reparto</button>
+                                                    </div>
+                                                </div>
                                         </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
             </main>
 
             <?php
@@ -249,8 +367,44 @@ function showCompanyName()
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
     </script>
     <script type="text/javascript">
-        $(document).ready(function() {
-            $("#company-dropdown").change(function() {
+        moment.locale('it');
+
+        function capitalizeFirstLetter(word) {
+            return word.charAt(0).toUpperCase() + word.slice(1);
+        }
+
+        var picker = new Pikaday({
+            field: document.getElementById('datePicker'),
+            format: 'YYYY-MM-DD',
+            i18n: {
+                previousMonth: 'Mese Precedente',
+                nextMonth: 'Mese Successivo',
+                months: moment.localeData().months().map(capitalizeFirstLetter), // Capitalize months
+                weekdays: moment.localeData().weekdays().map(capitalizeFirstLetter), // Capitalize weekdays
+                weekdaysShort: moment.localeData().weekdaysShort().map(capitalizeFirstLetter) // Capitalize weekdaysShort
+            },
+            onSelect: function () {
+                console.log(this.getMoment().format('Do MMMM YYYY'));
+            }
+        });
+
+        var picker = new Pikaday({
+            field: document.getElementById('datePicker1'),
+            format: 'YYYY-MM-DD',
+            i18n: {
+                previousMonth: 'Mese Precedente',
+                nextMonth: 'Mese Successivo',
+                months: moment.localeData().months().map(capitalizeFirstLetter), // Capitalize months
+                weekdays: moment.localeData().weekdays().map(capitalizeFirstLetter), // Capitalize weekdays
+                weekdaysShort: moment.localeData().weekdaysShort().map(capitalizeFirstLetter) // Capitalize weekdaysShort
+            },
+            onSelect: function () {
+                console.log(this.getMoment().format('Do MMMM YYYY'));
+            }
+        });
+
+        $(document).ready(function () {
+            $("#company-dropdown").change(function () {
                 var companyID = $(this).val();
                 var post_id = 'id=' + companyID;
                 $.ajax({
@@ -258,14 +412,14 @@ function showCompanyName()
                     url: "fetch_structures.php",
                     data: post_id,
                     cache: false,
-                    success: function(structure) {
+                    success: function (structure) {
                         $("#structure_name").html(structure);
                     }
                 });
             });
         });
-        $(document).ready(function() {
-            $("#structure_name").change(function() {
+        $(document).ready(function () {
+            $("#structure_name").change(function () {
                 var companyID = $(this).val();
                 var post_id = 'id=' + companyID;
                 $.ajax({
@@ -273,7 +427,7 @@ function showCompanyName()
                     url: "fetch_departments.php",
                     data: post_id,
                     cache: false,
-                    success: function(department) {
+                    success: function (department) {
                         $("#department_name").html(department);
                     }
                 });
