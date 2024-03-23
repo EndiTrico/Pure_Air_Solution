@@ -357,7 +357,7 @@ function showCompanyName()
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-12 d-flex justify-content-center">
-                                                        <button name="create_department" id="create_impianto"
+                                                        <button name="create_impianto" id="create_impianto"
                                                             class="btn btn-success btn-lg">Crea un Impianto</button>
                                                     </div>
                                                 </div>
