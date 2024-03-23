@@ -4,4 +4,4 @@
     $dbpass = '';
     $dbname = 'pure_air_solutions';
 
-?>
+

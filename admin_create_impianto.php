@@ -9,38 +9,53 @@ $successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset ($_POST['create_impianto'])) {
-        $department_name = mysqli_real_escape_string($conn, $_POST['department_name']);
-        $department_company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
-        $department_structure_id = mysqli_real_escape_string($conn, $_POST['structure_name']);
-        $department_address = mysqli_real_escape_string($conn, $_POST['department_address']);
-        $department_city = mysqli_real_escape_string($conn, $_POST['department_city']);
-        $department_information = mysqli_real_escape_string($conn, $_POST['department_information']);
+        $impianto_nome = mysqli_real_escape_string($conn, $_POST['impianto_nome']);
+        $impianto_capacita_uta = mysqli_real_escape_string($conn, $_POST['impianto_capacita_uta']);
+        $impianto_ripresa = mysqli_real_escape_string($conn, $_POST['impianto_ripresa']);
+        $impianto_espulsione = mysqli_real_escape_string($conn, $_POST['impianto_espulsione']);
+        $impianto_data_inizio_utilizzo = mysqli_real_escape_string($conn, $_POST['impianto_data_inizio_utilizzo']);
+        $impianto_mandata = mysqli_real_escape_string($conn, $_POST['impianto_mandata']);
+        $impianto_data_ultima_att = mysqli_real_escape_string($conn, $_POST['impianto_data_ultima_att']);
+        $impianto_ultima_attivita = mysqli_real_escape_string($conn, $_POST['impianto_ultima_attivita']);
+        $impianto_presa_aria_esterna = mysqli_real_escape_string($conn, $_POST['impianto_presa_aria_esterna']);
 
-        $queryCheck = "SELECT REPARTO_ID FROM REPARTI 
-                        WHERE REPARTO_NOME = ? 
-                            AND AZIENDA_ID = ? 
-                            AND STRUTTURA_ID = ? 
+        $impianto_company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
+        $impianto_structure_id = mysqli_real_escape_string($conn, $_POST['structure_name']);
+        $impianto_department_id = mysqli_real_escape_string($conn, $_POST['department_name']);
+
+        
+        $queryCheck = "SELECT IMPIANTO_ID FROM IMPIANTI
+                        WHERE NOME_UTA = ?
+                            AND AZIENDA_ID = ?
+                            AND STRUTTURA_ID = ?
+                            AND REPARTO_ID = ?
                         LIMIT 1";
 
         $stmt = mysqli_prepare($conn, $queryCheck);
-        mysqli_stmt_bind_param($stmt, "sii", $department_name, $department_company_id, $department_structure_id);
+        mysqli_stmt_bind_param($stmt, "siii", $impianto_nome, $impianto_company_id, $impianto_structure_id, $impianto_department_id);
         mysqli_stmt_execute($stmt);
         $resultCheck = mysqli_stmt_get_result($stmt);
 
         if ($resultCheck) {
             if (mysqli_num_rows($resultCheck) > 0) {
-                $errorMessage = "C'è un Reparto con Quel Nome in Quella Struttura e Agenzia";
+                $errorMessage = "C'è un Reparto con Quel Nome in Quella Struttura, Reparto e Agenzia";
             } else {
-                $sql = "INSERT INTO REPARTI (REPARTO_NOME, AZIENDA_ID, STRUTTURA_ID, INDIRIZZO, CITTA, INFORMAZIONI, E_ATTIVO) VALUES 
-                        (?, ?, ?, ?, ?, ?, 1)";
+                $sql = "INSERT INTO IMPIANTI 
+                (NOME_UTA, AZIENDA_ID, STRUTTURA_ID, REPARTO_ID, CAPACITA_UTA, MANDATA, RIPRESA, 
+                ESPULSIONE, PRESA_ARIA_ESTERNA, ULTIMA_ATTIVITA, DATA_DI_INIZIO_UTILIZZO, 
+                DATA_ULTIMA_ATT, E_ATTIVO) VALUES 
+                        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)";
                 $stmt = mysqli_prepare($conn, $sql);
-                mysqli_stmt_bind_param($stmt, "siisss", $department_name, $department_company_id, $department_structure_id, $department_address, $department_city, $department_information);
+                mysqli_stmt_bind_param($stmt, "siiidddddsss", 
+                $impianto_nome, $impianto_company_id , $impianto_structure_id, $impianto_department_id , 
+                $impianto_capacita_uta, $impianto_mandata, $impianto_ripresa, $impianto_espulsione, $impianto_presa_aria_esterna,
+                $impianto_ultima_attivita, $impianto_data_inizio_utilizzo , $impianto_data_ultima_att);
 
                 try {
                     if (mysqli_stmt_execute($stmt)) {
-                        $successfulMessage = "Reparto Creato con Successo";
+                        $successfulMessage = "Impianto Creato con Successo";
                     } else {
-                        $errorMessage = "Errore: Impossibile Creare il Reparto";
+                        $errorMessage = "Errore: Impossibile Creare il Impianto";
                     }
                 } catch (Exception $e) {
                     $errorMessage = $e->getMessage();
@@ -95,7 +110,7 @@ function showCompanyName()
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
 
-    <title>Create Department</title>
+    <title>Crea un Impianto</title>
 
     <link href="css/app.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -120,8 +135,8 @@ function showCompanyName()
 
                     <div class="row">
                         <div class="col-12 col-lg-1">
-                            <a class="btn transparent-btn" style="margin-top: -8px;" href="admin_create.php"><img
-                                    src="./images/back_button.png">
+                            <a class="btn transparent-btn" style="margin-top: -8px;" href="admin_create.php">
+                                <img alt= "Back" src="./images/back_button.png">
                             </a>
                         </div>
                         <div class="col-12 col-lg-11">
@@ -141,17 +156,17 @@ function showCompanyName()
                                                             <div class="card">
                                                                 <div class="card-header">
                                                                     <div style="height: auto; font-size:20px; text-align:center; background-color: #ffcccc; color: #cc0000;" class="alert alert-danger" role="alert"><h4 style = "padding-top:5px; color: #cc0000; font-weight:bold;">' . $errorMessage . '</h4>
-                                                                    </div> 
-                                                                </div>                                                    
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>';
-                                                    } else if (!empty ($successfulMessage)) {
+                                                    } elseif (!empty ($successfulMessage)) {
                                                         echo '<div class="col-12">
                                                             <div class="card">
                                                                 <div class="card-header">
                                                                     <div style="height: auto; font-size:20px; text-align:center; background-color: #ccffcc; color: #006600;" class="alert alert-success" role="alert"><h4 style = "padding-top:5px; color: #006600; font-weight:bold;">' . $successfulMessage . '</h4>
-                                                                    </div> 
-                                                                </div>                                                    
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>';
                                                     }
@@ -221,7 +236,7 @@ function showCompanyName()
                                                                 <div class="card-body">
                                                                     <input type="number" class="form-control"
                                                                         id="impianto_espulsione"
-                                                                        name="impianto_Espulsione"
+                                                                        name="impianto_espulsione"
                                                                         placeholder="Espulsione" min=0
                                                                         max=100000000000000000000000000 step="any"
                                                                         required>
@@ -230,13 +245,13 @@ function showCompanyName()
 
                                                             <div class="card">
                                                                 <div class="card-header">
-                                                                    <h5 class="card-title mb-0">Data di Fatturazione
+                                                                    <h5 class="card-title mb-0">Data di Inizio Utilizzo
                                                                     </h5>
                                                                 </div>
                                                                 <div class="card-body">
                                                                     <div class="form-group mb-4">
                                                                         <input readonly type="text" class="form-control"
-                                                                            id="datePicker" name="bill_billing_date"
+                                                                            id="datePicker" name="impianto_data_inizio_utilizzo"
                                                                             placeholder="Data di Fatturazione"
                                                                             style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px;">
                                                                     </div>
@@ -289,8 +304,8 @@ function showCompanyName()
                                                                 </div>
                                                                 <div class="card-body">
                                                                     <input type="number" class="form-control"
-                                                                        id="impianto_presa_ariae_esterna"
-                                                                        name="impianto_presa_ariae_esterna"
+                                                                        id="impianto_presa_aria_esterna"
+                                                                        name="impianto_presa_aria_esterna"
                                                                         placeholder="Presa Aria Esterna" min=0
                                                                         max=100000000000000000000000000 step="any"
                                                                         required>
@@ -311,13 +326,13 @@ function showCompanyName()
 
                                                             <div class="card">
                                                                 <div class="card-header">
-                                                                    <h5 class="card-title mb-0">Data di Fatturazione
+                                                                    <h5 class="card-title mb-0">Data Ultima Att
                                                                     </h5>
                                                                 </div>
                                                                 <div class="card-body">
                                                                     <div class="form-group mb-4">
                                                                         <input readonly type="text" class="form-control"
-                                                                            id="datePicker1" name="bill_billing_date"
+                                                                            id="datePicker1" name="impianto_data_ultima_att"
                                                                             placeholder="Data di Fatturazione"
                                                                             style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px;">
                                                                     </div>
@@ -342,8 +357,8 @@ function showCompanyName()
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-12 d-flex justify-content-center">
-                                                        <button name="create_department" id="createDepartmentButton"
-                                                            class="btn btn-success btn-lg">Crea un Reparto</button>
+                                                        <button name="create_department" id="create_impianto"
+                                                            class="btn btn-success btn-lg">Crea un Impianto</button>
                                                     </div>
                                                 </div>
                                         </div>
