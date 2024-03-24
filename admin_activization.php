@@ -48,7 +48,7 @@ if ($entity == 'utenti') {
 
     $sql = "SELECT s.E_ATTIVO 
             FROM REPARTI d
-            JOIN STRUTTURE s on s.AZIENDA_ID = d.AZIENDA_ID
+            JOIN STRUTTURE s on s.STRUTTURA_ID = d.STRUTTURA_ID
             WHERE d.REPARTO_ID = ?
             LIMIT 1";
 
@@ -100,12 +100,60 @@ if ($entity == 'utenti') {
     $update = "UPDATE " . $entity .
         " SET E_PAGATO = 1 
                 WHERE FATTURA_ID = ?";
-} else if ($entity == "impianti"){
-    $isActive = 1;
+} else if ($entity == "impianti") {
+    $sql = "SELECT c.E_ATTIVO 
+            FROM IMPIANTI d
+            JOIN AZIENDE c on d.AZIENDA_ID = c.AZIENDA_ID
+            WHERE d.IMPIANTO_ID = ?
+            LIMIT 1";
 
-    $update = "UPDATE " . $entity .
-        " SET E_ATTIVO = 1 
-                WHERE IMPIANTO_ID = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $id);
+
+    $stmt->execute();
+    $stmt->bind_result($isActive1);
+
+    $stmt->fetch();
+    $stmt->close();
+
+    $sql = "SELECT s.E_ATTIVO 
+            FROM IMPIANTI d
+            JOIN STRUTTURE s on s.STRUTTURA_ID = d.STRUTTURA_ID
+            WHERE d.IMPIANTO_ID = ?
+            LIMIT 1";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $id);
+
+    $stmt->execute();
+    $stmt->bind_result($isActive2);
+
+    $stmt->fetch();
+    $stmt->close();
+
+    $sql = "SELECT s.E_ATTIVO 
+            FROM IMPIANTI d
+            JOIN REPARTI s on s.REPARTO_ID = d.REPARTO_ID
+            WHERE d.IMPIANTO_ID = ?
+            LIMIT 1";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $id);
+
+    $stmt->execute();
+    $stmt->bind_result($isActive3);
+
+    $stmt->fetch();
+    $stmt->close();
+
+    if ($isActive1 == 1 && $isActive2 == 1 && $isActive3 == 1) {
+        $isActive = 1;
+        $update = "UPDATE " . $entity .
+            " SET E_ATTIVO = 1 
+                    WHERE IMPIANTO_ID = ?";
+    } else {
+        $isActive = 0;
+    }
 }
 
 if ($isActive == 0) {
