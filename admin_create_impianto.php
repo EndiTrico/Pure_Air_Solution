@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $impianto_structure_id = mysqli_real_escape_string($conn, $_POST['structure_name']);
         $impianto_department_id = mysqli_real_escape_string($conn, $_POST['department_name']);
 
-        
+
         $queryCheck = "SELECT IMPIANTO_ID FROM IMPIANTI
                         WHERE NOME_UTA = ?
                             AND AZIENDA_ID = ?
@@ -46,10 +46,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 DATA_ULTIMA_ATT, E_ATTIVO) VALUES 
                         (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)";
                 $stmt = mysqli_prepare($conn, $sql);
-                mysqli_stmt_bind_param($stmt, "siiidddddsss", 
-                $impianto_nome, $impianto_company_id , $impianto_structure_id, $impianto_department_id , 
-                $impianto_capacita_uta, $impianto_mandata, $impianto_ripresa, $impianto_espulsione, $impianto_presa_aria_esterna,
-                $impianto_ultima_attivita, $impianto_data_inizio_utilizzo , $impianto_data_ultima_att);
+                mysqli_stmt_bind_param(
+                    $stmt,
+                    "siiidddddsss",
+                    $impianto_nome,
+                    $impianto_company_id,
+                    $impianto_structure_id,
+                    $impianto_department_id,
+                    $impianto_capacita_uta,
+                    $impianto_mandata,
+                    $impianto_ripresa,
+                    $impianto_espulsione,
+                    $impianto_presa_aria_esterna,
+                    $impianto_ultima_attivita,
+                    $impianto_data_inizio_utilizzo,
+                    $impianto_data_ultima_att
+                );
 
                 try {
                     if (mysqli_stmt_execute($stmt)) {
@@ -120,7 +132,9 @@ function showCompanyName()
     <script src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment/locale/it.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-BTBZNOArLzKrjzlkrMgXw0S51oBnuy0/HWkCARN0aSUSnt5N6VX/9n6tsQwnPVK68OzI6KARmxx3AeeBfM2y+g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        integrity="sha512-BTBZNOArLzKrjzlkrMgXw0S51oBnuy0/HWkCARN0aSUSnt5N6VX/9n6tsQwnPVK68OzI6KARmxx3AeeBfM2y+g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 </head>
 
@@ -136,7 +150,7 @@ function showCompanyName()
                     <div class="row">
                         <div class="col-12 col-lg-1">
                             <a class="btn transparent-btn" style="margin-top: -8px;" href="admin_create.php">
-                                <img alt= "Back" src="./images/back_button.png">
+                                <img alt="Back" src="./images/back_button.png">
                             </a>
                         </div>
                         <div class="col-12 col-lg-11">
@@ -147,7 +161,7 @@ function showCompanyName()
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="card-body">
-                                            <form id="departmentForm" method="post">
+                                            <form id="impiantoForm" method="post">
                                                 <div class="row">
 
                                                     <?php
@@ -176,7 +190,8 @@ function showCompanyName()
                                                         <div class="col-12 col-lg-6">
                                                             <div class="card">
                                                                 <div class="card-header">
-                                                                    <h5 class="card-title mb-0">Nome Uta</h5>
+                                                                    <h5 class="card-title mb-0">Nome Uta <span
+                                                                            style="color:red;">*</span></h5>
                                                                 </div>
                                                                 <div class="card-body"
                                                                     style="margin-bottom: 15px !important;">
@@ -188,7 +203,8 @@ function showCompanyName()
 
                                                             <div class="card">
                                                                 <div class="card-header">
-                                                                    <h5 class="card-title mb-0">Struttura</h5>
+                                                                    <h5 class="card-title mb-0">Struttura <span
+                                                                            style="color:red;">*</span></h5>
                                                                 </div>
                                                                 <div class="card-body">
                                                                     <select name="structure_name" id="structure_name"
@@ -251,7 +267,8 @@ function showCompanyName()
                                                                 <div class="card-body">
                                                                     <div class="form-group mb-4">
                                                                         <input readonly type="text" class="form-control"
-                                                                            id="datePicker" name="impianto_data_inizio_utilizzo"
+                                                                            id="datePicker"
+                                                                            name="impianto_data_inizio_utilizzo"
                                                                             placeholder="Data di Fatturazione"
                                                                             style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px;">
                                                                     </div>
@@ -262,7 +279,8 @@ function showCompanyName()
                                                         <div class="col-12 col-lg-6">
                                                             <div class="card">
                                                                 <div class="card-header">
-                                                                    <h5 class="card-title mb-0">Azienda</h5>
+                                                                    <h5 class="card-title mb-0">Azienda <span
+                                                                            style="color:red;">*</span></h5>
                                                                 </div>
                                                                 <div class="card-body">
                                                                     <div>
@@ -332,7 +350,8 @@ function showCompanyName()
                                                                 <div class="card-body">
                                                                     <div class="form-group mb-4">
                                                                         <input readonly type="text" class="form-control"
-                                                                            id="datePicker1" name="impianto_data_ultima_att"
+                                                                            id="datePicker1"
+                                                                            name="impianto_data_ultima_att"
                                                                             placeholder="Data di Fatturazione"
                                                                             style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px;">
                                                                     </div>
@@ -341,28 +360,9 @@ function showCompanyName()
 
                                                         </div>
                                                     </div>
-
-                                                    <div class="col-12 col-lg-12">
-                                                        <div class="card">
-                                                            <div class="card-header">
-                                                                <h5 class="card-title mb-0">Informazioni</h5>
-                                                            </div>
-                                                            <div class="card-body">
-                                                                <textarea class="form-control"
-                                                                    name="department_information" rows="3"
-                                                                    placeholder="Informazioni"></textarea>
-                                                            </div>
-                                                        </div>
-                                                    </div>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="col-12 d-flex justify-content-center">
-                                                        <button name="create_impianto" id="create_impianto"
-                                                            class="btn btn-success btn-lg">Crea un Impianto</button>
-                                                    </div>
-                                                </div>
+                                            </form>
                                         </div>
-                                        </form>
                                     </div>
                                 </div>
                             </div>

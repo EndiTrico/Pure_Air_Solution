@@ -7,7 +7,7 @@ include 'database/opendb.php';
 $id = $_GET['id'];
 $entity = $_GET['entity'];
 
-function showStructureForDepartment($id)
+function showStructureDropDown($id)
 {
     include 'database/config.php';
     include 'database/opendb.php';
@@ -615,7 +615,7 @@ function showDepartments($row, $id)
                     </div>
                     <div class="card-body">
                         <select name="structure_name" id="structure_name" class="form-select mb-3" disabled>
-                            <option disable selected value="">Seleziona una Struttura</option> ' . showStructureForDepartment($id) . '
+                            <option disable selected value="">Seleziona una Struttura</option> ' . showStructureDropDown($id) . '
                         </select>
                     </div>
                 </div>
@@ -934,6 +934,8 @@ function showBills($row)
                                     echo "Conto Bancario";
                                 } else if ($entity == "fatture") {
                                     echo "Fattura";
+                                } else if ($entity == "impianti") {
+                                    echo "Impianto";
                                 }
                                 ?>
                             </h1>

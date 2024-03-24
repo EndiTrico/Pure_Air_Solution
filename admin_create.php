@@ -86,8 +86,8 @@ include 'database/closedb.php';
                                                 <div class="card-header">
                                                     <a href="admin_create_impianto.php"
                                                         class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                        style="font-size: 28px; height: 200px; font-weight: bold;">Create
-                                                        Company</a>
+                                                        style="font-size: 28px; height: 200px; font-weight: bold;">Crea un Impianto
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>

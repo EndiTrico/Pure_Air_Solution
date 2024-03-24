@@ -33,10 +33,13 @@ if ($entity == "utenti") {
                 FROM FATTURE f
                 JOIN AZIENDE a ON a.AZIENDA_ID = f.AZIENDA_ID";
 } else if ($entity == "impianti") {
-    $query = "SELECT NOME_UTA, CAPACITA_UTA
-                FROM IMPIANTI";
+    $query = "SELECT i.IMPIANTO_ID, i.NOME_UTA, a.AZIENDA_NOME, s.STRUTTURA_NOME, r.REPARTO_NOME, i.CAPACITA_UTA,
+                i.DATA_DI_INIZIO_UTILIZZO, i.DATA_ULTIMA_ATT, i.E_ATTIVO
+                FROM IMPIANTI i
+                JOIN AZIENDE a ON i.AZIENDA_ID = a.AZIENDA_ID
+                JOIN STRUTTURE s ON i.STRUTTURA_ID = s.STRUTTURA_ID
+                JOIN REPARTI r ON i.REPARTO_ID = r.REPARTO_ID";
 }
-
 
 if (!empty($_SESSION['company_ID'])) {
     $sanitizedIDs = array_map('intval', $_SESSION['company_ID']);

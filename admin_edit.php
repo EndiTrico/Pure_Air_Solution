@@ -9,7 +9,7 @@ $entity = $_GET['entity'];
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['update_user'])) {
+    if (isset ($_POST['update_user'])) {
         $user_first_name = mysqli_real_escape_string($conn, $_POST['user_first_name']);
         $user_last_name = mysqli_real_escape_string($conn, $_POST['user_last_name']);
         $user_email = mysqli_real_escape_string($conn, $_POST['user_email']);
@@ -17,13 +17,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $user_role = mysqli_real_escape_string($conn, $_POST['user_role']);
         $user_position = mysqli_real_escape_string($conn, $_POST['user_position']);
         $user_number = mysqli_real_escape_string($conn, $_POST['user_number']);
-        if (!empty($_POST['user_companies'])) {
+        if (!empty ($_POST['user_companies'])) {
             $user_companies = $_POST['user_companies'];
         }
 
         $sql = "";
 
-        if (empty($user_password)) {
+        if (empty ($user_password)) {
             $sql = "UPDATE UTENTI 
                     SET NOME = ?, 
                         COGNOME = ?, 
@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         try {
             $stmt = mysqli_prepare($conn, $sql);
             if ($stmt) {
-                if (empty($user_password)) {
+                if (empty ($user_password)) {
                     mysqli_stmt_bind_param($stmt, "ssssisi", ...$params);
                 } else {
                     mysqli_stmt_bind_param($stmt, "ssssissi", ...$params);
@@ -65,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     mysqli_stmt_bind_param($stmt1, "i", $id);
                     mysqli_stmt_execute($stmt1);
 
-                    if (!empty($user_companies)) {
+                    if (!empty ($user_companies)) {
                         foreach ($user_companies as $company_id) {
                             $sql2 = "INSERT INTO UTENTI_AZIENDE (UTENTE_ID, AZIENDA_ID) VALUES (?, ?)";
 
@@ -89,7 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } catch (mysqli_sql_exception $e) {
             $errorMessage = "Error: " . $e->getMessage();
         }
-    } else if (isset($_POST['update_company'])) {
+    } else if (isset ($_POST['update_company'])) {
         $company_name = mysqli_real_escape_string($conn, $_POST['company_name']);
         $company_codice_fiscale = mysqli_real_escape_string($conn, $_POST['company_codice_fiscale']);
         $company_contact1 = mysqli_real_escape_string($conn, $_POST['company_contact1']);
@@ -171,7 +171,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             $errorMessage = "Errore: Impossibile Preparare l'Istruzione";
         }
-    } else if (isset($_POST['update_structure'])) {
+    } else if (isset ($_POST['update_structure'])) {
         $structure_name = mysqli_real_escape_string($conn, $_POST['structure_name']);
         $structure_company_id = $_POST['company_name'];
         $structure_address = mysqli_real_escape_string($conn, $_POST['structure_address']);
@@ -202,7 +202,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             $errorMessage = "Errore: Impossibile Eseguire l'Istruzione";
         }
-    } else if (isset($_POST['update_department'])) {
+    } else if (isset ($_POST['update_department'])) {
         $department_name = mysqli_real_escape_string($conn, $_POST['department_name']);
         $department_company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
         $department_structure_id = mysqli_real_escape_string($conn, $_POST['structure_name']);
@@ -233,7 +233,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             $errorMessage = "Errore: Impossibile Preparare l'Istruzione";
         }
-    } else if (isset($_POST['update_bank_account'])) {
+    } else if (isset ($_POST['update_bank_account'])) {
         $bank_name = mysqli_real_escape_string($conn, $_POST['bank_name']);
         $bank_company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
         $bank_IBAN = mysqli_real_escape_string($conn, $_POST['bank_iban']);
@@ -262,7 +262,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             $errorMessage = "Errore: Impossibile Preparare l'Istruzione";
         }
-    } else if (isset($_POST['update_bill'])) {
+    } else if (isset ($_POST['update_bill'])) {
         $bill_name = mysqli_real_escape_string($conn, $_POST['bill_name']);
         $bill_company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
         $bill_value = ROUND(($_POST['bill_value']), 2);
@@ -308,16 +308,52 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 include 'database/closedb.php';
 
-function showStructureForDepartment($id)
+function showDepartmentDropDown($entity)
 {
     include 'database/config.php';
     include 'database/opendb.php';
 
-    $sql = "SELECT s.STRUTTURA_ID, s.STRUTTURA_NOME 
-            FROM STRUTTURE s 
-            INNER JOIN REPARTI d ON s.STRUTTURA_ID = d.STRUTTURA_ID
-            WHERE d.REPARTO_ID = ?
-            LIMIT 1";
+    $id = $_GET['id'];
+
+    if ($entity == 'impianti') {
+        $sql = "SELECT r.REPARTO_ID, r.REPARTO_NOME 
+                FROM REPARTI r 
+                INNER JOIN IMPIANTI i ON r.REPARTO_ID = i.REPARTO_ID
+                WHERE i.IMPIANTO_ID = ?
+                LIMIT 1";
+    }
+
+    $stmt = mysqli_prepare($conn, $sql);
+    mysqli_stmt_bind_param($stmt, "i", $id);
+    mysqli_stmt_execute($stmt);
+    $execute = mysqli_stmt_get_result($stmt);
+    $row_retrieve = mysqli_fetch_assoc($execute);
+
+    include 'database/closedb.php';
+
+    return '<option selected value="' . htmlspecialchars($row_retrieve["REPARTO_ID"]) . '">' . htmlspecialchars($row_retrieve['REPARTO_NOME']) . '</option>';
+}
+
+function showStructureDropDown($entity)
+{
+    include 'database/config.php';
+    include 'database/opendb.php';
+
+    $id = $_GET['id'];
+
+    if ($entity == 'reparti') {
+        $sql = "SELECT s.STRUTTURA_ID, s.STRUTTURA_NOME 
+                FROM STRUTTURE s 
+                INNER JOIN REPARTI d ON s.STRUTTURA_ID = d.STRUTTURA_ID
+                WHERE d.REPARTO_ID = ?
+                LIMIT 1";
+    } else if ($entity == 'impianti') {
+        $sql = "SELECT s.STRUTTURA_ID, s.STRUTTURA_NOME 
+                FROM STRUTTURE s 
+                INNER JOIN IMPIANTI i ON s.STRUTTURA_ID = i.STRUTTURA_ID
+                WHERE i.REPARTO_ID = ?
+                LIMIT 1";
+    }
 
     $stmt = mysqli_prepare($conn, $sql);
     mysqli_stmt_bind_param($stmt, "i", $id);
@@ -353,6 +389,8 @@ function showCompaniesNameDropDown($entity)
         $sql = "SELECT AZIENDA_ID FROM BANCA_CONTI WHERE BANCA_CONTO_ID = ?";
     } else if ($entity == "fatture") {
         $sql = "SELECT AZIENDA_ID FROM FATTURE WHERE FATTURA_ID = ?";
+    } else if ($entity == "impianti") {
+        $sql = "SELECT AZIENDA_ID FROM IMPIANTI WHERE IMPIANTO_ID = ?";
     }
 
     $stmt3 = mysqli_prepare($conn, $sql);
@@ -456,6 +494,18 @@ function showForm()
         if ($result) {
             $row = mysqli_fetch_assoc($result);
             showBills($row);
+        }
+    } else if ($entity == "impianti") {
+        $query = "SELECT * FROM IMPIANTI WHERE IMPIANTO_ID = ?";
+
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, "i", $id);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        if ($result) {
+            $row = mysqli_fetch_assoc($result);
+            showImpianti($row);
         }
     }
 
@@ -941,7 +991,7 @@ function showDepartments($row, $id)
                     </div>
                     <div class="card-body">
                         <select name="structure_name" id="structure_name" class="form-select mb-3" required>
-                            <option disable selected value="">Seleziona una Struttura</option> ' . showStructureForDepartment($id) . '
+                            <option disable selected value="">Seleziona una Struttura</option> ' . showStructureDropDown("reparti") . '
                         </select>
                     </div>
                 </div>
@@ -1117,7 +1167,7 @@ function showBills($row)
                         <h5 class="card-title mb-0">IVA (%) <span
                             style="color:red;">*</span></h5>
                     </div>
-                    div class="card-body">
+                    <div class="card-body">
                         <input type="number" class="form-control" id="VAT" oninput="calculateValueWithVAT()"
                             name="bill_VAT" placeholder="IVA" min="0" max="100" step="any" value = "' . $row["IVA"] . '"
                             required>
@@ -1211,6 +1261,254 @@ function showBills($row)
 ';
 }
 
+function showImpianti($row)
+{
+    echo '
+<form id="impiantoForm" method="post">
+    <div class="row">
+        <div class="row">
+            <div class="col-12 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Nome Uta <span
+                                style="color:red;">*</span></h5>
+                    </div>
+                    <div class="card-body"
+                        style="margin-bottom: 15px !important;">
+                        <input type="text" class="form-control"
+                            name="impianto_nome" placeholder="Nome" value = "' . $row["NOME_UTA"] . '"
+                            required>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Struttura <span
+                                style="color:red;">*</span></h5>
+                    </div>
+                    <div class="card-body">
+                    <select name="structure_name" id="structure_name" class="form-select mb-3" required>
+                        <option disable selected value="">Seleziona una Struttura</option> ' . showStructureDropDown("impianti") . '
+                    </select>
+                </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Capacita Uta <span
+                                style="color:red;">*</span></h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="number" class="form-control" value = "' . $row["CAPACITA_UTA"] . '"
+                            id="impianto_capacita_uta"
+                            name="impianto_capacita_uta"
+                            placeholder="Capacita Uta" min=0
+                            max=100000000000000000000000000 step="any"
+                            required>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Ripresa <span
+                                style="color:red;">*</span></h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="number" class="form-control" value = "' . $row["RIPRESA"] . '"
+                            id="impianto_ripresa" name="impianto_ripresa"
+                            placeholder="Ripresa" min=0
+                            max=100000000000000000000000000 step="any"
+                            required>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Espulsione <span
+                                style="color:red;">*</span></h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="number" class="form-control" value = "' . $row["ESPULSIONE"] . '"
+                            id="impianto_espulsione"
+                            name="impianto_espulsione"
+                            placeholder="Espulsione" min=0
+                            max=100000000000000000000000000 step="any"
+                            required>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Data di Inizio Utilizzo
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group mb-4">
+                            <input readonly type="text" class="form-control"
+                                id="datePicker" value = "' . $row["DATA_DI_INIZIO_UTILIZZO"] . '"
+                                name="impianto_data_inizio_utilizzo"
+                                placeholder="Data di Fatturazione"
+                                style="background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat right 10px center; background-size: 16px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Azienda <span
+                                style="color:red;">*</span></h5>
+                    </div>
+                    <div class="card-body">
+                    <select class="form-select mb-3" name = "company_name" required>' .
+        showCompaniesNameDropDown("fatture") . '</select>
+               </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Reparto</h5>
+                    </div>
+                    <div class="card-body">
+                    <select name="structure_name" id="structure_name" class="form-select mb-3" required>
+                        <option disable selected value="">Seleziona una Struttura</option> ' . showDepartmentDropDown("impianti") . '
+                    </select>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Mandata <span
+                                style="color:red;">*</span></h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="number" class="form-control" value = "' . $row["MANDATA"] . '"
+                            id="impianto_mandata" name="impianto_mandata"
+                            placeholder="Mandata" min=0
+                            max=100000000000000000000000000 step="any"
+                            required>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Presa Aria Esterna <span
+                                style="color:red;">*</span></h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="number" class="form-control" value = "' . $row["PRESA_ARIA_ESTERNA"] . '"
+                            id="impianto_presa_aria_esterna"
+                            name="impianto_presa_aria_esterna"
+                            placeholder="Presa Aria Esterna" min=0
+                            max=100000000000000000000000000 step="any"
+                            required>
+                    </div>
+                </div>
+
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Ultima Attivita</h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" class="form-control" value = "' . $row["ULTIMA_ATTIVITA"] . '"
+                            name="impianto_ultima_attivita"
+                            placeholder="Ultima Attivita">
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Data Ultima Att
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group mb-4">
+                            <input readonly type="text" class="form-control" value = "' . $row["DATA_ULTIMA_ATT"] . '"
+                                id="datePicker1"
+                                name="impianto_data_ultima_att"
+                                placeholder="Data di Fatturazione"
+                                style="background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat right 10px center; background-size: 16px;">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
+</script>
+<script type="text/javascript">
+    moment.locale("it");
+
+    function capitalizeFirstLetter(word) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+    }
+
+    var picker = new Pikaday({
+        field: document.getElementById("datePicker"),
+        format: "YYYY-MM-DD",
+        i18n: {
+            previousMonth: "Mese Precedente",
+            nextMonth: "Mese Successivo",
+            months: moment.localeData().months().map(capitalizeFirstLetter),
+            weekdays: moment.localeData().weekdays().map(capitalizeFirstLetter),
+            weekdaysShort: moment.localeData().weekdaysShort().map(capitalizeFirstLetter)
+        },
+        onSelect: function () {
+            console.log(this.getMoment().format("Do MMMM YYYY"));
+        }
+    });
+
+    var picker = new Pikaday({
+        field: document.getElementById("datePicker1"),
+        format: "YYYY-MM-DD",
+        i18n: {
+            previousMonth: "Mese Precedente",
+            nextMonth: "Mese Successivo",
+            months: moment.localeData().months().map(capitalizeFirstLetter),
+            weekdays: moment.localeData().weekdays().map(capitalizeFirstLetter),
+            weekdaysShort: moment.localeData().weekdaysShort().map(capitalizeFirstLetter)
+        },
+        onSelect: function () {
+            console.log(this.getMoment().format("Do MMMM YYYY"));
+        }
+    });
+
+    $(document).ready(function () {
+        $("#company-dropdown").change(function () {
+            var companyID = $(this).val();
+            var post_id = "id=" + companyID;
+            $.ajax({
+                type: "POST",
+                url: "fetch_structures.php",
+                data: post_id,
+                cache: false,
+                success: function (structure) {
+                    $("#structure_name").html(structure);
+                }
+            });
+        });
+    });
+    $(document).ready(function () {
+        $("#structure_name").change(function () {
+            var companyID = $(this).val();
+            var post_id = "id=" + companyID;
+            $.ajax({
+                type: "POST",
+                url: "fetch_departments.php",
+                data: post_id,
+                cache: false,
+                success: function (department) {
+                    $("#department_name").html(department);
+                }
+            });
+        });
+    });
+</script>';
+}
 
 ?>
 
@@ -1282,6 +1580,8 @@ function showBills($row)
                                     echo "Aggiorna il Conto Bancario";
                                 } else if ($entity == "fatture") {
                                     echo "Aggiorna la Fattura";
+                                } else if ($entity == "impianti") {
+                                    echo "Aggiorna il Impianto";
                                 }
                                 ?>
                             </h1>
@@ -1291,7 +1591,7 @@ function showBills($row)
                             <div class="card">
                                 <div class="card-body">
                                     <?php
-                                    if (!empty($errorMessage)) {
+                                    if (!empty ($errorMessage)) {
                                         echo '<div class="col-12">
                                                 <div class="card">
                                                     <div class="card-header">
@@ -1300,7 +1600,7 @@ function showBills($row)
                                                     </div>                                                    
                                                 </div>
                                             </div>';
-                                    } else if (!empty($successfulMessage)) {
+                                    } else if (!empty ($successfulMessage)) {
                                         echo '<div class="col-12">
                                                     <div class="card">
                                                         <div class="card-header">
@@ -1338,8 +1638,8 @@ function showBills($row)
             i18n: {
                 previousMonth: 'Mese Precedente',
                 nextMonth: 'Mese Successivo',
-                months: moment.localeData().months().map(capitalizeFirstLetter), 
-                weekdays: moment.localeData().weekdays().map(capitalizeFirstLetter), 
+                months: moment.localeData().months().map(capitalizeFirstLetter),
+                weekdays: moment.localeData().weekdays().map(capitalizeFirstLetter),
                 weekdaysShort: moment.localeData().weekdaysShort().map(capitalizeFirstLetter)
             },
             onSelect: function () {
@@ -1353,8 +1653,8 @@ function showBills($row)
             i18n: {
                 previousMonth: 'Mese Precedente',
                 nextMonth: 'Mese Successivo',
-                months: moment.localeData().months().map(capitalizeFirstLetter), 
-                weekdays: moment.localeData().weekdays().map(capitalizeFirstLetter), 
+                months: moment.localeData().months().map(capitalizeFirstLetter),
+                weekdays: moment.localeData().weekdays().map(capitalizeFirstLetter),
                 weekdaysShort: moment.localeData().weekdaysShort().map(capitalizeFirstLetter)
             },
             onSelect: function () {
