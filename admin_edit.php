@@ -131,7 +131,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     DATA_ISCRIZIONE = ?,
                     DATA_SINISTRA = ?
                 WHERE 
-                    AZIENDA_ID = ?;";
+                    AZIENDA_ID = ?";
 
         $stmt = mysqli_prepare($conn, $sql);
 
@@ -294,6 +294,69 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $successfulMessage = "Fattura è Stata Aggiornata con Successo";
                 } else {
                     $errorMessage = "Errore: Impossibile Aggiornata la Fattura";
+                }
+            } catch (mysqli_sql_exception $e) {
+                $errorMessage = "Error: " . $e->getMessage();
+            }
+
+            mysqli_stmt_close($stmt);
+        } else {
+            $errorMessage = "Errore: Impossibile Preparare l'Istruzione";
+        }
+    } else if (isset ($_POST['update_impianto'])) {
+        $impianto_nome = mysqli_real_escape_string($conn, $_POST['impianto_nome']);
+        $impianto_capacita_uta = mysqli_real_escape_string($conn, $_POST['impianto_capacita_uta']);
+        $impianto_ripresa = mysqli_real_escape_string($conn, $_POST['impianto_ripresa']);
+        $impianto_espulsione = mysqli_real_escape_string($conn, $_POST['impianto_espulsione']);
+        $impianto_data_inizio_utilizzo = mysqli_real_escape_string($conn, $_POST['impianto_data_inizio_utilizzo']);
+        $impianto_mandata = mysqli_real_escape_string($conn, $_POST['impianto_mandata']);
+        $impianto_data_ultima_att = mysqli_real_escape_string($conn, $_POST['impianto_data_ultima_att']);
+        $impianto_ultima_attivita = mysqli_real_escape_string($conn, $_POST['impianto_ultima_attivita']);
+        $impianto_presa_aria_esterna = mysqli_real_escape_string($conn, $_POST['impianto_presa_aria_esterna']);
+
+        $impianto_company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
+        $impianto_structure_id = mysqli_real_escape_string($conn, $_POST['structure_name']);
+        $impianto_department_id = mysqli_real_escape_string($conn, $_POST['department_name']);
+
+        $sql = "UPDATE IMPIANTI 
+                SET NOME_UTA = ?,
+                    AZIENDA_ID = ?,
+                    STRUTTURA_ID = ?,
+                    REPARTO_ID = ?,
+                    CAPACITA_UTA = ?,
+                    MANDATA = ?,
+                    RIPRESA = ?,
+                    ESPULSIONE = ?,
+                    PRESA_ARIA_ESTERNA = ?,
+                    ULTIMA_ATTIVITA = ?,
+                    DATA_DI_INIZIO_UTILIZZO = ?,
+                    DATA_ULTIMA_ATT = ?
+                WHERE IMPIANTO_ID = ?";
+
+        $stmt = mysqli_prepare($conn, $sql);
+        if ($stmt) {
+            mysqli_stmt_bind_param(
+                $stmt,
+                "siiidddddsssi",
+                $impianto_nome,
+                $impianto_company_id,
+                $impianto_structure_id,
+                $impianto_department_id,
+                $impianto_capacita_uta,
+                $impianto_mandata,
+                $impianto_ripresa,
+                $impianto_espulsione,
+                $impianto_presa_aria_esterna,
+                $impianto_ultima_attivita,
+                $impianto_data_inizio_utilizzo,
+                $impianto_data_ultima_att,
+                $id
+            );
+            try {
+                if (mysqli_stmt_execute($stmt)) {
+                    $successfulMessage = "L'impianto è Stato Aggiornato con Successo";
+                } else {
+                    $errorMessage = "Errore: Impossibile Aggiornare l'Impianto";
                 }
             } catch (mysqli_sql_exception $e) {
                 $errorMessage = "Error: " . $e->getMessage();
@@ -1347,7 +1410,7 @@ function showImpianti($row)
                             <input readonly type="text" class="form-control"
                                 id="datePicker" value = "' . $row["DATA_DI_INIZIO_UTILIZZO"] . '"
                                 name="impianto_data_inizio_utilizzo"
-                                placeholder="Data di Fatturazione"
+                                placeholder="Data di Inizio Utilizzo"
                                 style="background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat right 10px center; background-size: 16px;">
                         </div>
                     </div>
@@ -1427,12 +1490,20 @@ function showImpianti($row)
                             <input readonly type="text" class="form-control" value = "' . $row["DATA_ULTIMA_ATT"] . '"
                                 id="datePicker1"
                                 name="impianto_data_ultima_att"
-                                placeholder="Data di Fatturazione"
+                                placeholder="Data Ultima Atte"
                                 style="background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat right 10px center; background-size: 16px;">
                         </div>
                     </div>
                 </div>
 
+                <div class="row">
+                    <div class="col-12 d-flex justify-content-center">
+                        <button name="update_impianto"
+                            id="updateImpiantoButton"
+                            class="btn btn-success btn-lg">Aggiorna il Impianto
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1561,11 +1632,12 @@ function showImpianti($row)
             <main class="content">
                 <div class="container-fluid p-0">
                     <div class="row">
-                        <div class="col-12 col-lg-1">
-                            <a class="btn transparent-btn" style="margin-top: -8px;"
-                                href="admin_display_entities.php"><img src="./images/back_button.png"></a>
+                        <div class="col-auto">
+                            <a class="btn transparent-btn" href="admin_display_entities.php">
+                                <img alt="Back" style="margin-top: -8px;" src="./images/back_button.png">
+                            </a>
                         </div>
-                        <div class="col-12 col-lg-11">
+                        <div class="col">
                             <h1 class="h3 mb-3">
                                 <?php
                                 if ($entity == "utenti") {
@@ -1581,7 +1653,7 @@ function showImpianti($row)
                                 } else if ($entity == "fatture") {
                                     echo "Aggiorna la Fattura";
                                 } else if ($entity == "impianti") {
-                                    echo "Aggiorna il Impianto";
+                                    echo "Aggiorna  l'Impianto";
                                 }
                                 ?>
                             </h1>

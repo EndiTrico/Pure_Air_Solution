@@ -29,13 +29,16 @@ if ($entity == "aziende") {
     $queryBankAccount = "UPDATE BANCA_CONTI
                         SET E_ATTIVO = 0
                         WHERE AZIENDA_ID = ?";
-
+    $queryImpianto = "UPDATE IMPIANTO 
+                        SET E_ATTIVO = 0
+                        WHERE AZIENDA_ID = ?";
 
     $stmtDepartment = mysqli_prepare($conn, $queryDepartment);
     $stmtStructure = mysqli_prepare($conn, $queryStructure);
     $stmtUser = mysqli_prepare($conn, $queryUser);
     $stmtCompany = mysqli_prepare($conn, $queryCompany);
     $stmtBankAccount = mysqli_prepare($conn, $queryBankAccount);
+    $stmtImpianto = mysqli_prepare($conn, $queryImpianto);
 
 
     mysqli_stmt_bind_param($stmtDepartment, "i", $id);
@@ -43,6 +46,7 @@ if ($entity == "aziende") {
     mysqli_stmt_bind_param($stmtUser, "i", $id);
     mysqli_stmt_bind_param($stmtCompany, "i", $id);
     mysqli_stmt_bind_param($stmtBankAccount, "i", $id);
+    mysqli_stmt_bind_param($stmtImpianto, "i", $id);
 
 
     mysqli_stmt_execute($stmtDepartment);
@@ -50,8 +54,10 @@ if ($entity == "aziende") {
     mysqli_stmt_execute($stmtUser);
     mysqli_stmt_execute($stmtCompany);
     mysqli_stmt_execute($stmtBankAccount);
+    mysqli_stmt_execute($stmtImpianto);
 
 } else if ($entity == "strutture") {
+    
     $queryDepartment = "UPDATE REPARTI 
                         SET E_ATTIVO = 0
                         WHERE STRUTTURA_ID = ?";

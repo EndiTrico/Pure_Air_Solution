@@ -8,7 +8,7 @@ $errorMessage = "";
 $successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['create_department'])) {
+    if (isset ($_POST['create_department'])) {
         $department_name = mysqli_real_escape_string($conn, $_POST['department_name']);
         $department_company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
         $department_structure_id = mysqli_real_escape_string($conn, $_POST['structure_name']);
@@ -113,13 +113,15 @@ function showCompanyName()
                 <div class="container-fluid p-0">
 
                     <div class="row">
-                        <div class="col-12 col-lg-1">
-                            <a class="btn transparent-btn" style="margin-top: -8px;" href="admin_create.php"><img src="./images/back_button.png">
+                        <div class="col-auto">
+                            <a class="btn transparent-btn" href="admin_create.php">
+                                <img alt="Back" style="margin-top: -8px;" src="./images/back_button.png">
                             </a>
                         </div>
-                        <div class="col-12 col-lg-11">
+                        <div class="col">
                             <h1 class="h3 mb-3">Crea un Reparto</h1>
                         </div>
+
                         <div class="row">
                             <div class="col-12">
                                 <div class="card">
@@ -129,7 +131,7 @@ function showCompanyName()
                                                 <div class="row">
 
                                                     <?php
-                                                    if (!empty($errorMessage)) {
+                                                    if (!empty ($errorMessage)) {
                                                         echo '<div class="col-12">
                                                             <div class="card">
                                                                 <div class="card-header">
@@ -138,7 +140,7 @@ function showCompanyName()
                                                                 </div>                                                    
                                                             </div>
                                                         </div>';
-                                                    } else if (!empty($successfulMessage)) {
+                                                    } else if (!empty ($successfulMessage)) {
                                                         echo '<div class="col-12">
                                                             <div class="card">
                                                                 <div class="card-header">
@@ -157,7 +159,9 @@ function showCompanyName()
                                                                     <h5 class="card-title mb-0">Nome</h5>
                                                                 </div>
                                                                 <div class="card-body">
-                                                                    <input type="text" class="form-control" name="department_name" placeholder="Nome" required>
+                                                                    <input type="text" class="form-control"
+                                                                        name="department_name" placeholder="Nome"
+                                                                        required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -178,7 +182,9 @@ function showCompanyName()
                                                                     <h5 class="card-title mb-0">Indirizzo</h5>
                                                                 </div>
                                                                 <div class="card-body">
-                                                                    <input type="text" class="form-control" name="department_address" placeholder="Indirizzo">
+                                                                    <input type="text" class="form-control"
+                                                                        name="department_address"
+                                                                        placeholder="Indirizzo">
                                                                 </div>
                                                             </div>
 
@@ -189,8 +195,10 @@ function showCompanyName()
                                                                     <h5 class="card-title mb-0">Struttura</h5>
                                                                 </div>
                                                                 <div class="card-body">
-                                                                    <select name="structure_name" id="structure_name" class="form-select mb-3" required>
-                                                                        <option disable selected value="">Seleziona una Struttura</option>
+                                                                    <select name="structure_name" id="structure_name"
+                                                                        class="form-select mb-3" required>
+                                                                        <option disable selected value="">Seleziona una
+                                                                            Struttura</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -199,7 +207,8 @@ function showCompanyName()
                                                                     <h5 class="card-title mb-0">Citta</h5>
                                                                 </div>
                                                                 <div class="card-body">
-                                                                    <input type="text" class="form-control" name="department_city" placeholder="Citta">
+                                                                    <input type="text" class="form-control"
+                                                                        name="department_city" placeholder="Citta">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -210,14 +219,17 @@ function showCompanyName()
                                                                     <h5 class="card-title mb-0">Informazioni</h5>
                                                                 </div>
                                                                 <div class="card-body">
-                                                                    <textarea class="form-control" name="department_information" rows="3" placeholder="Informazioni"></textarea>
+                                                                    <textarea class="form-control"
+                                                                        name="department_information" rows="3"
+                                                                        placeholder="Informazioni"></textarea>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12 d-flex justify-content-center">
-                                                            <button name="create_department" id="createDepartmentButton" class="btn btn-success btn-lg">Crea un Reparto</button>
+                                                            <button name="create_department" id="createDepartmentButton"
+                                                                class="btn btn-success btn-lg">Crea un Reparto</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -241,8 +253,8 @@ function showCompanyName()
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
     </script>
     <script type="text/javascript">
-        $(document).ready(function() {
-            $("#company-dropdown").change(function() {
+        $(document).ready(function () {
+            $("#company-dropdown").change(function () {
                 var companyID = $(this).val();
                 var post_id = 'id=' + companyID;
                 $.ajax({
@@ -250,7 +262,7 @@ function showCompanyName()
                     url: "fetch_structures.php",
                     data: post_id,
                     cache: false,
-                    success: function(cities) {
+                    success: function (cities) {
                         $("#structure_name").html(cities);
                     }
                 });

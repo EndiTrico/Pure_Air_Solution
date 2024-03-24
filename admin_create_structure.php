@@ -8,7 +8,7 @@ $errorMessage = "";
 $successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['create_structure'])) {
+    if (isset ($_POST['create_structure'])) {
         $structure_name = mysqli_real_escape_string($conn, $_POST['structure_name']);
         $structure_company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
         $structure_address = mysqli_real_escape_string($conn, $_POST['structure_address']);
@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                        WHERE STRUTTURA_NOME = ? 
                             AND AZIENDA_ID = ? 
                        LIMIT 1";
-        
+
         $stmtCheck = mysqli_prepare($conn, $queryCheck);
         if ($stmtCheck) {
             mysqli_stmt_bind_param($stmtCheck, "si", $structure_name, $structure_company_id);
@@ -123,12 +123,15 @@ function showCompanyName()
             <main class="content">
                 <div class="container-fluid p-0">
                     <div class="row">
-                        <div class="col-12 col-lg-1">
-                            <a class="btn transparent-btn" style="margin-top: -8px;" href="admin_create.php"><img src="./images/back_button.png"></a>
+                        <div class="col-auto">
+                            <a class="btn transparent-btn" href="admin_create.php">
+                                <img alt="Back" style="margin-top: -8px;" src="./images/back_button.png">
+                            </a>
                         </div>
-                        <div class="col-12 col-lg-11">
+                        <div class="col">
                             <h1 class="h3 mb-3">Crea una Struttura</h1>
                         </div>
+
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
@@ -136,7 +139,7 @@ function showCompanyName()
                                         <form id="structureForm" method="post">
                                             <div class="row">
                                                 <?php
-                                                if (!empty($errorMessage)) {
+                                                if (!empty ($errorMessage)) {
                                                     echo '<div class="col-12">
                                                             <div class="card">
                                                                 <div class="card-header">
@@ -145,7 +148,7 @@ function showCompanyName()
                                                                 </div>                                                    
                                                             </div>
                                                         </div>';
-                                                } else if (!empty($successfulMessage)) {
+                                                } else if (!empty ($successfulMessage)) {
                                                     echo '<div class="col-12">
                                                             <div class="card">
                                                                 <div class="card-header">
@@ -161,10 +164,12 @@ function showCompanyName()
                                                     <div class="col-12 col-lg-6">
                                                         <div class="card">
                                                             <div class="card-header">
-                                                                <h5 class="card-title mb-0">Nome <span style = "color:red;">*</span></h5>
+                                                                <h5 class="card-title mb-0">Nome <span
+                                                                        style="color:red;">*</span></h5>
                                                             </div>
                                                             <div class="card-body" style="height: 88px !important;">
-                                                                <input type="text" class="form-control" name="structure_name" placeholder="Nome" required>
+                                                                <input type="text" class="form-control"
+                                                                    name="structure_name" placeholder="Nome" required>
                                                             </div>
                                                         </div>
                                                         <div class="card">
@@ -180,7 +185,8 @@ function showCompanyName()
                                                     <div class="col-12 col-lg-6">
                                                         <div class="card">
                                                             <div class="card-header">
-                                                                <h5 class="card-title mb-0">Aziende <span style = "color:red;">*</span></h5>
+                                                                <h5 class="card-title mb-0">Aziende <span
+                                                                        style="color:red;">*</span></h5>
                                                             </div>
                                                             <div class="card-body">
                                                                 <div>
@@ -213,7 +219,8 @@ function showCompanyName()
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-12 d-flex justify-content-center">
-                                                        <button name="create_structure" id="createStructureButton" class="btn btn-success btn-lg">Crea una Struttura</button>
+                                                        <button name="create_structure" id="createStructureButton"
+                                                            class="btn btn-success btn-lg">Crea una Struttura</button>
                                                     </div>
                                                 </div>
                                             </div>

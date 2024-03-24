@@ -148,14 +148,15 @@ function showCompanyName()
                 <div class="container-fluid p-0">
 
                     <div class="row">
-                        <div class="col-12 col-lg-1">
-                            <a class="btn transparent-btn" style="margin-top: -8px;" href="admin_create.php">
-                                <img alt="Back" src="./images/back_button.png">
+                        <div class="col-auto">
+                            <a class="btn transparent-btn" href="admin_create.php">
+                                <img alt="Back" style="margin-top: -8px;" src="./images/back_button.png">
                             </a>
                         </div>
-                        <div class="col-12 col-lg-11">
+                        <div class="col">
                             <h1 class="h3 mb-3">Crea un Impianto</h1>
                         </div>
+
                         <div class="row">
                             <div class="col-12">
                                 <div class="card">
@@ -357,7 +358,13 @@ function showCompanyName()
                                                                     </div>
                                                                 </div>
                                                             </div>
-
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-12 d-flex justify-content-center">
+                                                                <button name="create_impianto" id="createImpiantoButton"
+                                                                    class="btn btn-success btn-lg">Crea un
+                                                                    Impianto</button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>

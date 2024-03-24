@@ -7,16 +7,52 @@ include 'database/opendb.php';
 $id = $_GET['id'];
 $entity = $_GET['entity'];
 
-function showStructureDropDown($id)
+function showDepartmentDropDown($entity)
 {
     include 'database/config.php';
     include 'database/opendb.php';
 
-    $sql = "SELECT s.STRUTTURA_ID, s.STRUTTURA_NOME 
-            FROM STRUTTURE s 
-            INNER JOIN REPARTI d ON s.STRUTTURA_ID = d.STRUTTURA_ID
-            WHERE d.REPARTO_ID = ?
-            LIMIT 1";
+    $id = $_GET['id'];
+
+    if ($entity == 'impianti') {
+        $sql = "SELECT r.REPARTO_ID, r.REPARTO_NOME 
+                FROM REPARTI r 
+                INNER JOIN IMPIANTI i ON r.REPARTO_ID = i.REPARTO_ID
+                WHERE i.IMPIANTO_ID = ?
+                LIMIT 1";
+    }
+
+    $stmt = mysqli_prepare($conn, $sql);
+    mysqli_stmt_bind_param($stmt, "i", $id);
+    mysqli_stmt_execute($stmt);
+    $execute = mysqli_stmt_get_result($stmt);
+    $row_retrieve = mysqli_fetch_assoc($execute);
+
+    include 'database/closedb.php';
+
+    return '<option selected value="' . htmlspecialchars($row_retrieve["REPARTO_ID"]) . '">' . htmlspecialchars($row_retrieve['REPARTO_NOME']) . '</option>';
+}
+
+function showStructureDropDown($entity)
+{
+    include 'database/config.php';
+    include 'database/opendb.php';
+
+    $id = $_GET['id'];
+
+    if ($entity == 'reparti') {
+        $sql = "SELECT s.STRUTTURA_ID, s.STRUTTURA_NOME 
+                FROM STRUTTURE s 
+                INNER JOIN REPARTI d ON s.STRUTTURA_ID = d.STRUTTURA_ID
+                WHERE d.REPARTO_ID = ?
+                LIMIT 1";
+    } else if ($entity == 'impianti') {
+        $sql = "SELECT s.STRUTTURA_ID, s.STRUTTURA_NOME 
+                FROM STRUTTURE s 
+                INNER JOIN IMPIANTI i ON s.STRUTTURA_ID = i.STRUTTURA_ID
+                WHERE i.REPARTO_ID = ?
+                LIMIT 1";
+    }
 
     $stmt = mysqli_prepare($conn, $sql);
     mysqli_stmt_bind_param($stmt, "i", $id);
@@ -52,6 +88,8 @@ function showCompaniesNameDropDown($entity)
         $sql = "SELECT AZIENDA_ID FROM BANCA_CONTI WHERE BANCA_CONTO_ID = ?";
     } else if ($entity == "fatture") {
         $sql = "SELECT AZIENDA_ID FROM FATTURE WHERE FATTURA_ID = ?";
+    } else if ($entity == "impianti") {
+        $sql = "SELECT AZIENDA_ID FROM IMPIANTI WHERE IMPIANTO_ID = ?";
     }
 
     $stmt3 = mysqli_prepare($conn, $sql);
@@ -69,7 +107,6 @@ function showCompaniesNameDropDown($entity)
     if ($company && $stmt3) {
         while ($row = mysqli_fetch_assoc($company)) {
             $selected = (in_array($row['AZIENDA_ID'], $selectedOptions)) ? 'selected' : '';
-
             $companyDropDown .= '<option ' . $selected . ' value="' . $row['AZIENDA_ID'] . '">' . htmlspecialchars($row['AZIENDA_NOME']) . '</option>';
         }
     } else {
@@ -80,7 +117,6 @@ function showCompaniesNameDropDown($entity)
 
     return $companyDropDown;
 }
-
 
 function showForm()
 {
@@ -156,6 +192,18 @@ function showForm()
         if ($result) {
             $row = mysqli_fetch_assoc($result);
             showBills($row);
+        }
+    } else if ($entity == "impianti") {
+        $query = "SELECT * FROM IMPIANTI WHERE IMPIANTO_ID = ?";
+
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, "i", $id);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        if ($result) {
+            $row = mysqli_fetch_assoc($result);
+            showImpianti($row);
         }
     }
 
@@ -615,7 +663,7 @@ function showDepartments($row, $id)
                     </div>
                     <div class="card-body">
                         <select name="structure_name" id="structure_name" class="form-select mb-3" disabled>
-                            <option disable selected value="">Seleziona una Struttura</option> ' . showStructureDropDown($id) . '
+                            <option disable selected value="">Seleziona una Struttura</option> ' . showStructureDropDown("reparti") . '
                         </select>
                     </div>
                 </div>
@@ -863,6 +911,178 @@ function showBills($row)
 ';
 }
 
+function showImpianti($row)
+{
+    echo '
+<form id="impiantoForm" method="post">
+    <div class="row">
+        <div class="row">
+            <div class="col-12 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Nome Uta</h5>
+                    </div>
+                    <div class="card-body"
+                        style="margin-bottom: 15px !important;">
+                        <input type="text" class="form-control" disabled
+                            name="impianto_nome" placeholder="Nome" value = "' . $row["NOME_UTA"] . '"
+                            >
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Struttura</h5>
+                    </div>
+                    <div class="card-body">
+                    <select name="structure_name" id="structure_name" class="form-select mb-3" disabled>
+                        <option disable selected value="">Seleziona una Struttura</option> ' . showStructureDropDown("impianti") . '
+                    </select>
+                </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Capacita Uta</h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="number" class="form-control" value = "' . $row["CAPACITA_UTA"] . '"
+                            id="impianto_capacita_uta"
+                            name="impianto_capacita_uta"
+                            placeholder="Capacita Uta" min=0
+                            max=100000000000000000000000000 step="any"
+                            disabled>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Ripresa</h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="number" class="form-control" value = "' . $row["RIPRESA"] . '"
+                            id="impianto_ripresa" name="impianto_ripresa" 
+                            placeholder="Ripresa" min=0 
+                            max=100000000000000000000000000 step="any"
+                            disabled>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Espulsione</h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="number" class="form-control" value = "' . $row["ESPULSIONE"] . '"
+                            id="impianto_espulsione"
+                            name="impianto_espulsione"
+                            placeholder="Espulsione" min=0
+                            max=100000000000000000000000000 step="any"
+                            disabled>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Data di Inizio Utilizzo
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group mb-4">
+                            <input readonly type="text" class="form-control" disabled
+                                id="datePicker" value = "' . $row["DATA_DI_INIZIO_UTILIZZO"] . '"
+                                name="impianto_data_inizio_utilizzo"
+                                placeholder="Data di Inizio Utilizzo"
+                                style="background: #E9ECEF url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat right 10px center; background-size: 16px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Azienda</h5>
+                    </div>
+                    <div class="card-body">
+                    <select class="form-select mb-3" name = "company_name" disabled>' .
+        showCompaniesNameDropDown("fatture") . '</select>
+               </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Reparto</h5>
+                    </div>
+                    <div class="card-body">
+                    <select name="structure_name" id="structure_name" class="form-select mb-3" disabled>
+                        <option disable selected value="">Seleziona una Struttura</option> ' . showDepartmentDropDown("impianti") . '
+                    </select>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Mandata</h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="number" class="form-control" value = "' . $row["MANDATA"] . '"
+                            id="impianto_mandata" name="impianto_mandata" 
+                            placeholder="Mandata" min=0
+                            max=100000000000000000000000000 step="any"
+                            disabled>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Presa Aria Esterna</h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="number" class="form-control" value = "' . $row["PRESA_ARIA_ESTERNA"] . '"
+                            id="impianto_presa_aria_esterna"
+                            name="impianto_presa_aria_esterna"
+                            placeholder="Presa Aria Esterna" min=0
+                            max=100000000000000000000000000 step="any"
+                            disabled>
+                    </div>
+                </div>
+
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Ultima Attivita</h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" class="form-control" value = "' . $row["ULTIMA_ATTIVITA"] . '"
+                            name="impianto_ultima_attivita" disabled
+                            placeholder="Ultima Attivita">
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Data Ultima Att
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group mb-4">
+                            <input readonly type="text" class="form-control" value = "' . $row["DATA_ULTIMA_ATT"] . '"
+                                id="datePicker1" disabled
+                                name="impianto_data_ultima_att"
+                                placeholder="Data Ultima Att"
+                                style="background: #E9ECEF url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat right 10px center; background-size: 16px;">
+                        <div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
+</script>';
+}
+
 
 ?>
 
@@ -915,11 +1135,12 @@ function showBills($row)
             <main class="content">
                 <div class="container-fluid p-0">
                     <div class="row">
-                        <div class="col-12 col-lg-1">
-                            <a class="btn transparent-btn" style="margin-top: -8px;"
-                                href="client_display_entities.php"><img src="./images/back_button.png"></a>
+                        <div class="col-auto">
+                            <a class="btn transparent-btn" href="client_display_entities.php">
+                                <img alt="Back" style="margin-top: -8px;" src="./images/back_button.png">
+                            </a>
                         </div>
-                        <div class="col-12 col-lg-11">
+                        <div class="col">
                             <h1 class="h3 mb-3">
                                 <?php
                                 if ($entity == "utenti") {
@@ -945,7 +1166,7 @@ function showBills($row)
                             <div class="card">
                                 <div class="card-body">
                                     <?php
-                                    if (!empty($errorMessage)) {
+                                    if (!empty ($errorMessage)) {
                                         echo '<div class="col-12">
                                                 <div class="card">
                                                     <div class="card-header">
@@ -954,7 +1175,7 @@ function showBills($row)
                                                     </div>                                                    
                                                 </div>
                                             </div>';
-                                    } else if (!empty($successfulMessage)) {
+                                    } else if (!empty ($successfulMessage)) {
                                         echo '<div class="col-12">
                                                     <div class="card">
                                                         <div class="card-header">

@@ -168,13 +168,15 @@ function showAllCompanies()
             <main class="content">
                 <div class="container-fluid p-0">
                     <div class="row">
-                        <div class="col-12 col-lg-1">
-                            <a class="btn transparent-btn" style="margin-top: -8px;" href="admin_create.php"><img
-                                    src="./images/back_button.png"></a>
+                        <div class="col-auto">
+                            <a class="btn transparent-btn" href="admin_create.php">
+                                <img alt="Back" style="margin-top: -8px;" src="./images/back_button.png">
+                            </a>
                         </div>
-                        <div class="col-12 col-lg-11">
+                        <div class="col">
                             <h1 class="h3 mb-3">Crea un Utente</h1>
                         </div>
+
 
                         <div class="col-12">
                             <div class="card">
@@ -344,9 +346,9 @@ function showAllCompanies()
                         });
                     });
 
-                    let 
+                    let
                         passwordInput = document.getElementById('password');
-                        iconPassword = document.getElementById('eyeIconPassword');
+                    iconPassword = document.getElementById('eyeIconPassword');
 
                     function togglePassword() {
                         if (passwordInput.type === 'password') {

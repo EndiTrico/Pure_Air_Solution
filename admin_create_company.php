@@ -8,7 +8,7 @@ $errorMessage = "";
 $successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['create_company'])) {
+    if (isset ($_POST['create_company'])) {
         $company_name = mysqli_real_escape_string($conn, $_POST['company_name']);
         $company_codice_fiscale = mysqli_real_escape_string($conn, $_POST['company_codice_fiscale']);
         $company_contact1 = mysqli_real_escape_string($conn, $_POST['company_contact1']);
@@ -98,13 +98,15 @@ include 'database/closedb.php';
                 <div class="container-fluid p-0">
 
                     <div class="row">
-                        <div class="col-12 col-lg-1">
-                            <a class="btn transparent-btn" style="margin-top: -8px;" href="admin_create.php"><img
-                                    src="./images/back_button.png"></a>
+                        <div class="col-auto">
+                            <a class="btn transparent-btn" href="admin_create.php">
+                                <img alt="Back" style="margin-top: -8px;" src="./images/back_button.png">
+                            </a>
                         </div>
-                        <div class="col-12 col-lg-11">
+                        <div class="col">
                             <h1 class="h3 mb-3">Crea un Azienda</h1>
                         </div>
+
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
@@ -113,7 +115,7 @@ include 'database/closedb.php';
                                             <div class="row">
 
                                                 <?php
-                                                if (!empty($errorMessage)) {
+                                                if (!empty ($errorMessage)) {
                                                     echo '<div class="col-12">
                                                             <div class="card">
                                                                 <div class="card-header">
@@ -122,7 +124,7 @@ include 'database/closedb.php';
                                                                 </div>                                                    
                                                             </div>
                                                         </div>';
-                                                } else if (!empty($successfulMessage)) {
+                                                } else if (!empty ($successfulMessage)) {
                                                     echo '<div class="col-12">
                                                             <div class="card">
                                                                 <div class="card-header">
@@ -143,8 +145,7 @@ include 'database/closedb.php';
                                                             </div>
                                                             <div class="card-body">
                                                                 <input type="text" class="form-control"
-                                                                    name="company_name" placeholder="Nome"
-                                                                    required>
+                                                                    name="company_name" placeholder="Nome" required>
                                                             </div>
                                                         </div>
                                                         <div class="card">

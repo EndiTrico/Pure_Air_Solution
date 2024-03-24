@@ -100,6 +100,12 @@ if ($entity == 'utenti') {
     $update = "UPDATE " . $entity .
         " SET E_PAGATO = 1 
                 WHERE FATTURA_ID = ?";
+} else if ($entity == "impianti"){
+    $isActive = 1;
+
+    $update = "UPDATE " . $entity .
+        " SET E_ATTIVO = 1 
+                WHERE IMPIANTO_ID = ?";
 }
 
 if ($isActive == 0) {
