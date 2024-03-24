@@ -13,7 +13,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $bank_company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
         $bank_IBAN = mysqli_real_escape_string($conn, $_POST['bank_iban']);
 
-
         $queryCheck = "SELECT BANCA_CONTO_ID FROM BANCA_CONTI 
                        WHERE BANCA_NOME = ? 
                             AND IBAN = ?
