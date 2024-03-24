@@ -28,7 +28,7 @@ function validateLogin($email, $password)
     mysqli_stmt_close($stmt);
     include 'database/closedb.php';
 
-    return ['success' => false, 'message' => "Invalid credentials!"];
+    return ['success' => false, 'message' => "Credenziali non Valide!"];
 }
 
 

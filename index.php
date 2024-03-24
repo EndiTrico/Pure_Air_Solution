@@ -102,7 +102,7 @@ unset($_SESSION['errorMessage']);
                 <?php if (!empty($errorMessage)) { ?>
                     <script>
                         Swal.fire({
-                            title: "Unsuccessful Login",
+                            title: "Accesso non Riuscito",
                             text: "<?php echo $errorMessage; ?>",
                             icon: "error",
                             showCancelButton: false,
