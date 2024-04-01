@@ -125,7 +125,7 @@ function showCompanyName()
                         <div class="col">
                             <h1 class="h3 mb-3">Crea una Fattura</h1>
                         </div>
-                        
+
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
@@ -155,45 +155,30 @@ function showCompanyName()
                                                 ?>
 
                                                 <div class="row">
-                                                    <div class="col-12 col-lg-6">
-                                                        <div class="card">
-                                                            <div class="card-header">
-                                                                <h5 class="card-title mb-0">Il Nome Della Fattura <span
-                                                                        style="color:red;">*</span></h5>
-                                                            </div>
-                                                            <div class="card-body">
-                                                                <input type="text" class="form-control" name="bill_name"
-                                                                    placeholder="Il Nome Della Fattura" required>
-                                                            </div>
-                                                        </div>
-                                                        <div class="card">
-                                                            <div class="card-header">
-                                                                <h5 class="card-title mb-0">Valore <span
-                                                                        style="color:red;">*</span></h5>
-                                                            </div>
-                                                            <div class="card-body">
+                                                    <div class="col-12">
+                                                        <div class="mb-3 row">
+                                                            <h5 class="card-title col-sm-2 col-form-label">Valore<span
+                                                                    style="color:red;">*</span></h5>
+                                                            <div class="col-sm-4">
                                                                 <input type="number" class="form-control" id="value"
                                                                     oninput="calculateValueWithVAT()" name="bill_value"
                                                                     placeholder="Valore" min=0
                                                                     max=100000000000000000000000000 step="any" required>
                                                             </div>
                                                         </div>
-                                                        <div class="card">
-                                                            <div class="card-header">
-                                                                <h5 class="card-title mb-0">Aziende <span
-                                                                        style="color:red;">*</span></h5>
-                                                            </div>
-                                                            <div class="card-body">
-                                                                <div>
-                                                                    <?php echo showCompanyName() ?>
-                                                                </div>
+
+                                                        <div class="mb-3 row">
+                                                            <h5 class="card-title col-sm-2 col-form-label">Aziende<span
+                                                                    style="color:red;">*</span></h5>
+                                                            <div class="col-sm-4">
+                                                                <?php echo showCompanyName() ?>
                                                             </div>
                                                         </div>
-                                                        <div class="card">
-                                                            <div class="card-header">
-                                                                <h5 class="card-title mb-0">Data di Fatturazione</h5>
-                                                            </div>
-                                                            <div class="card-body">
+
+                                                        <div class="mb-3 row">
+                                                            <h5 class="card-title col-sm-2 col-form-label">Data di
+                                                                Fatturazione</h5>
+                                                            <div class="col-sm-4">
                                                                 <div class="form-group mb-4">
                                                                     <input readonly type="text" class="form-control"
                                                                         id="datePicker" name="bill_billing_date"
@@ -202,37 +187,33 @@ function showCompanyName()
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-12 col-lg-6">
-                                                        <div class="card">
-                                                            <div class="card-header">
-                                                                <h5 class="card-title mb-0">Valore Iva Inclusa</h5>
-                                                            </div>
-                                                            <div class="card-body">
+
+                                                        <div class="mb-3 row">
+                                                            <h5 class="card-title col-sm-2 col-form-label">Valore Iva
+                                                                Inclusa</h5>
+                                                            <div class="col-sm-4">
                                                                 <input type="number" class="form-control"
                                                                     id="bill_withVAT" name="bill_withVAT"
                                                                     placeholder="Valore Iva Inclusa" min=0
                                                                     max=100000000000000000000000000 step="any" readonly>
                                                             </div>
                                                         </div>
-                                                        <div class="card">
-                                                            <div class="card-header">
-                                                                <h5 class="card-title mb-0">IVA (%) <span
-                                                                        style="color:red;">*</span></h5>
-                                                            </div>
-                                                            <div class="card-body">
+
+                                                        <div class="mb-3 row">
+                                                            <h5 class="card-title col-sm-2 col-form-label">IVA (%)<span
+                                                                    style="color:red;">*</span></h5>
+                                                            <div class="col-sm-4">
                                                                 <input type="number" class="form-control" id="VAT"
                                                                     oninput="calculateValueWithVAT()" name="bill_VAT"
                                                                     placeholder="IVA" min="0" max="100" step="any"
                                                                     required>
                                                             </div>
                                                         </div>
-                                                        <div class="card">
-                                                            <div class="card-header">
-                                                                <h5 class="card-title mb-0">Moneta <span
-                                                                        style="color:red;">*</span></h5>
-                                                            </div>
-                                                            <div class="card-body">
+
+                                                        <div class="mb-3 row">
+                                                            <h5 class="card-title col-sm-2 col-form-label">Moneta<span
+                                                                    style="color:red;">*</span></h5>
+                                                            <div class="col-sm-4">
                                                                 <div class="form-group">
                                                                     <select class="form-select mb-3"
                                                                         name="bill_currency" required>
@@ -272,11 +253,11 @@ function showCompanyName()
                                                             </div>
                                                         </div>
 
-                                                        <div class="card">
-                                                            <div class="card-header">
-                                                                <h5 class="card-title mb-0">Data di Pagamento</h5>
-                                                            </div>
-                                                            <div class="card-body">
+                                                        <div class="mb-3 row">
+                                                            <h5 class="card-title col-sm-2 col-form-label">Data di
+                                                                Pagamento
+                                                            </h5>
+                                                            <div class="col-sm-4">
                                                                 <div class="form-group mb-4">
                                                                     <input readonly type="text" class="form-control"
                                                                         id="datePicker1" name="bill_payment_date"
@@ -285,25 +266,25 @@ function showCompanyName()
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-12 col-lg-12">
-                                                        <div class="card">
-                                                            <div class="card-header">
-                                                                <h5 class="card-title mb-0">Descrizione</h5>
-                                                            </div>
-                                                            <div class="card-body">
+
+                                                        <div class="mb-3 row">
+                                                            <h5 class="card-title col-sm-2 col-form-label">Descrizione
+                                                            </h5>
+                                                            <div class="col-sm-4">
+
                                                                 <textarea class="form-control" name="bill_information"
                                                                     rows="3" placeholder="Descrizione"></textarea>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-12 d-flex justify-content-center">
-                                                            <button name="create_bill" id="createBillButton"
-                                                                class="btn btn-success btn-lg">Crea una Fattura</button>
+
+                                                        <div class="row">
+                                                            <div class="col-12 d-flex justify-content-center">
+                                                                <button name="create_bill" id="createBillButton"
+                                                                    class="btn btn-success btn-lg">Crea una
+                                                                    Fattura</button>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
                                         </form>
                                     </div>
                                 </div>

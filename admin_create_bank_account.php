@@ -158,37 +158,29 @@ function showCompanyName()
                                                 ?>
 
                                                 <div class="row">
-                                                    <div class="col-12 col-lg-6">
+                                                    <div class="col-12">
 
-                                                        <div class="card">
-                                                            <div class="card-header">
-                                                                <h5 class="card-title mb-0">Il Nome Della Banca <span
-                                                                        style="color:red;">*</span></h5>
-                                                            </div>
-                                                            <div class="card-body">
+                                                        <div class="mb-3 row">
+                                                            <h5 class="card-title col-sm-2 col-form-label">Il Nome Della
+                                                                Banca<span style="color:red;">*</span></h5>
+                                                            <div class="col-sm-4">
                                                                 <input type="text" class="form-control" name="bank_name"
                                                                     placeholder="Il Nome Della Banca" required>
                                                             </div>
                                                         </div>
-                                                        <div class="card">
-                                                            <div class="card-header">
-                                                                <h5 class="card-title mb-0">Aziende <span
-                                                                        style="color:red;">*</span></h5>
-                                                            </div>
-                                                            <div class="card-body">
-                                                                <div>
-                                                                    <?php echo showCompanyName() ?>
-                                                                </div>
+                                                        
+                                                        <div class="mb-3 row">
+                                                            <h5 class="card-title col-sm-2 col-form-label">Aziende <span
+                                                                    style="color:red;">*</span></h5>
+                                                            <div class="col-sm-4">
+                                                                <?php echo showCompanyName() ?>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-12 col-lg-6">
-                                                        <div class="card">
-                                                            <div class="card-header">
-                                                                <h5 class="card-title mb-0">IBAN <span
-                                                                        style="color:red;">*</span></h5>
-                                                            </div>
-                                                            <div class="card-body">
+
+                                                        <div class="mb-3 row">
+                                                            <h5 class="card-title col-sm-2 col-form-label">IBAN<span
+                                                                    style="color:red;">*</span></h5>
+                                                            <div class="col-sm-4">
                                                                 <input type="text" class="form-control" name="bank_iban"
                                                                     placeholder="IBAN" required>
                                                             </div>
@@ -211,7 +203,6 @@ function showCompanyName()
                     </div>
                 </div>
             </main>
-
             <?php
             include "footer.php";
             ?>

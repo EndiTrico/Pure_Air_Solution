@@ -153,48 +153,41 @@ function showCompanyName()
                                                     ?>
 
                                                     <div class="row">
-                                                        <div class="col-12 col-lg-12">
-                                                            <div class="card">
-                                                                <div class="card-header">
-                                                                    <h5 class="card-title mb-0">Nome</h5>
-                                                                </div>
-                                                                <div class="card-body">
+                                                        <div class="col-12">
+                                                            <div class="mb-3 row">
+                                                                <h5 class="card-title col-sm-2 col-form-label">Nome<span
+                                                                style="color:red;">*</span></h5>
+                                                                <div class="col-sm-4">
                                                                     <input type="text" class="form-control"
                                                                         name="department_name" placeholder="Nome"
                                                                         required>
                                                                 </div>
                                                             </div>
-                                                        </div>
 
-                                                        <div class="col-12 col-lg-6">
-                                                            <div class="card">
-                                                                <div class="card-header">
-                                                                    <h5 class="card-title mb-0">Azienda</h5>
-                                                                </div>
-                                                                <div class="card-body">
-                                                                    <div>
-                                                                        <?php echo showCompanyName() ?>
-                                                                    </div>
+                                                            <div class="mb-3 row">
+                                                                <h5 class="card-title col-sm-2 col-form-label">Azienda<span
+                                                                style="color:red;">*</span>
+                                                                </h5>
+                                                                <div class="col-sm-4">
+                                                                    <?php echo showCompanyName() ?>
                                                                 </div>
                                                             </div>
-                                                            <div class="card">
-                                                                <div class="card-header">
-                                                                    <h5 class="card-title mb-0">Indirizzo</h5>
-                                                                </div>
-                                                                <div class="card-body">
+
+                                                            <div class="mb-3 row">
+                                                                <h5 class="card-title col-sm-2 col-form-label">Indirizzo
+                                                                </h5>
+                                                                <div class="col-sm-4">
                                                                     <input type="text" class="form-control"
                                                                         name="department_address"
                                                                         placeholder="Indirizzo">
                                                                 </div>
                                                             </div>
 
-                                                        </div>
-                                                        <div class="col-12 col-lg-6">
-                                                            <div class="card">
-                                                                <div class="card-header">
-                                                                    <h5 class="card-title mb-0">Struttura</h5>
-                                                                </div>
-                                                                <div class="card-body">
+                                                            <div class="mb-3 row">
+                                                                <h5 class="card-title col-sm-2 col-form-label">Struttura<span
+                                                                style="color:red;">*</span>
+                                                                </h5>
+                                                                <div class="col-sm-4">
                                                                     <select name="structure_name" id="structure_name"
                                                                         class="form-select mb-3" required>
                                                                         <option disable selected value="">Seleziona una
@@ -202,23 +195,20 @@ function showCompanyName()
                                                                     </select>
                                                                 </div>
                                                             </div>
-                                                            <div class="card">
-                                                                <div class="card-header">
-                                                                    <h5 class="card-title mb-0">Citta</h5>
-                                                                </div>
-                                                                <div class="card-body">
+
+                                                            <div class="mb-3 row">
+                                                                <h5 class="card-title col-sm-2 col-form-label">Citta
+                                                                </h5>
+                                                                <div class="col-sm-4">
                                                                     <input type="text" class="form-control"
                                                                         name="department_city" placeholder="Citta">
                                                                 </div>
                                                             </div>
-                                                        </div>
 
-                                                        <div class="col-12 col-lg-12">
-                                                            <div class="card">
-                                                                <div class="card-header">
-                                                                    <h5 class="card-title mb-0">Informazioni</h5>
-                                                                </div>
-                                                                <div class="card-body">
+                                                            <div class="mb-3 row">
+                                                                <h5 class="card-title col-sm-2 col-form-label">
+                                                                    Informazioni</h5>
+                                                                <div class="col-sm-4">
                                                                     <textarea class="form-control"
                                                                         name="department_information" rows="3"
                                                                         placeholder="Informazioni"></textarea>
@@ -240,6 +230,7 @@ function showCompanyName()
                             </div>
                         </div>
                     </div>
+                </div>
             </main>
 
             <?php

@@ -72,8 +72,8 @@ function showCompanyName()
     $company = mysqli_query($conn, $query);
 
     $companyDropDown = "";
-    $companyDropDown .= '<select class="form-select mb-3" name = "company_name" required>';
-    $companyDropDown .= '<option value="" disabled selected>Seleziona un\'Azienda</option>';
+    $companyDropDown .= '<select class="form-select form-control mb-3" name = "company_name" required>';
+    $companyDropDown .= '<option value="" disabled selected >Seleziona un\'Azienda</option>';
 
     if ($company) {
         while ($row = mysqli_fetch_assoc($company)) {
@@ -131,16 +131,15 @@ function showCompanyName()
                         <div class="col">
                             <h1 class="h3 mb-3">Crea una Struttura</h1>
                         </div>
-
+                        
                         <div class="col-12">
-                            <div class="card">
+                        <div class="card" style="background:url('./img/logo/logo01.png'); background-color: white;  background-size: contain; background-position: right; background-repeat: no-repeat; ">
                                 <div class="card-body">
-                                    <div class="card-body">
-                                        <form id="structureForm" method="post">
-                                            <div class="row">
-                                                <?php
-                                                if (!empty ($errorMessage)) {
-                                                    echo '<div class="col-12">
+                                    <form id="structureForm" method="post">
+                                        <div class="row">
+                                            <?php
+                                            if (!empty ($errorMessage)) {
+                                                echo '<div class="col-12">
                                                             <div class="card">
                                                                 <div class="card-header">
                                                                     <div style="height: auto; font-size:20px; text-align:center; background-color: #ffcccc; color: #cc0000;" class="alert alert-danger" role="alert"><h4 style = "padding-top:5px; color: #cc0000; font-weight:bold;">' . $errorMessage . '</h4>
@@ -148,8 +147,8 @@ function showCompanyName()
                                                                 </div>                                                    
                                                             </div>
                                                         </div>';
-                                                } else if (!empty ($successfulMessage)) {
-                                                    echo '<div class="col-12">
+                                            } else if (!empty ($successfulMessage)) {
+                                                echo '<div class="col-12">
                                                             <div class="card">
                                                                 <div class="card-header">
                                                                     <div style="height: auto; font-size:20px; text-align:center; background-color: #ccffcc; color: #006600;" class="alert alert-success" role="alert"><h4 style = "padding-top:5px; color: #006600; font-weight:bold;">' . $successfulMessage . '</h4>
@@ -157,82 +156,66 @@ function showCompanyName()
                                                                 </div>                                                    
                                                             </div>
                                                         </div>';
-                                                }
-                                                ?>
+                                            }
+                                            ?>
 
-                                                <div class="row">
-                                                    <div class="col-12 col-lg-6">
-                                                        <div class="card">
-                                                            <div class="card-header">
-                                                                <h5 class="card-title mb-0">Nome <span
-                                                                        style="color:red;">*</span></h5>
-                                                            </div>
-                                                            <div class="card-body" style="height: 88px !important;">
-                                                                <input type="text" class="form-control"
-                                                                    name="structure_name" placeholder="Nome" required>
-                                                            </div>
-                                                        </div>
-                                                        <div class="card">
-                                                            <div class="card-header">
-                                                                <h5 class="card-title mb-0">Indirizzo</h5>
-                                                            </div>
-                                                            <div class="card-body">
-                                                                <input type="text" class="form-control"
-                                                                    name="structure_address" placeholder="Indirizzo">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-lg-6">
-                                                        <div class="card">
-                                                            <div class="card-header">
-                                                                <h5 class="card-title mb-0">Aziende <span
-                                                                        style="color:red;">*</span></h5>
-                                                            </div>
-                                                            <div class="card-body">
-                                                                <div>
-                                                                    <?php echo showCompanyName() ?>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="card">
-                                                            <div class="card-header">
-                                                                <h5 class="card-title mb-0">Citta</h5>
-                                                            </div>
-                                                            <div class="card-body">
-                                                                <input type="text" class="form-control"
-                                                                    name="structure_city" placeholder="Citta">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-lg-12">
-                                                        <div class="card">
-                                                            <div class="card-header">
-                                                                <h5 class="card-title mb-0">Informazioni</h5>
-                                                            </div>
-                                                            <div class="card-body">
-                                                                <textarea class="form-control"
-                                                                    name="structure_information" rows="3"
-                                                                    placeholder="Informazioni"></textarea>
-                                                            </div>
-                                                        </div>
+                                            <div class="row">
+                                                <div class="mb-3 row">
+                                                    <h5 class="card-title col-sm-2 col-form-label">Nome<span
+                                                            style="color:red;">*</span></h5>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" class="form-control" name="structure_name"
+                                                            placeholder="Nome" required>
                                                     </div>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="col-12 d-flex justify-content-center">
-                                                        <button name="create_structure" id="createStructureButton"
-                                                            class="btn btn-success btn-lg">Crea una Struttura</button>
+
+                                                <div class="mb-3 row">
+                                                    <h5 class="card-title col-sm-2 col-form-label">Aziende<span
+                                                            style="color:red;">*</span></h5>
+                                                    <div class="col-sm-4">
+                                                        <?php echo showCompanyName() ?>
+                                                    </div>
+                                                </div>
+
+                                                <div class="mb-3 row">
+                                                    <h5 class="card-title col-sm-2 col-form-label">Indirizzo</h5>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" class="form-control" name="structure_address"
+                                                            placeholder="Indirizzo">
+                                                    </div>
+                                                </div>
+
+                                                <div class="mb-3 row">
+                                                    <h5 class="card-title col-sm-2 col-form-label">Citta</h5>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" class="form-control" name="structure_city"
+                                                            placeholder="Citta">
+                                                    </div>
+                                                </div>
+
+                                                <div class="mb-3 row">
+                                                    <h5 class="card-title col-sm-2 col-form-label">Informazioni</h5>
+                                                    <div class="col-sm-4">
+                                                        <textarea class="form-control" name="structure_information"
+                                                            rows="3" placeholder="Informazioni"></textarea>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </form>
-                                    </div>
+
+                                            <div class="row">
+                                                <div class="col-12 d-flex justify-content-center">
+                                                    <button name="create_structure" id="createStructureButton"
+                                                        class="btn btn-success btn-lg">Crea una Struttura</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </main>
-
             <?php
             include "footer.php";
             ?>

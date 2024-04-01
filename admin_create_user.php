@@ -132,7 +132,7 @@ function showAllCompanies()
 
     <!-- select2-bootstrap4-theme -->
     <link href="https://raw.githack.com/ttskch/select2-bootstrap4-theme/master/dist/select2-bootstrap4.css"
-        rel="stylesheet"> <!-- for live demo page -->
+        rel="stylesheet"> <!--for live demo page -->
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
         integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
@@ -167,25 +167,25 @@ function showAllCompanies()
 
             <main class="content">
                 <div class="container-fluid p-0">
-                    <div class="row">
+                    <div class="row justify-content-center">
                         <div class="col-auto">
-                            <a class="btn transparent-btn" href="admin_create.php">
-                                <img alt="Back" style="margin-top: -8px;" src="./images/back_button.png">
+                            <a class="btn transparent-btn" style="margin-top: -7px;" href="admin_create.php">
+                                <img alt="Back" src="./images/back_button.png">
                             </a>
                         </div>
                         <div class="col">
                             <h1 class="h3 mb-3">Crea un Utente</h1>
                         </div>
 
-
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <form id="userForm" method="post">
-                                        <div class="row">
-                                            <?php
-                                            if (!empty ($errorMessage)) {
-                                                echo '<div class="col-12">
+                        <div class="col-lg-12">
+                            <div class="col-lg-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <form id="userForm" method="post">
+                                            <div class="row">
+                                                <?php
+                                                if (!empty ($errorMessage)) {
+                                                    echo '<div class="col-12">
                                                             <div class="card">
                                                                 <div class="card-header">
                                                                     <div style="height: auto; font-size:20px; text-align:center; background-color: #ffcccc; color: #cc0000;" class="alert alert-danger" role="alert"><h4 style = "padding-top:5px; color: #cc0000; font-weight:bold;">' . $errorMessage . '</h4>
@@ -193,8 +193,8 @@ function showAllCompanies()
                                                                 </div>                                                    
                                                             </div>
                                                         </div>';
-                                            } else if (!empty ($successfulMessage)) {
-                                                echo '<div class="col-12">
+                                                } else if (!empty ($successfulMessage)) {
+                                                    echo '<div class="col-12">
                                                             <div class="card">
                                                                 <div class="card-header">
                                                                     <div style="height: auto; font-size:20px; text-align:center; background-color: #ccffcc; color: #006600;" class="alert alert-success" role="alert"><h4 style = "padding-top:5px; color: #006600; font-weight:bold;">' . $successfulMessage . '</h4>
@@ -202,92 +202,78 @@ function showAllCompanies()
                                                                 </div>                                                    
                                                             </div>
                                                         </div>';
-                                            }
-                                            ?>
+                                                }
+                                                ?>
 
-                                            <div class="col-12 col-lg-6">
-                                                <div class="card">
-                                                    <div class="card-header">
-                                                        <h5 class="card-title mb-0">Nome <span
-                                                                style="color:red;">*</span></h5>
-                                                    </div>
-                                                    <div class="card-body">
+                                                <div class="mb-3 row d-flex justify-content-center">
+                                                    <h5 class="card-title col-sm-2 col-form-label">Nome<span
+                                                            style="color:red;">*</span></h5>
+                                                    <div class="col-sm-4">
                                                         <input type="text" class="form-control" name="user_first_name"
                                                             placeholder="Nome" required>
                                                     </div>
                                                 </div>
 
-                                                <div class="card">
-                                                    <div class="card-header">
-                                                        <h5 class="card-title mb-0">Cognome <span
-                                                                style="color:red;">*</span></h5>
-                                                    </div>
-                                                    <div class="card-body">
+                                                <div class="mb-3 row d-flex justify-content-center">
+                                                    <h5 class="card-title col-sm-2 col-form-label">Cognome<span
+                                                            style="color:red;">*</span></h5>
+                                                    <div class="col-sm-4">
                                                         <input type="text" class="form-control" name="user_last_name"
                                                             placeholder="Cognome" required>
                                                     </div>
                                                 </div>
 
-                                                <div class="card">
-                                                    <div class="card-header">
-                                                        <h5 class="card-title mb-0">Azienda Posizione</h5>
-                                                    </div>
-                                                    <div class="card-body">
+                                                <div class="mb-3 row d-flex justify-content-center">
+                                                    <h5 class="card-title col-sm-2 col-form-label">Azienda Posizione
+                                                    </h5>
+                                                    <div class="col-sm-4">
                                                         <input type="text" placeholder="Azienda Posizione"
                                                             name="user_position" class="form-control" value="" />
                                                     </div>
                                                 </div>
 
-                                                <div class="card">
-                                                    <div class="card-header">
-                                                        <h5 class="card-title mb-0">Ruolo <span
-                                                                style="color:red;">*</span></h5>
-                                                    </div>
-                                                    <div class="card-body">
+                                                <div class="mb-3 row d-flex justify-content-center">
+                                                    <h5 class="card-title col-sm-2 col-form-label">Ruole<span
+                                                            style="color:red;">*</span>
+                                                    </h5>
+                                                    <div class="col-sm-4">
                                                         <div>
                                                             <select data-allow-clear="1" name="user_role"
                                                                 class="form-select mb-3" required>
                                                                 <option value="" style="margin-right:20px !important;"
-                                                                    disabled selected hidden>Seleciona Ruolo</option>
+                                                                    disabled selected hidden>Seleziona Ruolo</option>
                                                                 <option value="Admin">Admin</option>
                                                                 <option value="Cliente">Cliente</option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
 
-                                            <div class="col-12 col-lg-6">
-                                                <div class="card">
-                                                    <div class="card-header">
-                                                        <h5 class="card-title mb-0">Numero <span
-                                                                style="color:red;">*</span></h5>
-                                                    </div>
-                                                    <div class="card-body">
+                                                <div class="mb-3 row d-flex justify-content-center">
+                                                    <h5 class="card-title col-sm-2 col-form-label">Numero<span
+                                                            style="color:red;">*</span>
+                                                    </h5>
+                                                    <div class="col-sm-4">
                                                         <input type="text" placeholder="Numero" name="user_number"
                                                             class="form-control" value="" required />
                                                     </div>
                                                 </div>
 
-                                                <div class="card">
-                                                    <div class="card-header">
-                                                        <h5 class="card-title mb-0">E-mail <span
-                                                                style="color:red;">*</span></h5>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <div>
-                                                            <input type="email" placeholder="Email" name="user_email"
-                                                                value="" class="form-control" required />
-                                                        </div>
+                                                <div class="mb-3 row d-flex justify-content-center">
+                                                    <h5 class="card-title col-sm-2 col-form-label">E-mail<span
+                                                            style="color:red;">*</span>
+                                                    </h5>
+                                                    <div class="col-sm-4">
+                                                        <input type="email" placeholder="Email" name="user_email"
+                                                            value="" class="form-control" required />
                                                     </div>
                                                 </div>
 
-                                                <div class="card">
-                                                    <div class="card-header">
-                                                        <h5 class="card-title mb-0">Password <span
-                                                                style="color:red;">*</span></h5>
-                                                    </div>
-                                                    <div class="card-body">
+                                                <div class="mb-3 row d-flex justify-content-center">
+                                                    <h5 class="card-title col-sm-2 col-form-label">Password<span
+                                                            style="color:red;">*</span>
+                                                    </h5>
+                                                    <div class="col-sm-4">
                                                         <div class="input-group">
                                                             <input type="password" id="password" placeholder="Password"
                                                                 name="user_password" class="form-control" required />
@@ -302,25 +288,29 @@ function showAllCompanies()
                                                     </div>
                                                 </div>
 
-                                                <div class="card">
-                                                    <div class="card-header">
-                                                        <h5 class="card-title mb-0">Aziende</h5>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <select multiple placeholder="Seleciona Azienda"
-                                                            name="user_companies[]" id="select" data-allow-clear="1">
+                                                <div class="mb-3 row d-flex justify-content-center">
+                                                    <h5 class="card-title col-sm-2 col-form-label">Aziende</h5>
+                                                    <div class="col-sm-4">
+                                                        <select style="font-size: 1px !important;" multiple
+                                                            placeholder="Seleziona Azienda" name="user_companies[]"
+                                                            id="select" data-allow-clear="1">
                                                             <?php echo showAllCompanies(); ?>
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            <div class="col-lg-6 row d-flex justify-content-center" style="background:url('./img/logo/logo01.png'); background-color: white; background-size: contain; background-position: right; background-repeat: no-repeat; ">                                                
+                                            </div>
+
                                             <div class="row">
                                                 <div class="col-12 d-flex justify-content-center">
                                                     <button type="submit" name="create_user"
-                                                        class="btn btn-success btn-lg">Crea un Utente</button>
+                                                        class="btn btn-success btn-lg">Crea un
+                                                        Utente</button>
                                                 </div>
                                             </div>
-                                        </div>
+                                    </div>
                                     </form>
                                 </div>
                             </div>
