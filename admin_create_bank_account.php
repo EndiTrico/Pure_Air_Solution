@@ -8,7 +8,7 @@ $errorMessage = "";
 $successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset ($_POST['create_bank_account'])) {
+    if (isset($_POST['create_bank_account'])) {
         $bank_name = mysqli_real_escape_string($conn, $_POST['bank_name']);
         $bank_company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
         $bank_IBAN = mysqli_real_escape_string($conn, $_POST['bank_iban']);
@@ -130,13 +130,14 @@ function showCompanyName()
                             <h1 class="h3 mb-3">Crea un Conto Bancario</h1>
                         </div>
                         <div class="col-12">
-                            <div class="card">
+                            <div class="card"
+                                style="background:url('./images/logo/logo01_backgroundForm.png'); background-color: white;  background-size: contain; background-position: center; background-repeat: no-repeat; ">
                                 <div class="card-body">
                                     <div class="card-body">
                                         <form id="bankAccountForm" method="post">
                                             <div class="row">
                                                 <?php
-                                                if (!empty ($errorMessage)) {
+                                                if (!empty($errorMessage)) {
                                                     echo '<div class="col-12">
                                                             <div class="card">
                                                                 <div class="card-header">
@@ -145,7 +146,7 @@ function showCompanyName()
                                                                 </div>                                                    
                                                             </div>
                                                         </div>';
-                                                } else if (!empty ($successfulMessage)) {
+                                                } else if (!empty($successfulMessage)) {
                                                     echo '<div class="col-12">
                                                             <div class="card">
                                                                 <div class="card-header">
@@ -160,7 +161,7 @@ function showCompanyName()
                                                 <div class="row">
                                                     <div class="col-12">
 
-                                                        <div class="mb-3 row">
+                                                        <div class="mb-3 row d-flex justify-content-center">
                                                             <h5 class="card-title col-sm-2 col-form-label">Il Nome Della
                                                                 Banca<span style="color:red;">*</span></h5>
                                                             <div class="col-sm-4">
@@ -168,8 +169,8 @@ function showCompanyName()
                                                                     placeholder="Il Nome Della Banca" required>
                                                             </div>
                                                         </div>
-                                                        
-                                                        <div class="mb-3 row">
+
+                                                        <div class="mb-3 row d-flex justify-content-center">
                                                             <h5 class="card-title col-sm-2 col-form-label">Aziende <span
                                                                     style="color:red;">*</span></h5>
                                                             <div class="col-sm-4">
@@ -177,7 +178,7 @@ function showCompanyName()
                                                             </div>
                                                         </div>
 
-                                                        <div class="mb-3 row">
+                                                        <div class="mb-3 row d-flex justify-content-center">
                                                             <h5 class="card-title col-sm-2 col-form-label">IBAN<span
                                                                     style="color:red;">*</span></h5>
                                                             <div class="col-sm-4">

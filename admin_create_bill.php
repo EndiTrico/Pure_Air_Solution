@@ -8,7 +8,7 @@ $errorMessage = "";
 $successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset ($_POST['create_bill'])) {
+    if (isset($_POST['create_bill'])) {
         $bill_name = mysqli_real_escape_string($conn, $_POST['bill_name']);
         $bill_company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
         $bill_value = ROUND(($_POST['bill_value']), 2);
@@ -127,13 +127,14 @@ function showCompanyName()
                         </div>
 
                         <div class="col-12">
-                            <div class="card">
+                            <div class="card"
+                                style="background:url('./images/logo/logo01_backgroundForm.png'); background-color: white;  background-size: contain; background-position: center; background-repeat: no-repeat; ">
                                 <div class="card-body">
                                     <div class="card-body">
                                         <form id="billForm" method="post">
                                             <div class="row">
                                                 <?php
-                                                if (!empty ($errorMessage)) {
+                                                if (!empty($errorMessage)) {
                                                     echo '<div class="col-12">
                                                             <div class="card">
                                                                 <div class="card-header">
@@ -142,7 +143,7 @@ function showCompanyName()
                                                                 </div>                                                    
                                                             </div>
                                                         </div>';
-                                                } else if (!empty ($successfulMessage)) {
+                                                } else if (!empty($successfulMessage)) {
                                                     echo '<div class="col-12">
                                                             <div class="card">
                                                                 <div class="card-header">
@@ -156,7 +157,7 @@ function showCompanyName()
 
                                                 <div class="row">
                                                     <div class="col-12">
-                                                        <div class="mb-3 row">
+                                                        <div class="mb-3 row d-flex justify-content-center">
                                                             <h5 class="card-title col-sm-2 col-form-label">Valore<span
                                                                     style="color:red;">*</span></h5>
                                                             <div class="col-sm-4">
@@ -167,7 +168,7 @@ function showCompanyName()
                                                             </div>
                                                         </div>
 
-                                                        <div class="mb-3 row">
+                                                        <div class="mb-3 row d-flex justify-content-center">
                                                             <h5 class="card-title col-sm-2 col-form-label">Aziende<span
                                                                     style="color:red;">*</span></h5>
                                                             <div class="col-sm-4">
@@ -175,20 +176,18 @@ function showCompanyName()
                                                             </div>
                                                         </div>
 
-                                                        <div class="mb-3 row">
+                                                        <div class="mb-3 row d-flex justify-content-center">
                                                             <h5 class="card-title col-sm-2 col-form-label">Data di
                                                                 Fatturazione</h5>
                                                             <div class="col-sm-4">
-                                                                <div class="form-group mb-4">
-                                                                    <input readonly type="text" class="form-control"
-                                                                        id="datePicker" name="bill_billing_date"
-                                                                        placeholder="Data di Fatturazione"
-                                                                        style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px;">
-                                                                </div>
+                                                                <input readonly type="text" class="form-control"
+                                                                    id="datePicker" name="bill_billing_date"
+                                                                    placeholder="Data di Fatturazione"
+                                                                    style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white">
                                                             </div>
                                                         </div>
 
-                                                        <div class="mb-3 row">
+                                                        <div class="mb-3 row d-flex justify-content-center">
                                                             <h5 class="card-title col-sm-2 col-form-label">Valore Iva
                                                                 Inclusa</h5>
                                                             <div class="col-sm-4">
@@ -199,7 +198,7 @@ function showCompanyName()
                                                             </div>
                                                         </div>
 
-                                                        <div class="mb-3 row">
+                                                        <div class="mb-3 row d-flex justify-content-center">
                                                             <h5 class="card-title col-sm-2 col-form-label">IVA (%)<span
                                                                     style="color:red;">*</span></h5>
                                                             <div class="col-sm-4">
@@ -210,7 +209,7 @@ function showCompanyName()
                                                             </div>
                                                         </div>
 
-                                                        <div class="mb-3 row">
+                                                        <div class="mb-3 row d-flex justify-content-center">
                                                             <h5 class="card-title col-sm-2 col-form-label">Moneta<span
                                                                     style="color:red;">*</span></h5>
                                                             <div class="col-sm-4">
@@ -253,21 +252,19 @@ function showCompanyName()
                                                             </div>
                                                         </div>
 
-                                                        <div class="mb-3 row">
+                                                        <div class="mb-3 row d-flex justify-content-center">
                                                             <h5 class="card-title col-sm-2 col-form-label">Data di
                                                                 Pagamento
                                                             </h5>
                                                             <div class="col-sm-4">
-                                                                <div class="form-group mb-4">
-                                                                    <input readonly type="text" class="form-control"
-                                                                        id="datePicker1" name="bill_payment_date"
-                                                                        placeholder="Data di Pagamento"
-                                                                        style="background: url(' data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px;">
-                                                                </div>
+                                                                <input readonly type="text" class="form-control"
+                                                                    id="datePicker1" name="bill_payment_date"
+                                                                    placeholder="Data di Pagamento"
+                                                                    style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white">
                                                             </div>
                                                         </div>
 
-                                                        <div class="mb-3 row">
+                                                        <div class="mb-3 row d-flex justify-content-center">
                                                             <h5 class="card-title col-sm-2 col-form-label">Descrizione
                                                             </h5>
                                                             <div class="col-sm-4">

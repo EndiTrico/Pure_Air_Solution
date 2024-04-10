@@ -8,7 +8,7 @@ $errorMessage = "";
 $successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset ($_POST['create_impianto'])) {
+    if (isset($_POST['create_impianto'])) {
         $impianto_nome = mysqli_real_escape_string($conn, $_POST['impianto_nome']);
         $impianto_capacita_uta = mysqli_real_escape_string($conn, $_POST['impianto_capacita_uta']);
         $impianto_ripresa = mysqli_real_escape_string($conn, $_POST['impianto_ripresa']);
@@ -159,14 +159,15 @@ function showCompanyName()
 
                         <div class="row">
                             <div class="col-12">
-                                <div class="card">
+                                <div class="card"
+                                    style="background:url('./images/logo/logo01_backgroundForm.png'); background-color: white;  background-size: contain; background-position: center; background-repeat: no-repeat; ">
                                     <div class="card-body">
                                         <div class="card-body">
                                             <form id="impiantoForm" method="post">
                                                 <div class="row">
 
                                                     <?php
-                                                    if (!empty ($errorMessage)) {
+                                                    if (!empty($errorMessage)) {
                                                         echo '<div class="col-12">
                                                             <div class="card">
                                                                 <div class="card-header">
@@ -175,7 +176,7 @@ function showCompanyName()
                                                                 </div>
                                                             </div>
                                                         </div>';
-                                                    } elseif (!empty ($successfulMessage)) {
+                                                    } elseif (!empty($successfulMessage)) {
                                                         echo '<div class="col-12">
                                                             <div class="card">
                                                                 <div class="card-header">
@@ -187,7 +188,7 @@ function showCompanyName()
                                                     }
                                                     ?>
 
-                                                    <div class="mb-3 row">
+                                                    <div class="mb-3 row d-flex justify-content-center">
                                                         <h5 class="card-title col-sm-2 col-form-label">Nome Uta<span
                                                                 style="color:red;">*</span></h5>
                                                         <div class="col-sm-4">
@@ -196,7 +197,7 @@ function showCompanyName()
                                                         </div>
                                                     </div>
 
-                                                    <div class="mb-3 row">
+                                                    <div class="mb-3 row d-flex justify-content-center">
                                                         <h5 class="card-title col-sm-2 col-form-label">Struttura<span
                                                                 style="color:red;">*</span></h5>
                                                         <div class="col-sm-4">
@@ -208,7 +209,7 @@ function showCompanyName()
                                                         </div>
                                                     </div>
 
-                                                    <div class="mb-3 row">
+                                                    <div class="mb-3 row d-flex justify-content-center">
                                                         <h5 class="card-title col-sm-2 col-form-label">Capacita Uta<span
                                                                 style="color:red;">*</span>
                                                         </h5>
@@ -220,7 +221,7 @@ function showCompanyName()
                                                         </div>
                                                     </div>
 
-                                                    <div class="mb-3 row">
+                                                    <div class="mb-3 row d-flex justify-content-center">
                                                         <h5 class="card-title col-sm-2 col-form-label">Ripresa<span
                                                                 style="color:red;">*</span></h5>
                                                         <div class="col-sm-4">
@@ -231,7 +232,7 @@ function showCompanyName()
                                                         </div>
                                                     </div>
 
-                                                    <div class="mb-3 row">
+                                                    <div class="mb-3 row d-flex justify-content-center">
                                                         <h5 class="card-title col-sm-2 col-form-label">Espulsione<span
                                                                 style="color:red;">*</span></h5>
                                                         <div class="col-sm-4">
@@ -242,7 +243,7 @@ function showCompanyName()
                                                         </div>
                                                     </div>
 
-                                                    <div class="mb-3 row">
+                                                    <div class="mb-3 row d-flex justify-content-center">
                                                         <h5 class="card-title col-sm-2 col-form-label">Data di Inizio
                                                             Utilizzo
                                                         </h5>
@@ -251,12 +252,12 @@ function showCompanyName()
                                                                 <input readonly type="text" class="form-control"
                                                                     id="datePicker" name="impianto_data_inizio_utilizzo"
                                                                     placeholder="Data di Fatturazione"
-                                                                    style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px;">
+                                                                    style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white;">
                                                             </div>
                                                         </div>
                                                     </div>
 
-                                                    <div class="mb-3 row">
+                                                    <div class="mb-3 row d-flex justify-content-center">
                                                         <h5 class="card-title col-sm-2 col-form-label">Azienda<span
                                                                 style="color:red;">*</span></h5>
                                                         <div class="col-sm-4">
@@ -264,7 +265,7 @@ function showCompanyName()
                                                         </div>
                                                     </div>
 
-                                                    <div class="mb-3 row">
+                                                    <div class="mb-3 row d-flex justify-content-center">
                                                         <h5 class="card-title col-sm-2 col-form-label">Reparto</h5>
                                                         <div class="col-sm-4">
                                                             <select name="department_name" id="department_name"
@@ -275,7 +276,7 @@ function showCompanyName()
                                                         </div>
                                                     </div>
 
-                                                    <div class="mb-3 row">
+                                                    <div class="mb-3 row d-flex justify-content-center">
                                                         <h5 class="card-title col-sm-2 col-form-label">
                                                             Mandata<span style="color:red;">*</span></h5>
                                                         <div class="col-sm-4">
@@ -286,7 +287,7 @@ function showCompanyName()
                                                         </div>
                                                     </div>
 
-                                                    <div class="mb-3 row">
+                                                    <div class="mb-3 row d-flex justify-content-center">
                                                         <h5 class="card-title col-sm-2 col-form-label">Presa Aria
                                                             Esterna<span style="color:red;">*</span></h5>
                                                         <div class="col-sm-4">
@@ -298,7 +299,7 @@ function showCompanyName()
                                                         </div>
                                                     </div>
 
-                                                    <div class="mb-3 row">
+                                                    <div class="mb-3 row d-flex justify-content-center">
                                                         <h5 class="card-title col-sm-2 col-form-label">Ultima Attivita
                                                         </h5>
                                                         <div class="col-sm-4">
@@ -308,7 +309,7 @@ function showCompanyName()
                                                         </div>
                                                     </div>
 
-                                                    <div class="mb-3 row">
+                                                    <div class="mb-3 row d-flex justify-content-center">
                                                         <h5 class="card-title col-sm-2 col-form-label">Data Ultima Att
                                                         </h5>
                                                         <div class="col-sm-4">
@@ -316,7 +317,7 @@ function showCompanyName()
                                                                 <input readonly type="text" class="form-control"
                                                                     id="datePicker1" name="impianto_data_ultima_att"
                                                                     placeholder="Data di Fatturazione"
-                                                                    style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px;">
+                                                                    style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white;">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -341,11 +342,7 @@ function showCompanyName()
             include "footer.php";
             ?>
         </div>
-
     </div>
-
-
-
 
     <script src="js/app.js"></script>
 

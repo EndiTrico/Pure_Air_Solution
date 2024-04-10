@@ -8,7 +8,7 @@ $errorMessage = "";
 $successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset ($_POST['create_user'])) {
+    if (isset($_POST['create_user'])) {
         $user_first_name = mysqli_real_escape_string($conn, $_POST['user_first_name']);
         $user_last_name = mysqli_real_escape_string($conn, $_POST['user_last_name']);
         $user_email = mysqli_real_escape_string($conn, $_POST['user_email']);
@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $user_role = mysqli_real_escape_string($conn, $_POST['user_role']);
         $user_position = mysqli_real_escape_string($conn, $_POST['user_position']);
         $user_numero = mysqli_real_escape_string($conn, $_POST['user_number']);
-        if (!empty ($_POST['user_companies'])) {
+        if (!empty($_POST['user_companies'])) {
             $user_companies = $_POST['user_companies'];
         }
 
@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             mysqli_stmt_bind_param($stmt, "ssssiss", $user_first_name, $user_last_name, $user_email, $hashed_password, $user_numero, $user_role, $user_position);
             try {
                 if (mysqli_stmt_execute($stmt)) {
-                    if (!empty ($user_companies)) {
+                    if (!empty($user_companies)) {
                         $sql = "SELECT UTENTE_ID
                                 FROM UTENTI
                                 WHERE EMAIL = ?
@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         mysqli_stmt_bind_result($stmt1, $user_id);
                         mysqli_stmt_fetch($stmt1);
 
-                        if (!empty ($user_companies)) {
+                        if (!empty($user_companies)) {
                             foreach ($user_companies as $company_id) {
                                 $sql2 = "INSERT INTO UTENTI_AZIENDE (UTENTE_ID, AZIENDA_ID) VALUES (?, ?)";
 
@@ -177,15 +177,15 @@ function showAllCompanies()
                             <h1 class="h3 mb-3">Crea un Utente</h1>
                         </div>
 
-                        <div class="col-lg-12">
-                            <div class="col-lg-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <form id="userForm" method="post">
-                                            <div class="row">
-                                                <?php
-                                                if (!empty ($errorMessage)) {
-                                                    echo '<div class="col-12">
+                        <div class="col-12">
+                            <div class="card"
+                                style="background:url('./images/logo/logo01_backgroundForm.png'); background-color: white;  background-size: contain; background-position: center; background-repeat: no-repeat; ">
+                                <div class="card-body">
+                                    <form id="userForm" method="post">
+                                        <div class="row">
+                                            <?php
+                                            if (!empty($errorMessage)) {
+                                                echo '<div class="col-12">
                                                             <div class="card">
                                                                 <div class="card-header">
                                                                     <div style="height: auto; font-size:20px; text-align:center; background-color: #ffcccc; color: #cc0000;" class="alert alert-danger" role="alert"><h4 style = "padding-top:5px; color: #cc0000; font-weight:bold;">' . $errorMessage . '</h4>
@@ -193,8 +193,8 @@ function showAllCompanies()
                                                                 </div>                                                    
                                                             </div>
                                                         </div>';
-                                                } else if (!empty ($successfulMessage)) {
-                                                    echo '<div class="col-12">
+                                            } else if (!empty($successfulMessage)) {
+                                                echo '<div class="col-12">
                                                             <div class="card">
                                                                 <div class="card-header">
                                                                     <div style="height: auto; font-size:20px; text-align:center; background-color: #ccffcc; color: #006600;" class="alert alert-success" role="alert"><h4 style = "padding-top:5px; color: #006600; font-weight:bold;">' . $successfulMessage . '</h4>
@@ -202,115 +202,113 @@ function showAllCompanies()
                                                                 </div>                                                    
                                                             </div>
                                                         </div>';
-                                                }
-                                                ?>
+                                            }
+                                            ?>
 
-                                                <div class="mb-3 row d-flex justify-content-center">
-                                                    <h5 class="card-title col-sm-2 col-form-label">Nome<span
-                                                            style="color:red;">*</span></h5>
-                                                    <div class="col-sm-4">
-                                                        <input type="text" class="form-control" name="user_first_name"
-                                                            placeholder="Nome" required>
-                                                    </div>
+                                            <div class="mb-3 row d-flex justify-content-center">
+                                                <h5 class="card-title col-sm-2 col-form-label">Nome<span
+                                                        style="color:red;">*</span></h5>
+                                                <div class="col-sm-4">
+                                                    <input type="text" class="form-control" name="user_first_name"
+                                                        placeholder="Nome" required>
                                                 </div>
+                                            </div>
 
-                                                <div class="mb-3 row d-flex justify-content-center">
-                                                    <h5 class="card-title col-sm-2 col-form-label">Cognome<span
-                                                            style="color:red;">*</span></h5>
-                                                    <div class="col-sm-4">
-                                                        <input type="text" class="form-control" name="user_last_name"
-                                                            placeholder="Cognome" required>
-                                                    </div>
+                                            <div class="mb-3 row d-flex justify-content-center">
+                                                <h5 class="card-title col-sm-2 col-form-label">Cognome<span
+                                                        style="color:red;">*</span></h5>
+                                                <div class="col-sm-4">
+                                                    <input type="text" class="form-control" name="user_last_name"
+                                                        placeholder="Cognome" required>
                                                 </div>
+                                            </div>
 
-                                                <div class="mb-3 row d-flex justify-content-center">
-                                                    <h5 class="card-title col-sm-2 col-form-label">Azienda Posizione
-                                                    </h5>
-                                                    <div class="col-sm-4">
-                                                        <input type="text" placeholder="Azienda Posizione"
-                                                            name="user_position" class="form-control" value="" />
-                                                    </div>
+                                            <div class="mb-3 row d-flex justify-content-center">
+                                                <h5 class="card-title col-sm-2 col-form-label">E-mail<span
+                                                        style="color:red;">*</span>
+                                                </h5>
+                                                <div class="col-sm-4">
+                                                    <input type="email" placeholder="Email" name="user_email" value=""
+                                                        class="form-control" required />
                                                 </div>
+                                            </div>
 
-                                                <div class="mb-3 row d-flex justify-content-center">
-                                                    <h5 class="card-title col-sm-2 col-form-label">Ruole<span
-                                                            style="color:red;">*</span>
-                                                    </h5>
-                                                    <div class="col-sm-4">
-                                                        <div>
-                                                            <select data-allow-clear="1" name="user_role"
-                                                                class="form-select mb-3" required>
-                                                                <option value="" style="margin-right:20px !important;"
-                                                                    disabled selected hidden>Seleziona Ruolo</option>
-                                                                <option value="Admin">Admin</option>
-                                                                <option value="Cliente">Cliente</option>
-                                                            </select>
+                                            
+                                            <div class="mb-3 row d-flex justify-content-center">
+                                                <h5 class="card-title col-sm-2 col-form-label">Password<span
+                                                        style="color:red;">*</span>
+                                                </h5>
+                                                <div class="col-sm-4">
+                                                    <div class="input-group">
+                                                        <input type="password" id="password" placeholder="Password"
+                                                            name="user_password" class="form-control" required />
+                                                        <div class="input-group-append">
+                                                            <button type="button" onclick="togglePassword()"
+                                                                id="btnToggle"
+                                                                class="btn btn-outline btn-xs btn-xs btn-2x"><i
+                                                                    id="eyeIconPassword"
+                                                                    class="fa fa-eye fa-xs"></i></button>
                                                         </div>
                                                     </div>
                                                 </div>
+                                            </div>
 
-                                                <div class="mb-3 row d-flex justify-content-center">
-                                                    <h5 class="card-title col-sm-2 col-form-label">Numero<span
-                                                            style="color:red;">*</span>
-                                                    </h5>
-                                                    <div class="col-sm-4">
-                                                        <input type="text" placeholder="Numero" name="user_number"
-                                                            class="form-control" value="" required />
-                                                    </div>
+                                            <div class="mb-3 row d-flex justify-content-center">
+                                                <h5 class="card-title col-sm-2 col-form-label">Numero<span
+                                                        style="color:red;">*</span>
+                                                </h5>
+                                                <div class="col-sm-4">
+                                                    <input type="text" placeholder="Numero" name="user_number"
+                                                        class="form-control" value="" required />
                                                 </div>
+                                            </div>
 
-                                                <div class="mb-3 row d-flex justify-content-center">
-                                                    <h5 class="card-title col-sm-2 col-form-label">E-mail<span
-                                                            style="color:red;">*</span>
-                                                    </h5>
-                                                    <div class="col-sm-4">
-                                                        <input type="email" placeholder="Email" name="user_email"
-                                                            value="" class="form-control" required />
-                                                    </div>
+                                            <div class="mb-3 row d-flex justify-content-center">
+                                                <h5 class="card-title col-sm-2 col-form-label">Azienda Posizione
+                                                </h5>
+                                                <div class="col-sm-4">
+                                                    <input type="text" placeholder="Azienda Posizione"
+                                                        name="user_position" class="form-control" value="" />
                                                 </div>
+                                            </div>
 
-                                                <div class="mb-3 row d-flex justify-content-center">
-                                                    <h5 class="card-title col-sm-2 col-form-label">Password<span
-                                                            style="color:red;">*</span>
-                                                    </h5>
-                                                    <div class="col-sm-4">
-                                                        <div class="input-group">
-                                                            <input type="password" id="password" placeholder="Password"
-                                                                name="user_password" class="form-control" required />
-                                                            <div class="input-group-append">
-                                                                <button type="button" onclick="togglePassword()"
-                                                                    id="btnToggle"
-                                                                    class="btn btn-outline btn-xs btn-xs btn-2x"><i
-                                                                        id="eyeIconPassword"
-                                                                        class="fa fa-eye fa-xs"></i></button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="mb-3 row d-flex justify-content-center">
-                                                    <h5 class="card-title col-sm-2 col-form-label">Aziende</h5>
-                                                    <div class="col-sm-4">
-                                                        <select style="font-size: 1px !important;" multiple
-                                                            placeholder="Seleziona Azienda" name="user_companies[]"
-                                                            id="select" data-allow-clear="1">
-                                                            <?php echo showAllCompanies(); ?>
+                                            
+                                            <div class="mb-3 row d-flex justify-content-center">
+                                                <h5 class="card-title col-sm-2 col-form-label">Ruole<span
+                                                        style="color:red;">*</span>
+                                                </h5>
+                                                <div class="col-sm-4">
+                                                    <div>
+                                                        <select data-allow-clear="1" name="user_role"
+                                                            class="form-select mb-3" required>
+                                                            <option value="" style="margin-right:20px !important;"
+                                                                disabled selected hidden>Seleziona Ruolo</option>
+                                                            <option value="Admin">Admin</option>
+                                                            <option value="Cliente">Cliente</option>
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <div class="col-lg-6 row d-flex justify-content-center" style="background:url('./img/logo/logo01.png'); background-color: white; background-size: contain; background-position: right; background-repeat: no-repeat; ">                                                
-                                            </div>
-
-                                            <div class="row">
-                                                <div class="col-12 d-flex justify-content-center">
-                                                    <button type="submit" name="create_user"
-                                                        class="btn btn-success btn-lg">Crea un
-                                                        Utente</button>
+                                            <div class="mb-3 row d-flex justify-content-center">
+                                                <h5 class="card-title col-sm-2 col-form-label">Aziende</h5>
+                                                <div class="col-sm-4">
+                                                    <select style="font-size: 1px !important;" multiple
+                                                        placeholder="Seleziona Azienda" name="user_companies[]"
+                                                        id="select" data-allow-clear="1">
+                                                        <?php echo showAllCompanies(); ?>
+                                                    </select>
                                                 </div>
                                             </div>
-                                    </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-12 d-flex justify-content-center">
+                                                <button type="submit" name="create_user"
+                                                    class="btn btn-success btn-lg">Crea un
+                                                    Utente</button>
+                                            </div>
+                                        </div>
                                     </form>
                                 </div>
                             </div>

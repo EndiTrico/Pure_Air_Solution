@@ -499,7 +499,7 @@ function showForm()
 
         if ($result) {
             $row = mysqli_fetch_assoc($result);
-            showUsers($row);
+            include 'admin_edit_user.php';    
         }
     } else if ($entity == 'aziende') {
         $query = "SELECT * FROM AZIENDE WHERE AZIENDA_ID = ?";
@@ -577,132 +577,8 @@ function showForm()
 }
 
 
-function showUsers($row)
-{
-    echo '
-<form id="userForm" method="post">
-    <div class="row">
-        <div class="col-12 col-lg-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Nome <span style = "color:red;">*</span></h5>
-                </div>
-                <div class="card-body">
-                    <input type="text" class="form-control" name="user_first_name" value = "' . $row["NOME"] . '" 
-                        placeholder="Nome" required>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Cognome <span style = "color:red;">*</span></h5>
-                </div>
-                <div class="card-body">
-                    <input type="text" class="form-control" name="user_last_name" value = "' . $row["COGNOME"] . '"
-                        placeholder="Cognome" required> 
-                </div>
-            </div>
 
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Azienda Posizione</h5>
-                </div>
-                <div class="card-body">
-                    <input type="text" placeholder="Azienda Posizione"
-                        name="user_position" class="form-control" value="' . $row["AZIENDA_POSIZIONE"] . '" /> 
-                </div>
-            </div>
 
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Ruolo <span style = "color:red;">*</span></h5>
-                </div>
-                <div class="card-body">
-                    <div>
-                        <select data-allow-clear="1" name="user_role"
-                            class="form-select mb-3" required>
-                            <option value="" style="margin-right:20px !important;"
-                                disabled selected hidden>Seleciona Ruolo</option>
-                            <option value="Admin" ' . ($row["RUOLO"] == "Admin" ? 'selected' : '') . '>Admin</option>
-                            <option value="Cliente" ' . ($row["RUOLO"] == "Cliente" ? 'selected' : '') . '>Cliente</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-lg-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Numero <span style = "color:red;">*</span></h5>
-                </div>
-                <div class="card-body">
-                    <input type="text" placeholder="Numero" name="user_number"
-                        class="form-control" value="' . $row["NUMERO"] . '" required />
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">E-mail <span style = "color:red;">*</span></h5>
-                </div>
-                <div class="card-body">
-                    <div>
-                        <input type="email" placeholder="Email" name="user_email"
-                            value="' . $row["EMAIL"] . '" class="form-control" required />
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Password</h5>
-                </div>
-                <div class="card-body">
-                    <input type="password" placeholder="Password"
-                        name="user_password" class="form-control" value=""
-                        />
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Aziende</h5>
-                </div>
-                <div class="card-body">
-                    <select placeholder="Seleciona Azienda"
-                        name="user_companies[]" id= "select" data-allow-clear="1" multiple>' .
-        showCompaniesNameDropDown("utenti") . '
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12 d-flex justify-content-center">
-                <button name="update_user" id="updateUserButton"
-                    class="btn btn-success btn-lg">Aggiorna</button>
-            </div>
-        </div>
-    </div>
-</form>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-crossorigin="anonymous"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-<script>
-$(function () {
-    $(\'select\').each(function () {
-        $(this).select2({
-            theme: \'bootstrap4\',
-            width: \'style\',
-            placeholder: $(this).attr(\'placeholder\'),
-            allowClear: Boolean($(this).data(\'allow-clear\')),
-        });
-    });
-});
-
-</script>';
-}
 
 function showCompanies($row)
 {
@@ -724,7 +600,7 @@ function showCompanies($row)
                     <div class="card-header">
                         <h5 class="card-title mb-0">Codice Fiscale <span
                                 style="color:red;">*</span></h5>
-                    </div>
+321                    </div>
                     <div class="card-body">
                         <input type="text" class="form-control"
                             name="company_codice_fiscale" value = "' . $row["CODICE_FISCALE"] . '"
