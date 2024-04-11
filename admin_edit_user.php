@@ -1,4 +1,24 @@
 <?php echo '
+<style>
+.alert {
+    margin-left: 20px
+}
+
+.passwordCheck {
+    margin-right: 10px;
+}
+
+.fa {
+    font-size: 1rem;
+    margin-left: 1px;
+    border-color: lightgray;
+}
+
+#btnToggle {
+    border-color: darkgray;
+    background-color: white;
+}
+</style>
 <form id="userForm" method="post">
     <div class="row">
         <div class="col"

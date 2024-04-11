@@ -155,6 +155,7 @@ function showAllCompanies()
 
         #btnToggle {
             border-color: darkgray;
+            background-color: white;
         }
     </style>
 </head>

@@ -9,7 +9,7 @@ $entity = $_GET['entity'];
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset ($_POST['update_user'])) {
+    if (isset($_POST['update_user'])) {
         $user_first_name = mysqli_real_escape_string($conn, $_POST['user_first_name']);
         $user_last_name = mysqli_real_escape_string($conn, $_POST['user_last_name']);
         $user_email = mysqli_real_escape_string($conn, $_POST['user_email']);
@@ -17,13 +17,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $user_role = mysqli_real_escape_string($conn, $_POST['user_role']);
         $user_position = mysqli_real_escape_string($conn, $_POST['user_position']);
         $user_number = mysqli_real_escape_string($conn, $_POST['user_number']);
-        if (!empty ($_POST['user_companies'])) {
+        if (!empty($_POST['user_companies'])) {
             $user_companies = $_POST['user_companies'];
         }
 
         $sql = "";
 
-        if (empty ($user_password)) {
+        if (empty($user_password)) {
             $sql = "UPDATE UTENTI 
                     SET NOME = ?, 
                         COGNOME = ?, 
@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         try {
             $stmt = mysqli_prepare($conn, $sql);
             if ($stmt) {
-                if (empty ($user_password)) {
+                if (empty($user_password)) {
                     mysqli_stmt_bind_param($stmt, "ssssisi", ...$params);
                 } else {
                     mysqli_stmt_bind_param($stmt, "ssssissi", ...$params);
@@ -65,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     mysqli_stmt_bind_param($stmt1, "i", $id);
                     mysqli_stmt_execute($stmt1);
 
-                    if (!empty ($user_companies)) {
+                    if (!empty($user_companies)) {
                         foreach ($user_companies as $company_id) {
                             $sql2 = "INSERT INTO UTENTI_AZIENDE (UTENTE_ID, AZIENDA_ID) VALUES (?, ?)";
 
@@ -89,7 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } catch (mysqli_sql_exception $e) {
             $errorMessage = "Error: " . $e->getMessage();
         }
-    } else if (isset ($_POST['update_company'])) {
+    } else if (isset($_POST['update_company'])) {
         $company_name = mysqli_real_escape_string($conn, $_POST['company_name']);
         $company_codice_fiscale = mysqli_real_escape_string($conn, $_POST['company_codice_fiscale']);
         $company_contact1 = mysqli_real_escape_string($conn, $_POST['company_contact1']);
@@ -171,7 +171,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             $errorMessage = "Errore: Impossibile Preparare l'Istruzione";
         }
-    } else if (isset ($_POST['update_structure'])) {
+    } else if (isset($_POST['update_structure'])) {
         $structure_name = mysqli_real_escape_string($conn, $_POST['structure_name']);
         $structure_company_id = $_POST['company_name'];
         $structure_address = mysqli_real_escape_string($conn, $_POST['structure_address']);
@@ -202,7 +202,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             $errorMessage = "Errore: Impossibile Eseguire l'Istruzione";
         }
-    } else if (isset ($_POST['update_department'])) {
+    } else if (isset($_POST['update_department'])) {
         $department_name = mysqli_real_escape_string($conn, $_POST['department_name']);
         $department_company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
         $department_structure_id = mysqli_real_escape_string($conn, $_POST['structure_name']);
@@ -233,7 +233,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             $errorMessage = "Errore: Impossibile Preparare l'Istruzione";
         }
-    } else if (isset ($_POST['update_bank_account'])) {
+    } else if (isset($_POST['update_bank_account'])) {
         $bank_name = mysqli_real_escape_string($conn, $_POST['bank_name']);
         $bank_company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
         $bank_IBAN = mysqli_real_escape_string($conn, $_POST['bank_iban']);
@@ -262,7 +262,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             $errorMessage = "Errore: Impossibile Preparare l'Istruzione";
         }
-    } else if (isset ($_POST['update_bill'])) {
+    } else if (isset($_POST['update_bill'])) {
         $bill_name = mysqli_real_escape_string($conn, $_POST['bill_name']);
         $bill_company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
         $bill_value = ROUND(($_POST['bill_value']), 2);
@@ -303,7 +303,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             $errorMessage = "Errore: Impossibile Preparare l'Istruzione";
         }
-    } else if (isset ($_POST['update_impianto'])) {
+    } else if (isset($_POST['update_impianto'])) {
         $impianto_nome = mysqli_real_escape_string($conn, $_POST['impianto_nome']);
         $impianto_capacita_uta = mysqli_real_escape_string($conn, $_POST['impianto_capacita_uta']);
         $impianto_ripresa = mysqli_real_escape_string($conn, $_POST['impianto_ripresa']);
@@ -499,7 +499,7 @@ function showForm()
 
         if ($result) {
             $row = mysqli_fetch_assoc($result);
-            include 'admin_edit_user.php';    
+            include 'admin_edit_user.php';
         }
     } else if ($entity == 'aziende') {
         $query = "SELECT * FROM AZIENDE WHERE AZIENDA_ID = ?";
@@ -522,8 +522,7 @@ function showForm()
 
         if ($result) {
             $row = mysqli_fetch_assoc($result);
-
-            showStructures($row);
+            include 'admin_edit_structure.php';
         }
     } else if ($entity == "reparti") {
         $query = "SELECT * FROM REPARTI WHERE REPARTO_ID = ?";
@@ -1483,8 +1482,7 @@ function showImpianti($row)
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
 
     <!-- select2-bootstrap4-theme -->
-    <link href="https://raw.githack.com/ttskch/select2-bootstrap4-theme/master/dist/select2-bootstrap4.css"
-        rel="stylesheet">
+    <link href="https://raw.githack.com/ttskch/select2-bootstrap4-theme/master/dist/select2-bootstrap4.css" rel="stylesheet">
 
 
 
@@ -1493,9 +1491,10 @@ function showImpianti($row)
     <script src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment/locale/it.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-        integrity="sha512-BTBZNOArLzKrjzlkrMgXw0S51oBnuy0/HWkCARN0aSUSnt5N6VX/9n6tsQwnPVK68OzI6KARmxx3AeeBfM2y+g=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-BTBZNOArLzKrjzlkrMgXw0S51oBnuy0/HWkCARN0aSUSnt5N6VX/9n6tsQwnPVK68OzI6KARmxx3AeeBfM2y+g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 
 </head>
 
@@ -1539,7 +1538,7 @@ function showImpianti($row)
                             <div class="card">
                                 <div class="card-body">
                                     <?php
-                                    if (!empty ($errorMessage)) {
+                                    if (!empty($errorMessage)) {
                                         echo '<div class="col-12">
                                                 <div class="card">
                                                     <div class="card-header">
@@ -1548,7 +1547,7 @@ function showImpianti($row)
                                                     </div>                                                    
                                                 </div>
                                             </div>';
-                                    } else if (!empty ($successfulMessage)) {
+                                    } else if (!empty($successfulMessage)) {
                                         echo '<div class="col-12">
                                                     <div class="card">
                                                         <div class="card-header">
@@ -1590,7 +1589,7 @@ function showImpianti($row)
                 weekdays: moment.localeData().weekdays().map(capitalizeFirstLetter),
                 weekdaysShort: moment.localeData().weekdaysShort().map(capitalizeFirstLetter)
             },
-            onSelect: function () {
+            onSelect: function() {
                 console.log(this.getMoment().format('Do MMMM YYYY'));
             }
         });
@@ -1605,7 +1604,7 @@ function showImpianti($row)
                 weekdays: moment.localeData().weekdays().map(capitalizeFirstLetter),
                 weekdaysShort: moment.localeData().weekdaysShort().map(capitalizeFirstLetter)
             },
-            onSelect: function () {
+            onSelect: function() {
                 console.log(this.getMoment().format('Do MMMM YYYY'));
             }
         });
