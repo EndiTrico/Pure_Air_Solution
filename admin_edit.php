@@ -533,7 +533,7 @@ function showForm()
 
         if ($result) {
             $row = mysqli_fetch_assoc($result);
-            showDepartments($row, $id);
+            include 'admin_edit_department.php';
         }
     } else if ($entity == "banca conti") {
         $query = "SELECT * FROM BANCA_CONTI WHERE BANCA_CONTO_ID = ?";
@@ -567,7 +567,7 @@ function showForm()
 
         if ($result) {
             $row = mysqli_fetch_assoc($result);
-            showImpianti($row);
+            include 'admin_edit_impianto.php';
         }
     }
 
@@ -599,7 +599,7 @@ function showCompanies($row)
                     <div class="card-header">
                         <h5 class="card-title mb-0">Codice Fiscale <span
                                 style="color:red;">*</span></h5>
-321                    </div>
+                   </div>
                     <div class="card-body">
                         <input type="text" class="form-control"
                             name="company_codice_fiscale" value = "' . $row["CODICE_FISCALE"] . '"

@@ -49,7 +49,6 @@
                 </div>
             </div>
 
-
             <div class="mb-3 row d-flex justify-content-center">
                 <h5 class="card-title col-sm-2 col-form-label">Password<span style="color:red;">*</span>
                 </h5>
