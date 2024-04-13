@@ -1,7 +1,6 @@
 <?php 
 echo '
 <form id="structureForm" method="post">
-    <div class="row">
         <div class="row" style="background:url(\'./images/logo/logo01_backgroundForm.png\'); background-color: white;  background-size: contain; background-position: center; background-repeat: no-repeat; ">
 
             <div class="mb-3 row d-flex justify-content-center">
@@ -47,7 +46,6 @@ showCompaniesNameDropDown("strutture") . '</select>
                 <button name="create_structure" id="createStructureButton" class="btn btn-success btn-lg">Crea una Struttura</button>
             </div>
         </div>
-    </div>
 </form>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
 integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

@@ -511,7 +511,7 @@ function showForm()
 
         if ($result) {
             $row = mysqli_fetch_assoc($result);
-            showCompanies($row);
+            include 'admin_edit_company.php';
         }
     } else if ($entity == 'strutture') {
         $query = "SELECT * FROM STRUTTURE WHERE STRUTTURA_ID = ?";
@@ -544,7 +544,7 @@ function showForm()
 
         if ($result) {
             $row = mysqli_fetch_assoc($result);
-            showBankAccounts($row);
+            include 'admin_edit_bank_account.php';
         }
     } else if ($entity == "fatture") {
         $query = "SELECT * FROM FATTURE WHERE FATTURA_ID = ?";
@@ -555,7 +555,7 @@ function showForm()
 
         if ($result) {
             $row = mysqli_fetch_assoc($result);
-            showBills($row);
+            include 'admin_edit_bill.php';
         }
     } else if ($entity == "impianti") {
         $query = "SELECT * FROM IMPIANTI WHERE IMPIANTO_ID = ?";

@@ -193,7 +193,7 @@ function showCompanyName()
                                                             <div class="col-sm-4">
                                                                 <input type="number" class="form-control"
                                                                     id="bill_withVAT" name="bill_withVAT"
-                                                                    placeholder="Valore Iva Inclusa" min=0
+                                                                    placeholder="Valore Iva Inclusa" min=0 value = "0"
                                                                     max=100000000000000000000000000 step="any" readonly>
                                                             </div>
                                                         </div>

@@ -1,7 +1,6 @@
 <?php
 echo '
 <form id="departmentForm" method="post">
-    <div class="row">
         <div class="row"
         style="background:url(\'./images/logo/logo01_backgroundForm.png\'); background-color: white;  background-size: contain; background-position: center; background-repeat: no-repeat; ">
             <div class="col-12">
@@ -26,7 +25,8 @@ echo '
                         Azienda<span style="color:red;">*</span>
                     </h5>
                     <div class="col-sm-4">
-                        <?php echo showCompanyName() ?>
+                        <select class="form-select mb-3" name = "company_name" id="company-dropdown" required>'
+                            . showCompaniesNameDropDown('reparti') . '</select>                    
                     </div>
                 </div>
 
@@ -66,5 +66,29 @@ echo '
                     il Reparto</button>
             </div>
         </div>
-    </div>
-</form>';
+    
+</form>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
+</script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#company-dropdown").change(function() {
+            var companyID = $(this).val();
+            var post_id = \'id=\' + companyID;
+            $.ajax({
+                type: "POST",
+                url: "fetch_structures.php",
+                data: post_id,
+                cache: false,
+                success: function(cities) {
+                    $("#structure_name").html(cities);
+                }
+            });
+        });
+    });
+</script>';

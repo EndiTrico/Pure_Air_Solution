@@ -119,4 +119,74 @@ echo '
                 l\'Impianto</button>
         </div>
     </div>
-</form>';
+</form>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
+</script>
+<script type="text/javascript">
+    moment.locale("it");
+
+    function capitalizeFirstLetter(word) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+    }
+
+    var picker = new Pikaday({
+        field: document.getElementById("datePicker"),
+        format: "YYYY-MM-DD",
+        i18n: {
+            previousMonth: "Mese Precedente",
+            nextMonth: "Mese Successivo",
+            months: moment.localeData().months().map(capitalizeFirstLetter),
+            weekdays: moment.localeData().weekdays().map(capitalizeFirstLetter),
+            weekdaysShort: moment.localeData().weekdaysShort().map(capitalizeFirstLetter)
+        },
+        onSelect: function () {
+            console.log(this.getMoment().format("Do MMMM YYYY"));
+        }
+    });
+
+    var picker = new Pikaday({
+        field: document.getElementById("datePicker1"),
+        format: "YYYY-MM-DD",
+        i18n: {
+            previousMonth: "Mese Precedente",
+            nextMonth: "Mese Successivo",
+            months: moment.localeData().months().map(capitalizeFirstLetter),
+            weekdays: moment.localeData().weekdays().map(capitalizeFirstLetter),
+            weekdaysShort: moment.localeData().weekdaysShort().map(capitalizeFirstLetter)
+        },
+        onSelect: function () {
+            console.log(this.getMoment().format("Do MMMM YYYY"));
+        }
+    });
+
+    $(document).ready(function () {
+        $("#company-dropdown").change(function () {
+            var companyID = $(this).val();
+            var post_id = "id=" + companyID;
+            $.ajax({
+                type: "POST",
+                url: "fetch_structures.php",
+                data: post_id,
+                cache: false,
+                success: function (structure) {
+                    $("#structure_name").html(structure);
+                }
+            });
+        });
+    });
+    $(document).ready(function () {
+        $("#structure_name").change(function () {
+            var companyID = $(this).val();
+            var post_id = "id=" + companyID;
+            $.ajax({
+                type: "POST",
+                url: "fetch_departments.php",
+                data: post_id,
+                cache: false,
+                success: function (department) {
+                    $("#department_name").html(department);
+                }
+            });
+        });
+    });
+</script>';
