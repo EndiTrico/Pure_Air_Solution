@@ -126,5 +126,4 @@ echo '
 
         document.getElementById("bill_withVAT").value = valueWithVAT;
     }
-</script>'
-;
+</script>';

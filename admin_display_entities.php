@@ -347,62 +347,35 @@ include 'database/closedb.php';
                                 destroy: true,
                                 orderCellsTop: true,
                                 fixedHeader: true,
+                                initComplete: function () {
+                                    var api = this.api();
+
+                                    // Clone the header row for the filter inputs
+                                    var clonedRow = $('#fetchTable thead tr').clone(true).appendTo('#fetchTable thead').addClass('filters');
+
+                                    // Disable sorting on the new row but allow input interaction
+                                    clonedRow.find('th').each(function () {
+                                        $(this).removeClass('sorting sorting_asc sorting_desc');
+                                        $(this).css('pointer-events', 'auto'); // Enable pointer events for the cell
+                                        $(this).off('click.DT'); // Turn off DataTables sorting on click events
+                                    });
+
+                                    // Set up search inputs in the new row
+                                    clonedRow.find('th').each(function (i) {
+                                        var title = $(this).text();
+                                        var input = $('<input type="text" style = "text-align: center;" placeholder="Cerca ' + title + '" />').appendTo($(this).empty());
+
+                                        input.on('keyup change', function () {
+                                            if (table.column(i).search() !== this.value) {
+                                                table.column(i).search(this.value).draw();
+                                            }
+                                        });
+                                    });
+                                },
                                 columnDefs: [{
                                     targets: 0,
                                     visible: true
                                 }]
-                            });
-
-                            // Clone the table header
-                            $('#fetchTable thead tr').clone(true).appendTo('#fetchTable thead');
-
-                            // Add individual column searching (input and select)
-                            $('#fetchTable thead tr:eq(1) th').each(function (i) {
-                                var headerCell = $(this);
-                                if (!headerCell.hasClass("noFilter")) {
-                                    var title = headerCell.text();
-
-                                    headerCell.html('<input type="text" placeholder="Cerca ' + title + '" />');
-
-                                    var select = $('<select><option value="">Tutti</option></select>')
-                                        .appendTo($(headerCell).empty())
-                                        .on('change', function () {
-                                            var val = $.fn.dataTable.util.escapeRegex(
-                                                $(this).val()
-                                            );
-                                            table.column(i)
-                                                .search(val ? '^' + val + '$' : '', true, false)
-                                                .draw();
-                                        });
-
-                                    var blankAppended = false;
-
-                                    table.column(i).data().unique().sort().each(function (d, j) {
-                                        var span = $('<div>').html(d).find('.myBadge');
-                                        if (span.length > 0) {
-                                            var value = span.text();
-                                            select.append('<option value="' + value + '">' + value + '</option>');
-                                        } else {
-                                            if (d.trim() === "" && !blankAppended) {
-                                                select.append('<option value="Vuoto"> Vuoto</option>');
-                                                blankAppended = true;
-                                            } else {
-                                                select.append('<option  value="' + d + '">' + d + '</option>');
-                                            }
-                                        }
-                                    });
-
-                                    $('input', this).on('keyup change', function () {
-                                        if (table.column(i).search() !== this.value) {
-                                            table
-                                                .column(i)
-                                                .search(this.value)
-                                                .draw();
-                                        }
-                                    });
-                                } else {
-                                    headerCell.html('<span></span>');
-                                }
                             });
                         }
                     };
@@ -410,6 +383,7 @@ include 'database/closedb.php';
                     xhttp.open("GET", "fetch_data.php?entity=" + entity, true);
                     xhttp.send();
                 }
+
 
 
                 function confirmDelete(id, entity) {
@@ -496,10 +470,6 @@ include 'database/closedb.php';
     </div>
 
     <script src="js/app.js"></script>
-
-
-
-
 
 </body>
 

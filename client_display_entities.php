@@ -288,51 +288,6 @@ include 'database/closedb.php';
 
 
             <script>
-                /* function fetchData(entity) {
-                    var xhttp = new XMLHttpRequest();
-                    var table;
-
-                    xhttp.onreadystatechange = function() {
-                        if (this.readyState == 4 && this.status == 200) {
-                            document.getElementById("tableContainer").innerHTML = this.responseText;
-                            table = $('#fetchTable').DataTable({
-                                language: {
-                                    "url": "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Italian.json"
-                                },
-                                destroy: true,
-                                orderCellsTop: true,
-                                fixedHeader: true,
-                                columnDefs: [{
-                                    targets: 0,
-                                    visible: true
-                                }]
-                            });
-
-                            $('#fetchTable thead tr').clone(true).appendTo('#fetchTable thead');
-                            $('#fetchTable thead tr:eq(1) th').each(function(i) {
-                                var headerCell = $(this);
-                                if (!headerCell.hasClass("noFilter")) {
-                                    var title = headerCell.text();
-                                    headerCell.html('<input type="text" placeholder="Cerca ' + title + '" />');
-
-                                    $('input', this).on('keyup change', function() {
-                                        if (table.column(i).search() !== this.value) {
-                                            table
-                                                .column(i)
-                                                .search(this.value)
-                                                .draw();
-                                        }
-                                    });
-                                } else {
-                                    headerCell.html('<span></span>');
-                                }
-                            });
-                        }
-                    };
-
-                    xhttp.open("GET", "fetch_data.php?entity=" + entity, true);
-                    xhttp.send();
-                }*/
                 function fetchData(entity) {
                     var xhttp = new XMLHttpRequest();
                     var table;
@@ -347,6 +302,25 @@ include 'database/closedb.php';
                                 destroy: true,
                                 orderCellsTop: true,
                                 fixedHeader: true,
+                                initComplete: function () {
+                                    var api = this.api();
+                                    // We ensure we use footer, checking if footer exists
+                                    if (api.table().header()) {
+                                        api.columns().every(function () {
+                                            var column = this;
+                                            var title = $(column.footer()).text(); // Ensure there is a footer element to use
+                                            var input = document.createElement('input');
+                                            input.placeholder = 'Cerca ' + title;
+                                            $(column.footer()).html(input);
+
+                                            $(input).on('keyup change', function () {
+                                                if (column.search() !== this.value) {
+                                                    column.search(this.value).draw();
+                                                }
+                                            });
+                                        });
+                                    }
+                                },
                                 columnDefs: [{
                                     targets: 0,
                                     visible: true
