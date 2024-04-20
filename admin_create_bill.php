@@ -54,7 +54,7 @@ function showCompanyName()
     $company = mysqli_query($conn, $query);
 
     $companyDropDown = "";
-    $companyDropDown .= '<select class="form-select mb-3" name = "company_name" required>';
+    $companyDropDown .= '<select class="form-select mb-3" name = "company_name" id = "company-dropdown" required>';
     $companyDropDown .= '<option value="" disabled selected>Seleziona un\'Azienda</option>';
 
     if ($company) {
@@ -94,18 +94,12 @@ function showCompanyName()
     <script src="https://code.jquery.com/jquery-3.6 .0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css">
-    <script src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/moment/locale/it.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
         integrity="sha512-BTBZNOArLzKrjzlkrMgXw0S51oBnuy0/HWkCARN0aSUSnt5N6VX/9n6tsQwnPVK68OzI6KARmxx3AeeBfM2y+g=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    </body>
-
+    <!-- FlatPickr  - Input Date -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 
 <body>
@@ -193,8 +187,35 @@ function showCompanyName()
                                                             <div class="col-sm-4">
                                                                 <input type="number" class="form-control"
                                                                     id="bill_withVAT" name="bill_withVAT"
-                                                                    placeholder="Valore Iva Inclusa" min=0 value = "0"
+                                                                    placeholder="Valore Iva Inclusa" min=0 value="0"
                                                                     max=100000000000000000000000000 step="any" readonly>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="mb-3 row d-flex justify-content-center">
+                                                            <h5 class="card-title col-sm-2 col-form-label">
+                                                                Nome di Banco
+                                                            </h5>
+                                                            <div class="col-sm-4">
+                                                                <select name="bank-name-dropdown"
+                                                                    id="bank-name-dropdown" class="form-select mb-3"
+                                                                    required>
+                                                                    <option disable selected value="">Seleziona una
+                                                                        Banca</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="mb-3 row d-flex justify-content-center">
+                                                            <h5 class="card-title col-sm-2 col-form-label">
+                                                                IBAN
+                                                            </h5>
+                                                            <div class="col-sm-4">
+                                                                <select name="iban-dropdown" id="iban-dropdown"
+                                                                    class="form-select mb-3" required>
+                                                                    <option disable selected value="">Seleziona un'IBAN
+                                                                    </option>
+                                                                </select>
                                                             </div>
                                                         </div>
 
@@ -257,9 +278,22 @@ function showCompanyName()
                                                                 Pagamento
                                                             </h5>
                                                             <div class="col-sm-4">
+
                                                                 <input readonly type="text" class="form-control"
-                                                                    id="datePicker1" name="bill_payment_date"
+                                                                    id="datePicker" name="bill_payment_date"
                                                                     placeholder="Data di Pagamento"
+                                                                    style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="mb-3 row d-flex justify-content-center">
+                                                            <h5 class="card-title col-sm-2 col-form-label">Data di
+                                                                Scadenza
+                                                            </h5>
+                                                            <div class="col-sm-4">
+                                                                <input readonly type="text" class="form-control"
+                                                                    id="datePicker" name="bill_expiration_date"
+                                                                    placeholder="Data di Scadenza"
                                                                     style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white">
                                                             </div>
                                                         </div>
@@ -282,6 +316,8 @@ function showCompanyName()
                                                             </div>
                                                         </div>
                                                     </div>
+                                                </div>
+                                            </div>
                                         </form>
                                     </div>
                                 </div>
@@ -290,69 +326,55 @@ function showCompanyName()
                     </div>
                 </div>
             </main>
-
             <?php
             include "footer.php";
             ?>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/it.js"></script>
+    <script src="js/app.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
-    <script>
-        moment.locale('it');
-
-        function capitalizeFirstLetter(word) {
-            return word.charAt(0).toUpperCase() + word.slice(1);
-        }
-
-        function calculateValueWithVAT() {
-            var value = parseFloat(document.getElementById("value").value);
-            var billVAT = parseFloat(document.getElementById("VAT").value);
-
-            if (isNaN(value)) {
-                value = 0;
-            }
-            if (isNaN(billVAT)) {
-                billVAT = 0;
-            }
-
-            var valueWithVAT = (value * (1 + (billVAT / 100)));
-
-            document.getElementById("bill_withVAT").value = valueWithVAT.toFixed(2);;
-        }
-
-
-        var picker = new Pikaday({
-            field: document.getElementById('datePicker'),
-            format: 'YYYY-MM-DD',
-            i18n: {
-                previousMonth: 'Mese Precedente',
-                nextMonth: 'Mese Successivo',
-                months: moment.localeData().months().map(capitalizeFirstLetter), // Capitalize months
-                weekdays: moment.localeData().weekdays().map(capitalizeFirstLetter), // Capitalize weekdays
-                weekdaysShort: moment.localeData().weekdaysShort().map(capitalizeFirstLetter) // Capitalize weekdaysShort
-            },
-            onSelect: function () {
-                console.log(this.getMoment().format('Do MMMM YYYY'));
-            }
+    <script type="text/javascript">
+        const flatpickrInstance = flatpickr("#datePicker", {
+            locale: 'it',
+            dateFormat: "Y-m-d",
         });
 
-        var picker = new Pikaday({
-            field: document.getElementById('datePicker1'),
-            format: 'YYYY-MM-DD',
-            i18n: {
-                previousMonth: 'Mese Precedente',
-                nextMonth: 'Mese Successivo',
-                months: moment.localeData().months().map(capitalizeFirstLetter), // Capitalize months
-                weekdays: moment.localeData().weekdays().map(capitalizeFirstLetter), // Capitalize weekdays
-                weekdaysShort: moment.localeData().weekdaysShort().map(capitalizeFirstLetter) // Capitalize weekdaysShort
-            },
-            onSelect: function () {
-                console.log(this.getMoment().format('Do MMMM YYYY'));
-            }
+        $("#company-dropdown").change(function () {
+            var companyID = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: "fetch_bank_name.php",
+                data: { id: companyID },
+                cache: false,
+                success: function (data) {
+                    $("#bank-name-dropdown").html(data);
+                    $('#bank-name-dropdown').data('companyID', companyID);
+                    $('#iban-dropdown').html('<option value="">Seleziona un\'IBAN</option>');
+                    $('#bank-name-dropdown').trigger('change');
+                }
+            });
+        });
+
+        $("#bank-name-dropdown").change(function () {
+            var bankName = $(this).val();
+            var companyID = $(this).data('companyID');
+            $.ajax({
+                type: "POST",
+                url: "fetch_iban.php",
+                data: { id: companyID, name: bankName },
+                success: function (data) {
+                    $('#iban-dropdown').html(data);
+                }
+            });
         });
     </script>
-    <script src="js/app.js"></script>
+
+
 </body>
 
 </html>

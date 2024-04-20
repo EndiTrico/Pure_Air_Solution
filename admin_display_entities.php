@@ -40,7 +40,22 @@ include 'database/closedb.php';
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css"
         href="https://cdn.datatables.net/fixedheader/3.1.7/css/fixedHeader.dataTables.min.css">
+
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        integrity="sha512-BTBZNOArLzKrjzlkrMgXw0S51oBnuy0/HWkCARN0aSUSnt5N6VX/9n6tsQwnPVK68OzI6KARmxx3AeeBfM2y+g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
+        #datepicker {
+            display: inline-block;
+        }
+
         .current {
             background-color: whitesmoke !important;
             border: none !important;
@@ -48,6 +63,11 @@ include 'database/closedb.php';
 
         option {
             text-align: center;
+        }
+
+        .swal2-overflow {
+            overflow-x: visible;
+            overflow-y: visible;
         }
 
         th,
@@ -288,51 +308,6 @@ include 'database/closedb.php';
 
 
             <script>
-                /* function fetchData(entity) {
-                    var xhttp = new XMLHttpRequest();
-                    var table;
-
-                    xhttp.onreadystatechange = function() {
-                        if (this.readyState == 4 && this.status == 200) {
-                            document.getElementById("tableContainer").innerHTML = this.responseText;
-                            table = $('#fetchTable').DataTable({
-                                language: {
-                                    "url": "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Italian.json"
-                                },
-                                destroy: true,
-                                orderCellsTop: true,
-                                fixedHeader: true,
-                                columnDefs: [{
-                                    targets: 0,
-                                    visible: true
-                                }]
-                            });
-
-                            $('#fetchTable thead tr').clone(true).appendTo('#fetchTable thead');
-                            $('#fetchTable thead tr:eq(1) th').each(function(i) {
-                                var headerCell = $(this);
-                                if (!headerCell.hasClass("noFilter")) {
-                                    var title = headerCell.text();
-                                    headerCell.html('<input type="text" placeholder="Cerca ' + title + '" />');
-
-                                    $('input', this).on('keyup change', function() {
-                                        if (table.column(i).search() !== this.value) {
-                                            table
-                                                .column(i)
-                                                .search(this.value)
-                                                .draw();
-                                        }
-                                    });
-                                } else {
-                                    headerCell.html('<span></span>');
-                                }
-                            });
-                        }
-                    };
-
-                    xhttp.open("GET", "fetch_data.php?entity=" + entity, true);
-                    xhttp.send();
-                }*/
                 function fetchData(entity) {
                     var xhttp = new XMLHttpRequest();
                     var table;
@@ -346,21 +321,18 @@ include 'database/closedb.php';
                                 },
                                 destroy: true,
                                 orderCellsTop: true,
-                                fixedHeader: true,
+                                fixedHeader: false,
                                 initComplete: function () {
                                     var api = this.api();
 
-                                    // Clone the header row for the filter inputs
                                     var clonedRow = $('#fetchTable thead tr').clone(true).appendTo('#fetchTable thead').addClass('filters');
 
-                                    // Disable sorting on the new row but allow input interaction
                                     clonedRow.find('th').each(function () {
                                         $(this).removeClass('sorting sorting_asc sorting_desc');
-                                        $(this).css('pointer-events', 'auto'); // Enable pointer events for the cell
-                                        $(this).off('click.DT'); // Turn off DataTables sorting on click events
+                                        $(this).css('pointer-events', 'auto');
+                                        $(this).off('click.DT');
                                     });
 
-                                    // Set up search inputs in the new row
                                     clonedRow.find('th').each(function (i) {
                                         var title = $(this).text();
                                         var input = $('<input type="text" style = "text-align: center;" placeholder="Cerca ' + title + '" />').appendTo($(this).empty());
@@ -416,12 +388,21 @@ include 'database/closedb.php';
                     Swal.fire({
                         title: "Sei Sicuro?",
                         text: "Tutte le Entità Principali Devono Essere Attive",
+                        html: '<input id="datePicker" class="swal2-input"  style = "text-align: center; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat right 10px center; background-size: 20px; background-color: white">',
+                        focusConfirm: false,
                         icon: "warning",
                         showCancelButton: true,
                         cancelButtonText: "No",
                         confirmButtonColor: "#3085d6",
                         cancelButtonColor: "#d33",
-                        confirmButtonText: "Si"
+                        confirmButtonText: "Si",
+                        preConfirm: () => {
+                            const date = flatpickrInstance.selectedDates[0];
+                            if (!date) {
+                                Swal.showValidationMessage("Please select a date.");
+                            }
+                            return date ? date.toISOString().substring(0, 10) : null;
+                        }
                     }).then((result) => {
                         if (result.isConfirmed) {
                             var xhr = new XMLHttpRequest();
@@ -461,7 +442,14 @@ include 'database/closedb.php';
                             xhr.send();
                         }
                     });
+
+                    const flatpickrInstance = flatpickr("#datePicker", {
+                        locale: 'it',
+                        defaultDate: new Date(),
+                        dateFormat: "Y-m-d",
+                    });
                 }
+
             </script>
             <?php
             include "footer.php";
@@ -470,6 +458,9 @@ include 'database/closedb.php';
     </div>
 
     <script src="js/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/it.js"></script>
 
 </body>
 

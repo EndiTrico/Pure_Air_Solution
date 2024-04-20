@@ -111,13 +111,10 @@ include 'database/closedb.php';
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
-
                             </div>
                         </div>
-
                     </div>
                 </div>
             </main>

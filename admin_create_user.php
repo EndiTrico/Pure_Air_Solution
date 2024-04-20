@@ -157,6 +157,15 @@ function showAllCompanies()
             border-color: darkgray;
             background-color: white;
         }
+
+        .select2-search__field, .select2-selection__choice{
+            margin-top: 8.5px !important;
+            margin-left: 7px !important;
+        }
+
+        .form-select{
+            color: #6d6f72 !important;
+        }
     </style>
 </head>
 
@@ -281,7 +290,7 @@ function showAllCompanies()
                                                 <div class="col-sm-4">
                                                     <div>
                                                         <select data-allow-clear="1" name="user_role"
-                                                            class="form-select mb-3" required>
+                                                            class="form-select mb-3 " required>
                                                             <option value="" style="margin-right:20px !important;"
                                                                 disabled selected hidden>Seleziona Ruolo</option>
                                                             <option value="Admin">Admin</option>
@@ -294,9 +303,9 @@ function showAllCompanies()
                                             <div class="mb-3 row d-flex justify-content-center">
                                                 <h5 class="card-title col-sm-2 col-form-label">Aziende</h5>
                                                 <div class="col-sm-4">
-                                                    <select style="font-size: 1px !important;" multiple
+                                                    <select style="font-size: 1px !important;" multiple 
                                                         placeholder="Seleziona Azienda" name="user_companies[]"
-                                                        id="select" data-allow-clear="1">
+                                                        id="multiple_select" data-allow-clear="1">
                                                         <?php echo showAllCompanies(); ?>
                                                     </select>
                                                 </div>
@@ -325,7 +334,7 @@ function showAllCompanies()
 
                 <script>
                     $(function () {
-                        $('select').each(function () {
+                        $('#multiple_select').each(function () {
                             $(this).select2({
                                 theme: 'bootstrap4',
                                 width: 'style',

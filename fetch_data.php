@@ -28,7 +28,7 @@ if ($entity == "utenti") {
                 FROM BANCA_CONTI b
                 JOIN AZIENDE a ON a.AZIENDA_ID = b.AZIENDA_ID";
 } else if ($entity == "fatture") {
-    $query = "SELECT f.FATTURA_ID, f.FATTURA_NOME, a.AZIENDA_NOME, f.VALORE, f.VALORE_IVA_INCLUSA, f.IVA, f.MONETA, 
+    $query = "SELECT f.FATTURA_ID, a.AZIENDA_NOME, f.VALORE, f.VALORE_IVA_INCLUSA, f.IVA, f.MONETA, 
                 f.DATA_FATTURAZIONE, f.DATA_PAGAMENTO, f.E_PAGATO
                 FROM FATTURE f
                 JOIN AZIENDE a ON a.AZIENDA_ID = f.AZIENDA_ID";
@@ -69,11 +69,15 @@ echo '<thead>
 $columnIndex = 0;
 
 while ($fieldinfo = mysqli_fetch_field($result)) {
-    if ($fieldinfo->name === 'PASSWORD' || strpos(strtolower($fieldinfo->name), 'id')) {
+    if($fieldinfo->name === 'FATTURA_ID'){
+        $fieldName = ucwords(str_replace('_', ' ', strtolower($fieldinfo->name)));
+    }
+    else if ($fieldinfo->name === 'PASSWORD' || strpos(strtolower($fieldinfo->name), 'id')) {
         continue;
     }
-
-    $fieldName = ucwords(str_replace('_', ' ', strtolower($fieldinfo->name)));
+    else {
+        $fieldName = ucwords(str_replace('_', ' ', strtolower($fieldinfo->name)));
+    }
 
     echo '<th>' . $fieldName . '</th>';
 }
@@ -101,6 +105,8 @@ if (mysqli_num_rows($result) > 0) {
                 echo $value == 1 ? '<td><span class="badge-success-custom myBadge">Pagato</span></td>' :
                     '<td><span class="badge-danger-custom myBadge">Non&nbsp;Pagato</span></td>';
                 $badge = $value;
+            } else if ($key == 'FATTURA_ID'){
+                echo '<td>' . $value . '</td>';
             } else if (strpos(strtolower($key), 'id')) {
                 continue;
             } else {
@@ -142,11 +148,9 @@ if (mysqli_num_rows($result) > 0) {
     }
 }
 
-echo '</tbody>';
-
-
-
-echo '</table></div>';
+echo '      </tbody>
+        </table>
+    </div>';
 
 
 mysqli_free_result($result);
