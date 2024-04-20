@@ -100,6 +100,12 @@ function showCompanyName()
 
     <!-- FlatPickr  - Input Date -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <style>
+        .form-select {
+            color: #6d6f72 !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -112,8 +118,8 @@ function showCompanyName()
                 <div class="container-fluid p-0">
                     <div class="row">
                         <div class="col-auto">
-                            <a class="btn transparent-btn" href="admin_create.php">
-                                <img alt="Back" style="margin-top: -8px;" src="./images/back_button.png">
+                        <a class="btn transparent-btn" style="margin-top: -7px;" href="admin_create.php">
+                                <img alt="Back" src="./images/back_button.png">
                             </a>
                         </div>
                         <div class="col">
@@ -332,7 +338,6 @@ function showCompanyName()
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/it.js"></script>
     <script src="js/app.js"></script>

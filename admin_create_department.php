@@ -15,6 +15,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $department_address = mysqli_real_escape_string($conn, $_POST['department_address']);
         $department_city = mysqli_real_escape_string($conn, $_POST['department_city']);
         $department_information = mysqli_real_escape_string($conn, $_POST['department_information']);
+        $department_joined_date = mysqli_real_escape_string($conn, $_POST['department_joined_date']);
+        $department_left_date = mysqli_real_escape_string($conn, $_POST['department_left_date']);
 
         $queryCheck = "SELECT REPARTO_ID FROM REPARTI 
                         WHERE REPARTO_NOME = ? 
@@ -31,10 +33,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (mysqli_num_rows($resultCheck) > 0) {
                 $errorMessage = "C'è un Reparto con Quel Nome in Quella Struttura e Agenzia";
             } else {
-                $sql = "INSERT INTO REPARTI (REPARTO_NOME, AZIENDA_ID, STRUTTURA_ID, INDIRIZZO, CITTA, INFORMAZIONI, E_ATTIVO) VALUES 
+                $sql = "INSERT INTO REPARTI (REPARTO_NOME, AZIENDA_ID, STRUTTURA_ID, INDIRIZZO, CITTA, INFORMAZIONI, DATA_INIZIO, DATA_FINITO, E_ATTIVO) VALUES 
                         (?, ?, ?, ?, ?, ?, 1)";
                 $stmt = mysqli_prepare($conn, $sql);
-                mysqli_stmt_bind_param($stmt, "siisss", $department_name, $department_company_id, $department_structure_id, $department_address, $department_city, $department_information);
+                mysqli_stmt_bind_param($stmt, "siisssss", $department_name, $department_company_id, $department_structure_id, $department_address, $department_city, $department_information, $department_joined_date, $department_left_date);
 
                 try {
                     if (mysqli_stmt_execute($stmt)) {
@@ -101,6 +103,14 @@ function showCompanyName()
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- FlatPickr  - Input Date -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <style>
+        .form-select {
+            color: #6d6f72 !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -114,8 +124,8 @@ function showCompanyName()
 
                     <div class="row">
                         <div class="col-auto">
-                            <a class="btn transparent-btn" href="admin_create.php">
-                                <img alt="Back" style="margin-top: -8px;" src="./images/back_button.png">
+                        <a class="btn transparent-btn" style="margin-top: -7px;" href="admin_create.php">
+                                <img alt="Back" src="./images/back_button.png">
                             </a>
                         </div>
                         <div class="col">
@@ -193,7 +203,31 @@ function showCompanyName()
                                                                         name="department_city" placeholder="Citta">
                                                                 </div>
                                                             </div>
-                                                        
+
+                                                            <div class="mb-3 row d-flex justify-content-center">
+                                                                <h5 class="card-title col-sm-2 col-form-label">Data di
+                                                                    Inizio<span style="color:red;">*</span>
+                                                                </h5>
+                                                                <div class="col-sm-4">
+                                                                    <input readonly type="text" class="form-control"
+                                                                        id="datePicker" name="department_joined_date"
+                                                                        placeholder="Data di Inizio" required
+                                                                        style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="mb-3 row d-flex justify-content-center">
+                                                                <h5 class="card-title col-sm-2 col-form-label">Data di
+                                                                    Finito
+                                                                </h5>
+                                                                <div class="col-sm-4">
+                                                                    <input readonly type="text" class="form-control"
+                                                                        id="datePicker" name="department_left_date"
+                                                                        placeholder="Data di Finito"
+                                                                        style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white">
+                                                                </div>
+                                                            </div>
+
                                                             <div class="mb-3 row d-flex justify-content-center">
                                                                 <h5 class="card-title col-sm-2 col-form-label">
                                                                     Struttura<span style="color:red;">*</span>
@@ -243,9 +277,16 @@ function showCompanyName()
 
     <script src="js/app.js"></script>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
-    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"> </script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/it.js"></script>
+
     <script type="text/javascript">
+        const flatpickrInstance = flatpickr("#datePicker", {
+            locale: 'it',
+            dateFormat: "Y-m-d",
+        });
+
         $(document).ready(function () {
             $("#company-dropdown").change(function () {
                 var companyID = $(this).val();
@@ -263,4 +304,5 @@ function showCompanyName()
         });
     </script>
 </body>
+
 </html>

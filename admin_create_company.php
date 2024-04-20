@@ -8,7 +8,7 @@ $errorMessage = "";
 $successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset ($_POST['create_company'])) {
+    if (isset($_POST['create_company'])) {
         $company_name = mysqli_real_escape_string($conn, $_POST['company_name']);
         $company_codice_fiscale = mysqli_real_escape_string($conn, $_POST['company_codice_fiscale']);
         $company_contact1 = mysqli_real_escape_string($conn, $_POST['company_contact1']);
@@ -26,6 +26,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $company_city = mysqli_real_escape_string($conn, $_POST['company_city']);
         $company_address_pec = mysqli_real_escape_string($conn, $_POST['company_address_pec']);
         $company_information = mysqli_real_escape_string($conn, $_POST['company_information']);
+        $company_joined_date = mysqli_real_escape_string($conn, $_POST['company_joined_date']);
+        $company_left_date = mysqli_real_escape_string($conn, $_POST['company_left_date']);
 
 
         $queryCheck = "SELECT AZIENDA_ID FROM AZIENDE 
@@ -42,11 +44,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $errorMessage = "Errore: C'è Una Azienda con Quella Partita Iva";
             } else {
                 $sql = "INSERT INTO AZIENDE (AZIENDA_NOME, PARTITA_IVA, CODICE_FISCALE, CONTATTO_1, CONTATTO_2, CONTATTO_3, EMAIL_1, EMAIL_2, EMAIL_3,  
-                                            TELEFONO_1, TELEFONO_2, TELEFONO_3, INDIRIZZO, CITTA, INDIRIZZO_PEC, WEBSITE, DATA_ISCRIZIONE, INFORMAZIONI, E_ATTIVO) 
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, DATE(NOW()), ?, 1)";
+                                            TELEFONO_1, TELEFONO_2, TELEFONO_3, INDIRIZZO, CITTA, INDIRIZZO_PEC, WEBSITE, DATA_INIZIO, DATA_FINITO, INFORMAZIONI, E_ATTIVO) 
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)";
 
                 $stmt = mysqli_prepare($conn, $sql);
-                mysqli_stmt_bind_param($stmt, "sssssssssiiisssss", $company_name, $company_nipt, $company_codice_fiscale, $company_contact1, $company_contact2, $company_contact3, $company_email1, $company_email2, $company_email3, $company_telephone1, $company_telephone2, $company_telephone3, $company_address, $company_city, $company_address_pec, $company_website, $company_information);
+                mysqli_stmt_bind_param($stmt, "sssssssssiiisssssss", $company_name, $company_nipt, $company_codice_fiscale, $company_contact1, $company_contact2, $company_contact3, $company_email1, $company_email2, $company_email3, $company_telephone1, $company_telephone2, $company_telephone3, $company_address, $company_city, $company_address_pec, $company_website, $company_joined_date, $company_left_date, $company_information);
 
                 try {
                     if (mysqli_stmt_execute($stmt)) {
@@ -86,6 +88,15 @@ include 'database/closedb.php';
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script src="https://code.jquery.com/jquery-3.6 .0.min.js"></script>
+
+    <!-- FlatPickr  - Input Date -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <style>
+        .form-select {
+            color: #6d6f72 !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -99,8 +110,8 @@ include 'database/closedb.php';
 
                     <div class="row">
                         <div class="col-auto">
-                            <a class="btn transparent-btn" href="admin_create.php">
-                                <img alt="Back" style="margin-top: -8px;" src="./images/back_button.png">
+                        <a class="btn transparent-btn" style="margin-top: -7px;" href="admin_create.php">
+                                <img alt="Back" src="./images/back_button.png">
                             </a>
                         </div>
                         <div class="col">
@@ -108,14 +119,14 @@ include 'database/closedb.php';
                         </div>
 
                         <div class="col-12">
-                        <div class="card"
+                            <div class="card"
                                 style="background:url('./images/logo/logo01_backgroundForm.png'); background-color: white;  background-size: contain; background-position: center; background-repeat: no-repeat; ">
                                 <div class="card-body">
                                     <div class="card-body">
                                         <form id="companyForm" method="post">
                                             <div class="row">
                                                 <?php
-                                                if (!empty ($errorMessage)) {
+                                                if (!empty($errorMessage)) {
                                                     echo '<div class="col-12">
                                                             <div class="card">
                                                                 <div class="card-header">
@@ -124,7 +135,7 @@ include 'database/closedb.php';
                                                                 </div>                                                    
                                                             </div>
                                                         </div>';
-                                                } else if (!empty ($successfulMessage)) {
+                                                } else if (!empty($successfulMessage)) {
                                                     echo '<div class="col-12">
                                                             <div class="card">
                                                                 <div class="card-header">
@@ -147,7 +158,7 @@ include 'database/closedb.php';
                                                             </div>
                                                         </div>
 
-                                                        
+
                                                         <div class="mb-3 row d-flex justify-content-center">
                                                             <h5 class="card-title col-sm-2 col-form-label">Partita
                                                                 Iva<span style="color:red;">*</span></h5>
@@ -177,7 +188,7 @@ include 'database/closedb.php';
                                                                     required>
                                                             </div>
                                                         </div>
-                                                        
+
                                                         <div class="mb-3 row d-flex justify-content-center">
                                                             <h5 class="card-title col-sm-2 col-form-label">Indirizzo
                                                             </h5>
@@ -223,7 +234,8 @@ include 'database/closedb.php';
                                                         </div>
 
                                                         <div class="mb-3 row d-flex justify-content-center">
-                                                            <h5 class="card-title col-sm-2 col-form-label">Telefono 1</h5>
+                                                            <h5 class="card-title col-sm-2 col-form-label">Telefono 1
+                                                            </h5>
                                                             <div class="col-sm-4">
                                                                 <input type="number" class="form-control"
                                                                     name="company_telephone1"
@@ -231,7 +243,8 @@ include 'database/closedb.php';
                                                             </div>
                                                         </div>
                                                         <div class="mb-3 row d-flex justify-content-center">
-                                                            <h5 class="card-title col-sm-2 col-form-label">Telefono 2</h5>
+                                                            <h5 class="card-title col-sm-2 col-form-label">Telefono 2
+                                                            </h5>
                                                             <div class="col-sm-4">
                                                                 <input type="number" class="form-control"
                                                                     name="company_telephone2"
@@ -240,7 +253,8 @@ include 'database/closedb.php';
                                                         </div>
 
                                                         <div class="mb-3 row d-flex justify-content-center">
-                                                            <h5 class="card-title col-sm-2 col-form-label">Telefono 3</h5>
+                                                            <h5 class="card-title col-sm-2 col-form-label">Telefono 3
+                                                            </h5>
                                                             <div class="col-sm-4">
                                                                 <input type="number" class="form-control"
                                                                     name="company_telephone3"
@@ -271,6 +285,30 @@ include 'database/closedb.php';
                                                             <div class="col-sm-4">
                                                                 <input type="text" class="form-control"
                                                                     name="company_email3" placeholder="Email 3">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="mb-3 row d-flex justify-content-center">
+                                                            <h5 class="card-title col-sm-2 col-form-label">Data di
+                                                                Inizio<span style="color:red;">*</span>
+                                                            </h5>
+                                                            <div class="col-sm-4">
+                                                                <input readonly type="text" class="form-control"
+                                                                    id="datePicker" name="company_joined_date"
+                                                                    placeholder="Data di Inizio" required
+                                                                    style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="mb-3 row d-flex justify-content-center">
+                                                            <h5 class="card-title col-sm-2 col-form-label">Data di
+                                                                Finito
+                                                            </h5>
+                                                            <div class="col-sm-4">
+                                                                <input readonly type="text" class="form-control"
+                                                                    id="datePicker" name="company_left_date"
+                                                                    placeholder="Data di Finito"
+                                                                    style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white">
                                                             </div>
                                                         </div>
 
@@ -317,6 +355,14 @@ include 'database/closedb.php';
     </div>
 
     <script src="js/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/it.js"></script>
+    <script>
+        const flatpickrInstance = flatpickr("#datePicker", {
+            locale: 'it',
+            dateFormat: "Y-m-d",
+        });
+    </script>
 
 </body>
 

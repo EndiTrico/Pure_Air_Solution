@@ -132,8 +132,18 @@ function showCompanyName()
     <script src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment/locale/it.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-BTBZNOArLzKrjzlkrMgXw0S51oBnuy0/HWkCARN0aSUSnt5N6VX/9n6tsQwnPVK68OzI6KARmxx3AeeBfM2y+g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        integrity="sha512-BTBZNOArLzKrjzlkrMgXw0S51oBnuy0/HWkCARN0aSUSnt5N6VX/9n6tsQwnPVK68OzI6KARmxx3AeeBfM2y+g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+    <!-- FlatPickr  - Input Date -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <style>
+        .form-select {
+            color: #6d6f72 !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -147,8 +157,8 @@ function showCompanyName()
 
                     <div class="row">
                         <div class="col-auto">
-                            <a class="btn transparent-btn" href="admin_create.php">
-                                <img alt="Back" style="margin-top: -8px;" src="./images/back_button.png">
+                        <a class="btn transparent-btn" style="margin-top: -7px;" href="admin_create.php">
+                                <img alt="Back" src="./images/back_button.png">
                             </a>
                         </div>
                         <div class="col">
@@ -157,7 +167,8 @@ function showCompanyName()
 
                         <div class="row">
                             <div class="col-12">
-                                <div class="card" style="background:url('./images/logo/logo01_backgroundForm.png'); background-color: white;  background-size: contain; background-position: center; background-repeat: no-repeat; ">
+                                <div class="card"
+                                    style="background:url('./images/logo/logo01_backgroundForm.png'); background-color: white;  background-size: contain; background-position: center; background-repeat: no-repeat; ">
                                     <div class="card-body">
                                         <div class="card-body">
                                             <form id="impiantoForm" method="post">
@@ -186,16 +197,20 @@ function showCompanyName()
                                                     ?>
 
                                                     <div class="mb-3 row d-flex justify-content-center">
-                                                        <h5 class="card-title col-sm-2 col-form-label">Nome Uta<span style="color:red;">*</span></h5>
+                                                        <h5 class="card-title col-sm-2 col-form-label">Nome Uta<span
+                                                                style="color:red;">*</span></h5>
                                                         <div class="col-sm-4">
-                                                            <input type="text" class="form-control" name="impianto_nome" placeholder="Nome" required>
+                                                            <input type="text" class="form-control" name="impianto_nome"
+                                                                placeholder="Nome" required>
                                                         </div>
                                                     </div>
 
                                                     <div class="mb-3 row d-flex justify-content-center">
-                                                        <h5 class="card-title col-sm-2 col-form-label">Struttura<span style="color:red;">*</span></h5>
+                                                        <h5 class="card-title col-sm-2 col-form-label">Struttura<span
+                                                                style="color:red;">*</span></h5>
                                                         <div class="col-sm-4">
-                                                            <select name="structure_name" id="structure_name" class="form-select mb-3" required>
+                                                            <select name="structure_name" id="structure_name"
+                                                                class="form-select mb-3" required>
                                                                 <option disable selected value="">Seleziona una
                                                                     Struttura</option>
                                                             </select>
@@ -203,24 +218,36 @@ function showCompanyName()
                                                     </div>
 
                                                     <div class="mb-3 row d-flex justify-content-center">
-                                                        <h5 class="card-title col-sm-2 col-form-label">Capacita Uta<span style="color:red;">*</span>
+                                                        <h5 class="card-title col-sm-2 col-form-label">Capacita Uta<span
+                                                                style="color:red;">*</span>
                                                         </h5>
                                                         <div class="col-sm-4">
-                                                            <input type="number" class="form-control" id="impianto_capacita_uta" name="impianto_capacita_uta" placeholder="Capacita Uta" min=0 max=100000000000000000000000000 step="any" required>
+                                                            <input type="number" class="form-control"
+                                                                id="impianto_capacita_uta" name="impianto_capacita_uta"
+                                                                placeholder="Capacita Uta" min=0
+                                                                max=100000000000000000000000000 step="any" required>
                                                         </div>
                                                     </div>
 
                                                     <div class="mb-3 row d-flex justify-content-center">
-                                                        <h5 class="card-title col-sm-2 col-form-label">Ripresa<span style="color:red;">*</span></h5>
+                                                        <h5 class="card-title col-sm-2 col-form-label">Ripresa<span
+                                                                style="color:red;">*</span></h5>
                                                         <div class="col-sm-4">
-                                                            <input type="number" class="form-control" id="impianto_ripresa" name="impianto_ripresa" placeholder="Ripresa" min=0 max=100000000000000000000000000 step="any" required>
+                                                            <input type="number" class="form-control"
+                                                                id="impianto_ripresa" name="impianto_ripresa"
+                                                                placeholder="Ripresa" min=0
+                                                                max=100000000000000000000000000 step="any" required>
                                                         </div>
                                                     </div>
 
                                                     <div class="mb-3 row d-flex justify-content-center">
-                                                        <h5 class="card-title col-sm-2 col-form-label">Espulsione<span style="color:red;">*</span></h5>
+                                                        <h5 class="card-title col-sm-2 col-form-label">Espulsione<span
+                                                                style="color:red;">*</span></h5>
                                                         <div class="col-sm-4">
-                                                            <input type="number" class="form-control" id="impianto_espulsione" name="impianto_espulsione" placeholder="Espulsione" min=0 max=100000000000000000000000000 step="any" required>
+                                                            <input type="number" class="form-control"
+                                                                id="impianto_espulsione" name="impianto_espulsione"
+                                                                placeholder="Espulsione" min=0
+                                                                max=100000000000000000000000000 step="any" required>
                                                         </div>
                                                     </div>
 
@@ -229,14 +256,16 @@ function showCompanyName()
                                                             Utilizzo
                                                         </h5>
                                                         <div class="col-sm-4">
-                                                            <div class="form-group mb-4">
-                                                                <input readonly type="text" class="form-control" id="datePicker" name="impianto_data_inizio_utilizzo" placeholder="Data di Fatturazione" style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white;">
-                                                            </div>
+                                                                <input readonly type="text" class="form-control"
+                                                                    id="datePicker" name="impianto_data_inizio_utilizzo"
+                                                                    placeholder="Data di Inizio Utilizzo"
+                                                                    style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white;">
                                                         </div>
                                                     </div>
 
                                                     <div class="mb-3 row d-flex justify-content-center">
-                                                        <h5 class="card-title col-sm-2 col-form-label">Azienda<span style="color:red;">*</span></h5>
+                                                        <h5 class="card-title col-sm-2 col-form-label">Azienda<span
+                                                                style="color:red;">*</span></h5>
                                                         <div class="col-sm-4">
                                                             <?php echo showCompanyName() ?>
                                                         </div>
@@ -245,7 +274,8 @@ function showCompanyName()
                                                     <div class="mb-3 row d-flex justify-content-center">
                                                         <h5 class="card-title col-sm-2 col-form-label">Reparto</h5>
                                                         <div class="col-sm-4">
-                                                            <select name="department_name" id="department_name" class="form-control form-select mb-3" required>
+                                                            <select name="department_name" id="department_name"
+                                                                class="form-control form-select mb-3" required>
                                                                 <option disable selected value="">Seleziona un
                                                                     Reparto</option>
                                                             </select>
@@ -256,7 +286,10 @@ function showCompanyName()
                                                         <h5 class="card-title col-sm-2 col-form-label">
                                                             Mandata<span style="color:red;">*</span></h5>
                                                         <div class="col-sm-4">
-                                                            <input type="number" class="form-control" id="impianto_mandata" name="impianto_mandata" placeholder="Mandata" min=0 max=100000000000000000000000000 step="any" required>
+                                                            <input type="number" class="form-control"
+                                                                id="impianto_mandata" name="impianto_mandata"
+                                                                placeholder="Mandata" min=0
+                                                                max=100000000000000000000000000 step="any" required>
                                                         </div>
                                                     </div>
 
@@ -264,7 +297,11 @@ function showCompanyName()
                                                         <h5 class="card-title col-sm-2 col-form-label">Presa Aria
                                                             Esterna<span style="color:red;">*</span></h5>
                                                         <div class="col-sm-4">
-                                                            <input type="number" class="form-control" id="impianto_presa_aria_esterna" name="impianto_presa_aria_esterna" placeholder="Presa Aria Esterna" min=0 max=100000000000000000000000000 step="any" required>
+                                                            <input type="number" class="form-control"
+                                                                id="impianto_presa_aria_esterna"
+                                                                name="impianto_presa_aria_esterna"
+                                                                placeholder="Presa Aria Esterna" min=0
+                                                                max=100000000000000000000000000 step="any" required>
                                                         </div>
                                                     </div>
 
@@ -272,7 +309,9 @@ function showCompanyName()
                                                         <h5 class="card-title col-sm-2 col-form-label">Ultima Attivita
                                                         </h5>
                                                         <div class="col-sm-4">
-                                                            <input type="text" class="form-control" name="impianto_ultima_attivita" placeholder="Ultima Attivita">
+                                                            <input type="text" class="form-control"
+                                                                name="impianto_ultima_attivita"
+                                                                placeholder="Ultima Attivita">
                                                         </div>
                                                     </div>
 
@@ -280,22 +319,23 @@ function showCompanyName()
                                                         <h5 class="card-title col-sm-2 col-form-label">Data Ultima Att
                                                         </h5>
                                                         <div class="col-sm-4">
-                                                            <div class="form-group mb-4">
-                                                                <input readonly type="text" class="form-control" id="datePicker1" name="impianto_data_ultima_att" placeholder="Data di Fatturazione" style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white;">
-                                                            </div>
+                                                                <input readonly type="text" class="form-control"
+                                                                    id="datePicker" name="impianto_data_ultima_att"
+                                                                    placeholder="Data Ultima Att"
+                                                                    style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white;">
                                                         </div>
                                                     </div>
                                                 </div>
+                                            </form>
                                         </div>
                                         <div class="row">
                                             <div class="col-12 d-flex justify-content-center">
-                                                <button name="create_impianto" id="createImpiantoButton" class="btn btn-success btn-lg">Crea un
+                                                <button name="create_impianto" id="createImpiantoButton"
+                                                    class="btn btn-success btn-lg">Crea un
                                                     Impianto</button>
                                             </div>
                                         </div>
                                     </div>
-                                    </form>
-
                                 </div>
                             </div>
                         </div>
@@ -310,47 +350,16 @@ function showCompanyName()
 
     <script src="js/app.js"></script>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
-    </script>
-    <script type="text/javascript">
-        moment.locale('it');
-
-        function capitalizeFirstLetter(word) {
-            return word.charAt(0).toUpperCase() + word.slice(1);
-        }
-
-        var picker = new Pikaday({
-            field: document.getElementById('datePicker'),
-            format: 'YYYY-MM-DD',
-            i18n: {
-                previousMonth: 'Mese Precedente',
-                nextMonth: 'Mese Successivo',
-                months: moment.localeData().months().map(capitalizeFirstLetter), // Capitalize months
-                weekdays: moment.localeData().weekdays().map(capitalizeFirstLetter), // Capitalize weekdays
-                weekdaysShort: moment.localeData().weekdaysShort().map(capitalizeFirstLetter) // Capitalize weekdaysShort
-            },
-            onSelect: function() {
-                console.log(this.getMoment().format('Do MMMM YYYY'));
-            }
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/it.js"></script>
+    <script>
+        const flatpickrInstance = flatpickr("#datePicker", {
+            locale: 'it',
+            dateFormat: "Y-m-d",
         });
-
-        var picker = new Pikaday({
-            field: document.getElementById('datePicker1'),
-            format: 'YYYY-MM-DD',
-            i18n: {
-                previousMonth: 'Mese Precedente',
-                nextMonth: 'Mese Successivo',
-                months: moment.localeData().months().map(capitalizeFirstLetter), // Capitalize months
-                weekdays: moment.localeData().weekdays().map(capitalizeFirstLetter), // Capitalize weekdays
-                weekdaysShort: moment.localeData().weekdaysShort().map(capitalizeFirstLetter) // Capitalize weekdaysShort
-            },
-            onSelect: function() {
-                console.log(this.getMoment().format('Do MMMM YYYY'));
-            }
-        });
-
-        $(document).ready(function() {
-            $("#company-dropdown").change(function() {
+        $(document).ready(function () {
+            $("#company-dropdown").change(function () {
                 var companyID = $(this).val();
                 var post_id = 'id=' + companyID;
                 $.ajax({
@@ -358,14 +367,14 @@ function showCompanyName()
                     url: "fetch_structures.php",
                     data: post_id,
                     cache: false,
-                    success: function(structure) {
+                    success: function (structure) {
                         $("#structure_name").html(structure);
                     }
                 });
             });
         });
-        $(document).ready(function() {
-            $("#structure_name").change(function() {
+        $(document).ready(function () {
+            $("#structure_name").change(function () {
                 var companyID = $(this).val();
                 var post_id = 'id=' + companyID;
                 $.ajax({
@@ -373,7 +382,7 @@ function showCompanyName()
                     url: "fetch_departments.php",
                     data: post_id,
                     cache: false,
-                    success: function(department) {
+                    success: function (department) {
                         $("#department_name").html(department);
                     }
                 });

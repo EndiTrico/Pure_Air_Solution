@@ -356,8 +356,6 @@ include 'database/closedb.php';
                     xhttp.send();
                 }
 
-
-
                 function confirmDelete(id, entity) {
                     Swal.fire({
                         title: "Sei Sicuro?",

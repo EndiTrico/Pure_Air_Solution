@@ -16,6 +16,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $user_role = mysqli_real_escape_string($conn, $_POST['user_role']);
         $user_position = mysqli_real_escape_string($conn, $_POST['user_position']);
         $user_numero = mysqli_real_escape_string($conn, $_POST['user_number']);
+        $user_joined_date = mysqli_real_escape_string($conn, $_POST['user_joined_date']);
+        $user_left_date = mysqli_real_escape_string($conn, $_POST['user_left_date']);
+
         if (!empty($_POST['user_companies'])) {
             $user_companies = $_POST['user_companies'];
         }
@@ -35,11 +38,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (mysqli_stmt_num_rows($stmt) > 0) {
             $errorMessage = "Errore: C'è un Utente con Quell'E-mail";
         } else {
-            $sql = "INSERT INTO UTENTI (NOME, COGNOME, EMAIL, PASSWORD, NUMERO, RUOLO, AZIENDA_POSIZIONE, E_ATTIVO) VALUES 
-                (?, ?, ?, ?, ?, ?, ?, 1)";
+            $sql = "INSERT INTO UTENTI (NOME, COGNOME, EMAIL, PASSWORD, NUMERO, RUOLO, AZIENDA_POSIZIONE, DATA_INIZIO, DATA_FINITO, E_ATTIVO) VALUES 
+                (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)";
 
             $stmt = mysqli_prepare($conn, $sql);
-            mysqli_stmt_bind_param($stmt, "ssssiss", $user_first_name, $user_last_name, $user_email, $hashed_password, $user_numero, $user_role, $user_position);
+            mysqli_stmt_bind_param($stmt, "ssssissss", $user_first_name, $user_last_name, $user_email, $hashed_password, $user_numero, $user_role, $user_position, $user_joined_date, $user_left_date);
             try {
                 if (mysqli_stmt_execute($stmt)) {
                     if (!empty($user_companies)) {
@@ -137,7 +140,8 @@ function showAllCompanies()
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
         integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 
-
+    <!-- FlatPickr  - Input Date -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
         .alert {
             margin-left: 20px
@@ -158,12 +162,13 @@ function showAllCompanies()
             background-color: white;
         }
 
-        .select2-search__field, .select2-selection__choice{
+        .select2-search__field,
+        .select2-selection__choice {
             margin-top: 8.5px !important;
             margin-left: 7px !important;
         }
 
-        .form-select{
+        .form-select {
             color: #6d6f72 !important;
         }
     </style>
@@ -243,7 +248,7 @@ function showAllCompanies()
                                                 </div>
                                             </div>
 
-                                            
+
                                             <div class="mb-3 row d-flex justify-content-center">
                                                 <h5 class="card-title col-sm-2 col-form-label">Password<span
                                                         style="color:red;">*</span>
@@ -282,7 +287,28 @@ function showAllCompanies()
                                                 </div>
                                             </div>
 
-                                            
+                                            <div class="mb-3 row d-flex justify-content-center">
+                                                <h5 class="card-title col-sm-2 col-form-label">Data di
+                                                    Inizio<span style="color:red;">*</span>
+                                                </h5>
+                                                <div class="col-sm-4">
+                                                    <input readonly type="text" class="form-control" id="datePicker"
+                                                        name="user_joined_date" placeholder="Data di Inizio" required
+                                                        style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white">
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-3 row d-flex justify-content-center">
+                                                <h5 class="card-title col-sm-2 col-form-label">Data di
+                                                    Finito
+                                                </h5>
+                                                <div class="col-sm-4">
+                                                    <input readonly type="text" class="form-control" id="datePicker"
+                                                        name="user_left_date" placeholder="Data di Finito"
+                                                        style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white">
+                                                </div>
+                                            </div>
+
                                             <div class="mb-3 row d-flex justify-content-center">
                                                 <h5 class="card-title col-sm-2 col-form-label">Ruole<span
                                                         style="color:red;">*</span>
@@ -303,7 +329,7 @@ function showAllCompanies()
                                             <div class="mb-3 row d-flex justify-content-center">
                                                 <h5 class="card-title col-sm-2 col-form-label">Aziende</h5>
                                                 <div class="col-sm-4">
-                                                    <select style="font-size: 1px !important;" multiple 
+                                                    <select style="font-size: 1px !important;" multiple
                                                         placeholder="Seleziona Azienda" name="user_companies[]"
                                                         id="multiple_select" data-allow-clear="1">
                                                         <?php echo showAllCompanies(); ?>
@@ -332,7 +358,15 @@ function showAllCompanies()
 
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
+
+                <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+                <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/it.js"></script>
                 <script>
+                    const flatpickrInstance = flatpickr("#datePicker", {
+                        locale: 'it',
+                        dateFormat: "Y-m-d",
+                    });
+
                     $(function () {
                         $('#multiple_select').each(function () {
                             $(this).select2({
