@@ -346,7 +346,7 @@ include 'database/closedb.php';
 
                     Swal.fire({
                         title: "Sei Sicuro di Eliminare?",
-                        html: '<h4>Tutte le Entità Dipendenti Verranno Impostate su Inattive</h4><p style="margin-top: 20px;">Seleziona la data di fine</p><input id="datePicker1" class="swal2-input delete_date" style = "margin-top: -10px; height: 45px; text-align: center; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat right 10px center; background-size: 20px; background-color: white">',
+                        html: htmlText,
                         focusConfirm: false,
                         icon: "warning",
                         showCancelButton: true,
@@ -355,14 +355,25 @@ include 'database/closedb.php';
                         cancelButtonColor: "#d33",
                         confirmButtonText: "Si",
                         preConfirm: () => {
-                            const date = flatpickrInstance.selectedDates[0];
-                            if (!date) {
-                                Swal.showValidationMessage("Seleziona una Data!");
+                            if (entity === "fatture") {
+                                const datePickerElement = document.getElementById("datePicker2");
+                                if (datePickerElement) {
+                                    const date = flatpickrInstance.selectedDates[0];
+                                    if (!date) {
+                                        Swal.showValidationMessage("Seleziona una Data!");
+                                        return null;
+                                    }
+                                    return date.toISOString().substring(0, 10);
+                                } else {
+                                    Swal.showValidationMessage("Errore nel caricamento del selettore di data.");
+                                    return null;
+                                }
                             }
-                            return date ? date.toISOString().substring(0, 10) : null;
+                            return "fgfg";
                         }
                     }).then((result) => {
                         if (result.isConfirmed) {
+
                             Swal.fire({
                                 title: "Eliminato!",
                                 text: "Azione eseguita con successo",
@@ -370,10 +381,11 @@ include 'database/closedb.php';
                                 showConfirmButton: false
                             });
                             setTimeout(function() {
-                                var dateValue = document.getElementById("datePicker1").value;
+                                var dateValue = result.value || "fggffg"
 
                                 var url = 'admin_delete.php?id=' + encodeURIComponent(id) + '&entity=' + encodeURIComponent(entity) + '&dateValue=' + encodeURIComponent(dateValue);
                                 window.location.href = url;
+
                             }, 2000);
                         }
                     });
@@ -393,13 +405,6 @@ include 'database/closedb.php';
                         htmlText = '<p style="margin-top: 20px;">Seleziona la Data di Pagamento</p><input id="datePicker2" class="swal2-input paid_date" style="margin-top: -10px; height: 45px; text-align: center; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat right 10px center; background-size: 20px; background-color: white">';
                     }
 
-                    // Initialize flatpickr before Swal
-                    const flatpickrInstance = flatpickr("#datePicker2", {
-                        locale: 'it',
-                        defaultDate: new Date(),
-                        dateFormat: "Y-m-d",
-                    });
-
                     Swal.fire({
                         title: "Sei Sicuro di Attivarlo?",
                         html: htmlText,
@@ -414,13 +419,18 @@ include 'database/closedb.php';
                             const date = flatpickrInstance.selectedDates[0];
                             if (!date) {
                                 Swal.showValidationMessage("Seleziona una Data!");
+                                return null;
                             }
-                            return date ? date.toISOString().substring(0, 10) : null;
+                            return date.toISOString().substring(0, 10);
                         }
                     }).then((result) => {
                         if (result.isConfirmed) {
                             var xhr = new XMLHttpRequest();
-                            var dateValue = flatpickrInstance.selectedDates[0].toISOString().substring(0, 10);
+                            var dateValue = "";
+
+                            if (result.value) {
+                                dateValue = result.value;
+                            }
 
                             xhr.open('GET', `admin_activization.php?id=${encodeURIComponent(id)}&entity=${encodeURIComponent(entity)}&dateValue=${encodeURIComponent(dateValue)}`);
 
@@ -441,7 +451,7 @@ include 'database/closedb.php';
                                     } else {
                                         Swal.fire({
                                             title: "Error",
-                                            text: response.message, // Use the server response message
+                                            text: response.message,
                                             icon: "error",
                                             showConfirmButton: false
                                         });
@@ -461,6 +471,12 @@ include 'database/closedb.php';
 
                             xhr.send();
                         }
+                    });
+
+                    const flatpickrInstance = flatpickr("#datePicker2", {
+                        locale: 'it',
+                        defaultDate: new Date(),
+                        dateFormat: "Y-m-d",
                     });
                 }
             </script>
