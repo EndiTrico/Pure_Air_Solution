@@ -2,14 +2,16 @@
 
 $id = $_GET['id'];
 $entity = $_GET['entity'];
+//$paid_date = $_GET['dateValue'];
 
 include 'database/config.php';
 include 'database/opendb.php';
 
 if ($entity == 'utenti') {
     $isActive = 1;
-    $update = "UPDATE " . $entity .
-        " SET E_ATTIVO = 1 
+    $update = "UPDATE UTENTI 
+                SET E_ATTIVO = 1, 
+                    DATA_FINITO = NULL 
                 WHERE UTENTE_ID = ?";
 } else if ($entity == "strutture") {
     $sql = "SELECT c.E_ATTIVO 
@@ -19,7 +21,7 @@ if ($entity == 'utenti') {
             LIMIT 1";
 
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $id);
+    $stmt->bind_param("i", $id);
 
     $stmt->execute();
     $stmt->bind_result($isActive);
@@ -27,8 +29,9 @@ if ($entity == 'utenti') {
     $stmt->fetch();
     $stmt->close();
 
-    $update = "UPDATE " . $entity .
-        " SET E_ATTIVO = 1 
+    $update = "UPDATE strutture
+                SET E_ATTIVO = 1,
+                    DATA_FINITO = NULL
                 WHERE STRUTTURA_ID = ?";
 } else if ($entity == "reparti") {
     $sql = "SELECT c.E_ATTIVO 
@@ -38,7 +41,7 @@ if ($entity == 'utenti') {
             LIMIT 1";
 
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $id);
+    $stmt->bind_param("i", $id);
 
     $stmt->execute();
     $stmt->bind_result($isActive1);
@@ -53,7 +56,7 @@ if ($entity == 'utenti') {
             LIMIT 1";
 
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $id);
+    $stmt->bind_param("i", $id);
 
     $stmt->execute();
     $stmt->bind_result($isActive2);
@@ -63,8 +66,9 @@ if ($entity == 'utenti') {
 
     if ($isActive1 == 1 && $isActive2 == 1) {
         $isActive = 1;
-        $update = "UPDATE " . $entity .
-            " SET E_ATTIVO = 1 
+        $update = "UPDATE REPARTI
+                    SET E_ATTIVO = 1,
+                        DATA_FINITO = NULL   
                     WHERE REPARTO_ID = ?";
     } else {
         $isActive = 0;
@@ -72,8 +76,9 @@ if ($entity == 'utenti') {
 } else if ($entity == "aziende") {
     $isActive = 1;
 
-    $update = "UPDATE " . $entity .
-        " SET E_ATTIVO = 1 
+    $update = "UPDATE REPARTI
+                SET E_ATTIVO = 1,
+                    DATA_FINITO = NULL 
                 WHERE AIENDA_ID = ?";
 } else if ($entity == "banca conti") {
     $sql = "SELECT c.E_ATTIVO 
@@ -91,14 +96,16 @@ if ($entity == 'utenti') {
     $stmt->fetch();
     $stmt->close();
 
-    $update = "UPDATE " . $entity .
-        " SET E_ATTIZVO = 1 
-        WHERE BANCA_CONTO_ID = ?";
+    $update = "UPDATE BANCA_CONTI
+                SET E_ATTIZVO = 1,
+                    DATA_FINITO = NULL 
+                WHERE BANCA_CONTO_ID = ?";
 } else if ($entity == "fatture") {
     $isActive = 1;
 
-    $update = "UPDATE " . $entity .
-        " SET E_PAGATO = 1 
+    $update = "UPDATE FATTURE 
+                SET E_PAGATO = 1,
+                    DATA_PAGAMENTO = " . $paid_date . " 
                 WHERE FATTURA_ID = ?";
 } else if ($entity == "impianti") {
     $sql = "SELECT c.E_ATTIVO 
@@ -108,7 +115,7 @@ if ($entity == 'utenti') {
             LIMIT 1";
 
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $id);
+    $stmt->bind_param("i", $id);
 
     $stmt->execute();
     $stmt->bind_result($isActive1);
@@ -123,7 +130,7 @@ if ($entity == 'utenti') {
             LIMIT 1";
 
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $id);
+    $stmt->bind_param("i", $id);
 
     $stmt->execute();
     $stmt->bind_result($isActive2);
@@ -138,7 +145,7 @@ if ($entity == 'utenti') {
             LIMIT 1";
 
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $id);
+    $stmt->bind_param("i", $id);
 
     $stmt->execute();
     $stmt->bind_result($isActive3);
@@ -148,8 +155,9 @@ if ($entity == 'utenti') {
 
     if ($isActive1 == 1 && $isActive2 == 1 && $isActive3 == 1) {
         $isActive = 1;
-        $update = "UPDATE " . $entity .
-            " SET E_ATTIVO = 1 
+        $update = "UPDATE IMPIANTI
+                    SET E_ATTIVO = 1,
+                        DATA_FINITO = NULL  
                     WHERE IMPIANTO_ID = ?";
     } else {
         $isActive = 0;
@@ -162,7 +170,7 @@ if ($isActive == 0) {
     echo json_encode(array('status' => 'error'));
 } else {
     $stmt = $conn->prepare($update);
-    $stmt->bind_param("s", $id);
+    $stmt->bind_param("i", $id);
     $stmt->execute();
     $stmt->close();
 
