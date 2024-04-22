@@ -436,7 +436,7 @@ function showCompaniesNameDropDown($entity)
 
     $id = $_GET['id'];
 
-    $query = "SELECT AZIENDA_ID, AZIENDA_NOME FROM AZIENDE";
+    $query = "SELECT AZIENDA_ID, AZIENDA_NOME FROM AZIENDE WHERE E_ATTIVO = 1";
     $company = mysqli_query($conn, $query);
 
     $sql = "";

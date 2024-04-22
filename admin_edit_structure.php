@@ -25,7 +25,7 @@ echo '
             </div>
 
             <div class="mb-3 row row d-flex justify-content-center">
-                <h5 class="card-title col-sm-2 col-form-label">Aziende<span style="color:red;">*</span></h5>
+                <h5 class="card-title col-sm-2 col-form-label">Azienda<span style="color:red;">*</span></h5>
                 <div class="col-sm-4">
                 <div> <select placeholder="Seleciona Azienda"
                 name="company_name[]" id= "select" data-allow-clear="1">' .

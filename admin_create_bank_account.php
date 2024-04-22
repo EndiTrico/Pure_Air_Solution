@@ -19,7 +19,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                        WHERE BANCA_NOME = ? 
                             AND IBAN = ?
                        LIMIT 1";
-
         $stmtCheck = mysqli_prepare($conn, $queryCheck);
         if ($stmtCheck) {
             mysqli_stmt_bind_param($stmtCheck, "ss", $bank_name, $bank_IBAN);
@@ -29,8 +28,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if (mysqli_num_rows($resultCheck) > 0) {
                     echo 'C\'è una Struttura con Quel nome in Quell\'Agenzia';
                 } else {
-                    $sql = "INSERT INTO BANCA_CONTI (AZIENDA_ID, BANCA_NOME, IBAN, DATA_INIZIO, DATA_FINITO, E_ATTIVO) 
-                            VALUES (?, ?, ?, 1)";
+
+                    if (empty($bank_left_date)) {
+                        $sql = "INSERT INTO BANCA_CONTI (AZIENDA_ID, BANCA_NOME, IBAN, DATA_INIZIO, DATA_FINITO, E_ATTIVO) 
+                                VALUES (?, ?, ?, ?, ?, 1)";
+                    } else {
+                        $sql = "INSERT INTO BANCA_CONTI (AZIENDA_ID, BANCA_NOME, IBAN, DATA_INIZIO, DATA_FINITO, E_ATTIVO) 
+                                VALUES (?, ?, ?, ?, ?, 0)";
+                    }
+
                     $stmt = mysqli_prepare($conn, $sql);
                     if ($stmt) {
                         mysqli_stmt_bind_param($stmt, "issss", $bank_company_id, $bank_name, $bank_IBAN, $bank_joined_date, $bank_left_date);
@@ -68,7 +74,7 @@ function showCompanyName()
     include 'database/config.php';
     include 'database/opendb.php';
 
-    $query = "SELECT AZIENDA_ID, AZIENDA_NOME FROM AZIENDE";
+    $query = "SELECT AZIENDA_ID, AZIENDA_NOME FROM AZIENDE WHERE E_ATTIVO = 1";
     $company = mysqli_query($conn, $query);
 
     $companyDropDown = "";
@@ -139,8 +145,7 @@ function showCompanyName()
                             <h1 class="h3 mb-3">Crea un Conto Bancario</h1>
                         </div>
                         <div class="col-12">
-                            <div class="card"
-                                style="background:url('./images/logo/logo01_backgroundForm.png'); background-color: white;  background-size: contain; background-position: center; background-repeat: no-repeat; ">
+                            <div class="card" style="background:url('./images/logo/logo01_backgroundForm.png'); background-color: white;  background-size: contain; background-position: center; background-repeat: no-repeat; ">
                                 <div class="card-body">
                                     <div class="card-body">
                                         <form id="bankAccountForm" method="post">
@@ -174,25 +179,21 @@ function showCompanyName()
                                                             <h5 class="card-title col-sm-2 col-form-label">Il Nome Della
                                                                 Banca<span style="color:red;">*</span></h5>
                                                             <div class="col-sm-4">
-                                                                <input type="text" class="form-control" name="bank_name"
-                                                                    placeholder="Il Nome Della Banca" required>
+                                                                <input type="text" class="form-control" name="bank_name" placeholder="Il Nome Della Banca" required>
                                                             </div>
                                                         </div>
 
                                                         <div class="mb-3 row d-flex justify-content-center">
-                                                            <h5 class="card-title col-sm-2 col-form-label">Aziende <span
-                                                                    style="color:red;">*</span></h5>
+                                                            <h5 class="card-title col-sm-2 col-form-label">Aziende <span style="color:red;">*</span></h5>
                                                             <div class="col-sm-4">
                                                                 <?php echo showCompanyName() ?>
                                                             </div>
                                                         </div>
 
                                                         <div class="mb-3 row d-flex justify-content-center">
-                                                            <h5 class="card-title col-sm-2 col-form-label">IBAN<span
-                                                                    style="color:red;">*</span></h5>
+                                                            <h5 class="card-title col-sm-2 col-form-label">IBAN<span style="color:red;">*</span></h5>
                                                             <div class="col-sm-4">
-                                                                <input type="text" class="form-control" name="bank_iban"
-                                                                    placeholder="IBAN" required>
+                                                                <input type="text" class="form-control" name="bank_iban" placeholder="IBAN" required>
                                                             </div>
                                                         </div>
 
@@ -201,10 +202,7 @@ function showCompanyName()
                                                                 Inizio<span style="color:red;">*</span>
                                                             </h5>
                                                             <div class="col-sm-4">
-                                                                <input readonly type="text" class="form-control"
-                                                                    id="datePicker" name="bank_joined_date"
-                                                                    placeholder="Data di Inizio" required
-                                                                    style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white">
+                                                                <input readonly type="text" class="form-control" id="datePicker" name="bank_joined_date" placeholder="Data di Inizio" required style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white">
                                                             </div>
                                                         </div>
 
@@ -213,18 +211,14 @@ function showCompanyName()
                                                                 Finito
                                                             </h5>
                                                             <div class="col-sm-4">
-                                                                <input readonly type="text" class="form-control"
-                                                                    id="datePicker" name="bank_left_date"
-                                                                    placeholder="Data di Finito"
-                                                                    style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white">
+                                                                <input readonly type="text" class="form-control" id="datePicker" name="bank_left_date" placeholder="Data di Finito" style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white">
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-12 d-flex justify-content-center">
-                                                        <button name="create_bank_account" id="createBankAccountButton"
-                                                            class="btn btn-success btn-lg">Crea un Conto
+                                                        <button name="create_bank_account" id="createBankAccountButton" class="btn btn-success btn-lg">Crea un Conto
                                                             Bancario</button>
                                                     </div>
                                                 </div>

@@ -33,8 +33,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (mysqli_num_rows($resultCheck) > 0) {
                 $errorMessage = "C'è un Reparto con Quel Nome in Quella Struttura e Agenzia";
             } else {
-                $sql = "INSERT INTO REPARTI (REPARTO_NOME, AZIENDA_ID, STRUTTURA_ID, INDIRIZZO, CITTA, INFORMAZIONI, DATA_INIZIO, DATA_FINITO, E_ATTIVO) VALUES 
-                        (?, ?, ?, ?, ?, ?, 1)";
+
+                if (empty($department_left_date)) {
+                    $sql = "INSERT INTO REPARTI (REPARTO_NOME, AZIENDA_ID, STRUTTURA_ID, INDIRIZZO, CITTA, INFORMAZIONI, DATA_INIZIO, DATA_FINITO, E_ATTIVO) VALUES 
+                            (?, ?, ?, ?, ?, ?, 1)";
+                } else {
+                    $sql = "INSERT INTO REPARTI (REPARTO_NOME, AZIENDA_ID, STRUTTURA_ID, INDIRIZZO, CITTA, INFORMAZIONI, DATA_INIZIO, DATA_FINITO, E_ATTIVO) VALUES 
+                            (?, ?, ?, ?, ?, ?, 0)";
+                }
+
                 $stmt = mysqli_prepare($conn, $sql);
                 mysqli_stmt_bind_param($stmt, "siisssss", $department_name, $department_company_id, $department_structure_id, $department_address, $department_city, $department_information, $department_joined_date, $department_left_date);
 
@@ -61,7 +68,7 @@ function showCompanyName()
     include 'database/config.php';
     include 'database/opendb.php';
 
-    $query = "SELECT AZIENDA_ID, AZIENDA_NOME FROM AZIENDE";
+    $query = "SELECT AZIENDA_ID, AZIENDA_NOME FROM AZIENDE WHERE E_ATTIVO = 1";
     $company = mysqli_query($conn, $query);
 
     $companyDropDown = "";
@@ -124,7 +131,7 @@ function showCompanyName()
 
                     <div class="row">
                         <div class="col-auto">
-                        <a class="btn transparent-btn" style="margin-top: -7px;" href="admin_create.php">
+                            <a class="btn transparent-btn" style="margin-top: -7px;" href="admin_create.php">
                                 <img alt="Back" src="./images/back_button.png">
                             </a>
                         </div>
@@ -134,8 +141,7 @@ function showCompanyName()
 
                         <div class="row">
                             <div class="col-12">
-                                <div class="card"
-                                    style="background:url('./images/logo/logo01_backgroundForm.png'); background-color: white;  background-size: contain; background-position: center; background-repeat: no-repeat; ">
+                                <div class="card" style="background:url('./images/logo/logo01_backgroundForm.png'); background-color: white;  background-size: contain; background-position: center; background-repeat: no-repeat; ">
                                     <div class="card-body">
                                         <div class="card-body">
                                             <form id="departmentForm" method="post">
@@ -166,12 +172,9 @@ function showCompanyName()
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="mb-3 row d-flex justify-content-center">
-                                                                <h5 class="card-title col-sm-2 col-form-label">Nome<span
-                                                                        style="color:red;">*</span></h5>
+                                                                <h5 class="card-title col-sm-2 col-form-label">Nome<span style="color:red;">*</span></h5>
                                                                 <div class="col-sm-4">
-                                                                    <input type="text" class="form-control"
-                                                                        name="department_name" placeholder="Nome"
-                                                                        required>
+                                                                    <input type="text" class="form-control" name="department_name" placeholder="Nome" required>
                                                                 </div>
                                                             </div>
 
@@ -179,9 +182,7 @@ function showCompanyName()
                                                                 <h5 class="card-title col-sm-2 col-form-label">Indirizzo
                                                                 </h5>
                                                                 <div class="col-sm-4">
-                                                                    <input type="text" class="form-control"
-                                                                        name="department_address"
-                                                                        placeholder="Indirizzo">
+                                                                    <input type="text" class="form-control" name="department_address" placeholder="Indirizzo">
                                                                 </div>
                                                             </div>
 
@@ -199,8 +200,7 @@ function showCompanyName()
                                                                 <h5 class="card-title col-sm-2 col-form-label">Citta
                                                                 </h5>
                                                                 <div class="col-sm-4">
-                                                                    <input type="text" class="form-control"
-                                                                        name="department_city" placeholder="Citta">
+                                                                    <input type="text" class="form-control" name="department_city" placeholder="Citta">
                                                                 </div>
                                                             </div>
 
@@ -209,10 +209,7 @@ function showCompanyName()
                                                                     Inizio<span style="color:red;">*</span>
                                                                 </h5>
                                                                 <div class="col-sm-4">
-                                                                    <input readonly type="text" class="form-control"
-                                                                        id="datePicker" name="department_joined_date"
-                                                                        placeholder="Data di Inizio" required
-                                                                        style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white">
+                                                                    <input readonly type="text" class="form-control" id="datePicker" name="department_joined_date" placeholder="Data di Inizio" required style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white">
                                                                 </div>
                                                             </div>
 
@@ -221,10 +218,7 @@ function showCompanyName()
                                                                     Finito
                                                                 </h5>
                                                                 <div class="col-sm-4">
-                                                                    <input readonly type="text" class="form-control"
-                                                                        id="datePicker" name="department_left_date"
-                                                                        placeholder="Data di Finito"
-                                                                        style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white">
+                                                                    <input readonly type="text" class="form-control" id="datePicker" name="department_left_date" placeholder="Data di Finito" style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white">
                                                                 </div>
                                                             </div>
 
@@ -233,8 +227,7 @@ function showCompanyName()
                                                                     Struttura<span style="color:red;">*</span>
                                                                 </h5>
                                                                 <div class="col-sm-4">
-                                                                    <select name="structure_name" id="structure_name"
-                                                                        class="form-select mb-3" required>
+                                                                    <select name="structure_name" id="structure_name" class="form-select mb-3" required>
                                                                         <option disable selected value="">Seleziona una
                                                                             Struttura</option>
                                                                     </select>
@@ -245,17 +238,14 @@ function showCompanyName()
                                                                 <h5 class="card-title col-sm-2 col-form-label">
                                                                     Informazioni</h5>
                                                                 <div class="col-sm-4">
-                                                                    <textarea class="form-control"
-                                                                        name="department_information" rows="3"
-                                                                        placeholder="Informazioni"></textarea>
+                                                                    <textarea class="form-control" name="department_information" rows="3" placeholder="Informazioni"></textarea>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12 d-flex justify-content-center">
-                                                            <button name="create_department" id="createDepartmentButton"
-                                                                class="btn btn-success btn-lg">Crea un Reparto</button>
+                                                            <button name="create_department" id="createDepartmentButton" class="btn btn-success btn-lg">Crea un Reparto</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -287,8 +277,8 @@ function showCompanyName()
             dateFormat: "Y-m-d",
         });
 
-        $(document).ready(function () {
-            $("#company-dropdown").change(function () {
+        $(document).ready(function() {
+            $("#company-dropdown").change(function() {
                 var companyID = $(this).val();
                 var post_id = 'id=' + companyID;
                 $.ajax({
@@ -296,7 +286,7 @@ function showCompanyName()
                     url: "fetch_structures.php",
                     data: post_id,
                     cache: false,
-                    success: function (cities) {
+                    success: function(cities) {
                         $("#structure_name").html(cities);
                     }
                 });

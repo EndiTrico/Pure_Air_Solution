@@ -5,7 +5,7 @@ include 'database/opendb.php';
 $id = $_POST["id"];
 
 if (!empty($id)) {
-    $query = "SELECT REPARTO_ID, REPARTO_NOME FROM REPARTI WHERE STRUTTURA_ID = ?";
+    $query = "SELECT REPARTO_ID, REPARTO_NOME FROM REPARTI WHERE STRUTTURA_ID = ? AND E_ATTIVO = 1";
     
     $stmt = mysqli_prepare($conn, $query);
     mysqli_stmt_bind_param($stmt, "i", $id);

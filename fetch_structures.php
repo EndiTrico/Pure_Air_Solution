@@ -5,7 +5,7 @@ include 'database/opendb.php';
 $id = $_POST["id"];
 
 if (!empty($id)) {
-    $query = "SELECT STRUTTURA_ID, STRUTTURA_NOME FROM STRUTTURE WHERE AZIENDA_ID = ?";
+    $query = "SELECT STRUTTURA_ID, STRUTTURA_NOME FROM STRUTTURE WHERE AZIENDA_ID = ? AND E_ATTIVO = 1";
     
     $stmt = mysqli_prepare($conn, $query);
     mysqli_stmt_bind_param($stmt, "i", $id);

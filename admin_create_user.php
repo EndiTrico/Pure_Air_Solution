@@ -38,8 +38,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (mysqli_stmt_num_rows($stmt) > 0) {
             $errorMessage = "Errore: C'è un Utente con Quell'E-mail";
         } else {
-            $sql = "INSERT INTO UTENTI (NOME, COGNOME, EMAIL, PASSWORD, NUMERO, RUOLO, AZIENDA_POSIZIONE, DATA_INIZIO, DATA_FINITO, E_ATTIVO) VALUES 
-                (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)";
+
+            if (empty($user_left_date)) {
+                $sql = "INSERT INTO UTENTI (NOME, COGNOME, EMAIL, PASSWORD, NUMERO, RUOLO, AZIENDA_POSIZIONE, DATA_INIZIO, DATA_FINITO, E_ATTIVO) 
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)";
+            } else {
+                $sql = "INSERT INTO UTENTI (NOME, COGNOME, EMAIL, PASSWORD, NUMERO, RUOLO, AZIENDA_POSIZIONE, DATA_INIZIO, DATA_FINITO, E_ATTIVO) 
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)";
+            }
 
             $stmt = mysqli_prepare($conn, $sql);
             mysqli_stmt_bind_param($stmt, "ssssissss", $user_first_name, $user_last_name, $user_email, $hashed_password, $user_numero, $user_role, $user_position, $user_joined_date, $user_left_date);
@@ -89,7 +95,7 @@ function showAllCompanies()
     include 'database/config.php';
     include 'database/opendb.php';
 
-    $query = "SELECT AZIENDA_ID, AZIENDA_NOME FROM AZIENDE";
+    $query = "SELECT AZIENDA_ID, AZIENDA_NOME FROM AZIENDE WHERE E_ATTIVO = 1";
     $company = mysqli_query($conn, $query);
 
     $companyDropDown = "";
