@@ -86,7 +86,7 @@ function showCompanyName()
     include 'database/config.php';
     include 'database/opendb.php';
 
-    $query = "SELECT AZIENDA_ID, AZIENDA_NOME FROM AZIENDE AND E_ATTIVO = 1";
+    $query = "SELECT AZIENDA_ID, AZIENDA_NOME FROM AZIENDE WHERE E_ATTIVO = 1";
     $company = mysqli_query($conn, $query);
 
     $companyDropDown = "";
