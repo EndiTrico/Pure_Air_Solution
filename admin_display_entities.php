@@ -355,8 +355,8 @@ include 'database/closedb.php';
                         cancelButtonColor: "#d33",
                         confirmButtonText: "Si",
                         preConfirm: () => {
-                            if (entity === "fatture") {
-                                const datePickerElement = document.getElementById("datePicker2");
+                            if (entity != "fatture") {
+                                const datePickerElement = document.getElementById("datePicker1");
                                 if (datePickerElement) {
                                     const date = flatpickrInstance.selectedDates[0];
                                     if (!date) {
@@ -364,12 +364,9 @@ include 'database/closedb.php';
                                         return null;
                                     }
                                     return date.toISOString().substring(0, 10);
-                                } else {
-                                    Swal.showValidationMessage("Errore nel caricamento del selettore di data.");
-                                    return null;
-                                }
+                                } 
                             }
-                            return "fgfg";
+                            return "";
                         }
                     }).then((result) => {
                         if (result.isConfirmed) {
@@ -381,7 +378,7 @@ include 'database/closedb.php';
                                 showConfirmButton: false
                             });
                             setTimeout(function() {
-                                var dateValue = result.value || "fggffg"
+                                var dateValue = result.value || ""
 
                                 var url = 'admin_delete.php?id=' + encodeURIComponent(id) + '&entity=' + encodeURIComponent(entity) + '&dateValue=' + encodeURIComponent(dateValue);
                                 window.location.href = url;
@@ -416,21 +413,23 @@ include 'database/closedb.php';
                         cancelButtonColor: "#d33",
                         confirmButtonText: "Si",
                         preConfirm: () => {
-                            const date = flatpickrInstance.selectedDates[0];
-                            if (!date) {
-                                Swal.showValidationMessage("Seleziona una Data!");
-                                return null;
+                            if (entity == "fatture") {
+                                const datePickerElement = document.getElementById("datePicker2");
+                                if (datePickerElement) {
+                                    const date = flatpickrInstance.selectedDates[0];
+                                    if (!date) {
+                                        Swal.showValidationMessage("Seleziona una Data!");
+                                        return null;
+                                    }
+                                    return date.toISOString().substring(0, 10);
+                                }
                             }
-                            return date.toISOString().substring(0, 10);
+                            return "";
                         }
                     }).then((result) => {
                         if (result.isConfirmed) {
                             var xhr = new XMLHttpRequest();
-                            var dateValue = "";
-
-                            if (result.value) {
-                                dateValue = result.value;
-                            }
+                            var dateValue = result.value || ""
 
                             xhr.open('GET', `admin_activization.php?id=${encodeURIComponent(id)}&entity=${encodeURIComponent(entity)}&dateValue=${encodeURIComponent(dateValue)}`);
 

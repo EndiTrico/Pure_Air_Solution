@@ -2,7 +2,7 @@
 
 $id = $_GET['id'];
 $entity = $_GET['entity'];
-//$paid_date = $_GET['dateValue'];
+$paid_date = $_GET['dateValue'];
 
 include 'database/config.php';
 include 'database/opendb.php';
@@ -105,7 +105,7 @@ if ($entity == 'utenti') {
 
     $update = "UPDATE FATTURE 
                 SET E_PAGATO = 1,
-                    DATA_PAGAMENTO = " . $paid_date . " 
+                    DATA_PAGAMENTO = ? 
                 WHERE FATTURA_ID = ?";
 } else if ($entity == "impianti") {
     $sql = "SELECT c.E_ATTIVO 
@@ -170,7 +170,11 @@ if ($isActive == 0) {
     echo json_encode(array('status' => 'error'));
 } else {
     $stmt = $conn->prepare($update);
-    $stmt->bind_param("i", $id);
+    if ($entity == "fatture") {
+        $stmt->bind_param("si", $paid_date, $id);
+    } else {
+        $stmt->bind_param("i", $id);
+    }
     $stmt->execute();
     $stmt->close();
 
@@ -178,4 +182,3 @@ if ($isActive == 0) {
 
     echo json_encode(array('status' => 'success'));
 }
-
