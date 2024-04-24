@@ -17,6 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $user_role = mysqli_real_escape_string($conn, $_POST['user_role']);
         $user_position = mysqli_real_escape_string($conn, $_POST['user_position']);
         $user_number = mysqli_real_escape_string($conn, $_POST['user_number']);
+        
         if (!empty($_POST['user_companies'])) {
             $user_companies = $_POST['user_companies'];
         }

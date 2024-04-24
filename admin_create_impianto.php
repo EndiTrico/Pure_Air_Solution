@@ -332,6 +332,7 @@ function showCompanyName()
                     cache: false,
                     success: function(structure) {
                         $("#structure_name").html(structure);
+                        $('#structure_name').trigger('change');
                     }
                 });
             });

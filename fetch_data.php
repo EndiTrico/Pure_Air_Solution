@@ -95,8 +95,14 @@ if (mysqli_num_rows($result) > 0) {
         echo '<tr>';
         $badge = 0;
         $is_admin = "";
+        $current_email = "";
+        
 
         foreach ($row as $key => $value) {
+            if ($entity == 'utenti' && $key == 'EMAIL'){
+                $current_email = $value;
+            }
+
             if ($key == 'E_ATTIVO') {
                 echo $value == 1 ? '<td><span class="badge-success-custom myBadge">Attivo</span></td>' :
                     '<td><span class="badge-danger-custom myBadge">Inattivo</span></td>';
@@ -120,9 +126,15 @@ if (mysqli_num_rows($result) > 0) {
 
 
         if ($_SESSION['role'] == 'Admin') {
+            if($current_email == $_SESSION['email']){
+                $disabled = "disabled";
+            } else {
+                $disabled = "";
+            }
+
             echo '<td>
                     <div class="btn-group">
-                        <a href="admin_edit.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-warning">Modifica</a>&nbsp&nbsp&nbsp';
+                        <button ' . $disabled . ' onclick="editEntity(' . reset($row) . ', \'' . $entity . '\')" class="btn btn-warning">Modifica</button>&nbsp&nbsp&nbsp';
 
             if ($entity == 'fatture') {
                 if ($badge == 0) {
@@ -132,9 +144,9 @@ if (mysqli_num_rows($result) > 0) {
                 }
             } else {
                 if ($badge == 0) {
-                    echo '<button class="btn btn-success" onclick="confirmActivation(' . reset($row) . ', \'' . $entity . '\')">Attivare</button>&nbsp&nbsp&nbsp';
+                    echo '<button ' . $disabled . ' class="btn btn-success" onclick="confirmActivation(' . reset($row) . ', \'' . $entity . '\')">Attivare</button>&nbsp&nbsp&nbsp';
                 } else {
-                    echo '<button class="btn btn-danger" onclick="confirmDelete(' . reset($row) . ', \'' . $entity . '\')">Elimina</button>&nbsp&nbsp&nbsp';
+                    echo '<button ' . $disabled . ' class="btn btn-danger" onclick="confirmDelete(' . reset($row) . ', \'' . $entity . '\')">Elimina</button>&nbsp&nbsp&nbsp';
                 }
             }
 

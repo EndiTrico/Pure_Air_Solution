@@ -316,14 +316,18 @@ include 'database/closedb.php';
                                     });
 
                                     clonedRow.find('th').each(function(i) {
-                                        var title = $(this).text();
-                                        var input = $('<input type="text" style = "text-align: center;" placeholder="Cerca ' + title + '" />').appendTo($(this).empty());
+                                        if (i !== $(this).siblings().length && title !== "Azioni") {
+                                            var title = $(this).text();
+                                            var input = $('<input type="text" style = "text-align: center;" placeholder="Cerca ' + title + '" />').appendTo($(this).empty());
 
-                                        input.on('keyup change', function() {
-                                            if (table.column(i).search() !== this.value) {
-                                                table.column(i).search(this.value).draw();
-                                            }
-                                        });
+                                            input.on('keyup change', function() {
+                                                if (table.column(i).search() !== this.value) {
+                                                    table.column(i).search(this.value).draw();
+                                                }
+                                            });
+                                        } else {
+                                            $(this).empty().html('&nbsp;');
+                                        }
                                     });
                                 },
                                 columnDefs: [{
@@ -364,7 +368,7 @@ include 'database/closedb.php';
                                         return null;
                                     }
                                     return date.toISOString().substring(0, 10);
-                                } 
+                                }
                             }
                             return "";
                         }
@@ -477,6 +481,23 @@ include 'database/closedb.php';
                         defaultDate: new Date(),
                         dateFormat: "Y-m-d",
                     });
+                }
+
+                function editEntity(id, entity) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('GET', `admin_edit.php?id=${encodeURIComponent(id)}&entity=${encodeURIComponent(entity)}`);
+                    xhr.onload = function() {
+                        if (xhr.status === 200) {
+                            window.location.href = 'admin_edit.php?id=' + encodeURIComponent(id) + '&entity=' + encodeURIComponent(entity);
+                        } else {
+                            console.error('Request failed with status code ' + xhr.status);
+                        }
+                    };
+                    xhr.onerror = function() {
+                        console.error('Network Error');
+                    };
+
+                    xhr.send();
                 }
             </script>
             <?php
