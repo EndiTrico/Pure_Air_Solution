@@ -116,7 +116,6 @@
         </div>
     </div>
 
-
         <div class="mb-3 row d-flex justify-content-center">
             <h5 class="card-title col-sm-2 col-form-label">Ruole<span style="color:red;">*</span>
             </h5>
@@ -167,13 +166,7 @@ crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
 
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/it.js"></script>
 <script>
-const flatpickrInstance = flatpickr("#datePicker", {
-    locale: \'it\',
-    dateFormat: "Y-m-d",
-});
 
 $(function () {
     $(\'#multiple_select\').each(function () {

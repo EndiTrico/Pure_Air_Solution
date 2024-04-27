@@ -10,7 +10,7 @@ $query = "";
 if ($entity == "utenti") {
     $query = "SELECT DISTINCT u.UTENTE_ID, u.NOME, u.COGNOME, u.EMAIL, u.NUMERO, u.RUOLO, u.AZIENDA_POSIZIONE, u.E_ATTIVO 
                 FROM UTENTI u
-                JOIN UTENTI_AZIENDE a ON u.UTENTE_ID = a.UTENTE_ID";
+                LEFT JOIN UTENTI_AZIENDE a ON u.UTENTE_ID = a.UTENTE_ID";
 } else if ($entity == "aziende") {
     $query = "SELECT DISTINCT a.AZIENDA_ID, a.AZIENDA_NOME, a.PARTITA_IVA, a.CODICE_FISCALE, a.INDIRIZZO, a.CITTA, a.INDIRIZZO_PEC, a.WEBSITE, a.DATA_INIZIO, a.DATA_FINITO, a.E_ATTIVO
                 FROM AZIENDE a";
