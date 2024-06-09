@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             if (empty($user_left_date)) {
                 $sql = "INSERT INTO UTENTI (NOME, COGNOME, EMAIL, PASSWORD, NUMERO, RUOLO, AZIENDA_POSIZIONE, DATA_INIZIO, DATA_FINITO, E_ATTIVO) 
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)";
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0)";
             } else {
                 $sql = "INSERT INTO UTENTI (NOME, COGNOME, EMAIL, PASSWORD, NUMERO, RUOLO, AZIENDA_POSIZIONE, DATA_INIZIO, DATA_FINITO, E_ATTIVO) 
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)";
@@ -78,6 +78,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         }
                     }
                     $successfulMessage = "Utente Creato con Successo";
+
+                    $sql = "INSERT INTO LOGS "
                 } else {
                     $errorMessage = "Errore: Impossibile Creare l'Utente";
                 }
@@ -107,7 +109,6 @@ function showAllCompanies()
     } else {
         $companyDropDown .= "Error: " . mysqli_error($conn);
     }
-
 
     include 'database/closedb.php';
 
@@ -168,10 +169,13 @@ function showAllCompanies()
             background-color: white;
         }
 
-        .select2-search__field,
-        .select2-selection__choice {
-            margin-top: 8.5px !important;
-            margin-left: 7px !important;
+        .select2-container .select2-search--inline .select2-search__field{
+            margin-left: -6px !important;
+            padding-left: 14px !important;
+        }
+
+        .select2-selection__rendered{
+            padding-top: 5px !important;
         }
 
         .form-select {
@@ -367,6 +371,8 @@ function showAllCompanies()
 
                 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
                 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/it.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/i18n/it.js"></script>
+
                 <script>
                     const flatpickrInstance = flatpickr("#datePicker", {
                         locale: 'it',
@@ -380,12 +386,13 @@ function showAllCompanies()
                                 width: 'style',
                                 placeholder: $(this).attr('placeholder'),
                                 allowClear: Boolean($(this).data('allow-clear')),
+                                language: 'it'
                             });
                         });
                     });
 
                     let
-                        passwordInput = document.getElementById('password');
+                    passwordInput = document.getElementById('password');
                     iconPassword = document.getElementById('eyeIconPassword');
 
                     function togglePassword() {

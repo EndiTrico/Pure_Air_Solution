@@ -51,3 +51,23 @@ function determineRole($email)
 
     return $role;
 }
+
+function determineUserID($email)
+{
+    include 'database/config.php';
+    include 'database/opendb.php';
+
+    $query = "SELECT UTENTE_ID FROM UTENTI WHERE Email=?";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "s", $email);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_store_result($stmt);
+    mysqli_stmt_bind_result($stmt, $user_id);
+    mysqli_stmt_fetch($stmt);
+    mysqli_stmt_close($stmt);
+    
+    include 'database/closedb.php';
+
+    return $user_id;
+}
+

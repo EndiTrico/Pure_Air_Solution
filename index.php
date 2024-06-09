@@ -26,6 +26,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['email'] = $email;
         $role = determineRole($email);
         $_SESSION["role"] = $role;
+        $user_id = determineUserID($email);
+        $_SESSION["user_id"] = $user_id;
 
         if ($role == "Admin") {
             header('Location: admin_dashboard.php');

@@ -3,6 +3,7 @@ include 'database/config.php';
 include 'database/opendb.php';
 
 $id = $_POST["id"];
+echo 'FIRSTPARI';
 
 if (!empty($id)) {
     $query = "SELECT STRUTTURA_ID, STRUTTURA_NOME FROM STRUTTURE WHERE AZIENDA_ID = ? AND E_ATTIVO = 1";
@@ -12,7 +13,9 @@ if (!empty($id)) {
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
 
+
     if ($result->num_rows > 0) {
+        echo 'loooooooooooooooooooop';
         while ($row = mysqli_fetch_assoc($result)) {
             echo '<option value="' . $row['STRUTTURA_ID'] . '">' . $row['STRUTTURA_NOME'] . '</option>';
         }

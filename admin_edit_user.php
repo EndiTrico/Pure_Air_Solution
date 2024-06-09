@@ -19,10 +19,13 @@
     background-color: white;
 }
 
-.select2-search__field,
-.select2-selection__choice {
-    margin-top: 8.5px !important;
-    margin-left: 7px !important;
+.select2-container .select2-search--inline .select2-search__field{
+    margin-left: -6px !important;
+    padding-left: 14px !important;    
+}
+
+.select2-selection__rendered{
+    padding-top: 5px !important;
 }
 
 .form-select {
@@ -90,11 +93,11 @@
             </h5>
             <div class="col-sm-4">
                 <input type="text" placeholder="Azienda Posizione" name="user_position" class="form-control" value="' .
-                        $row["AZIENDA_POSIZIONE"] . '" />
+    $row["AZIENDA_POSIZIONE"] . '" />
             </div>
         </div>
 
-        <div class="mb-3 row d-flex justify-content-center">
+    <div class="mb-3 row d-flex justify-content-center">
         <h5 class="card-title col-sm-2 col-form-label">Data di
             Inizio<span style="color:red;">*</span>
         </h5>
@@ -124,8 +127,8 @@
                     <select data-allow-clear="1" name="user_role" class="form-select mb-3" required>
                         <option value="" style="margin-right:20px !important;" disabled selected hidden>Seleziona Ruolo
                         </option>
-                        <option value="Admin" ' . ($row["RUOLO"]=="Admin" ? 'selected' : '' ) . '>Admin</option>
-                        <option value="Cliente" ' . ($row["RUOLO"]=="Cliente" ? 'selected' : '' ) . '>Cliente</option>
+                        <option value="Admin" ' . ($row["RUOLO"] == "Admin" ? 'selected' : '') . '>Admin</option>
+                        <option value="Cliente" ' . ($row["RUOLO"] == "Cliente" ? 'selected' : '') . '>Cliente</option>
                     </select>
                 </div>
             </div>
@@ -135,8 +138,8 @@
             <h5 class="card-title col-sm-2 col-form-label">Aziende</h5>
             <div class="col-sm-4">
                 <select style="font-size: 1px !important;" multiple placeholder="Seleziona Azienda"
-                    name="user_companies[]" id="select" data-allow-clear="1">
-                    <?php echo showAllCompanies(); ?>
+                    name="user_companies[]" id="multiple_select" data-allow-clear="1">'.
+                     showCompaniesNameDropDown("utenti") . '
                 </select>
             </div>
         </div>
@@ -148,39 +151,31 @@
         </div>
     </div>
 </form>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+                    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+                    crossorigin="anonymous"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-<script> 
-    $(function () {
-        $(\' select\').each(function () { $(this).select2({ theme: \'bootstrap4\', width: \'style\', placeholder:
-                        $(this).attr(\'placeholder\'), allowClear: Boolean($(this).data(\'allow-clear\')), }); }); });
-                        </script>
-
-                        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-crossorigin="anonymous"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
 
+                <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+                <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/it.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/i18n/it.js"></script>
 <script>
-
-$(function () {
-    $(\'#multiple_select\').each(function () {
-        $(this).select2({
-            theme: \'bootstrap4\',
-            width: \'style\',
-            placeholder: $(this).attr(\'placeholder\'),
-            allowClear: Boolean($(this).data(\'allow-clear\')),
-        });
-    });
-});
+                        $(function () {
+                        $(\'#multiple_select\').each(function () {
+                            $(this).select2({
+                                theme: \'bootstrap4\',
+                                width: \'style\',
+                                placeholder: $(this).attr(\'placeholder\'),
+                                allowClear: Boolean($(this).data(\'allow-clear\')),
+                                language: \'it\'
+                            });
+                        });
+                    });
 
 let
-    passwordInput = document.getElementById(\'password\');
+passwordInput = document.getElementById(\'password\');
 iconPassword = document.getElementById(\'eyeIconPassword\');
 
 function togglePassword() {

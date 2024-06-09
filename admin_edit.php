@@ -430,10 +430,80 @@ function showStructureDropDown($entity)
     return '<option selected value="' . htmlspecialchars($row_retrieve["STRUTTURA_ID"]) . '">' . htmlspecialchars($row_retrieve['STRUTTURA_NOME']) . '</option>';
 }
 
+function showBankNameDropDown($aziendaID, $bancaContoID)
+{
+    include 'database/config.php';
+    include 'database/opendb.php';
+
+    $query = "SELECT BANCA_CONTO_ID, BANCA_NOME FROM BANCA_CONTI WHERE AZIENDA_ID = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, "i", $aziendaID);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        $bankDropDown = "";
+
+        if(empty($bancaContoID) || $bancaContoID == NULL){
+            $bankDropDown .= '<option disable selected value="">Seleziona una Banca</option>';
+        }
+
+        while ($row = mysqli_fetch_assoc($result)) {
+            $selected = ($row['BANCA_CONTO_ID'] == $bancaContoID) ? ' selected' : '';
+            $bankDropDown .= '<option value="' . htmlspecialchars($row['BANCA_CONTO_ID']) . '"' . $selected . '>' . htmlspecialchars($row['BANCA_NOME']) . '</option>';
+        }
+
+        mysqli_stmt_free_result($stmt);
+        mysqli_stmt_close($stmt);
+    } else {
+        $bankDropDown = "Error: " . mysqli_error($conn);
+    }
+
+    include 'database/closedb.php';
+
+    return $bankDropDown;
+}
+
+function showIBANDropDown($aziendaID, $bancaContoID)
+{
+    include 'database/config.php';
+    include 'database/opendb.php';
+
+    $query = "SELECT BANCA_CONTO_ID, IBAN FROM BANCA_CONTI WHERE AZIENDA_ID = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, "i", $aziendaID);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        $bankDropDown = "";
+
+        if(empty($bancaContoID) || $bancaContoID == NULL){
+            $bankDropDown .= '<option disable selected value="">Seleziona un\'IBAN</option>';
+        }
+
+        while ($row = mysqli_fetch_assoc($result)) {
+            $selected = ($row['BANCA_CONTO_ID'] == $bancaContoID) ? ' selected' : '';
+            $bankDropDown .= '<option value="' . htmlspecialchars($row['BANCA_CONTO_ID']) . '"' . $selected . '>' . htmlspecialchars($row['IBAN']) . '</option>';
+        }
+
+        mysqli_stmt_free_result($stmt);
+        mysqli_stmt_close($stmt);
+    } else {
+        $bankDropDown = "Error: " . mysqli_error($conn);
+    }
+
+    include 'database/closedb.php';
+
+    return $bankDropDown;
+}
+
+
 function showCompaniesNameDropDown($entity)
 {
     include 'database/config.php';
     include 'database/opendb.php';
+
 
     $id = $_GET['id'];
 
@@ -468,6 +538,7 @@ function showCompaniesNameDropDown($entity)
             $selectedOptions[] = $row_retrieve['AZIENDA_ID'];
         }
     }
+
 
     if ($company && $stmt3) {
         while ($row = mysqli_fetch_assoc($company)) {
@@ -548,7 +619,9 @@ function showForm()
             include 'admin_edit_bank_account.php';
         }
     } else if ($entity == "fatture") {
-        $query = "SELECT * FROM FATTURE WHERE FATTURA_ID = ?";
+        $query = "SELECT FATTURE.*, BANCA.BANCA_NOME, BANCA.IBAN FROM FATTURE 
+                LEFT JOIN BANCA_CONTI BANCA ON FATTURE.BANCA_CONTO_ID = BANCA.BANCA_CONTO_ID 
+                WHERE FATTURA_ID = ?";
         $stmt = mysqli_prepare($conn, $query);
         mysqli_stmt_bind_param($stmt, "i", $id);
         mysqli_stmt_execute($stmt);
@@ -572,7 +645,6 @@ function showForm()
         }
     }
 
-
     include 'database/closedb.php';
 }
 ?>
@@ -594,7 +666,7 @@ function showForm()
     <link href="css/app.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
-    <script src="https://code.jquery.com/jquery-3.6 .0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
@@ -691,25 +763,26 @@ function showForm()
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/it.js"></script>
-    <script src="js/app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/i18n/it.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"> </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
     <script>
         const flatpickrInstance = flatpickr("#datePicker", {
             locale: 'it',
             dateFormat: "Y-m-d",
         });
+       
 
-        const flatpickrInstance1 = flatpickr("#datePicker1", {
-            locale: 'it',
-            dateFormat: "Y-m-d",
-        });
-
-        const flatpickrInstance2 = flatpickr("#datePicker", {
-            locale: 'it',
-            dateFormat: "Y-m-d",
-        });
     </script>
+    <script src="js/app.js"></script>
+
 </body>
 
 </html>
