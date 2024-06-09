@@ -79,7 +79,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     }
                     $successfulMessage = "Utente Creato con Successo";
 
-                    $sql = "INSERT INTO LOGS "
+                    $sql = "INSERT INTO LOGS (UTENTE_ID, ENTITY, ENTITY_ID, ACTION, DATE) VALUES (?, 'Utenti', ?, 'Creare', ?)";
+
+                    date_default_timezone_set('Europe/Berlin');
+                    $currentDateAndTime = date('Y-m-d H:i:s');
+
+                    $stmt = mysqli_prepare($conn, $sql);
+                    mysqli_stmt_bind_param($stmt, "iis", $_SESSION["user_id"], $user_id, $currentDateAndTime);
+                    mysqli_stmt_execute($stmt);
                 } else {
                     $errorMessage = "Errore: Impossibile Creare l'Utente";
                 }
