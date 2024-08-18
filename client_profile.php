@@ -10,37 +10,49 @@ $errorMessage = "";
 $successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['update_profile'])) {
-        $NOME = mysqli_real_escape_string($conn, $_POST['user_first_name']);
-        $COGNOME = mysqli_real_escape_string($conn, $_POST['user_last_name']);
+    if (isset ($_POST['update_profile'])) {
+        $user_first_name = mysqli_real_escape_string($conn, $_POST['user_first_name']);
+        $user_last_name = mysqli_real_escape_string($conn, $_POST['user_last_name']);
         $user_email = mysqli_real_escape_string($conn, $_POST['user_email']);
+        $user_number = mysqli_real_escape_string($conn, $_POST['user_number']);
         $user_password = mysqli_real_escape_string($conn, $_POST['user_password']);
         $user_confirm_password = mysqli_real_escape_string($conn, $_POST['user_confirm_password']);
 
         if ($user_password == $user_confirm_password) {
             $hashed_password = password_hash($user_password, PASSWORD_BCRYPT);
 
+         	$fields = [
+    			'NOME' => $user_first_name,
+    			'COGNOME' => $user_last_name,
+    			'EMAIL' => $user_email,
+        		'PASSWORD' => $user_password,
+    			'NUMERO' => $user_number
+            ];
+                  $existingEntity = oldRecord($_SESSION['user_id']);
+
             $sql = "UPDATE UTENTI 
                     SET NOME = ?, 
                         COGNOME = ?, 
-                        PASSWORD = ?,  
+                        PASSWORD = ?,
+						NUMERO = ?,  
                         EMAIL = ?
                     WHERE EMAIL = ?";
 
             $stmt = mysqli_prepare($conn, $sql);
 
             if ($stmt) {
-                mysqli_stmt_bind_param($stmt, "sssss", $NOME, $COGNOME, $hashed_password, $user_email, $email);
+                mysqli_stmt_bind_param($stmt, "ssssss", $user_first_name, $user_last_name, $hashed_password, $user_number, $user_email, $email);
 
                 try {
                     if (mysqli_stmt_execute($stmt)) {
-                        $successfulMessage = "Profilo Aggiornato con Successo";
+                        $isChanged = insertIntoLogs($fields, 'UTENTI', $_SESSION['user_id'], $existingEntity);
+                    	$isChanged ? $successfulMessage = "Profilo Aggiornato con Successo": $infoMessage = "Non Hai Modificato Alcun Attributo";
                         $_SESSION['email'] = $user_email;
                     } else {
                         $errorMessage = "Errore: Impossibile Aggiornare il Profilo";
                     }
                 } catch (mysqli_sql_exception $e) {
-                    $errorMessage = "Error: " . $e->getMessage();
+                    $errorMessage = "Errore: " . $e->getMessage();
                 } finally {
                     mysqli_stmt_close($stmt);
                 }
@@ -53,6 +65,57 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
+function insertIntoLogs($fields, $entity, $id, $existingEntity){
+    include 'database/config.php';
+	include 'database/opendb.php';
+	$modifiedDate = date("Y-m-d H:i:s");
+    $entity01 = strtoupper($entity);  
+    $changed = false;
+
+	foreach ($fields as $key => $value) {
+		if ($value != $existingEntity[$key] && $key != 'PASSWORD') {
+            $changed = true;
+
+        	$logSql = "INSERT INTO LOGS (UTENTE_ID, ENTITA, ENTITA_ID, AZIONE, ATTRIBUTO, VECCHIO_VALORE, NUOVO_VALORE, DATA_ORA) 
+            			VALUES (?, ?, ?, 'Modificare', ?, ?, ?, ?)";
+            $logStmt = mysqli_prepare($conn, $logSql);
+            mysqli_stmt_bind_param($logStmt, "isissss", $id, $entity01, $id, $key, $existingEntity[$key], $value, $modifiedDate);
+            mysqli_stmt_execute($logStmt);
+            mysqli_stmt_close($logStmt);
+        } else if ($key == 'PASSWORD' && $value != '') {
+        	$changed = true;
+
+        	$logSql01 = "INSERT INTO LOGS (UTENTE_ID, ENTITA, ENTITA_ID, AZIONE, ATTRIBUTO, DATA_ORA) 
+            				VALUES (?, ?, ?, 'Modificare', ?, ?)";
+            $logStmt01 = mysqli_prepare($conn, $logSql01);
+            mysqli_stmt_bind_param($logStmt01, "isiss", $id, $entity01, $id, $key, $modifiedDate);
+            mysqli_stmt_execute($logStmt01);
+            mysqli_stmt_close($logStmt01);
+        
+        }
+    }
+  
+	include 'database/closedb.php';
+    
+    return $changed;
+}
+
+function oldRecord($id){
+	include 'database/config.php';
+  	include 'database/opendb.php';
+  
+  	$existingSql = "SELECT NOME, COGNOME, EMAIL, PASSWORD, NUMERO, AZIENDA_POSIZIONE, RUOLO, DATA_INIZIO, DATA_FINE FROM UTENTI WHERE UTENTE_ID = ?";
+    $stmt = mysqli_prepare($conn, $existingSql);
+    mysqli_stmt_bind_param($stmt, "i", $id);
+    mysqli_stmt_execute($stmt);
+   	$result = mysqli_stmt_get_result($stmt);
+    $existingEntity = mysqli_fetch_assoc($result);
+    mysqli_stmt_close($stmt);
+  
+  	include 'database/closedb.php';
+
+    return $existingEntity;
+}
 
 function showForm($email)
 {
@@ -124,35 +187,35 @@ function showForm($email)
             </div>
     
             <div class="card">
-            <div class="card-header">
-                <h5 class="card-title mb-0">Password</h5>
-            </div>
-            <div class="card-body">
-                <div class="input-group">
-                    <input type="password" onkeyup="check()" id="password" placeholder="Password" name="user_password" class="form-control"/>
-                    <div class="input-group-append">
-                        <button type="button" onclick="togglePassword()" id="btnToggle" class="btn btn-outline btn-xs btn-xs btn-2x"><i id="eyeIconPassword" class="fa fa-eye fa-xs"></i></button>        
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Password</h5>
+                </div>
+                <div class="card-body">
+                    <div class="input-group">
+                        <input type="password" onkeyup="check()" id="password" placeholder="Password" name="user_password" class="form-control"/>
+                        <div class="input-group-append">
+                            <button type="button" onclick="togglePassword()" id="btnToggle" class="btn btn-outline btn-xs btn-xs btn-2x"><i id="eyeIconPassword" class="fa fa-eye fa-xs"></i></button>        
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="card">
-            <div class="card-header">
-                <div class="col">
-                    <h5 class="card-title mb-0 d-inline">Confirm Password</h5>
-                    <p id="alertPassword" class="alert d-inline"></p>
+            <div class="card">
+                <div class="card-header">
+                    <div class="col">
+                        <h5 class="card-title mb-0 d-inline">Confirm Password</h5>
+                        <p id="alertPassword" class="alert d-inline"></p>
+                    </div>
+                </div>
+                <div class="card-body">
+                <div class="input-group">
+                    <input type="password" onkeyup="check()" id="confirmPassword" placeholder="Confirm Password" name="user_confirm_password" class="form-control"/>
+                    <div class="input-group-append">
+                        <button type="button" onclick="toggleConfirmPassword()" id="btnToggle" class="btn btn-outline btn-xs btn-xs btn-2x"><i id="eyeIconConfirmPassword" class="fa fa-eye fa-xs"></i></button>
+                    </div>
                 </div>
             </div>
-            <div class="card-body">
-            <div class="input-group">
-                <input type="password" onkeyup="check()" id="confirmPassword" placeholder="Confirm Password" name="user_confirm_password" class="form-control"/>
-                <div class="input-group-append">
-                    <button type="button" onclick="toggleConfirmPassword()" id="btnToggle" class="btn btn-outline btn-xs btn-xs btn-2x"><i id="eyeIconConfirmPassword" class="fa fa-eye fa-xs"></i></button>
-                </div>
             </div>
-        </div>
-        </div>
 
             <div class="row">
                 <div class="col-12 d-flex justify-content-center">
@@ -239,7 +302,7 @@ function showLeftForm($email)
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
+    <link rel="shortcut icon" href="images/logo/small_logo.png" />
 
     <title>Il Mio Profilo</title>
 
@@ -272,7 +335,6 @@ function showLeftForm($email)
             border-color: darkgray;
         }
     </style>
-
 </head>
 
 <body>
@@ -294,7 +356,7 @@ function showLeftForm($email)
                                     <form id="userForm" method="post">
                                         <div class="row">
                                             <?php
-                                            if (!empty($errorMessage)) {
+                                            if (!empty ($errorMessage)) {
                                                 echo '<div class="col-12">
                                                         <div class="card">
                                                             <div class="card-header">
@@ -303,7 +365,7 @@ function showLeftForm($email)
                                                             </div>                                                    
                                                         </div>
                                                     </div>';
-                                            } else if (!empty($successfulMessage)) {
+                                            } else if (!empty ($successfulMessage)) {
                                                 echo '<div class="col-12">
                                                         <div class="card">
                                                             <div class="card-header">
@@ -363,25 +425,24 @@ function showLeftForm($email)
     <script>
         function check() {
             var password = document.getElementById('password');
-            var checkPassword = document.getElementById('checkPassword');
+            var confirmPassword = document.getElementById('confirmPassword');
             var alertPassword = document.getElementById('alertPassword');
 
-            if (password.value === '' && checkPassword.value === '') {
+            if (password.value === '' && confirmPassword.value === '') {
                 alertPassword.style.visibility = 'hidden';
             } else {
                 alertPassword.style.visibility = 'visible';
 
-                if (password.value === checkPassword.value) {
+                if (password.value === confirmPassword.value) {
                     alertPassword.style.color = '#8CC63E';
-                    alertPassword.innerHTML = '<span><i class="fas fa-check-circle"></i>Corrisponde</span>';
+                    alertPassword.innerHTML = '<span style="font-weight: bold;"><i class="fas fa-check-circle passwordCheck"></i>Corrisponde</span>';
                 } else {
                     alertPassword.style.color = '#EE2B39';
-                    alertPassword.innerHTML = '<span><i class="fas fa-exclamation-triangle"></i>Non Corrisponde</span>';
+                    alertPassword.innerHTML = '<span style="font-weight: bold;"><i class="fas fa-exclamation-triangle passwordCheck"></i>Non Corrisponde</span>';
                 }
             }
         }
 
-        
         let confirmPasswordInput = document.getElementById('confirmPassword'),
             passwordInput = document.getElementById('password');
             iconPassword = document.getElementById('eyeIconPassword');
@@ -406,7 +467,6 @@ function showLeftForm($email)
                 iconPassword.classList.remove("fa-eye-slash");
             }
         }
-
 
     </script>
 

@@ -16,7 +16,7 @@ include 'database/closedb.php';
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
+    <link rel="shortcut icon" href="images/logo/small_logo.png" />
 
     <title>Crea Entità</title>
 

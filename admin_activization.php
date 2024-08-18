@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 $id = $_GET['id'];
 $entity = $_GET['entity'];
@@ -11,7 +12,7 @@ if ($entity == 'utenti') {
     $isActive = 1;
     $update = "UPDATE UTENTI 
                 SET E_ATTIVO = 1, 
-                    DATA_FINITO = NULL 
+                    DATA_FINE = NULL 
                 WHERE UTENTE_ID = ?";
 } else if ($entity == "strutture") {
     $sql = "SELECT c.E_ATTIVO 
@@ -29,9 +30,9 @@ if ($entity == 'utenti') {
     $stmt->fetch();
     $stmt->close();
 
-    $update = "UPDATE strutture
+    $update = "UPDATE STRUTTURE
                 SET E_ATTIVO = 1,
-                    DATA_FINITO = NULL
+                    DATA_FINE = NULL
                 WHERE STRUTTURA_ID = ?";
 } else if ($entity == "reparti") {
     $sql = "SELECT c.E_ATTIVO 
@@ -68,7 +69,7 @@ if ($entity == 'utenti') {
         $isActive = 1;
         $update = "UPDATE REPARTI
                     SET E_ATTIVO = 1,
-                        DATA_FINITO = NULL   
+                        DATA_FINE = NULL   
                     WHERE REPARTO_ID = ?";
     } else {
         $isActive = 0;
@@ -76,10 +77,10 @@ if ($entity == 'utenti') {
 } else if ($entity == "aziende") {
     $isActive = 1;
 
-    $update = "UPDATE REPARTI
+    $update = "UPDATE AZIENDE
                 SET E_ATTIVO = 1,
-                    DATA_FINITO = NULL 
-                WHERE AIENDA_ID = ?";
+                    DATA_FINE = NULL 
+                WHERE AZIENDA_ID = ?";
 } else if ($entity == "banca conti") {
     $sql = "SELECT c.E_ATTIVO 
             FROM BANCA_CONTI s
@@ -98,7 +99,7 @@ if ($entity == 'utenti') {
 
     $update = "UPDATE BANCA_CONTI
                 SET E_ATTIZVO = 1,
-                    DATA_FINITO = NULL 
+                    DATA_FINE = NULL 
                 WHERE BANCA_CONTO_ID = ?";
 } else if ($entity == "fatture") {
     $isActive = 1;
@@ -157,7 +158,7 @@ if ($entity == 'utenti') {
         $isActive = 1;
         $update = "UPDATE IMPIANTI
                     SET E_ATTIVO = 1,
-                        DATA_FINITO = NULL  
+                        DATA_FINE = NULL  
                     WHERE IMPIANTO_ID = ?";
     } else {
         $isActive = 0;
@@ -175,10 +176,31 @@ if ($isActive == 0) {
     } else {
         $stmt->bind_param("i", $id);
     }
+  	
     $stmt->execute();
     $stmt->close();
+    
+    date_default_timezone_set('Europe/Berlin');
+    $currentDateAndTime = date('Y-m-d H:i:s');
+    insertIntoLogs($entity, $id, $currentDateAndTime, $conn);
 
     include 'database/closedb.php';
 
     echo json_encode(array('status' => 'success'));
+}
+
+function insertIntoLogs($entity, $id, $currentDateAndTime, $conn) {
+  	$entity_upper = strtoupper($entity);
+    $sql = "INSERT INTO LOGS (UTENTE_ID, ENTITA, ENTITA_ID, AZIONE, DATA_ORA) VALUES (?, ?, ?, 'Attivare', ?)";
+    if ($stmt = $conn->prepare($sql)) {
+        $userId = $_SESSION["user_id"];
+        if ($stmt->bind_param("isis", $userId, $entity_upper, $id, $currentDateAndTime)) {
+            $stmt->execute();
+        } else {
+            echo "Bind param failed: " . $conn->error;
+        }
+        $stmt->close();
+    } else {
+        echo "Prepare failed: " . $conn->error;
+    }
 }

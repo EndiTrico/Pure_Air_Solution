@@ -3,6 +3,7 @@ include 'auth_check.php';
 
 include 'database/config.php';
 include 'database/opendb.php';
+include 'fetch_companies.php';
 
 $errorMessage = "";
 $successfulMessage = "";
@@ -16,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $user_role = mysqli_real_escape_string($conn, $_POST['user_role']);
         $user_position = mysqli_real_escape_string($conn, $_POST['user_position']);
         $user_numero = mysqli_real_escape_string($conn, $_POST['user_number']);
-        $user_joined_date = mysqli_real_escape_string($conn, $_POST['user_joined_date']);
+        $user_joined_date = empty(mysqli_real_escape_string($conn, $_POST['user_joined_date'])) ? null : mysqli_real_escape_string($conn, $_POST['user_joined_date']);
         $user_left_date = mysqli_real_escape_string($conn, $_POST['user_left_date']);
 
         if (!empty($_POST['user_companies'])) {
@@ -40,53 +41,62 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
 
             if (empty($user_left_date)) {
-                $sql = "INSERT INTO UTENTI (NOME, COGNOME, EMAIL, PASSWORD, NUMERO, RUOLO, AZIENDA_POSIZIONE, DATA_INIZIO, DATA_FINITO, E_ATTIVO) 
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0)";
+                $sql = "INSERT INTO UTENTI (NOME, COGNOME, EMAIL, PASSWORD, NUMERO, RUOLO, AZIENDA_POSIZIONE, DATA_INIZIO, E_ATTIVO) 
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)";
+                $stmt = mysqli_prepare($conn, $sql);
+                mysqli_stmt_bind_param($stmt, "ssssisss", $user_first_name, $user_last_name, $user_email, $hashed_password, $user_numero, $user_role, $user_position, $user_joined_date);
             } else {
-                $sql = "INSERT INTO UTENTI (NOME, COGNOME, EMAIL, PASSWORD, NUMERO, RUOLO, AZIENDA_POSIZIONE, DATA_INIZIO, DATA_FINITO, E_ATTIVO) 
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)";
+                $sql = "INSERT INTO UTENTI (NOME, COGNOME, EMAIL, PASSWORD, NUMERO, RUOLO, AZIENDA_POSIZIONE, DATA_INIZIO, DATA_FINE, E_ATTIVO) 
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0)";
+                $stmt = mysqli_prepare($conn, $sql);
+                mysqli_stmt_bind_param($stmt, "ssssissss", $user_first_name, $user_last_name, $user_email, $hashed_password, $user_numero, $user_role, $user_position, $user_joined_date, $user_left_date);
             }
 
-            $stmt = mysqli_prepare($conn, $sql);
-            mysqli_stmt_bind_param($stmt, "ssssissss", $user_first_name, $user_last_name, $user_email, $hashed_password, $user_numero, $user_role, $user_position, $user_joined_date, $user_left_date);
+
             try {
                 if (mysqli_stmt_execute($stmt)) {
-                    if (!empty($user_companies)) {
-                        $sql = "SELECT UTENTE_ID
+                    $sql = "SELECT UTENTE_ID
                                 FROM UTENTI
                                 WHERE EMAIL = ?
                                 LIMIT 1";
 
-                        $stmt1 = mysqli_prepare($conn, $sql);
-                        mysqli_stmt_bind_param($stmt1, "s", $user_email);
-                        mysqli_stmt_execute($stmt1);
-                        mysqli_stmt_store_result($stmt1);
+                    $stmt1 = mysqli_prepare($conn, $sql);
+                    mysqli_stmt_bind_param($stmt1, "s", $user_email);
+                    mysqli_stmt_execute($stmt1);
+                    mysqli_stmt_store_result($stmt1);
 
-                        mysqli_stmt_bind_result($stmt1, $user_id);
-                        mysqli_stmt_fetch($stmt1);
-
-                        if (!empty($user_companies)) {
-                            foreach ($user_companies as $company_id) {
-                                $sql2 = "INSERT INTO UTENTI_AZIENDE (UTENTE_ID, AZIENDA_ID) VALUES (?, ?)";
-
-                                $company_id = (int) $company_id;
-
-                                $stmt2 = mysqli_prepare($conn, $sql2);
-                                mysqli_stmt_bind_param($stmt2, "ii", $user_id, $company_id);
-                                mysqli_stmt_execute($stmt2);
-                            }
-                        }
-                    }
-                    $successfulMessage = "Utente Creato con Successo";
-
-                    $sql = "INSERT INTO LOGS (UTENTE_ID, ENTITY, ENTITY_ID, ACTION, DATE) VALUES (?, 'Utenti', ?, 'Creare', ?)";
+                    mysqli_stmt_bind_result($stmt1, $user_id);
+                    mysqli_stmt_fetch($stmt1);
 
                     date_default_timezone_set('Europe/Berlin');
                     $currentDateAndTime = date('Y-m-d H:i:s');
 
+                    if (!empty($user_companies)) {
+                        foreach ($user_companies as $company_id) {
+                            $sql2 = "INSERT INTO UTENTI_AZIENDE (UTENTE_ID, AZIENDA_ID) VALUES (?, ?)";
+
+                            $company_id = (int) $company_id;
+
+                            $stmt2 = mysqli_prepare($conn, $sql2);
+                            mysqli_stmt_bind_param($stmt2, "ii", $user_id, $company_id);
+                            mysqli_stmt_execute($stmt2);
+
+                            $logSql01 = "INSERT INTO LOGS (UTENTE_ID, ENTITA, UA_AZIENDA_ID, UA_UTENTE_ID, AZIONE, DATA_ORA) VALUES (?, 'UTENTI_AZIENDE', ?, ?,'Creare', ?)";
+                            $stmtLog01 = mysqli_prepare($conn, $logSql01);
+                            mysqli_stmt_bind_param($stmtLog01, "iiis", $_SESSION["user_id"], $company_id, $user_id, $currentDateAndTime);
+                            mysqli_stmt_execute($stmtLog01);
+                            mysqli_stmt_close($stmtLog01);
+                        }
+                    }
+
+                    $successfulMessage = "Utente Creato con Successo";
+
+                    $sql = "INSERT INTO LOGS (UTENTE_ID, ENTITA, ENTITA_ID, AZIONE, DATA_ORA) VALUES (?, 'UTENTI', ?, 'Creare', ?)";
+
                     $stmt = mysqli_prepare($conn, $sql);
                     mysqli_stmt_bind_param($stmt, "iis", $_SESSION["user_id"], $user_id, $currentDateAndTime);
                     mysqli_stmt_execute($stmt);
+                    mysqli_stmt_close($stmt);
                 } else {
                     $errorMessage = "Errore: Impossibile Creare l'Utente";
                 }
@@ -99,28 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
 include 'database/closedb.php';
-function showAllCompanies()
-{
-    include 'database/config.php';
-    include 'database/opendb.php';
 
-    $query = "SELECT AZIENDA_ID, AZIENDA_NOME FROM AZIENDE WHERE E_ATTIVO = 1";
-    $company = mysqli_query($conn, $query);
-
-    $companyDropDown = "";
-
-    if ($company) {
-        while ($row = mysqli_fetch_assoc($company)) {
-            $companyDropDown .= '<option value="' . $row['AZIENDA_ID'] . '">' . htmlspecialchars($row['AZIENDA_NOME']) . '</option>';
-        }
-    } else {
-        $companyDropDown .= "Error: " . mysqli_error($conn);
-    }
-
-    include 'database/closedb.php';
-
-    return $companyDropDown;
-}
 ?>
 
 
@@ -133,7 +122,7 @@ function showAllCompanies()
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
+    <link rel="shortcut icon" href="images/logo/small_logo.png" />
 
     <title>Crea un Utente</title>
 
@@ -176,12 +165,12 @@ function showAllCompanies()
             background-color: white;
         }
 
-        .select2-container .select2-search--inline .select2-search__field{
+        .select2-container .select2-search--inline .select2-search__field {
             margin-left: -6px !important;
             padding-left: 14px !important;
         }
 
-        .select2-selection__rendered{
+        .select2-selection__rendered {
             padding-top: 5px !important;
         }
 
@@ -306,22 +295,22 @@ function showAllCompanies()
 
                                             <div class="mb-3 row d-flex justify-content-center">
                                                 <h5 class="card-title col-sm-2 col-form-label">Data di
-                                                    Inizio<span style="color:red;">*</span>
+                                                    Inizio
                                                 </h5>
                                                 <div class="col-sm-4">
                                                     <input readonly type="text" class="form-control" id="datePicker"
-                                                        name="user_joined_date" placeholder="Data di Inizio" required
+                                                        name="user_joined_date" placeholder="Data di Inizio"
                                                         style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white">
                                                 </div>
                                             </div>
 
                                             <div class="mb-3 row d-flex justify-content-center">
                                                 <h5 class="card-title col-sm-2 col-form-label">Data di
-                                                    Finito
+                                                    Fine
                                                 </h5>
                                                 <div class="col-sm-4">
                                                     <input readonly type="text" class="form-control" id="datePicker"
-                                                        name="user_left_date" placeholder="Data di Finito"
+                                                        name="user_left_date" placeholder="Data di Fine"
                                                         style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white">
                                                 </div>
                                             </div>
@@ -399,7 +388,7 @@ function showAllCompanies()
                     });
 
                     let
-                    passwordInput = document.getElementById('password');
+                        passwordInput = document.getElementById('password');
                     iconPassword = document.getElementById('eyeIconPassword');
 
                     function togglePassword() {

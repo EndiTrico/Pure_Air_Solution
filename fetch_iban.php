@@ -14,6 +14,7 @@ if (!empty($companyID)) {
     $result = mysqli_stmt_get_result($stmt);
 
     if ($result->num_rows > 0) {
+      	echo '<option selected value="">Seleziona un\'IBAN</option>';
         while ($row = mysqli_fetch_assoc($result)) {
             echo '<option value="' . $row['BANCA_CONTO_ID'] . '">' . $row['IBAN']  . ' </option>';
         }

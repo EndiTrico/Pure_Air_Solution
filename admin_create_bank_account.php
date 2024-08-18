@@ -3,6 +3,7 @@ include 'auth_check.php';
 
 include 'database/config.php';
 include 'database/opendb.php';
+include 'fetch_companies.php';
 
 $errorMessage = "";
 $successfulMessage = "";
@@ -13,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $bank_company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
         $bank_IBAN = mysqli_real_escape_string($conn, $_POST['bank_iban']);
         $bank_left_date = mysqli_real_escape_string($conn, $_POST['bank_left_date']);
-        $bank_joined_date = mysqli_real_escape_string($conn, $_POST['bank_joined_date']);
+		$bank_joined_date = empty(mysqli_real_escape_string($conn, $_POST['bank_joined_date'])) ? null : mysqli_real_escape_string($conn, $_POST['bank_joined_date']);
 
         $queryCheck = "SELECT BANCA_CONTO_ID FROM BANCA_CONTI 
                        WHERE BANCA_NOME = ? 
@@ -30,20 +31,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 } else {
 
                     if (empty($bank_left_date)) {
-                        $sql = "INSERT INTO BANCA_CONTI (AZIENDA_ID, BANCA_NOME, IBAN, DATA_INIZIO, DATA_FINITO, E_ATTIVO) 
-                                VALUES (?, ?, ?, ?, ?, 1)";
+                        $sql = "INSERT INTO BANCA_CONTI (AZIENDA_ID, BANCA_NOME, IBAN, DATA_INIZIO, E_ATTIVO) 
+                                VALUES (?, ?, ?, ?, 1)";
                     } else {
-                        $sql = "INSERT INTO BANCA_CONTI (AZIENDA_ID, BANCA_NOME, IBAN, DATA_INIZIO, DATA_FINITO, E_ATTIVO) 
+                        $sql = "INSERT INTO BANCA_CONTI (AZIENDA_ID, BANCA_NOME, IBAN, DATA_INIZIO, DATA_FINE, E_ATTIVO) 
                                 VALUES (?, ?, ?, ?, ?, 0)";
                     }
+                    
+                  	$stmt = mysqli_prepare($conn, $sql);
 
-                    $stmt = mysqli_prepare($conn, $sql);
                     if ($stmt) {
-                        mysqli_stmt_bind_param($stmt, "issss", $bank_company_id, $bank_name, $bank_IBAN, $bank_joined_date, $bank_left_date);
-
+                      	if (empty($bank_left_date)) {
+                        	mysqli_stmt_bind_param($stmt, "isss", $bank_company_id, $bank_name, $bank_IBAN, $bank_joined_date);
+                      	} else {
+                             mysqli_stmt_bind_param($stmt, "issss", $bank_company_id, $bank_name, $bank_IBAN, $bank_joined_date, $bank_left_date);
+                        }
                         try {
                             if (mysqli_stmt_execute($stmt)) {
                                 $successfulMessage = "Il Conto Bancario è Stato Creato con Successo";
+                              	$bank_account_ID = nextBankAccountID();
+                      
+                        		$sql = "INSERT INTO LOGS (UTENTE_ID, ENTITA, ENTITA_ID, AZIONE, DATA_ORA) VALUES (?, '', ?, 'BANCA_CONTI', 'Creare', ?)";
+                    			date_default_timezone_set('Europe/Berlin');
+                    			$currentDateAndTime = date('Y-m-d H:i:s');
+
+                    			$stmt = mysqli_prepare($conn, $sql);
+                    			mysqli_stmt_bind_param($stmt, "iis", $_SESSION["user_id"], $bank_account_ID, $currentDateAndTime);
+                    			mysqli_stmt_execute($stmt);
                             } else {
                                 $errorMessage = "Errore: Impossibile Creare un Conto Bancario";
                             }
@@ -67,34 +81,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-include 'database/closedb.php';
 
-function showCompanyName()
+function nextBankAccountID()
 {
     include 'database/config.php';
     include 'database/opendb.php';
 
-    $query = "SELECT AZIENDA_ID, AZIENDA_NOME FROM AZIENDE WHERE E_ATTIVO = 1";
-    $company = mysqli_query($conn, $query);
+    $query = "SELECT MAX(BANCA_CONTO_ID) AS max_sid FROM BANCA_CONTI";
+    $result = mysqli_query($conn, $query);
 
-    $companyDropDown = "";
-    $companyDropDown .= '<select class="form-select mb-3" name = "company_name" required>';
-    $companyDropDown .= '<option value="" disabled selected>Seleziona un\'Azienda</option>';
+    if ($result && $result->num_rows > 0) {
+        $row = mysqli_fetch_assoc($result);
+        $max_sid = $row['max_sid'];
 
-    if ($company) {
-        while ($row = mysqli_fetch_assoc($company)) {
-            $companyDropDown .= '<option value="' . $row['AZIENDA_ID'] . '">' . htmlspecialchars($row['AZIENDA_NOME']) . '</option>';
-        }
+        $next_id = $max_sid;
     } else {
-        $companyDropDown .= "Error: " . mysqli_error($conn);
+        echo "Error: " . mysqli_error($conn);
+        $next_id = 1;
     }
-
-    $companyDropDown .= '</select>';
 
     include 'database/closedb.php';
 
-    return $companyDropDown;
+    return $next_id;
 }
+
+
 ?>
 
 
@@ -107,7 +118,7 @@ function showCompanyName()
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
+    <link rel="shortcut icon" href="images/logo/small_logo.png" />
 
     <title>Crea un Conto Bancario</title>
 
@@ -199,19 +210,20 @@ function showCompanyName()
 
                                                         <div class="mb-3 row d-flex justify-content-center">
                                                             <h5 class="card-title col-sm-2 col-form-label">Data di
-                                                                Inizio<span style="color:red;">*</span>
+                                                                Inizio
                                                             </h5>
                                                             <div class="col-sm-4">
-                                                                <input readonly type="text" class="form-control" id="datePicker" name="bank_joined_date" placeholder="Data di Inizio" required style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white">
+                                                                <input readonly type="text" class="form-control" id="datePicker" value = ""
+                                                                       name="bank_joined_date" placeholder="Data di Inizio" required style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white">
                                                             </div>
                                                         </div>
 
                                                         <div class="mb-3 row d-flex justify-content-center">
                                                             <h5 class="card-title col-sm-2 col-form-label">Data di
-                                                                Finito
+                                                                Fine
                                                             </h5>
                                                             <div class="col-sm-4">
-                                                                <input readonly type="text" class="form-control" id="datePicker" name="bank_left_date" placeholder="Data di Finito" style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white">
+                                                                <input readonly type="text" class="form-control" id="datePicker" name="bank_left_date" placeholder="Data di Fine" style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white">
                                                             </div>
                                                         </div>
                                                     </div>

@@ -13,6 +13,7 @@ if (!empty($id)) {
     $result = mysqli_stmt_get_result($stmt);
 
     if ($result->num_rows > 0) {
+        echo '<option selected value="">Seleziona una Banca</option>';
         while ($row = mysqli_fetch_assoc($result)) {
             echo '<option value="' . $row['BANCA_NOME'] . '">' . $row['BANCA_NOME']  . ' </option>';
         }

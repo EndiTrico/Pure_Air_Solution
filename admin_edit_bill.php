@@ -1,5 +1,6 @@
 <?php
 echo '
+
 <form id="billForm" method="post">
     <div class="row"
         style="background:url(\'./images/logo/logo01_backgroundForm.png\'); background-color: white;  background-size: contain; background-position: center; background-repeat: no-repeat; ">
@@ -72,7 +73,7 @@ echo '
                 <div class="mb-3 row d-flex justify-content-center">
                     <h5 class="card-title col-sm-2 col-form-label">Azienda<span style="color:red;">*</span></h5>
                     <div class="col-sm-4">
-                        <select class="form-select mb-3" name = "company_name" required>' .
+                        <select class="form-select mb-3" name = "company_name" id = "company-dropdown" required>' .
                             showCompaniesNameDropDown("fatture") . '</select>                    
                     </div>
                 </div>
@@ -97,7 +98,7 @@ echo '
 
                 <div class="mb-3 row d-flex justify-content-center">
                     <h5 class="card-title col-sm-2 col-form-label">Data di
-                        Fatturazione<span style="color:red;">*</span></h5>
+                        Fatturazione</h5>
                     <div class="col-sm-4">
                         <input readonly type="text" class="form-control" id="datePicker" name="bill_billing_date" required
                             placeholder="Data di Fatturazione" value="' . $row['DATA_FATTURAZIONE'] . '" 
@@ -107,7 +108,7 @@ echo '
 
                 <div class="mb-3 row d-flex justify-content-center">
                     <h5 class="card-title col-sm-2 col-form-label">Data di
-                        Scadenza<span style="color:red;">*</span>
+                        Scadenza
                     </h5>
                     <div class="col-sm-4">
                         <input readonly type="text" class="form-control" id="datePicker" name="bill_expiration_date" required
@@ -132,7 +133,7 @@ echo '
                     </h5>
                     <div class="col-sm-4">
                         <textarea class="form-control" name="bill_information" rows="3"
-                            placeholder="Descrizione"></textarea>
+                            placeholder="Descrizione">'. $row['DESCRIZIONE'] .'</textarea>
                     </div>
                 </div>
 
@@ -147,24 +148,10 @@ echo '
     </div>  
 </form>
 
+
 <script>
-    function calculateValueWithVAT() {
-        var value = parseFloat(document.getElementById("value").value);
-        var billVAT = parseFloat(document.getElementById("VAT").value);
 
-        if (isNaN(value)) {
-            value = 0;
-        }  
-        if (isNaN(billVAT)) {
-            billVAT = 0;
-        }
-    
-        var valueWithVAT = (value * (1 + (billVAT / 100))).toFixed(2);
-
-        document.getElementById("bill_withVAT").value = valueWithVAT;
-    }
-
-            $("#company-dropdown").change(function() {
+        $("#company-dropdown").change(function() {
             var companyID = $(this).val();
             $.ajax({
                 type: "POST",
@@ -175,16 +162,16 @@ echo '
                 cache: false,
                 success: function(data) {
                     $("#bank-name-dropdown").html(data);
-                    $("#bank-name-dropdown").data(\'companyID\', companyID);
-                    $("#iban-dropdown").html(\'<option value="">Seleziona un\'IBAN</option>\');
-                    $("#bank-name-dropdown").trigger(\'change\');
+                    $("#bank-name-dropdown").data("companyID", companyID);
+                    $("#iban-dropdown").html("<option >Seleziona unIBAN</option>");
+                    $("#bank-name-dropdown").trigger("change");
                 }
             });
         });
 
         $("#bank-name-dropdown").change(function() {
             var bankName = $(this).val();
-            var companyID = $(this).data(\'companyID\');
+            var companyID = $(this).data("companyID");
             $.ajax({
                 type: "POST",
                 url: "fetch_iban.php",
@@ -193,9 +180,10 @@ echo '
                     name: bankName
                 },
                 success: function(data) {
-                    $(\'#iban-dropdown\').html(data);
+                    $("#iban-dropdown").html(data);
                 }
             });
         });
 
-</script>';
+</script>
+';

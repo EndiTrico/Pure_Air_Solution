@@ -17,7 +17,7 @@ include 'database/closedb.php';
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
+    <link rel="shortcut icon" href="images/logo/small_logo.png" />
 
     <title>Visualizza Entità</title>
 
@@ -34,13 +34,14 @@ include 'database/closedb.php';
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js">
     </script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.1.7/js/dataTables.fixedHeader.min.js"></script>
+    <script type="text/javascript"
+        src="https://cdn.datatables.net/fixedheader/3.1.7/js/dataTables.fixedHeader.min.js"></script>
 
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.1.7/css/fixedHeader.dataTables.min.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/fixedheader/3.1.7/css/fixedHeader.dataTables.min.css">
 
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-BTBZNOArLzKrjzlkrMgXw0S51oBnuy0/HWkCARN0aSUSnt5N6VX/9n6tsQwnPVK68OzI6KARmxx3AeeBfM2y+g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -78,6 +79,7 @@ include 'database/closedb.php';
             font-size: 14px;
             padding: 5px 10px;
             border-radius: 999px;
+            font-weight: bold;
         }
 
         .badge-danger-custom {
@@ -86,6 +88,16 @@ include 'database/closedb.php';
             font-size: 14px;
             padding: 5px 10px;
             border-radius: 999px;
+            font-weight: bold;
+        }
+
+        .badge-warning-custom {
+            background-color: #ffc107;
+            color: #fff;
+            font-size: 14px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-weight: bold;
         }
 
         .button-row {
@@ -226,28 +238,36 @@ include 'database/closedb.php';
                                     <div class="row">
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('utenti')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Mostra Utenti
+                                                <a onclick="fetchData('utenti')"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Mostra Utenti
                                                 </a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('aziende')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Mostra Aziende
+                                                <a onclick="fetchData('aziende')"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Mostra Aziende
                                                 </a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('strutture')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Mostra Strutture
+                                                <a onclick="fetchData('strutture')"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Mostra Strutture
                                                 </a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-3">
                                             <div class="card-header">
-                                                <a onclick="fetchData('reparti')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Mostra Reparti
+                                                <a onclick="fetchData('reparti')"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Mostra Reparti
                                                 </a>
                                             </div>
                                         </div>
@@ -256,24 +276,31 @@ include 'database/closedb.php';
                                     <div class="row">
                                         <div class="col-12 col-lg-4">
                                             <div class="card-header">
-                                                <a onclick="fetchData('banca conti')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Mostra Banca Conti</a>
+                                                <a onclick="fetchData('banca conti')"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Mostra Banca Conti</a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-4">
                                             <div class="card-header">
-                                                <a onclick="fetchData('fatture')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Mostra Fatture
+                                                <a onclick="fetchData('fatture')"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Mostra Fatture
                                                 </a>
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-lg-4">
                                             <div class="card-header">
-                                                <a id="mybtn" onclick="fetchData('impianti')" class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center" style="font-weight: bold;">Mostra Impianti
+                                                <a id="mybtn" onclick="fetchData('impianti')"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Mostra Impianti
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
+
 
 
                                     <div class="col-12 col-lg-12">
@@ -289,38 +316,41 @@ include 'database/closedb.php';
 
 
 
+            <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+            <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/it.js"></script>
             <script>
                 function fetchData(entity) {
                     var xhttp = new XMLHttpRequest();
-                    var table;
 
-                    xhttp.onreadystatechange = function() {
+                    xhttp.onreadystatechange = function () {
                         if (this.readyState == 4 && this.status == 200) {
                             document.getElementById("tableContainer").innerHTML = this.responseText;
-                            table = $('#fetchTable').DataTable({
+
+                            var table = $('#fetchTable').DataTable({
                                 language: {
                                     "url": "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Italian.json"
                                 },
                                 destroy: true,
                                 orderCellsTop: true,
                                 fixedHeader: false,
-                                initComplete: function() {
+                                initComplete: function () {
                                     var api = this.api();
 
+                                    // Clone the header row and add it as a filter row
                                     var clonedRow = $('#fetchTable thead tr').clone(true).appendTo('#fetchTable thead').addClass('filters');
 
-                                    clonedRow.find('th').each(function() {
+                                    clonedRow.find('th').each(function () {
                                         $(this).removeClass('sorting sorting_asc sorting_desc');
                                         $(this).css('pointer-events', 'auto');
                                         $(this).off('click.DT');
                                     });
 
-                                    clonedRow.find('th').each(function(i) {
+                                    clonedRow.find('th').each(function (i) {
+                                        var title = $(this).text();
                                         if (i !== $(this).siblings().length && title !== "Azioni") {
-                                            var title = $(this).text();
-                                            var input = $('<input type="text" style = "text-align: center;" placeholder="Cerca ' + title + '" />').appendTo($(this).empty());
+                                            var input = $('<input type="text" style="text-align: center;" placeholder="Cerca ' + title + '" />').appendTo($(this).empty());
 
-                                            input.on('keyup change', function() {
+                                            input.on('keyup change', function () {
                                                 if (table.column(i).search() !== this.value) {
                                                     table.column(i).search(this.value).draw();
                                                 }
@@ -335,11 +365,196 @@ include 'database/closedb.php';
                                     visible: true
                                 }]
                             });
+
+                            filterWithDate(entity, table);
                         }
                     };
 
                     xhttp.open("GET", "fetch_data.php?entity=" + entity, true);
                     xhttp.send();
+                }
+
+
+                function filterWithDate(entity, table) {
+                    if (entity === 'fatture') {
+                        var fatturazioneColIdx = table.column(':contains("Data Fatturazione")').index();
+                        var pagamentoColIdx = table.column(':contains("Data Pagamento")').index();
+                        var scadenzaColIdx = table.column(':contains("Data Scadenza")').index();
+
+                        $.fn.dataTable.ext.search.push(
+                            function (settings, data, dataIndex) {
+                                var minFatturazione = $('#minFatturazione').val();
+                                var maxFatturazione = $('#maxFatturazione').val();
+                                var minPagamento = $('#minPagamento').val();
+                                var maxPagamento = $('#maxPagamento').val();
+                                var minScadenza = $('#minScadenza').val();
+                                var maxScadenza= $('#maxScadenza').val();
+                                
+                                var dataFatturazione = data[fatturazioneColIdx];
+                                var dataPagamento = data[pagamentoColIdx];
+                                var dataScadenza = data[scadenzaColIdx];
+
+                                dataFatturazione = dataFatturazione ? new Date(dataFatturazione) : null;
+                                dataPagamento = dataPagamento ? new Date(dataPagamento) : null;
+                                dataScadenza = dataScadenza ? new Date(dataScadenza) : null;
+
+                                minFatturazione = minFatturazione ? new Date(minFatturazione) : null;
+                                maxFatturazione = maxFatturazione ? new Date(maxFatturazione) : null;
+                                minPagamento = minPagamento ? new Date(minPagamento) : null;
+                                maxPagamento = maxPagamento ? new Date(maxPagamento) : null;
+                                minScadenza = minScadenza ? new Date(minScadenza) : null;
+                                maxScadenza = maxScadenza ? new Date(maxScadenza) : null;
+
+                                if (
+                                    (
+                                        (minFatturazione === null || (dataFatturazione !== null && dataFatturazione >= minFatturazione)) &&
+                                        (maxFatturazione === null || (dataFatturazione !== null && dataFatturazione <= maxFatturazione))
+                                    )
+
+                                    &&
+
+                                    (
+                                        (minPagamento === null || (dataPagamento !== null && dataPagamento >= minPagamento)) &&
+                                        (maxPagamento === null || (dataPagamento !== null && dataPagamento <= maxPagamento))
+                                    )
+
+                                    &&
+
+                                    (
+                                        (minScadenza === null || (dataScadenza !== null && dataScadenza >= minScadenza)) &&
+                                        (maxScadenza === null || (dataScadenza !== null && dataScadenza <= maxScadenza))
+                                    )
+                                ) {
+                                    return true;
+                                }
+
+                                return false;
+                            }
+                        );
+
+                        $('#minFatturazione, #maxFatturazione, #minPagamento, #maxPagamento, #minScadenza, #maxScadenza').change(function () {
+                            table.draw();
+                        });
+
+                        flatpickr("#minFatturazione, #maxFatturazione, #minPagamento, #maxPagamento, #minScadenza, #maxScadenza", {
+                            locale: 'it',
+                            dateFormat: "Y-m-d"
+                        });
+                    } else if (entity == 'impianti') {
+                        var inizioColIdx = table.column(':contains("Data Inizio")').index();
+                        var fineColIdx = table.column(':contains("Data Fine")').index();
+                        var ultimaColIdx = table.column(':contains("Data Ultima Att")').index();
+
+                        $.fn.dataTable.ext.search.push(
+                            function (settings, data, dataIndex) {
+                                var minInizio = $('#minInizio').val();
+                                var maxInizio = $('#maxInizio').val();
+                                var minFine = $('#minFine').val();
+                                var maxFine = $('#maxFine').val();
+                                var minUltima = $('#minUltima').val();
+                                var maxUltima= $('#maxUltima').val();
+                                
+                                var dataInizio = data[inizioColIdx];
+                                var dataFine = data[fineColIdx];
+                                var dataUltima = data[ultimaColIdx];
+
+                                dataInizio = dataInizio ? new Date(dataInizio) : null;
+                                dataFine = dataFine ? new Date(dataFine) : null;
+                                dataUltima = dataUltima ? new Date(dataUltima) : null;
+
+                                minInizio = minInizio ? new Date(minInizio) : null;
+                                maxInizio = maxInizio ? new Date(maxInizio) : null;
+                                minFine = minFine ? new Date(minFine) : null;
+                                maxFine = maxFine ? new Date(maxFine) : null;
+                                minUltima = minUltima ? new Date(minUltima) : null;
+                                maxUltima = maxUltima ? new Date(maxUltima) : null;
+
+                                if (
+                                    (
+                                        (minInizio === null || (dataInizio !== null && dataInizio >= minInizio)) &&
+                                        (maxInizio === null || (dataInizio !== null && dataInizio <= maxInizio))
+                                    )
+
+                                    &&
+
+                                    (
+                                        (minFine === null || (dataFine !== null && dataFine >= minFine)) &&
+                                        (maxFine === null || (dataFine !== null && dataFine <= maxFine))
+                                    )
+
+                                    &&
+
+                                    (
+                                        (minUltima === null || (dataUltima !== null && dataUltima >= minUltima)) &&
+                                        (maxUltima === null || (dataUltima !== null && dataUltima <= maxUltima))
+                                    )
+                                ) {
+                                    return true;
+                                }
+
+                                return false;
+                            }
+                        );
+
+                        $('#minInizio, #maxInizio, #minFine, #maxFine, #minUltima, #maxUltima').change(function () {
+                            table.draw();
+                        });
+
+                        flatpickr("#minInizio, #maxInizio, #minFine, #maxFine, #minUltima, #maxUltima", {
+                            locale: 'it',
+                            dateFormat: "Y-m-d"
+                        });
+                    } else {
+                        var inizioColIdx = table.column(':contains("Data Inizio")').index();
+                        var fineColIdx = table.column(':contains("Data Fine")').index();
+
+                        $.fn.dataTable.ext.search.push(
+                            function (settings, data, dataIndex) {
+                                var minInizio = $('#minInizio').val();
+                                var maxInizio = $('#maxInizio').val();
+                                var minFine = $('#minFine').val();
+                                var maxFine = $('#maxFine').val();
+
+                                var dataInizio = data[inizioColIdx];
+                                var dataFine = data[fineColIdx];
+
+                                dataInizio = dataInizio ? new Date(dataInizio) : null;
+                                dataFine = dataFine ? new Date(dataFine) : null;
+
+                                minInizio = minInizio ? new Date(minInizio) : null;
+                                maxInizio = maxInizio ? new Date(maxInizio) : null;
+                                minFine = minFine ? new Date(minFine) : null;
+                                maxFine = maxFine ? new Date(maxFine) : null;
+
+                                if (
+                                    (
+                                        (minInizio === null || (dataInizio !== null && dataInizio >= minInizio)) &&
+                                        (maxInizio === null || (dataInizio !== null && dataInizio <= maxInizio))
+                                    )
+
+                                    &&
+
+                                    (
+                                        (minFine === null || (dataFine !== null && dataFine >= minFine)) &&
+                                        (maxFine === null || (dataFine !== null && dataFine <= maxFine))
+                                    )
+                                ) {
+                                    return true;
+                                }
+
+                                return false;
+                            }
+                        );
+
+                        $('#minInizio, #maxInizio, #minFine, #maxFine').change(function () {
+                            table.draw();
+                        });
+
+                        flatpickr("#minInizio, #maxInizio, #minFine, #maxFine", {
+                            locale: 'it',
+                            dateFormat: "Y-m-d"
+                        });
+                    }
                 }
 
                 function confirmDelete(id, entity) {
@@ -381,7 +596,7 @@ include 'database/closedb.php';
                                 icon: "success",
                                 showConfirmButton: false
                             });
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 var dateValue = result.value || ""
 
                                 var url = 'admin_delete.php?id=' + encodeURIComponent(id) + '&entity=' + encodeURIComponent(entity) + '&dateValue=' + encodeURIComponent(dateValue);
@@ -437,7 +652,7 @@ include 'database/closedb.php';
 
                             xhr.open('GET', `admin_activization.php?id=${encodeURIComponent(id)}&entity=${encodeURIComponent(entity)}&dateValue=${encodeURIComponent(dateValue)}`);
 
-                            xhr.onload = function() {
+                            xhr.onload = function () {
                                 if (xhr.status === 200) {
                                     var response = JSON.parse(xhr.responseText);
                                     if (response.status === 'success') {
@@ -447,7 +662,7 @@ include 'database/closedb.php';
                                             icon: "success",
                                             showConfirmButton: false
                                         });
-                                        setTimeout(function() {
+                                        setTimeout(function () {
                                             var url = "admin_display_entities.php";
                                             window.location.href = url;
                                         }, 2000);
@@ -458,7 +673,7 @@ include 'database/closedb.php';
                                             icon: "error",
                                             showConfirmButton: false
                                         });
-                                        setTimeout(function() {
+                                        setTimeout(function () {
                                             var url = "admin_display_entities.php";
                                             window.location.href = url;
                                         }, 2000);
@@ -468,7 +683,7 @@ include 'database/closedb.php';
                                 }
                             };
 
-                            xhr.onerror = function() {
+                            xhr.onerror = function () {
                                 console.error('Network Error');
                             };
 
@@ -486,14 +701,14 @@ include 'database/closedb.php';
                 function editEntity(id, entity) {
                     var xhr = new XMLHttpRequest();
                     xhr.open('GET', `admin_edit.php?id=${encodeURIComponent(id)}&entity=${encodeURIComponent(entity)}`);
-                    xhr.onload = function() {
+                    xhr.onload = function () {
                         if (xhr.status === 200) {
                             window.location.href = 'admin_edit.php?id=' + encodeURIComponent(id) + '&entity=' + encodeURIComponent(entity);
                         } else {
                             console.error('Request failed with status code ' + xhr.status);
                         }
                     };
-                    xhr.onerror = function() {
+                    xhr.onerror = function () {
                         console.error('Network Error');
                     };
 

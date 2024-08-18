@@ -3,6 +3,7 @@ include 'auth_check.php';
 
 include 'database/config.php';
 include 'database/opendb.php';
+include 'fetch_companies.php';
 
 $errorMessage = "";
 $successfulMessage = "";
@@ -11,29 +12,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['create_bill'])) {
         $bill_company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
         $bill_value = ROUND(($_POST['bill_value']), 2);
-        $bill_billing_date = mysqli_real_escape_string($conn, $_POST['bill_billing_date']);
+        $bill_billing_date = empty(mysqli_real_escape_string($conn, $_POST['bill_billing_date'])) ? null : mysqli_real_escape_string($conn, $_POST['bill_billing_date']);
         $bill_VAT = ROUND($_POST['bill_VAT'], 2);
         $bill_currency = mysqli_real_escape_string($conn, $_POST['bill_currency']);
         $bill_payment_date = mysqli_real_escape_string($conn, $_POST['bill_payment_date']);
         $bill_information = mysqli_real_escape_string($conn, $_POST['bill_information']);
         $bill_value_with_VAT = ROUND((float) $_POST['bill_withVAT'], 2);
-        $bill_expiration_date = mysqli_real_escape_string($conn, $_POST['bill_expiration_date']);
-        $bill_bank_conto_id = mysqli_real_escape_string($conn, $_POST['bill_bank_iban']);
+        $bill_expiration_date = empty($_POST['bill_expiration_date']) ? null : mysqli_real_escape_string($conn, $_POST['bill_expiration_date']);
+        $bill_bank_conto_id = empty(mysqli_real_escape_string($conn, $_POST['bill_bank_iban'])) ? null : mysqli_real_escape_string($conn, $_POST['bill_bank_iban']);
 
-        $paid = "no";
         if (empty($bill_payment_date)) {
             $sql = "INSERT INTO FATTURE (AZIENDA_ID, DESCRIZIONE, VALORE, VALORE_IVA_INCLUSA, IVA, MONETA, DATA_FATTURAZIONE, DATA_SCADENZA, E_PAGATO) 
                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)";
-            $paid = "no";
         } else {
             $sql = "INSERT INTO FATTURE (AZIENDA_ID, DESCRIZIONE, VALORE, VALORE_IVA_INCLUSA, IVA, MONETA, DATA_FATTURAZIONE, DATA_SCADENZA, DATA_PAGAMENTO, BANCO_CONTO_ID, E_PAGATO) 
                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)";
-            $paid = "yes";
         }
 
         $stmt = mysqli_prepare($conn, $sql);
         if ($stmt) {
-            if ($paid = "no") {
+            if (empty($bill_payment_date)) {
                 mysqli_stmt_bind_param($stmt, "isdddsss", $bill_company_id, $bill_information, $bill_value, $bill_value_with_VAT, $bill_VAT, $bill_currency, $bill_billing_date, $bill_expiration_date);
             } else {
                 mysqli_stmt_bind_param($stmt, "isdddssssi", $bill_company_id, $bill_information, $bill_value, $bill_value_with_VAT, $bill_VAT, $bill_currency, $bill_billing_date, $bill_expiration_date, $bill_payment_date, $bill_bank_conto_id);
@@ -42,6 +40,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             try {
                 if (mysqli_stmt_execute($stmt)) {
                     $successfulMessage = "Fattura è Stata Creata con Successo";
+                    $bill_ID = nextBillID();
+                      
+                    $sql = "INSERT INTO LOGS (UTENTE_ID, ENTITA, ENTITA_ID, AZIONE, DATA_ORA) VALUES (?, 'FATTURE', ?, 'Creare', ?)";
+                    date_default_timezone_set('Europe/Berlin');
+                    $currentDateAndTime = date('Y-m-d H:i:s');
+
+                    $stmt = mysqli_prepare($conn, $sql);
+                    mysqli_stmt_bind_param($stmt, "iis", $_SESSION["user_id"], $bill_ID, $currentDateAndTime);
+                    mysqli_stmt_execute($stmt);
                 } else {
                     $errorMessage = "Errore: Impossibile Creare la Fattura";
                 }
@@ -58,52 +65,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 include 'database/closedb.php';
 
-function showCompanyName()
-{
-    include 'database/config.php';
-    include 'database/opendb.php';
-
-    $query = "SELECT AZIENDA_ID, AZIENDA_NOME FROM AZIENDE WHERE E_ATTIVO = 1";
-    $company = mysqli_query($conn, $query);
-
-    $companyDropDown = "";
-    $companyDropDown .= '<select class="form-select mb-3" name = "company_name" id = "company-dropdown" required>';
-    $companyDropDown .= '<option value="" disabled selected>Seleziona un\'Azienda</option>';
-
-    if ($company) {
-        while ($row = mysqli_fetch_assoc($company)) {
-            $companyDropDown .= '<option value="' . $row['AZIENDA_ID'] . '">' . htmlspecialchars($row['AZIENDA_NOME']) . '</option>';
-        }
-    } else {
-        $companyDropDown .= "Error: " . mysqli_error($conn);
-    }
-
-    $companyDropDown .= '</select>';
-
-    include 'database/closedb.php';
-
-    return $companyDropDown;
-}
-
 function nextBillID()
 {
     include 'database/config.php';
     include 'database/opendb.php';
 
-    $query = "SHOW TABLE STATUS LIKE 'FATTURE'";
+    $query = "SELECT MAX(FATTURA_ID) AS max_sid FROM FATTURE";
     $result = mysqli_query($conn, $query);
 
     if ($result && $result->num_rows > 0) {
         $row = mysqli_fetch_assoc($result);
+        $max_sid = $row['max_sid'];
 
-        $next_auto_increment = $row['Auto_increment'];
+        $next_id = $max_sid;
     } else {
-        echo "Error: " . mysqli_error($connection);
+        echo "Error: " . mysqli_error($conn);
+        $next_id = 1;
     }
 
     include 'database/closedb.php';
 
-    return $next_auto_increment;
+    return $next_id;
 }
 ?>
 
@@ -117,18 +99,16 @@ function nextBillID()
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
-
+    <link rel="shortcut icon" href="images/logo/small_logo.png" />
 
     <title>Crea una Fattura</title>
 
     <link href="css/app.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
-    <script src="https://code.jquery.com/jquery-3.6 .0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-BTBZNOArLzKrjzlkrMgXw0S51oBnuy0/HWkCARN0aSUSnt5N6VX/9n6tsQwnPVK68OzI6KARmxx3AeeBfM2y+g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- FlatPickr  - Input Date -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -138,6 +118,18 @@ function nextBillID()
             color: #6d6f72 !important;
         }
     </style>
+  
+  
+    <script defer>
+    function calculateValueWithVAT() {
+        var value = parseFloat(document.getElementById("value").value);
+        var VAT = parseFloat(document.getElementById("VAT").value);
+        if (isNaN(value)) value = 0;
+        if (isNaN(VAT)) VAT = 0;
+        var valueWithVAT = (value * (1 + (VAT / 100))).toFixed(2);
+        document.getElementById("bill_withVAT").value = valueWithVAT;
+    }
+  </script>
 </head>
 
 <body>
@@ -192,7 +184,7 @@ function nextBillID()
                                                         <div class="mb-3 row d-flex justify-content-center">
                                                             <h5 class="card-title col-sm-2 col-form-label">Fattura ID</h5>
                                                             <div class="col-sm-4">
-                                                                <input type="number" class="form-control" id="value" name="bill_ID" placeholder="Fattura ID" min=0 max=100000000000000000000000000 step="any" value="<?php echo nextBillID(); ?>" readonly>
+                                                                <input type="number" class="form-control" id="fattura_id" name="bill_ID" placeholder="Fattura ID" min=0 max=100000000000000000000000000 step="any" value="<?php echo nextBillID(); ?>" readonly>
                                                             </div>
                                                         </div>
 
@@ -272,7 +264,7 @@ function nextBillID()
                                                             </h5>
                                                             <div class="col-sm-4">
                                                                 <select name="bill_bank_name" id="bank-name-dropdown" class="form-select mb-3" required>
-                                                                    <option disable selected value="">Seleziona una
+                                                                    <option selected value="">Seleziona una
                                                                         Banca</option>
                                                                 </select>
                                                             </div>
@@ -284,7 +276,7 @@ function nextBillID()
                                                             </h5>
                                                             <div class="col-sm-4">
                                                                 <select name="bill_bank_iban" id="iban-dropdown" class="form-select mb-3" required>
-                                                                    <option disable selected value="">Seleziona un'IBAN
+                                                                    <option selected value="">Seleziona un'IBAN
                                                                     </option>
                                                                 </select>
                                                             </div>
@@ -292,18 +284,18 @@ function nextBillID()
 
                                                         <div class="mb-3 row d-flex justify-content-center">
                                                             <h5 class="card-title col-sm-2 col-form-label">Data di
-                                                                Fatturazione<span style="color:red;">*</span></h5>
+                                                                Fatturazione</h5>
                                                             <div class="col-sm-4">
-                                                                <input required readonly type="text" class="form-control" id="datePicker" name="bill_billing_date" placeholder="Data di Fatturazione" style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white">
+                                                                <input readonly type="date" class="form-control" id="datePicker" name="bill_billing_date" placeholder="Data di Fatturazione" style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white">
                                                             </div>
                                                         </div>
 
                                                         <div class="mb-3 row d-flex justify-content-center">
                                                             <h5 class="card-title col-sm-2 col-form-label">Data di
-                                                                Scadenza<span style="color:red;">*</span>
+                                                                Scadenza
                                                             </h5>
                                                             <div class="col-sm-4">
-                                                                <input required readonly type="text" class="form-control" id="datePicker" name="bill_expiration_date" placeholder="Data di Scadenza" style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white">
+                                                                <input required type="date" class="form-control" id="datePicker" placeholder = "Data di Scadenza" name="bill_expiration_date" style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white">
                                                             </div>
                                                         </div>
 

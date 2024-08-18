@@ -11,36 +11,48 @@ $successfulMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset ($_POST['update_profile'])) {
-        $NOME = mysqli_real_escape_string($conn, $_POST['user_first_name']);
-        $COGNOME = mysqli_real_escape_string($conn, $_POST['user_last_name']);
+        $user_first_name = mysqli_real_escape_string($conn, $_POST['user_first_name']);
+        $user_last_name = mysqli_real_escape_string($conn, $_POST['user_last_name']);
         $user_email = mysqli_real_escape_string($conn, $_POST['user_email']);
+        $user_number = mysqli_real_escape_string($conn, $_POST['user_number']);
         $user_password = mysqli_real_escape_string($conn, $_POST['user_password']);
         $user_confirm_password = mysqli_real_escape_string($conn, $_POST['user_confirm_password']);
 
         if ($user_password == $user_confirm_password) {
             $hashed_password = password_hash($user_password, PASSWORD_BCRYPT);
 
+         	$fields = [
+    			'NOME' => $user_first_name,
+    			'COGNOME' => $user_last_name,
+    			'EMAIL' => $user_email,
+        		'PASSWORD' => $user_password,
+    			'NUMERO' => $user_number
+            ];
+                  $existingEntity = oldRecord($_SESSION['user_id']);
+
             $sql = "UPDATE UTENTI 
                     SET NOME = ?, 
                         COGNOME = ?, 
-                        PASSWORD = ?,  
+                        PASSWORD = ?,
+						NUMERO = ?,  
                         EMAIL = ?
                     WHERE EMAIL = ?";
 
             $stmt = mysqli_prepare($conn, $sql);
 
             if ($stmt) {
-                mysqli_stmt_bind_param($stmt, "sssss", $NOME, $COGNOME, $hashed_password, $user_email, $email);
+                mysqli_stmt_bind_param($stmt, "ssssss", $user_first_name, $user_last_name, $hashed_password, $user_number, $user_email, $email);
 
                 try {
                     if (mysqli_stmt_execute($stmt)) {
-                        $successfulMessage = "Profilo Aggiornato con Successo";
+                        $isChanged = insertIntoLogs($fields, 'UTENTI', $_SESSION['user_id'], $existingEntity);
+                    	$isChanged ? $successfulMessage = "Profilo Aggiornato con Successo": $infoMessage = "Non Hai Modificato Alcun Attributo";
                         $_SESSION['email'] = $user_email;
                     } else {
                         $errorMessage = "Errore: Impossibile Aggiornare il Profilo";
                     }
                 } catch (mysqli_sql_exception $e) {
-                    $errorMessage = "Error: " . $e->getMessage();
+                    $errorMessage = "Errore: " . $e->getMessage();
                 } finally {
                     mysqli_stmt_close($stmt);
                 }
@@ -53,6 +65,57 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
+function insertIntoLogs($fields, $entity, $id, $existingEntity){
+    include 'database/config.php';
+	include 'database/opendb.php';
+	$modifiedDate = date("Y-m-d H:i:s");
+    $entity01 = strtoupper($entity);  
+    $changed = false;
+
+	foreach ($fields as $key => $value) {
+		if ($value != $existingEntity[$key] && $key != 'PASSWORD') {
+            $changed = true;
+
+        	$logSql = "INSERT INTO LOGS (UTENTE_ID, ENTITA, ENTITA_ID, AZIONE, ATTRIBUTO, VECCHIO_VALORE, NUOVO_VALORE, DATA_ORA) 
+            			VALUES (?, ?, ?, 'Modificare', ?, ?, ?, ?)";
+            $logStmt = mysqli_prepare($conn, $logSql);
+            mysqli_stmt_bind_param($logStmt, "isissss", $id, $entity01, $id, $key, $existingEntity[$key], $value, $modifiedDate);
+            mysqli_stmt_execute($logStmt);
+            mysqli_stmt_close($logStmt);
+        } else if ($key == 'PASSWORD' && $value != '') {
+        	$changed = true;
+
+        	$logSql01 = "INSERT INTO LOGS (UTENTE_ID, ENTITA, ENTITA_ID, AZIONE, ATTRIBUTO, DATA_ORA) 
+            				VALUES (?, ?, ?, 'Modificare', ?, ?)";
+            $logStmt01 = mysqli_prepare($conn, $logSql01);
+            mysqli_stmt_bind_param($logStmt01, "isiss", $id, $entity01, $id, $key, $modifiedDate);
+            mysqli_stmt_execute($logStmt01);
+            mysqli_stmt_close($logStmt01);
+        
+        }
+    }
+  
+	include 'database/closedb.php';
+    
+    return $changed;
+}
+
+function oldRecord($id){
+	include 'database/config.php';
+  	include 'database/opendb.php';
+  
+  	$existingSql = "SELECT NOME, COGNOME, EMAIL, PASSWORD, NUMERO, AZIENDA_POSIZIONE, RUOLO, DATA_INIZIO, DATA_FINE FROM UTENTI WHERE UTENTE_ID = ?";
+    $stmt = mysqli_prepare($conn, $existingSql);
+    mysqli_stmt_bind_param($stmt, "i", $id);
+    mysqli_stmt_execute($stmt);
+   	$result = mysqli_stmt_get_result($stmt);
+    $existingEntity = mysqli_fetch_assoc($result);
+    mysqli_stmt_close($stmt);
+  
+  	include 'database/closedb.php';
+
+    return $existingEntity;
+}
 
 function showForm($email)
 {
@@ -239,7 +302,7 @@ function showLeftForm($email)
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
+    <link rel="shortcut icon" href="images/logo/small_logo.png" />
 
     <title>Il Mio Profilo</title>
 

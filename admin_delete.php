@@ -2,133 +2,318 @@
 include 'database/config.php';
 include 'database/opendb.php';
 
+session_start();
+
 $id = $_GET['id'];
 $entity = $_GET['entity'];
 $left_date = $_GET['dateValue'];
 
-$queryDepartment = "";
-$queryStructure = "";
-$queryUser = "";
-$queryCompany = "";
-$queryBankAccount = "";
-$queryBills = "";
+date_default_timezone_set('Europe/Berlin');
+$currentDateAndTime = date('Y-m-d H:i:s');
 
 
 if ($entity == "aziende") {
-    $queryDepartment = "UPDATE REPARTI 
-                        SET E_ATTIVO = 0, DATA_FINITO = ?
-                        WHERE AZIENDA_ID = ?";
-    $queryStructure = "UPDATE STRUTTURE 
-                        SET E_ATTIVO = 0, DATA_FINITO = ?
-                        WHERE AZIENDA_ID = ?";
-    $queryUser = "DELETE FROM UTENTI_AZIENDE 
-                    WHERE AZIENDA_ID = ?";
-    $queryCompany = "UPDATE AZIENDE
-                    SET E_ATTIVO = 0, DATA_FINITO = ?
-                    WHERE AZIENDA_ID = ?";
-    $queryBankAccount = "UPDATE BANCA_CONTI
-                        SET E_ATTIVO = 0, DATA_FINITO = ?
-                        WHERE AZIENDA_ID = ?";
-    $queryImpianto = "UPDATE IMPIANTO 
-                        SET E_ATTIVO = 0, DATA_FINITO = ?
-                        WHERE AZIENDA_ID = ?";
+    $childEntities = [
+        'REPARTO-REPARTI' => "SELECT REPARTO_ID FROM REPARTI WHERE AZIENDA_ID = ? AND E_ATTIVO = 1",
+        'STRUTTURA-STRUTTURE' => "SELECT STRUTTURA_ID FROM STRUTTURE WHERE AZIENDA_ID = ? AND E_ATTIVO = 1",
+        'UTENTE-UTENTI_AZIENDE' => "SELECT UTENTE_ID FROM UTENTI_AZIENDE WHERE AZIENDA_ID = ?",
+        'BANCA_CONTO-BANCA_CONTI' => "SELECT BANCA_CONTO_ID FROM BANCA_CONTI WHERE AZIENDA_ID = ? AND E_ATTIVO = 1",
+        'IMPIANTO-IMPIANTI' => "SELECT IMPIANTO_ID FROM IMPIANTI WHERE AZIENDA_ID = ? AND E_ATTIVO = 1"
+    ];
 
-    $stmtDepartment = mysqli_prepare($conn, $queryDepartment);
-    $stmtStructure = mysqli_prepare($conn, $queryStructure);
-    $stmtUser = mysqli_prepare($conn, $queryUser);
-    $stmtCompany = mysqli_prepare($conn, $queryCompany);
-    $stmtBankAccount = mysqli_prepare($conn, $queryBankAccount);
-    $stmtImpianto = mysqli_prepare($conn, $queryImpianto);
+    foreach ($childEntities as $name => $query) {
+        $stmtFetch = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmtFetch, "i", $id);
+        mysqli_stmt_execute($stmtFetch);
+        $result = mysqli_stmt_get_result($stmtFetch);
+        
+      	$parts = explode("-", $name);
 
+		$partOfPK = $parts[0];
+		$childEntity = $parts[1];
+      
+        if ($childEntity == 'UTENTI_AZIENDE') {
+ 	        $deleteQuery = "DELETE FROM UTENTI_AZIENDE WHERE UTENTE_ID = ?";
+            $stmtDelete = mysqli_prepare($conn, $deleteQuery);
+            mysqli_stmt_bind_param($stmtDelete, "i", $childId);
+            mysqli_stmt_execute($stmtDelete);
+        } else {
+            $updateQuery = "UPDATE " . $childEntity . " SET E_ATTIVO = 0, DATA_FINE = ? WHERE " . "AZIENDA_ID = ?";
+            $stmtUpdate = mysqli_prepare($conn, $updateQuery);
+            mysqli_stmt_bind_param($stmtUpdate, "si", $left_date, $childId);
+            mysqli_stmt_execute($stmtUpdate);
+        }
+      
+        while ($row = mysqli_fetch_assoc($result)) {
+            $childId = $row[$partOfPK . '_ID'];
 
-    mysqli_stmt_bind_param($stmtDepartment, "si", $left_date, $id);
-    mysqli_stmt_bind_param($stmtStructure, "si", $left_date, $id);
-    mysqli_stmt_bind_param($stmtUser, "si", $left_date, $id);
-    mysqli_stmt_bind_param($stmtCompany, "si", $left_date, $id);
-    mysqli_stmt_bind_param($stmtBankAccount, "si", $left_date, $id);
-    mysqli_stmt_bind_param($stmtImpianto, "si", $left_date, $id);
+            if ($childEntity == 'UTENTI_AZIENDE') {
+                insertIntoLogsUTENTI_AZIENDA($conn, $_SESSION['user_id'], $childEntity, $id , $childId , $currentDateAndTime);
+            } else {
+                insertIntoLogs($conn, $_SESSION['user_id'], $childEntity, $childId, $currentDateAndTime);
+            }
+        }
+    }
+    mysqli_stmt_close($stmtUpdate);
+    mysqli_stmt_close($stmtDelete);
+    
+	$updateAzienda = "UPDATE AZIENDE SET E_ATTIVO = 0, DATA_FINE = ? WHERE AZIENDA_ID = ?";
+    $stmtAzienda = mysqli_prepare($conn, $updateAzienda);
+    mysqli_stmt_bind_param($stmtAzienda, "si", $left_date, $id);
+    mysqli_stmt_execute($stmtAzienda);
+    mysqli_stmt_close($stmtAzienda);
 
-
-    mysqli_stmt_execute($stmtDepartment);
-    mysqli_stmt_execute($stmtStructure);
-    mysqli_stmt_execute($stmtUser);
-    mysqli_stmt_execute($stmtCompany);
-    mysqli_stmt_execute($stmtBankAccount);
-    mysqli_stmt_execute($stmtImpianto);
-
+    insertIntoLogs($conn, $_SESSION['user_id'], 'AZIENDE', $id, $currentDateAndTime);
 } else if ($entity == "strutture") {
-    $queryImpianto = "UPDATE IMPIANTO 
-                        SET E_ATTIVO = 0, DATA_FINITO = ?
-                        WHERE STRUTTURA_ID = ?";
-    $queryDepartment = "UPDATE REPARTI 
-                        SET E_ATTIVO = 0, DATA_FINITO = ?
-                        WHERE STRUTTURA_ID = ?";
-    $queryStructure = "UPDATE STRUTTURE 
-                        SET E_ATTIVO = 0, DATA_FINITO = ?
-                        WHERE STRUTTURA_ID = ?";
+    $childEntities = [
+        'IMPIANTO-IMPIANTI' => "SELECT IMPIANTO_ID FROM IMPIANTI WHERE STRUTTURA_ID = ? AND E_ATTIVO = 1",
+        'REPARTO-REPARTI' => "SELECT REPARTO_ID FROM REPARTI WHERE STRUTTURA_ID = ? AND E_ATTIVO = 1"
+    ];
 
-    $stmtImpianto = mysqli_prepare($conn, $queryImpianto);
-    $stmtDepartment = mysqli_prepare($conn, $queryDepartment);
-    $stmtStructure = mysqli_prepare($conn, $queryStructure);
+    foreach ($childEntities as $name => $query) {
+        $stmtFetch = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmtFetch, "i", $id);
+        mysqli_stmt_execute($stmtFetch);
+        $result = mysqli_stmt_get_result($stmtFetch);
 
-    mysqli_stmt_bind_param($stmtImpianto, "si", $left_date, $id);
-    mysqli_stmt_bind_param($stmtDepartment, "si", $left_date, $id);
-    mysqli_stmt_bind_param($stmtStructure, "si", $left_date, $id);
+        $parts = explode("-", $name);
+        $partOfPK = $parts[0];
+        $childEntity = $parts[1];
 
-    mysqli_stmt_execute($stmtImpianto);
-    mysqli_stmt_execute($stmtDepartment);
-    mysqli_stmt_execute($stmtStructure);
+        $updateQuery = "UPDATE " . $childEntity . " SET E_ATTIVO = 0, DATA_FINE = ? WHERE " . " STRUTTURA_ID = ?";
+        $stmtUpdate = mysqli_prepare($conn, $updateQuery);
+        mysqli_stmt_bind_param($stmtUpdate, "si", $left_date, $id);
+        mysqli_stmt_execute($stmtUpdate);
 
+        while ($row = mysqli_fetch_assoc($result)) {
+            $childId = $row[$partOfPK . '_ID'];
+         
+            insertIntoLogs($conn, $_SESSION['user_id'], $childEntity, $childId, $currentDateAndTime);
+        }
+    }
+    mysqli_stmt_close($stmtUpdate);
+  
+  	$updateStruttura = "UPDATE STRUTTURE SET E_ATTIVO = 0, DATA_FINE = ? WHERE STRUTTURA_ID = ?";
+    $stmtStruttura = mysqli_prepare($conn, $updateStruttura);
+    mysqli_stmt_bind_param($stmtStruttura, "si", $left_date, $id);
+    mysqli_stmt_execute($stmtStruttura);
+    mysqli_stmt_close($stmtStruttura);
 
+    insertIntoLogs($conn, $_SESSION['user_id'], "STRUTTURE", $id, $currentDateAndTime);
 } else if ($entity == "reparti") {
-    $queryImpianto = "UPDATE IMPIANTO 
-                        SET E_ATTIVO = 0, DATA_FINITO = ?
-                        WHERE STRUTTURA_ID = ?";
+    $childEntities = [
+        'IMPIANTO-IMPIANTI' => "SELECT IMPIANTO_ID FROM IMPIANTI WHERE REPARTO_ID = ? AND E_ATTIVO = 1"
+    ];
 
-    $queryDepartment = "UPDATE REPARTI 
-                        SET E_ATTIVO = 0, DATA_FINITO = ?
-                        WHERE REPARTO_ID = ?";
+    foreach ($childEntities as $name => $query) {
+        $stmtFetch = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmtFetch, "i", $id);
+        mysqli_stmt_execute($stmtFetch);
+        $result = mysqli_stmt_get_result($stmtFetch);
 
-    $stmtImpianto = mysqli_prepare($conn, $queryImpianto);
-    $stmtDepartment = mysqli_prepare($conn, $queryDepartment);
+        $parts = explode("-", $name);
+        $partOfPK = $parts[0];
+        $childEntity = $parts[1];
+        
+        $updateQuery = "UPDATE " . $childEntity . " SET E_ATTIVO = 0, DATA_FINE = ? WHERE REPARTO_ID = ?";
+        $stmtUpdate = mysqli_prepare($conn, $updateQuery);
+        mysqli_stmt_bind_param($stmtUpdate, "si", $left_date, $id);
+        mysqli_stmt_execute($stmtUpdate);
+    
+        while ($row = mysqli_fetch_assoc($result)) {
+            $childId = $row[$partOfPK . '_ID'];
 
-    mysqli_stmt_bind_param($stmtImpianto, "si", $left_date, $id);
-    mysqli_stmt_bind_param($stmtDepartment, "si", $left_date, $id);
+            insertIntoLogs($conn, $_SESSION['user_id'], $childEntity, $childId, $currentDateAndTime);
+        }
+    }
+    mysqli_stmt_close($stmtUpdate);
 
-    mysqli_stmt_execute($stmtImpianto);
-    mysqli_stmt_execute($stmtDepartment);
+    $updateReparti = "UPDATE REPARTI SET E_ATTIVO = 0, DATA_FINE = ? WHERE REPARTO_ID = ?";
+    $stmtReparti = mysqli_prepare($conn, $updateReparti);
+    mysqli_stmt_bind_param($stmtReparti, "si", $left_date, $id);
+    mysqli_stmt_execute($stmtReparti);
+    mysqli_stmt_close($stmtReparti);
+
+    insertIntoLogs($conn, $_SESSION['user_id'], "REPARTI", $id, $currentDateAndTime);
 } else if ($entity == "utenti") {
-    $queryUser = "UPDATE UTENTI 
-                    SET E_ATTIVO = 0, DATA_FINITO = ?
-                    WHERE UTENTE_ID = ?";
+      $childEntities = [
+        'AZIENDA-UTENTI_AZIENDE' => "SELECT AZIENDA_ID FROM UTENTI_AZIENDE WHERE UTENTE_ID = ?"
+      ];
 
-    $stmtUser = mysqli_prepare($conn, $queryUser);
+    foreach ($childEntities as $name => $query) {
+        $stmtFetch = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmtFetch, "i", $id);
+        mysqli_stmt_execute($stmtFetch);
+        $result = mysqli_stmt_get_result($stmtFetch);
+        
+      	$parts = explode("-", $name);
 
-    mysqli_stmt_bind_param($stmtUser, "si", $left_date, $id);
+		$partOfPK = $parts[0];
+		$childEntity = $parts[1];
+       
+        $deleteQuery = "DELETE FROM UTENTI_AZIENDE WHERE UTENTE_ID = ?";
+        $stmtDelete = mysqli_prepare($conn, $deleteQuery);
+        mysqli_stmt_bind_param($stmtDelete, "i", $id);  
+        mysqli_stmt_execute($stmtDelete);
+        
+        while ($row = mysqli_fetch_assoc($result)) {
+           $childId = $row[$partOfPK . '_ID'];
+          
+           insertIntoLogsUTENTI_AZIENDA($conn, $_SESSION['user_id'], $childEntity, $childId, $id, $currentDateAndTime);
+        }
+    }
+   mysqli_stmt_close($stmtDelete);
+    
+	$updateUtente = "UPDATE UTENTI SET E_ATTIVO = 0, DATA_FINE = ? WHERE UTENTE_ID = ?";
+    $stmtUtente = mysqli_prepare($conn, $updateUtente);
+    mysqli_stmt_bind_param($stmtUtente, "si", $left_date, $id);
+    mysqli_stmt_execute($stmtUtente);
+    mysqli_stmt_close($stmtUtente);
 
-    mysqli_stmt_execute($stmtUser);
+    insertIntoLogs($conn, $_SESSION['user_id'], 'UTENTI', $id, $currentDateAndTime); 
 } else if ($entity == "banca conti") {
-    $queryBankAccount = "UPDATE BANCA_CONTI 
-                        SET E_ATTIVO = 0, DATA_FINITO = ?
-                        WHERE BANCA_CONTI = ?";
+	$updateQuery = "UPDATE BANCA_CONTI SET E_ATTIVO = 0, DATA_FINE = ? WHERE BANCA_CONTO_ID = ?";
+    $stmtUpdate = mysqli_prepare($conn, $updateQuery);
+	mysqli_stmt_bind_param($stmtUpdate, "si", $left_date, $id);
+    mysqli_stmt_execute($stmtUpdate);
+   	mysqli_stmt_close($stmtUpdate);
 
-    $stmtBankAccount = mysqli_prepare($conn, $queryBankAccount);
-
-    mysqli_stmt_bind_param($stmtBankAccount, "si", $left_date, $id);
-
-    mysqli_stmt_execute($stmtBankAccount);
+    insertIntoLogs($conn, $_SESSION['user_id'], 'BANCA_CONTI', $id, $currentDateAndTime);    
 } else if ($entity == "fatture") {
-    $queryBills = "UPDATE FATTURE 
-                    SET E_PAGATO = 0, DATA_PAGAMENTO = NULL
-                    WHERE FATTURA_ID = ?";
+    $updateQuery = "UPDATE FATTURE SET E_PAGATO = 0, DATA_PAGAMENTO = NULL WHERE FATTURA_ID = ?";
+    $stmtUpdate = mysqli_prepare($conn, $updateQuery);
+    mysqli_stmt_bind_param($stmtUpdate, "i", $id);
+    mysqli_stmt_execute($stmtUpdate);
+   	mysqli_stmt_close($stmtUpdate);
 
-    $stmtBills = mysqli_prepare($conn, $queryBills);
+    insertIntoLogs($conn, $_SESSION['user_id'], 'FATTURE', $id, $currentDateAndTime);
+}  else if ($entity == "impianti") {
+    $updateQuery = "UPDATE IMPIANTI SET E_ATTIVO = 0, DATA_FINE = ? WHERE IMPIANTO_ID = ?";
+    $stmtUpdate = mysqli_prepare($conn, $updateQuery);
+    mysqli_stmt_bind_param($stmtUpdate, "ii", $left_date, $id);
+    mysqli_stmt_execute($stmtUpdate);
+   	mysqli_stmt_close($stmtUpdate);
 
-    mysqli_stmt_bind_param($stmtBills, "i", $id);
-    mysqli_stmt_execute($stmtBills);
+    insertIntoLogs($conn, $_SESSION['user_id'], 'IMPIANTI', $id, $currentDateAndTime);
+} else if ($entity == 'cartelle') {
+	echo deleteDirectory($id, $currentDateAndTime);
+} else if ($entity == 'documenti') {
+	echo deleteFile($id, $currentDateAndTime);
 }
+
+function insertIntoLogs($conn, $userId, $entity, $entityId, $actionDate) {
+  	if ($entity === 'CARTELLE') {
+     	$logSql = "INSERT INTO LOGS (UTENTE_ID, ENTITA, VECCHIO_VALORE, AZIONE, DATA_ORA) VALUES (?, ?, ?, 'Eliminare', ?)";
+    	$stmtLog = mysqli_prepare($conn, $logSql);
+    	mysqli_stmt_bind_param($stmtLog, "isss", $userId, $entity, $entityId, $actionDate);
+    	mysqli_stmt_execute($stmtLog);
+   		mysqli_stmt_close($stmtLog);
+    } else {
+      	$logSql = "INSERT INTO LOGS (UTENTE_ID, ENTITA, ENTITA_ID, AZIONE, DATA_ORA) VALUES (?, ?, ?, 'Eliminare', ?)";
+    	$stmtLog = mysqli_prepare($conn, $logSql);
+    	mysqli_stmt_bind_param($stmtLog, "isis", $userId, $entity, $entityId, $actionDate);
+    	mysqli_stmt_execute($stmtLog);
+   		mysqli_stmt_close($stmtLog);
+    }
+}
+
+function insertIntoLogsUTENTI_AZIENDA($conn, $userId, $entity, $aziendaId, $utenteId, $actionDate) {
+    $logSql01 = "INSERT INTO LOGS (UTENTE_ID, ENTITA, UA_AZIENDA_ID, UA_UTENTE_ID, AZIONE, DATA_ORA) VALUES (?, ?, ?, ?,'Eliminare', ?)";
+    $stmtLog01 = mysqli_prepare($conn, $logSql01);
+    mysqli_stmt_bind_param($stmtLog01, "isiis", $userId, $entity, $aziendaId, $utenteId, $actionDate);
+    mysqli_stmt_execute($stmtLog01);
+   	mysqli_stmt_close($stmtLog01);
+}
+
+function deleteFile($id, $currentDateAndTime){
+	include 'database/config.php';
+    include 'database/opendb.php';
+    unlink($id);
+  
+   	$selectQuery = "SELECT DOCUMENTO_ID FROM DOCUMENTI WHERE PERCORSO = ? AND E_ATTIVO = 1";
+    $stmtSelect = mysqli_prepare($conn, $selectQuery);
+    
+  	if (!$stmtSelect) {
+      	throw new Exception("Impossibile preparare l'istruzione select");
+    }
+  
+  	mysqli_stmt_bind_param($stmtSelect, "s", $id);
+    mysqli_stmt_execute($stmtSelect);
+    mysqli_stmt_bind_result($stmtSelect, $documentoId);
+    mysqli_stmt_fetch($stmtSelect);
+    mysqli_stmt_close($stmtSelect);
+  	
+  	$updateQuery = "UPDATE DOCUMENTI SET E_ATTIVO = 0, DATA_CANCELLATA = ? WHERE DOCUMENTO_ID = ? AND E_ATTIVO = 1";
+    $stmtUpdate = mysqli_prepare($conn, $updateQuery);
+    
+  	if (!$stmtUpdate) {
+		throw new Exception("Impossibile preparare l'istruzione update");
+    }
+    
+  	mysqli_stmt_bind_param($stmtUpdate, "si", $currentDateAndTime, $documentoId);
+    mysqli_stmt_execute($stmtUpdate);
+    mysqli_stmt_close($stmtUpdate);
+
+  	insertIntoLogs($conn, $_SESSION['user_id'], 'DOCUMENTI', $documentoId, $currentDateAndTime);
+    include 'database/closedb.php';
+}
+
+function deleteDirectory($dirPath, $currentDateAndTime) {
+    include 'database/config.php';
+    include 'database/opendb.php';
+  
+    if (!is_dir($dirPath)) {
+        throw new InvalidArgumentException("$dirPath must be a directory");
+    }
+    if (substr($dirPath, -1) != '/') {
+        $dirPath .= '/';
+    }
+    $files = glob($dirPath . '*', GLOB_MARK);
+
+    foreach ($files as $file) {
+        if (is_dir($file)) {
+            deleteDirectory($file, $currentDateAndTime);
+        } else {
+            if (!unlink($file)) {
+                throw new Exception("Impossibile eliminare il documento $file");
+            }
+            $selectQuery = "SELECT DOCUMENTO_ID FROM DOCUMENTI WHERE PERCORSO = ? AND E_ATTIVO = 1";
+            $stmtSelect = mysqli_prepare($conn, $selectQuery);
+            if (!$stmtSelect) {
+                throw new Exception("Impossibile preparare l'istruzione select");
+            }
+            mysqli_stmt_bind_param($stmtSelect, "s", $file);
+            mysqli_stmt_execute($stmtSelect);
+            mysqli_stmt_bind_result($stmtSelect, $documentoId);
+            mysqli_stmt_fetch($stmtSelect);
+            mysqli_stmt_close($stmtSelect);
+
+            $updateQuery = "UPDATE DOCUMENTI SET E_ATTIVO = 0, DATA_CANCELLATA = ? WHERE DOCUMENTO_ID = ? AND E_ATTIVO = 1";
+            $stmtUpdate = mysqli_prepare($conn, $updateQuery);
+            if (!$stmtUpdate) {
+                throw new Exception("Impossibile preparare l'istruzione update");
+            }
+            mysqli_stmt_bind_param($stmtUpdate, "si", $currentDateAndTime, $documentoId);
+            mysqli_stmt_execute($stmtUpdate);
+            mysqli_stmt_close($stmtUpdate);
+
+            insertIntoLogs($conn, $_SESSION['user_id'], 'DOCUMENTI', $documentoId, $currentDateAndTime);
+        }
+    }
+    if (!rmdir($dirPath)) {
+        throw new Exception("Impossibile rimuovere la directory $dirPath");
+    } else {
+        insertIntoLogs($conn, $_SESSION['user_id'], 'CARTELLE', $dirPath, $currentDateAndTime);
+    }
+    include 'database/closedb.php';
+}
+
 
 include 'database/closedb.php';
 
-header('Location: admin_display_entities.php');
+if ($entity == 'documenti' || $entity == 'cartelle') {
+  header('Location: admin_display_reports.php');
+} else {
+	header('Location: admin_display_entities.php');
+}
 exit();

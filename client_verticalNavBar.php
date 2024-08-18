@@ -1,7 +1,3 @@
-<style>
-
-</style>
-
 <nav id="sidebar" class="sidebar js-sidebar">
 	<div class="sidebar-content js-simplebar">
 		<a class="sidebar-brand" href = "client_dashboard.php">
@@ -52,17 +48,17 @@
 			</li>
 
 			<li class="sidebar-item">
-				<a class="sidebar-link" href="ui-buttons.html">
-					<i class="align-middle" data-feather="square"></i> <span class="align-middle">Buttons</span>
+				<a class="sidebar-link" href="client_display_reports.php">
+					<i class="align-middle" data-feather="file-text"></i> <span class="align-middle">Rapporti</span>
 				</a>
 			</li>
 
-			<li class="sidebar-item">
+			<!--<li class="sidebar-item">
 				<a class="sidebar-link" href="ui-forms.html">
 					<i class="align-middle" data-feather="check-square"></i> <span class="align-middle">Forms</span>
 				</a>
 			</li>
-			<!--
+			
 					<li class="sidebar-item">
 						<a class="sidebar-link" href="ui-cards.html">
 							<i class="align-middle" data-feather="grid"></i> <span class="align-middle">Cards</span>
@@ -102,25 +98,41 @@
 	</div>
 </nav>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const sidebarItems = document.querySelectorAll('.sidebar-item');
-        const currentPage = window.location.pathname.split('/').pop(); // Get the current page name
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebarItems = document.querySelectorAll('.sidebar-item');
+
+  if (!localStorage.getItem('lastSelectedLink')) {
+        if (sidebarItems.length > 0) {
+            sidebarItems[0].classList.add('active');
+            const firstLink = sidebarItems[0].querySelector('.sidebar-link').getAttribute('href');
+            localStorage.setItem('lastSelectedLink', firstLink);
+        }
+    } else {
+        const lastSelectedLink = localStorage.getItem('lastSelectedLink');
 
         sidebarItems.forEach(item => {
             const link = item.querySelector('.sidebar-link');
             const href = link.getAttribute('href');
 
-            if (currentPage === href) {
+            if (href === lastSelectedLink) {
                 item.classList.add('active');
             }
+        });
 
-            link.addEventListener('click', () => {
-                sidebarItems.forEach(otherItem => {
-                    otherItem.classList.remove('active');
-                });
+    }
 
-                item.classList.add('active');
+    sidebarItems.forEach(item => {
+        const link = item.querySelector('.sidebar-link');
+
+        link.addEventListener('click', () => {
+            sidebarItems.forEach(otherItem => {
+                otherItem.classList.remove('active');
             });
+
+            item.classList.add('active');
+
+            localStorage.setItem('lastSelectedLink', link.getAttribute('href'));
         });
     });
+});
 </script>

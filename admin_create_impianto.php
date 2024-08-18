@@ -3,6 +3,7 @@ include 'auth_check.php';
 
 include 'database/config.php';
 include 'database/opendb.php';
+include 'fetch_companies.php';
 
 $errorMessage = "";
 $successfulMessage = "";
@@ -13,11 +14,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $impianto_capacita_uta = mysqli_real_escape_string($conn, $_POST['impianto_capacita_uta']);
         $impianto_ripresa = mysqli_real_escape_string($conn, $_POST['impianto_ripresa']);
         $impianto_espulsione = mysqli_real_escape_string($conn, $_POST['impianto_espulsione']);
-        $impianto_data_inizio_utilizzo = mysqli_real_escape_string($conn, $_POST['impianto_data_inizio_utilizzo']);
+        $impianto_data_inizio = empty(mysqli_real_escape_string($conn, $_POST['impianto_data_inizio'])) ? null : mysqli_real_escape_string($conn, $_POST['impianto_data_inizio']);
         $impianto_mandata = mysqli_real_escape_string($conn, $_POST['impianto_mandata']);
-        $impianto_data_ultima_att = mysqli_real_escape_string($conn, $_POST['impianto_data_ultima_att']);
+        $impianto_data_ultima_att = empty(mysqli_real_escape_string($conn, $_POST['impianto_data_ultima_att'])) ? null : mysqli_real_escape_string($conn, $_POST['impianto_data_ultima_att']);
         $impianto_ultima_attivita = mysqli_real_escape_string($conn, $_POST['impianto_ultima_attivita']);
         $impianto_presa_aria_esterna = mysqli_real_escape_string($conn, $_POST['impianto_presa_aria_esterna']);
+        $impianto_data_fine = empty(mysqli_real_escape_string($conn, $_POST['impianto_data_fine'])) ? null : mysqli_real_escape_string($conn, $_POST['impianto_data_fine']);
 
         $impianto_company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
         $impianto_structure_id = mysqli_real_escape_string($conn, $_POST['structure_name']);
@@ -25,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
         $queryCheck = "SELECT IMPIANTO_ID FROM IMPIANTI
-                        WHERE NOME_UTA = ?
+                        WHERE IMPIANTO_NOME = ?
                             AND AZIENDA_ID = ?
                             AND STRUTTURA_ID = ?
                             AND REPARTO_ID = ?
@@ -40,9 +42,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (mysqli_num_rows($resultCheck) > 0) {
                 $errorMessage = "C'è un Reparto con Quel Nome in Quella Struttura, Reparto e Agenzia";
             } else {
+                if(empty($impianto_data_fine)){
                 $sql = "INSERT INTO IMPIANTI 
-                (NOME_UTA, AZIENDA_ID, STRUTTURA_ID, REPARTO_ID, CAPACITA_UTA, MANDATA, RIPRESA, 
-                ESPULSIONE, PRESA_ARIA_ESTERNA, ULTIMA_ATTIVITA, DATA_DI_INIZIO_UTILIZZO, 
+                (IMPIANTO_NOME, AZIENDA_ID, STRUTTURA_ID, REPARTO_ID, CAPACITA_UTA, MANDATA, RIPRESA, 
+                ESPULSIONE, PRESA_ARIA_ESTERNA, ULTIMA_ATTIVITA, DATA_INIZIO, 
                 DATA_ULTIMA_ATT, E_ATTIVO) VALUES 
                         (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)";
                 $stmt = mysqli_prepare($conn, $sql);
@@ -59,13 +62,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $impianto_espulsione,
                     $impianto_presa_aria_esterna,
                     $impianto_ultima_attivita,
-                    $impianto_data_inizio_utilizzo,
+                    $impianto_data_inizio,
                     $impianto_data_ultima_att
                 );
-
+            } else {
+                $sql = "INSERT INTO IMPIANTI 
+                (IMPIANTO_NOME, AZIENDA_ID, STRUTTURA_ID, REPARTO_ID, CAPACITA_UTA, MANDATA, RIPRESA, 
+                ESPULSIONE, PRESA_ARIA_ESTERNA, ULTIMA_ATTIVITA, DATA_INIZIO, 
+                DATA_ULTIMA_ATT, DATA_FINE, E_ATTIVO) VALUES 
+                        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)";
+                $stmt = mysqli_prepare($conn, $sql);
+                mysqli_stmt_bind_param(
+                    $stmt,
+                    "siiidddddssss",
+                    $impianto_nome,
+                    $impianto_company_id,
+                    $impianto_structure_id,
+                    $impianto_department_id,
+                    $impianto_capacita_uta,
+                    $impianto_mandata,
+                    $impianto_ripresa,
+                    $impianto_espulsione,
+                    $impianto_presa_aria_esterna,
+                    $impianto_ultima_attivita,
+                    $impianto_data_inizio,
+                    $impianto_data_ultima_att,
+                    $impianto_data_fine
+                );
+            }
                 try {
                     if (mysqli_stmt_execute($stmt)) {
                         $successfulMessage = "Impianto Creato con Successo";
+                        $impianto_ID = nextImpiantoID();
+                      
+                        $sql = "INSERT INTO LOGS (UTENTE_ID, ENTITA, ENTITA_ID, AZIONE, DATA_ORA) VALUES (?, 'IMPIANTI', ?, 'Creare', ?)";
+                    	date_default_timezone_set('Europe/Berlin');
+                    	$currentDateAndTime = date('Y-m-d H:i:s');
+
+                    	$stmt = mysqli_prepare($conn, $sql);
+                    	mysqli_stmt_bind_param($stmt, "iis", $_SESSION["user_id"], $impianto_ID, $currentDateAndTime);
+                    	mysqli_stmt_execute($stmt);
                     } else {
                         $errorMessage = "Errore: Impossibile Creare il Impianto";
                     }
@@ -74,40 +110,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             }
         } else {
-            $errorMessage = "Error: " . mysqli_error($conn);
+            $errorMessage = "Errore: " . mysqli_error($conn);
         }
     }
 }
 
 include 'database/closedb.php';
 
-function showCompanyName()
+function nextImpiantoID()
 {
     include 'database/config.php';
     include 'database/opendb.php';
 
-    $query = "SELECT AZIENDA_ID, AZIENDA_NOME FROM AZIENDE WHERE E_ATTIVO = 1";
-    $company = mysqli_query($conn, $query);
+    $query = "SELECT MAX(IMPIANTO_ID) AS max_sid FROM IMPIANTI";
+    $result = mysqli_query($conn, $query);
 
-    $companyDropDown = "";
+    if ($result && $result->num_rows > 0) {
+        $row = mysqli_fetch_assoc($result);
+        $max_sid = $row['max_sid'];
 
-    $companyDropDown .= '<select class="form-select mb-3" name = "company_name" id="company-dropdown" required>';
-    $companyDropDown .= '<option value="" disabled selected>Seleziona un\'Azienda</option>';
-
-    if ($company) {
-        while ($row = mysqli_fetch_assoc($company)) {
-            $companyDropDown .= '<option value="' . $row['AZIENDA_ID'] . '">' . htmlspecialchars($row['AZIENDA_NOME']) . '</option>';
-        }
+        $next_id = $max_sid;
     } else {
-        $companyDropDown .= "Error: " . mysqli_error($conn);
+        echo "Error: " . mysqli_error($conn);
+        $next_id = 1;
     }
-
-    $companyDropDown .= '</select>';
 
     include 'database/closedb.php';
 
-    return $companyDropDown;
+    return $next_id;
 }
+
+
 ?>
 
 
@@ -120,7 +153,7 @@ function showCompanyName()
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
+    <link rel="shortcut icon" href="images/logo/small_logo.png" />
 
     <title>Crea un Impianto</title>
 
@@ -128,11 +161,7 @@ function showCompanyName()
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css">
-    <script src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/moment/locale/it.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-BTBZNOArLzKrjzlkrMgXw0S51oBnuy0/HWkCARN0aSUSnt5N6VX/9n6tsQwnPVK68OzI6KARmxx3AeeBfM2y+g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
 
     <!-- FlatPickr  - Input Date -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -192,37 +221,8 @@ function showCompanyName()
                                                         </div>';
                                                     }
                                                     ?>
-
-                                                    <div class="mb-3 row d-flex justify-content-center">
-                                                        <h5 class="card-title col-sm-2 col-form-label">Nome Uta<span style="color:red;">*</span></h5>
-                                                        <div class="col-sm-4">
-                                                            <input type="text" class="form-control" name="impianto_nome" placeholder="Nome" required>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="mb-3 row d-flex justify-content-center">
-                                                        <h5 class="card-title col-sm-2 col-form-label">Capacita Uta<span style="color:red;">*</span>
-                                                        </h5>
-                                                        <div class="col-sm-4">
-                                                            <input type="number" class="form-control" id="impianto_capacita_uta" name="impianto_capacita_uta" placeholder="Capacita Uta" min=0 max=100000000000000000000000000 step="any" required>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="mb-3 row d-flex justify-content-center">
-                                                        <h5 class="card-title col-sm-2 col-form-label">Ripresa<span style="color:red;">*</span></h5>
-                                                        <div class="col-sm-4">
-                                                            <input type="number" class="form-control" id="impianto_ripresa" name="impianto_ripresa" placeholder="Ripresa" min=0 max=100000000000000000000000000 step="any" required>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="mb-3 row d-flex justify-content-center">
-                                                        <h5 class="card-title col-sm-2 col-form-label">Espulsione<span style="color:red;">*</span></h5>
-                                                        <div class="col-sm-4">
-                                                            <input type="number" class="form-control" id="impianto_espulsione" name="impianto_espulsione" placeholder="Espulsione" min=0 max=100000000000000000000000000 step="any" required>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="mb-3 row d-flex justify-content-center">
+'
+                                                                                                      <div class="mb-3 row d-flex justify-content-center">
                                                         <h5 class="card-title col-sm-2 col-form-label">Azienda<span style="color:red;">*</span></h5>
                                                         <div class="col-sm-4">
                                                             <?php echo showCompanyName() ?>
@@ -248,7 +248,22 @@ function showCompanyName()
                                                             </select>
                                                         </div>
                                                     </div>
-
+                                                  
+                                                    <div class="mb-3 row d-flex justify-content-center">
+                                                        <h5 class="card-title col-sm-2 col-form-label">Nome di Impianto<span style="color:red;">*</span></h5>
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control" name="impianto_nome" placeholder="Nome" required>
+                                                        </div>
+                                                    </div>
+                                                  
+                                                    <div class="mb-3 row d-flex justify-content-center">
+                                                        <h5 class="card-title col-sm-2 col-form-label">Capacita Uta<span style="color:red;">*</span>
+                                                        </h5>
+                                                        <div class="col-sm-4">
+                                                            <input type="number" class="form-control" id="impianto_capacita_uta" name="impianto_capacita_uta" placeholder="Capacita Uta" min=0 max=100000000000000000000000000 step="any" required>
+                                                        </div>
+                                                    </div>
+                                                  
                                                     <div class="mb-3 row d-flex justify-content-center">
                                                         <h5 class="card-title col-sm-2 col-form-label">
                                                             Mandata<span style="color:red;">*</span></h5>
@@ -258,27 +273,33 @@ function showCompanyName()
                                                     </div>
 
                                                     <div class="mb-3 row d-flex justify-content-center">
+                                                        <h5 class="card-title col-sm-2 col-form-label">Ripresa<span style="color:red;">*</span></h5>
+                                                        <div class="col-sm-4">
+                                                            <input type="number" class="form-control" id="impianto_ripresa" name="impianto_ripresa" placeholder="Ripresa" min=0 max=100000000000000000000000000 step="any" required>
+                                                        </div>
+                                                    </div>
+
+                                                  
+                                                    <div class="mb-3 row d-flex justify-content-center">
                                                         <h5 class="card-title col-sm-2 col-form-label">Presa Aria
                                                             Esterna<span style="color:red;">*</span></h5>
                                                         <div class="col-sm-4">
                                                             <input type="number" class="form-control" id="impianto_presa_aria_esterna" name="impianto_presa_aria_esterna" placeholder="Presa Aria Esterna" min=0 max=100000000000000000000000000 step="any" required>
                                                         </div>
                                                     </div>
-
+                                                  
                                                     <div class="mb-3 row d-flex justify-content-center">
-                                                        <h5 class="card-title col-sm-2 col-form-label">Ultima Attivita
-                                                        </h5>
+                                                        <h5 class="card-title col-sm-2 col-form-label">Espulsione<span style="color:red;">*</span></h5>
                                                         <div class="col-sm-4">
-                                                            <input type="text" class="form-control" name="impianto_ultima_attivita" placeholder="Ultima Attivita">
+                                                            <input type="number" class="form-control" id="impianto_espulsione" name="impianto_espulsione" placeholder="Espulsione" min=0 max=100000000000000000000000000 step="any" required>
                                                         </div>
                                                     </div>
 
                                                     <div class="mb-3 row d-flex justify-content-center">
-                                                        <h5 class="card-title col-sm-2 col-form-label">Data di Inizio
-                                                            Utilizzo
+                                                        <h5 class="card-title col-sm-2 col-form-label">Tipologia Ultima Attivita
                                                         </h5>
                                                         <div class="col-sm-4">
-                                                            <input readonly type="text" class="form-control" id="datePicker" name="impianto_data_inizio_utilizzo" placeholder="Data di Inizio Utilizzo" style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white;">
+                                                            <input type="text" class="form-control" name="impianto_ultima_attivita" placeholder="Tipologia Ultima Attivita">
                                                         </div>
                                                     </div>
 
@@ -289,15 +310,32 @@ function showCompanyName()
                                                             <input readonly type="text" class="form-control" id="datePicker" name="impianto_data_ultima_att" placeholder="Data Ultima Att" style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white;">
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <div class="row">
+                                                  
+                                                    <div class="mb-3 row d-flex justify-content-center">
+                                                        <h5 class="card-title col-sm-2 col-form-label">Data di Inizio
+                                                        </h5>
+                                                        <div class="col-sm-4">
+                                                            <input readonly type="text" class="form-control" id="datePicker" name="impianto_data_inizio" placeholder="Data di Inizio" style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white;">
+                                                        </div>
+                                                    </div>
+                           
+                                                   <div class="mb-3 row d-flex justify-content-center">
+                                                        <h5 class="card-title col-sm-2 col-form-label">Data di Fine
+                                                        </h5>
+                                                        <div class="col-sm-4">
+                                                            <input readonly type="text" class="form-control" id="datePicker" name="impianto_data_fine" placeholder="Data di Fine" style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E') no-repeat right 10px center; background-size: 16px; background-color: white;">
+                                                        </div>
+                                                    </div>
+                                                  <div class="row">
                                             <div class="col-12 d-flex justify-content-center">
                                                 <button name="create_impianto" id="createImpiantoButton" class="btn btn-success btn-lg">Crea un
                                                     Impianto</button>
                                             </div>
                                         </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        
                                     </div>
                                 </div>
                             </div>

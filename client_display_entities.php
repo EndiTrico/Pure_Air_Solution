@@ -17,7 +17,7 @@ include 'database/closedb.php';
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
+    <link rel="shortcut icon" href="images/logo/small_logo.png" />
 
     <title>Visualizza Entità</title>
 
@@ -62,6 +62,7 @@ include 'database/closedb.php';
             font-size: 14px;
             padding: 5px 10px;
             border-radius: 999px;
+            font-weight:bold;
         }
 
         .badge-danger-custom {
@@ -70,6 +71,16 @@ include 'database/closedb.php';
             font-size: 14px;
             padding: 5px 10px;
             border-radius: 999px;
+            font-weight:bold;
+        }
+      
+   	   .badge-warning-custom {
+            background-color: #ffc107;
+            color: #fff;
+            font-size: 14px;
+            padding: 5px 10px;
+            border-radius: 999px;
+         	font-weight:bold;
         }
 
         .button-row {
@@ -288,38 +299,46 @@ include 'database/closedb.php';
 
 
             <script>
-                function fetchData(entity) {
+                              function fetchData(entity) {
                     var xhttp = new XMLHttpRequest();
-                    var table;
 
                     xhttp.onreadystatechange = function () {
                         if (this.readyState == 4 && this.status == 200) {
                             document.getElementById("tableContainer").innerHTML = this.responseText;
-                            table = $('#fetchTable').DataTable({
+
+                            var table = $('#fetchTable').DataTable({
                                 language: {
                                     "url": "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Italian.json"
                                 },
                                 destroy: true,
                                 orderCellsTop: true,
-                                fixedHeader: true,
+                                fixedHeader: false,
                                 initComplete: function () {
                                     var api = this.api();
-                                    // We ensure we use footer, checking if footer exists
-                                    if (api.table().header()) {
-                                        api.columns().every(function () {
-                                            var column = this;
-                                            var title = $(column.footer()).text(); // Ensure there is a footer element to use
-                                            var input = document.createElement('input');
-                                            input.placeholder = 'Cerca ' + title;
-                                            $(column.footer()).html(input);
 
-                                            $(input).on('keyup change', function () {
-                                                if (column.search() !== this.value) {
-                                                    column.search(this.value).draw();
+                                    // Clone the header row and add it as a filter row
+                                    var clonedRow = $('#fetchTable thead tr').clone(true).appendTo('#fetchTable thead').addClass('filters');
+
+                                    clonedRow.find('th').each(function () {
+                                        $(this).removeClass('sorting sorting_asc sorting_desc');
+                                        $(this).css('pointer-events', 'auto');
+                                        $(this).off('click.DT');
+                                    });
+
+                                    clonedRow.find('th').each(function (i) {
+                                        var title = $(this).text();
+                                        if (i !== $(this).siblings().length && title !== "Azioni") {
+                                            var input = $('<input type="text" style="text-align: center;" placeholder="Cerca ' + title + '" />').appendTo($(this).empty());
+
+                                            input.on('keyup change', function () {
+                                                if (table.column(i).search() !== this.value) {
+                                                    table.column(i).search(this.value).draw();
                                                 }
                                             });
-                                        });
-                                    }
+                                        } else {
+                                            $(this).empty().html('&nbsp;');
+                                        }
+                                    });
                                 },
                                 columnDefs: [{
                                     targets: 0,
@@ -327,60 +346,195 @@ include 'database/closedb.php';
                                 }]
                             });
 
-                            $('#fetchTable thead tr').clone(true).appendTo('#fetchTable thead');
-
-                            $('#fetchTable thead tr:eq(1) th').each(function (i) {
-                                var headerCell = $(this);
-                                if (!headerCell.hasClass("noFilter")) {
-                                    var title = headerCell.text();
-
-                                    headerCell.html('<input type="text" placeholder="Cerca ' + title + '" />');
-
-                                    var select = $('<select><option value="">Tutti</option></select>')
-                                        .appendTo($(headerCell).empty())
-                                        .on('change', function () {
-                                            var val = $.fn.dataTable.util.escapeRegex(
-                                                $(this).val()
-                                            );
-                                            table.column(i)
-                                                .search(val ? '^' + val + '$' : '', true, false)
-                                                .draw();
-                                        });
-
-                                    var blankAppended = false;
-
-                                    table.column(i).data().unique().sort().each(function (d, j) {
-                                        var span = $('<div>').html(d).find('.myBadge');
-                                        if (span.length > 0) {
-                                            var value = span.text();
-                                            select.append('<option value="' + value + '">' + value + '</option>');
-                                        } else {
-                                            if (d.trim() === "" && !blankAppended) {
-                                                select.append('<option value="Vuoto"> Vuoto</option>');
-                                                blankAppended = true;
-                                            } else {
-                                                select.append('<option  value="' + d + '">' + d + '</option>');
-                                            }
-                                        }
-                                    });
-
-                                    $('input', this).on('keyup change', function () {
-                                        if (table.column(i).search() !== this.value) {
-                                            table
-                                                .column(i)
-                                                .search(this.value)
-                                                .draw();
-                                        }
-                                    });
-                                } else {
-                                    headerCell.html('<span></span>');
-                                }
-                            });
+                            filterWithDate(entity, table);
                         }
                     };
 
                     xhttp.open("GET", "fetch_data.php?entity=" + entity, true);
                     xhttp.send();
+                }
+
+
+                function filterWithDate(entity, table) {
+                    if (entity === 'fatture') {
+                        var fatturazioneColIdx = table.column(':contains("Data Fatturazione")').index();
+                        var pagamentoColIdx = table.column(':contains("Data Pagamento")').index();
+                        var scadenzaColIdx = table.column(':contains("Data Scadenza")').index();
+
+                        $.fn.dataTable.ext.search.push(
+                            function (settings, data, dataIndex) {
+                                var minFatturazione = $('#minFatturazione').val();
+                                var maxFatturazione = $('#maxFatturazione').val();
+                                var minPagamento = $('#minPagamento').val();
+                                var maxPagamento = $('#maxPagamento').val();
+                                var minScadenza = $('#minScadenza').val();
+                                var maxScadenza= $('#maxScadenza').val();
+                                
+                                var dataFatturazione = data[fatturazioneColIdx];
+                                var dataPagamento = data[pagamentoColIdx];
+                                var dataScadenza = data[scadenzaColIdx];
+
+                                dataFatturazione = dataFatturazione ? new Date(dataFatturazione) : null;
+                                dataPagamento = dataPagamento ? new Date(dataPagamento) : null;
+                                dataScadenza = dataScadenza ? new Date(dataScadenza) : null;
+
+                                minFatturazione = minFatturazione ? new Date(minFatturazione) : null;
+                                maxFatturazione = maxFatturazione ? new Date(maxFatturazione) : null;
+                                minPagamento = minPagamento ? new Date(minPagamento) : null;
+                                maxPagamento = maxPagamento ? new Date(maxPagamento) : null;
+                                minScadenza = minScadenza ? new Date(minScadenza) : null;
+                                maxScadenza = maxScadenza ? new Date(maxScadenza) : null;
+
+                                if (
+                                    (
+                                        (minFatturazione === null || (dataFatturazione !== null && dataFatturazione >= minFatturazione)) &&
+                                        (maxFatturazione === null || (dataFatturazione !== null && dataFatturazione <= maxFatturazione))
+                                    )
+
+                                    &&
+
+                                    (
+                                        (minPagamento === null || (dataPagamento !== null && dataPagamento >= minPagamento)) &&
+                                        (maxPagamento === null || (dataPagamento !== null && dataPagamento <= maxPagamento))
+                                    )
+
+                                    &&
+
+                                    (
+                                        (minScadenza === null || (dataScadenza !== null && dataScadenza >= minScadenza)) &&
+                                        (maxScadenza === null || (dataScadenza !== null && dataScadenza <= maxScadenza))
+                                    )
+                                ) {
+                                    return true;
+                                }
+
+                                return false;
+                            }
+                        );
+
+                        $('#minFatturazione, #maxFatturazione, #minPagamento, #maxPagamento, #minScadenza, #maxScadenza').change(function () {
+                            table.draw();
+                        });
+
+                        flatpickr("#minFatturazione, #maxFatturazione, #minPagamento, #maxPagamento, #minScadenza, #maxScadenza", {
+                            locale: 'it',
+                            dateFormat: "Y-m-d"
+                        });
+                    } else if (entity == 'impianti') {
+                        var inizioColIdx = table.column(':contains("Data Inizio")').index();
+                        var fineColIdx = table.column(':contains("Data Fine")').index();
+                        var ultimaColIdx = table.column(':contains("Data Ultima Att")').index();
+
+                        $.fn.dataTable.ext.search.push(
+                            function (settings, data, dataIndex) {
+                                var minInizio = $('#minInizio').val();
+                                var maxInizio = $('#maxInizio').val();
+                                var minFine = $('#minFine').val();
+                                var maxFine = $('#maxFine').val();
+                                var minUltima = $('#minUltima').val();
+                                var maxUltima= $('#maxUltima').val();
+                                
+                                var dataInizio = data[inizioColIdx];
+                                var dataFine = data[fineColIdx];
+                                var dataUltima = data[ultimaColIdx];
+
+                                dataInizio = dataInizio ? new Date(dataInizio) : null;
+                                dataFine = dataFine ? new Date(dataFine) : null;
+                                dataUltima = dataUltima ? new Date(dataUltima) : null;
+
+                                minInizio = minInizio ? new Date(minInizio) : null;
+                                maxInizio = maxInizio ? new Date(maxInizio) : null;
+                                minFine = minFine ? new Date(minFine) : null;
+                                maxFine = maxFine ? new Date(maxFine) : null;
+                                minUltima = minUltima ? new Date(minUltima) : null;
+                                maxUltima = maxUltima ? new Date(maxUltima) : null;
+
+                                if (
+                                    (
+                                        (minInizio === null || (dataInizio !== null && dataInizio >= minInizio)) &&
+                                        (maxInizio === null || (dataInizio !== null && dataInizio <= maxInizio))
+                                    )
+
+                                    &&
+
+                                    (
+                                        (minFine === null || (dataFine !== null && dataFine >= minFine)) &&
+                                        (maxFine === null || (dataFine !== null && dataFine <= maxFine))
+                                    )
+
+                                    &&
+
+                                    (
+                                        (minUltima === null || (dataUltima !== null && dataUltima >= minUltima)) &&
+                                        (maxUltima === null || (dataUltima !== null && dataUltima <= maxUltima))
+                                    )
+                                ) {
+                                    return true;
+                                }
+
+                                return false;
+                            }
+                        );
+
+                        $('#minInizio, #maxInizio, #minFine, #maxFine, #minUltima, #maxUltima').change(function () {
+                            table.draw();
+                        });
+
+                        flatpickr("#minInizio, #maxInizio, #minFine, #maxFine, #minUltima, #maxUltima", {
+                            locale: 'it',
+                            dateFormat: "Y-m-d"
+                        });
+                    } else {
+                        var inizioColIdx = table.column(':contains("Data Inizio")').index();
+                        var fineColIdx = table.column(':contains("Data Fine")').index();
+
+                        $.fn.dataTable.ext.search.push(
+                            function (settings, data, dataIndex) {
+                                var minInizio = $('#minInizio').val();
+                                var maxInizio = $('#maxInizio').val();
+                                var minFine = $('#minFine').val();
+                                var maxFine = $('#maxFine').val();
+
+                                var dataInizio = data[inizioColIdx];
+                                var dataFine = data[fineColIdx];
+
+                                dataInizio = dataInizio ? new Date(dataInizio) : null;
+                                dataFine = dataFine ? new Date(dataFine) : null;
+
+                                minInizio = minInizio ? new Date(minInizio) : null;
+                                maxInizio = maxInizio ? new Date(maxInizio) : null;
+                                minFine = minFine ? new Date(minFine) : null;
+                                maxFine = maxFine ? new Date(maxFine) : null;
+
+                                if (
+                                    (
+                                        (minInizio === null || (dataInizio !== null && dataInizio >= minInizio)) &&
+                                        (maxInizio === null || (dataInizio !== null && dataInizio <= maxInizio))
+                                    )
+
+                                    &&
+
+                                    (
+                                        (minFine === null || (dataFine !== null && dataFine >= minFine)) &&
+                                        (maxFine === null || (dataFine !== null && dataFine <= maxFine))
+                                    )
+                                ) {
+                                    return true;
+                                }
+
+                                return false;
+                            }
+                        );
+
+                        $('#minInizio, #maxInizio, #minFine, #maxFine').change(function () {
+                            table.draw();
+                        });
+
+                        flatpickr("#minInizio, #maxInizio, #minFine, #maxFine", {
+                            locale: 'it',
+                            dateFormat: "Y-m-d"
+                        });
+                    }
                 }
             </script>
             <?php
