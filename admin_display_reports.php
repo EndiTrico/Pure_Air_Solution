@@ -256,9 +256,12 @@ include 'database/closedb.php';
                                     <div class="row">
                                         <div class="col-12 col-lg-6">
                                             <div class="card-header">
-                                                <a onclick="loadDirectory('pas')"
-                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                    style="font-weight: bold;">Cartelle</a>
+                                              <a onclick="loadDirectory('<?php 
+        														include 'nas/credentials.php'; 
+        														echo $rootPath; 
+    														?>')"    
+                                                  class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                  style="font-weight: bold;">Cartelle</a>
                                             </div>
                                         </div>
 
@@ -300,6 +303,7 @@ include 'database/closedb.php';
                         if (this.readyState == 4 && this.status == 200) {
                             document.getElementById("tableContainer").innerHTML = this.responseText;
                         } else if (this.readyState == 4) {
+                          	//alert(this.status);
                             alert('Errore durante il recupero delle cartelle');
                         }
                     };
@@ -316,13 +320,13 @@ include 'database/closedb.php';
                     });
 
                 });
-
+              
                 function fetchData(entity) {
                     var xhttp = new XMLHttpRequest();
                     var table;
 
                     xhttp.onreadystatechange = function () {
-                        if (this.readyState == 4 && this.status == 200) {
+                        if (this.readyState == 4 && (this.status == 200 || this.status == 207)) {
                             document.getElementById("tableContainer").innerHTML = this.responseText;
                             table = $('#fetchTable').DataTable({
                                 language: {
@@ -618,17 +622,17 @@ include 'database/closedb.php';
                     xhr.send('folderName=' + encodeURIComponent(newFolderName) + '&currentPath=' + encodeURIComponent(currentPath));
                 }
 
-                function confirmUploadFile(currentPath) {
+                function confirmUploadFile(path, originalPath, url) {
                     Swal.fire({
                         title: 'Carica',
                         html: `
                                 <div style="text-align: center;">
-                                    I file verranno caricati qui: <strong>`+ currentPath + `</strong><br>
+                                    I file verranno caricati qui: <strong>`+ originalPath + `</strong><br>
                                     Inserisci i file tramite trascinamento, oppure fai clic su "Seleziona il Documento".
                                     
                                     <div class="drop-zone" onclick="document.getElementById('file-upload').click()">
                                         Seleziona il Documento
-                                        <input type="file" id="file-upload" multiple onchange="updateFileList(this.files)">
+                                        <input type="file" id="file-upload"  name="filesToUpload[]" multiple onchange="updateFileList(this.files)">
                                     </div>
                                     <div class="row" style="align-items: center; justify-content: center; margin-top: 20px;">
                                         <div class="col-sm-6">
@@ -675,7 +679,7 @@ include 'database/closedb.php';
                                 return false;
                             }
 
-                            return uploadFiles(currentPath, azienda, struttura);
+                          return uploadFiles(path, originalPath, url, azienda, struttura);
                         }
                     });
                 }
@@ -688,10 +692,10 @@ include 'database/closedb.php';
                     });
                 }
 
-                function uploadFiles(currentPath, aziendaID, strutturaID) {
+                function uploadFiles(path, originalPath, url, aziendaID, strutturaID) {
                     const files = document.getElementById('file-upload').files;
                     const formData = new FormData();
-                    formData.append('uploadPath', currentPath);
+                    formData.append('uploadPath', url);
                     formData.append('aziendaID', aziendaID);
                     formData.append('strutturaID', strutturaID);
                     for (let i = 0; i < files.length; i++) {
@@ -702,29 +706,56 @@ include 'database/closedb.php';
                         method: 'POST',
                         body: formData,
                     })
-                        .then(response => response.json())
-                        .then(data => {
-                            let message = data.map(item => {
-                                if (item.status === 'success') {
-                                    return `<div style="color: green; font-weight: bold;">${item.name}: ${item.message}</div>`;
-                                } else {
-                                    return `<div style="color: red; font-weight: bold;">${item.name}: ${item.message}</div>`;
-                                }
-                            }).join('<br>');
-                            Swal.fire({
-                                title: "Risultati Caricati",
-                                html: message,
-                                icon: "info",
-                                confirmButtonColor: "#3085d6",
-                                showConfirmButton: true
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    window.location.href = `admin_display_reports.php?load=true&path=${encodeURIComponent(currentPath)}`;
-                                }
-                            });
-                        })
-                        .catch(error => console.error('Errore:', error));
+						.then(response => {
+    						if (!response.ok) {
+								throw new Error(`HTTP error! status: ${response.status}`);
+    						}
+    						return response.json();
+                   })
+					.then(data => {
+    // Validate `data` is an array
+   /* if (!Array.isArray(data)) {
+        throw new Error("Invalid response: Expected an array");
+    }
+*/
+    let message = data.map(item => {
+        // Validate each item has the required properties
+        if (typeof item.status !== 'string' || typeof item.name !== 'string' || typeof item.message !== 'string') {
+            return `<div style="color: red; font-weight: bold;">Invalid response format</div>`;
+        }
+
+        if (item.status === 'success') {
+            return `<div style="color: green; font-weight: bold;">${item.name}: ${item.message}</div>`;
+        } else {
+            return `<div style="color: red; font-weight: bold;">${item.name}: ${item.message}</div>`;
+        }
+    }).join('<br>');
+
+    // Display results with SweetAlert
+    Swal.fire({
+        title: "Risultati Caricati",
+        html: message,
+        icon: "info",
+        confirmButtonColor: "#3085d6",
+        showConfirmButton: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = `admin_display_reports.php?load=true&path=${encodeURIComponent(originalPath)}`;
+        }
+    });
+})
+						.catch(error => {
+    						Swal.fire({
+        						title: "Errore",
+        						text: `Si è verificato un errore: ${error.message}`,
+        						icon: "error",
+        						confirmButtonColor: "#3085d6",
+        						showConfirmButton: true
+    						});
+    						console.error('Errore:', error);
+						});
                 }
+
                 $(document).on('change', '#company-dropdown', function () {
                     var companyID = $(this).val();
                     var post_id = 'id=' + companyID;
@@ -741,7 +772,6 @@ include 'database/closedb.php';
                         }
                     });
                 });
-
 
             </script>
             <?php

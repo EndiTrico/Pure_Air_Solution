@@ -308,6 +308,20 @@ function showForm()
             $row = mysqli_fetch_assoc($result);
             showDocuments($row);
         }
+    } else if ($entity == "dipendenti") {
+        $query = "SELECT * FROM DIPENDENTI WHERE DIPENDENTE_ID = ?";
+
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, "i", $id);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        if ($result) {
+            include 'client_details_employee.php';
+
+            $row = mysqli_fetch_assoc($result);
+            showEmployees($row);
+        }
     }
 
 
@@ -389,6 +403,8 @@ function showForm()
                                     echo "Impianto";
                                 } else if ($entity == "documenti") {
                                     echo "Documenti";
+                                } else if ($entity == "dipendenti") {
+                                    echo "Dipendente";
                                 }
                                 ?>
                             </h1>

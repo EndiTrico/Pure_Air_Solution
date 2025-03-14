@@ -17,7 +17,7 @@ body{
     height: 100vh;
 }
 
-.container{
+.container-login{
     background-color: #fff;
     border-radius: 30px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
@@ -28,25 +28,25 @@ body{
     min-height: 480px;
 }
 
-.container p{
+.container-login p{
     font-size: 14px;
     line-height: 20px;
     letter-spacing: 0.3px;
     margin: 20px 0;
 }
 
-.container span{
+.container-login span{
     font-size: 12px;
 }
 
-.container a{
+.container-login a{
     color: #333;
     font-size: 13px;
     text-decoration: none;
     margin: 15px 0 10px;
 }
 
-.container .btn{
+.container-login .btn{
     background: linear-gradient(to right, #a9dfe3, #53d3de);
     color: #fff;
     font-size: 12px;
@@ -58,14 +58,39 @@ body{
     text-transform: uppercase;
     margin-top: 10px;
     cursor: pointer;
+    max-width: 380px;
+    width: 100%;
 }
 
-.container .btn.hidden{
+.container-login .btnPAS{
+    background: linear-gradient(to right, #a9dfe3, #53d3de);
+    color: #fff;
+    font-size: 12px;
+    padding: 8px 18px;
+    border: 1px solid transparent;
+    border-radius: 30px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 21px;
+    cursor: pointer;
+    max-width: 380px;
+    width: 100%;
+}
+
+
+.container-login .btn.hidden{
     background-color: transparent;
     border-color: #fff;
 }
 
-.container form{
+.container-login .btnPAS.hidden{
+    background-color: transparent;
+    border-color: #fff;
+}
+
+
+.container-login form{
     background-color: #fff;
     display: flex;
     align-items: center;
@@ -75,7 +100,7 @@ body{
     height: 100%;
 }
 
-.container input{
+.container-login input{
     background-color: #eee;
     border: none;
     margin: 8px 0;
@@ -86,10 +111,11 @@ body{
     outline: none;
 }
 
-.form-container{
+.form-container-login{
     position: absolute;
     top: 0;
     height: 100%;
+    width: 100%;
     transition: all 0.6s ease-in-out;
 }
 
@@ -99,14 +125,14 @@ body{
     z-index: 2;
 }
 
-.container.active .sign-in{
+.container-login.active .sign-in{
     transform: translateX(100%);
 }
 
 
 
 
-.toggle-container{
+.toggle-container-login{
     position: absolute;
     top: 0;
     left: 50%;
@@ -118,7 +144,7 @@ body{
     z-index: 1000;
 }
 
-.container.active .toggle-container{
+.container-login.active .toggle-container-login{
     transform: translateX(-100%);
     border-radius: 0 150px 100px 0;
 }
@@ -136,7 +162,7 @@ body{
     transition: all 0.6s ease-in-out;
 }
 
-.container.active .toggle{
+.container-login.active .toggle{
     transform: translateX(50%);
 }
 
@@ -160,7 +186,7 @@ body{
     transform: translateX(0);
 }
 
-.container.active .toggle-right{
+.container-login.active .toggle-right{
     transform: translateX(200%);
 }
 

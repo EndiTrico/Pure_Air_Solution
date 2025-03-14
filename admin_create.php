@@ -61,6 +61,15 @@ include 'database/closedb.php';
                                                     </a>
                                                 </div>
                                             </div>
+                                          
+                                            <div class="card w-100">
+                                                <div class="card-header">
+                                                    <a href="admin_create_impianto.php"
+                                                        class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                        style="font-size: 28px; height: 200px; font-weight: bold;">Crea un Impianto
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </div>
 
                                         <div class=" col-12 col-lg-4">
@@ -82,14 +91,15 @@ include 'database/closedb.php';
                                                 </div>
                                             </div>
 
-                                            <div class="card w-100">
+                                            <div class=" card w-100">
                                                 <div class="card-header">
-                                                    <a href="admin_create_impianto.php"
+                                                    <a href="admin_create_employee.php"
                                                         class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                        style="font-size: 28px; height: 200px; font-weight: bold;">Crea un Impianto
+                                                        style="font-size: 28px; height: 200px; font-weight: bold;">Crea un Dipendente
                                                     </a>
                                                 </div>
                                             </div>
+                                          
                                         </div>
 
                                         <div class=" col-12 col-lg-4">

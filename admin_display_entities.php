@@ -24,29 +24,19 @@ include 'database/closedb.php';
     <link href="css/app.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <!--    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+  	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.1/css/dataTables.dataTables.css">
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.0.1/js/dataTables.js"></script>
-
-
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js">
-    </script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript"
-        src="https://cdn.datatables.net/fixedheader/3.1.7/js/dataTables.fixedHeader.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.1.7/js/dataTables.fixedHeader.min.js"></script>
 
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" type="text/css"
-        href="https://cdn.datatables.net/fixedheader/3.1.7/css/fixedHeader.dataTables.min.css">
-
-
-
-
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.1.7/css/fixedHeader.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
         #datepicker {
@@ -274,7 +264,7 @@ include 'database/closedb.php';
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-12 col-lg-4">
+                                        <div class="col-12 col-lg-3">
                                             <div class="card-header">
                                                 <a onclick="fetchData('banca conti')"
                                                     class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
@@ -282,7 +272,7 @@ include 'database/closedb.php';
                                             </div>
                                         </div>
 
-                                        <div class="col-12 col-lg-4">
+                                        <div class="col-12 col-lg-3">
                                             <div class="card-header">
                                                 <a onclick="fetchData('fatture')"
                                                     class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
@@ -291,7 +281,7 @@ include 'database/closedb.php';
                                             </div>
                                         </div>
 
-                                        <div class="col-12 col-lg-4">
+                                        <div class="col-12 col-lg-3">
                                             <div class="card-header">
                                                 <a id="mybtn" onclick="fetchData('impianti')"
                                                     class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
@@ -299,9 +289,16 @@ include 'database/closedb.php';
                                                 </a>
                                             </div>
                                         </div>
+                                      
+                                        <div class="col-12 col-lg-3">
+                                            <div class="card-header">
+                                                <a id="mybtn" onclick="fetchData('dipendenti')"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Mostra Dipendenti
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
-
-
 
                                     <div class="col-12 col-lg-12">
                                         <div id="tableContainer" class="mt-4">
@@ -505,9 +502,9 @@ include 'database/closedb.php';
                             dateFormat: "Y-m-d"
                         });
                     } else {
-                        var inizioColIdx = table.column(':contains("Data Inizio")').index();
+						var inizioColIdx = table.column(':contains("' + (entity === 'dipendenti' ? 'Assunto Il' : 'Data Inizio') + '")').index();
                         var fineColIdx = table.column(':contains("Data Fine")').index();
-
+						console.log ("INI: " + inizioColIdx + " FINE: " + fineColIdx);
                         $.fn.dataTable.ext.search.push(
                             function (settings, data, dataIndex) {
                                 var minInizio = $('#minInizio').val();
@@ -562,7 +559,7 @@ include 'database/closedb.php';
                     if (entity != "fatture") {
                         htmlText = '<h4>Tutte le Entità Dipendenti Verranno Impostate su Inattive</h4><p style="margin-top: 20px;">Seleziona la data di fine</p><input id="datePicker1" class="swal2-input delete_date" style = "margin-top: -10px; height: 45px; text-align: center; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat right 10px center; background-size: 20px; background-color: white">';
                     }
-
+					console.log("ID " + id  + " ENTITY: " + entity);
                     Swal.fire({
                         title: "Sei Sicuro di Eliminare?",
                         html: htmlText,
@@ -620,7 +617,7 @@ include 'database/closedb.php';
                     } else {
                         htmlText = '<p style="margin-top: 20px;">Seleziona la Data di Pagamento</p><input id="datePicker2" class="swal2-input paid_date" style="margin-top: -10px; height: 45px; text-align: center; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat right 10px center; background-size: 20px; background-color: white">';
                     }
-
+					
                     Swal.fire({
                         title: "Sei Sicuro di Attivarlo?",
                         html: htmlText,
@@ -648,7 +645,8 @@ include 'database/closedb.php';
                     }).then((result) => {
                         if (result.isConfirmed) {
                             var xhr = new XMLHttpRequest();
-                            var dateValue = result.value || ""
+                            var dateValue = result.value || "";
+							console.log("ID " + id  + " ENTITY: " + entity);
 
                             xhr.open('GET', `admin_activization.php?id=${encodeURIComponent(id)}&entity=${encodeURIComponent(entity)}&dateValue=${encodeURIComponent(dateValue)}`);
 
@@ -669,7 +667,7 @@ include 'database/closedb.php';
                                     } else {
                                         Swal.fire({
                                             title: "Error",
-                                            text: response.message,
+                                            text: xhr.responseText,//response.message,
                                             icon: "error",
                                             showConfirmButton: false
                                         });

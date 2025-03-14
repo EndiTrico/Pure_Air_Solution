@@ -1,4 +1,34 @@
 <?php
+
+function showCompaniesNameDropDown()
+{
+   include 'database/config.php';
+    include 'database/opendb.php';
+  
+    $query = "SELECT AZIENDA_ID, AZIENDA_NOME FROM AZIENDE WHERE E_ATTIVO = 1";
+    $stmt = $conn->prepare($query);
+    
+    if ($stmt->execute()) {
+        $result = $stmt->get_result();
+
+        while ($row = $result->fetch_assoc()) {
+            $companyDropDown .= '<option value="' . htmlspecialchars($row['AZIENDA_ID']) . '">' . htmlspecialchars($row['AZIENDA_NOME']) . '</option>';
+        }
+   
+    } else {
+        $companyDropDown .= '<option disabled>Error fetching data</option>';
+    }
+
+    $companyDropDown .= '</select>';
+
+    $stmt->close();
+    
+    include 'database/closedb.php';
+
+    return $companyDropDown;
+}
+
+
 function showAllCompanies()
 {
     include 'database/config.php';

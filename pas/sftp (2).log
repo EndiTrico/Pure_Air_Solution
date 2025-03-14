@@ -1,0 +1,816 @@
+Jul  2 21:57:58 10.71.56.0 tmp94070858-1917 Connection from 10.71.56.0 port 43718 on 82.165.86.221 port 22 rdomain ""
+Jul  2 21:57:58 10.71.56.0 tmp94070858-1917 Accepted password for tmp94070858-1917 from 10.71.56.0 port 43718 ssh2
+Jul  2 21:57:58 10.71.56.0 tmp94070858-1917 Starting session: subsystem 'sftp' for tmp94070858-1917 from 10.71.56.0 port 43718 id 0
+Jul  2 21:57:58 10.71.56.0 tmp94070858-1917 session opened for local user tmp94070858-1917 from [10.71.56.0]
+Jul  2 21:58:21 10.71.56.0 tmp94070858-1917 open "/enea/PAS Pure Air Solutions 2018.pdf" flags READ mode 0666
+Jul  2 21:58:22 10.71.56.0 tmp94070858-1917 close "/enea/PAS Pure Air Solutions 2018.pdf" bytes read 6345063 written 0
+Jul  2 21:58:22 10.71.56.0 tmp94070858-1917 [10.71.56.0|get|1|6345063|0|0|0|2f656e65612f50415320507572652041697220536f6c7574696f6e7320323031382e706466|]
+Jul  2 22:03:22 10.71.56.0 tmp94070858-1917 Connection closed by 10.71.56.0 port 43718
+Jul  2 22:03:22 10.71.56.0 tmp94070858-1917 session closed for local user tmp94070858-1917 from [10.71.56.0]
+Jul  2 22:06:49 10.71.56.0 tmp94070858-7867 Connection from 10.71.56.0 port 52798 on 82.165.86.221 port 22 rdomain ""
+Jul  2 22:06:49 10.71.56.0 tmp94070858-7867 Accepted password for tmp94070858-7867 from 10.71.56.0 port 52798 ssh2
+Jul  2 22:06:49 10.71.56.0 tmp94070858-7867 Starting session: subsystem 'sftp' for tmp94070858-7867 from 10.71.56.0 port 52798 id 0
+Jul  2 22:06:49 10.71.56.0 tmp94070858-7867 session opened for local user tmp94070858-7867 from [10.71.56.0]
+Jul  2 22:09:30 10.71.56.0 tmp94070858-9098 Connection from 10.71.56.0 port 56666 on 82.165.86.221 port 22 rdomain ""
+Jul  2 22:09:30 10.71.56.0 tmp94070858-9098 Accepted password for tmp94070858-9098 from 10.71.56.0 port 56666 ssh2
+Jul  2 22:09:31 10.71.56.0 tmp94070858-7867 mkdir name "/login_system" mode 0777
+Jul  2 22:09:31 10.71.56.0 tmp94070858-7867 [10.71.56.0|mkdir|0|0|511|0|0|2f6c6f67696e5f73797374656d|]
+Jul  2 22:11:14 10.71.56.0 tmp94070858-7867 open "/login_system/admin_activization.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:14 10.71.56.0 tmp94070858-7867 close "/login_system/admin_activization.php" bytes read 0 written 4780
+Jul  2 22:11:14 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|4780|0|0|0|2f6c6f67696e5f73797374656d2f61646d696e5f6163746976697a6174696f6e2e706870|]
+Jul  2 22:11:14 10.71.56.0 tmp94070858-7867 open "/login_system/admin_create.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:14 10.71.56.0 tmp94070858-7867 close "/login_system/admin_create.php" bytes read 0 written 6944
+Jul  2 22:11:14 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|6944|0|0|0|2f6c6f67696e5f73797374656d2f61646d696e5f6372656174652e706870|]
+Jul  2 22:11:14 10.71.56.0 tmp94070858-7867 open "/login_system/admin_create_bank_account.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:14 10.71.56.0 tmp94070858-7867 close "/login_system/admin_create_bank_account.php" bytes read 0 written 14606
+Jul  2 22:11:14 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|14606|0|0|0|2f6c6f67696e5f73797374656d2f61646d696e5f6372656174655f62616e6b5f6163636f756e742e706870|]
+Jul  2 22:11:14 10.71.56.0 tmp94070858-7867 open "/login_system/admin_create_bill.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:14 10.71.56.0 tmp94070858-7867 close "/login_system/admin_create_bill.php" bytes read 0 written 26278
+Jul  2 22:11:14 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|26278|0|0|0|2f6c6f67696e5f73797374656d2f61646d696e5f6372656174655f62696c6c2e706870|]
+Jul  2 22:11:15 10.71.56.0 tmp94070858-7867 open "/login_system/admin_create_company.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:15 10.71.56.0 tmp94070858-7867 close "/login_system/admin_create_company.php" bytes read 0 written 24481
+Jul  2 22:11:15 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|24481|0|0|0|2f6c6f67696e5f73797374656d2f61646d696e5f6372656174655f636f6d70616e792e706870|]
+Jul  2 22:11:15 10.71.56.0 tmp94070858-7867 open "/login_system/admin_create_department.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:15 10.71.56.0 tmp94070858-7867 close "/login_system/admin_create_department.php" bytes read 0 written 18100
+Jul  2 22:11:15 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|18100|0|0|0|2f6c6f67696e5f73797374656d2f61646d696e5f6372656174655f6465706172746d656e742e706870|]
+Jul  2 22:11:15 10.71.56.0 tmp94070858-7867 open "/login_system/admin_create_impianto.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:15 10.71.56.0 tmp94070858-7867 close "/login_system/admin_create_impianto.php" bytes read 0 written 22183
+Jul  2 22:11:15 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|22183|0|0|0|2f6c6f67696e5f73797374656d2f61646d696e5f6372656174655f696d7069616e746f2e706870|]
+Jul  2 22:11:15 10.71.56.0 tmp94070858-7867 open "/login_system/admin_create_structure.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:15 10.71.56.0 tmp94070858-7867 close "/login_system/admin_create_structure.php" bytes read 0 written 15352
+Jul  2 22:11:15 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|15352|0|0|0|2f6c6f67696e5f73797374656d2f61646d696e5f6372656174655f7374727563747572652e706870|]
+Jul  2 22:11:15 10.71.56.0 tmp94070858-7867 open "/login_system/admin_create_user.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:15 10.71.56.0 tmp94070858-7867 close "/login_system/admin_create_user.php" bytes read 0 written 23818
+Jul  2 22:11:15 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|23818|0|0|0|2f6c6f67696e5f73797374656d2f61646d696e5f6372656174655f757365722e706870|]
+Jul  2 22:11:15 10.71.56.0 tmp94070858-7867 open "/login_system/admin_dashboard.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:15 10.71.56.0 tmp94070858-7867 close "/login_system/admin_dashboard.php" bytes read 0 written 6655
+Jul  2 22:11:15 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|6655|0|0|0|2f6c6f67696e5f73797374656d2f61646d696e5f64617368626f6172642e706870|]
+Jul  2 22:11:15 10.71.56.0 tmp94070858-7867 open "/login_system/admin_delete.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:15 10.71.56.0 tmp94070858-7867 close "/login_system/admin_delete.php" bytes read 0 written 4991
+Jul  2 22:11:15 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|4991|0|0|0|2f6c6f67696e5f73797374656d2f61646d696e5f64656c6574652e706870|]
+Jul  2 22:11:16 10.71.56.0 tmp94070858-7867 open "/login_system/admin_display_entities.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:16 10.71.56.0 tmp94070858-7867 close "/login_system/admin_display_entities.php" bytes read 0 written 23337
+Jul  2 22:11:16 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|23337|0|0|0|2f6c6f67696e5f73797374656d2f61646d696e5f646973706c61795f656e7469746965732e706870|]
+Jul  2 22:11:16 10.71.56.0 tmp94070858-7867 open "/login_system/admin_edit.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:16 10.71.56.0 tmp94070858-7867 close "/login_system/admin_edit.php" bytes read 0 written 33516
+Jul  2 22:11:16 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|33516|0|0|0|2f6c6f67696e5f73797374656d2f61646d696e5f656469742e706870|]
+Jul  2 22:11:16 10.71.56.0 tmp94070858-7867 open "/login_system/admin_edit_bank_account.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:16 10.71.56.0 tmp94070858-7867 close "/login_system/admin_edit_bank_account.php" bytes read 0 written 4181
+Jul  2 22:11:16 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|4181|0|0|0|2f6c6f67696e5f73797374656d2f61646d696e5f656469745f62616e6b5f6163636f756e742e706870|]
+Jul  2 22:11:16 10.71.56.0 tmp94070858-7867 open "/login_system/admin_edit_bill.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:16 10.71.56.0 tmp94070858-7867 close "/login_system/admin_edit_bill.php" bytes read 0 written 12867
+Jul  2 22:11:16 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|12867|0|0|0|2f6c6f67696e5f73797374656d2f61646d696e5f656469745f62696c6c2e706870|]
+Jul  2 22:11:16 10.71.56.0 tmp94070858-7867 open "/login_system/admin_edit_company.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:16 10.71.56.0 tmp94070858-7867 close "/login_system/admin_edit_company.php" bytes read 0 written 10266
+Jul  2 22:11:16 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|10266|0|0|0|2f6c6f67696e5f73797374656d2f61646d696e5f656469745f636f6d70616e792e706870|]
+Jul  2 22:11:16 10.71.56.0 tmp94070858-7867 open "/login_system/admin_edit_department.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:16 10.71.56.0 tmp94070858-7867 close "/login_system/admin_edit_department.php" bytes read 0 written 6823
+Jul  2 22:11:16 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|6823|0|0|0|2f6c6f67696e5f73797374656d2f61646d696e5f656469745f6465706172746d656e742e706870|]
+Jul  2 22:11:16 10.71.56.0 tmp94070858-7867 open "/login_system/admin_edit_impianto.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:16 10.71.56.0 tmp94070858-7867 close "/login_system/admin_edit_impianto.php" bytes read 0 written 9842
+Jul  2 22:11:16 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|9842|0|0|0|2f6c6f67696e5f73797374656d2f61646d696e5f656469745f696d7069616e746f2e706870|]
+Jul  2 22:11:17 10.71.56.0 tmp94070858-7867 open "/login_system/admin_edit_structure.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:17 10.71.56.0 tmp94070858-7867 close "/login_system/admin_edit_structure.php" bytes read 0 written 4965
+Jul  2 22:11:17 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|4965|0|0|0|2f6c6f67696e5f73797374656d2f61646d696e5f656469745f7374727563747572652e706870|]
+Jul  2 22:11:17 10.71.56.0 tmp94070858-7867 open "/login_system/admin_edit_user.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:17 10.71.56.0 tmp94070858-7867 close "/login_system/admin_edit_user.php" bytes read 0 written 9094
+Jul  2 22:11:17 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|9094|0|0|0|2f6c6f67696e5f73797374656d2f61646d696e5f656469745f757365722e706870|]
+Jul  2 22:11:17 10.71.56.0 tmp94070858-7867 open "/login_system/admin_horizontalNavBar.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:17 10.71.56.0 tmp94070858-7867 close "/login_system/admin_horizontalNavBar.php" bytes read 0 written 2997
+Jul  2 22:11:17 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|2997|0|0|0|2f6c6f67696e5f73797374656d2f61646d696e5f686f72697a6f6e74616c4e61764261722e706870|]
+Jul  2 22:11:17 10.71.56.0 tmp94070858-7867 open "/login_system/admin_profile.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:17 10.71.56.0 tmp94070858-7867 close "/login_system/admin_profile.php" bytes read 0 written 17820
+Jul  2 22:11:17 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|17820|0|0|0|2f6c6f67696e5f73797374656d2f61646d696e5f70726f66696c652e706870|]
+Jul  2 22:11:17 10.71.56.0 tmp94070858-7867 open "/login_system/admin_verticalNavBar.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:17 10.71.56.0 tmp94070858-7867 close "/login_system/admin_verticalNavBar.php" bytes read 0 written 3760
+Jul  2 22:11:17 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|3760|0|0|0|2f6c6f67696e5f73797374656d2f61646d696e5f766572746963616c4e61764261722e706870|]
+Jul  2 22:11:17 10.71.56.0 tmp94070858-7867 open "/login_system/auth_check.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:17 10.71.56.0 tmp94070858-7867 close "/login_system/auth_check.php" bytes read 0 written 116
+Jul  2 22:11:17 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|116|0|0|0|2f6c6f67696e5f73797374656d2f617574685f636865636b2e706870|]
+Jul  2 22:11:17 10.71.56.0 tmp94070858-7867 open "/login_system/client_dashboard.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:17 10.71.56.0 tmp94070858-7867 close "/login_system/client_dashboard.php" bytes read 0 written 6264
+Jul  2 22:11:17 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|6264|0|0|0|2f6c6f67696e5f73797374656d2f636c69656e745f64617368626f6172642e706870|]
+Jul  2 22:11:18 10.71.56.0 tmp94070858-7867 open "/login_system/client_details.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:18 10.71.56.0 tmp94070858-7867 close "/login_system/client_details.php" bytes read 0 written 57054
+Jul  2 22:11:18 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|57054|0|0|0|2f6c6f67696e5f73797374656d2f636c69656e745f64657461696c732e706870|]
+Jul  2 22:11:18 10.71.56.0 tmp94070858-7867 open "/login_system/client_display_entities.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:18 10.71.56.0 tmp94070858-7867 close "/login_system/client_display_entities.php" bytes read 0 written 16448
+Jul  2 22:11:18 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|16448|0|0|0|2f6c6f67696e5f73797374656d2f636c69656e745f646973706c61795f656e7469746965732e706870|]
+Jul  2 22:11:18 10.71.56.0 tmp94070858-7867 open "/login_system/client_horizontalNavBar.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:18 10.71.56.0 tmp94070858-7867 close "/login_system/client_horizontalNavBar.php" bytes read 0 written 3003
+Jul  2 22:11:18 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|3003|0|0|0|2f6c6f67696e5f73797374656d2f636c69656e745f686f72697a6f6e74616c4e61764261722e706870|]
+Jul  2 22:11:18 10.71.56.0 tmp94070858-7867 open "/login_system/client_profile.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:18 10.71.56.0 tmp94070858-7867 close "/login_system/client_profile.php" bytes read 0 written 17631
+Jul  2 22:11:18 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|17631|0|0|0|2f6c6f67696e5f73797374656d2f636c69656e745f70726f66696c652e706870|]
+Jul  2 22:11:18 10.71.56.0 tmp94070858-7867 open "/login_system/client_verticalNavBar.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:18 10.71.56.0 tmp94070858-7867 close "/login_system/client_verticalNavBar.php" bytes read 0 written 3906
+Jul  2 22:11:18 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|3906|0|0|0|2f6c6f67696e5f73797374656d2f636c69656e745f766572746963616c4e61764261722e706870|]
+Jul  2 22:11:18 10.71.56.0 tmp94070858-7867 open "/login_system/delete_myself.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:18 10.71.56.0 tmp94070858-7867 close "/login_system/delete_myself.php" bytes read 0 written 401
+Jul  2 22:11:18 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|401|0|0|0|2f6c6f67696e5f73797374656d2f64656c6574655f6d7973656c662e706870|]
+Jul  2 22:11:18 10.71.56.0 tmp94070858-7867 open "/login_system/fetch_bank_name.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:18 10.71.56.0 tmp94070858-7867 close "/login_system/fetch_bank_name.php" bytes read 0 written 783
+Jul  2 22:11:18 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|783|0|0|0|2f6c6f67696e5f73797374656d2f66657463685f62616e6b5f6e616d652e706870|]
+Jul  2 22:11:19 10.71.56.0 tmp94070858-7867 open "/login_system/fetch_data.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:19 10.71.56.0 tmp94070858-7867 close "/login_system/fetch_data.php" bytes read 0 written 6592
+Jul  2 22:11:19 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|6592|0|0|0|2f6c6f67696e5f73797374656d2f66657463685f646174612e706870|]
+Jul  2 22:11:19 10.71.56.0 tmp94070858-7867 open "/login_system/fetch_departments.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:19 10.71.56.0 tmp94070858-7867 close "/login_system/fetch_departments.php" bytes read 0 written 763
+Jul  2 22:11:19 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|763|0|0|0|2f6c6f67696e5f73797374656d2f66657463685f6465706172746d656e74732e706870|]
+Jul  2 22:11:19 10.71.56.0 tmp94070858-7867 open "/login_system/fetch_iban.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:19 10.71.56.0 tmp94070858-7867 close "/login_system/fetch_iban.php" bytes read 0 written 830
+Jul  2 22:11:19 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|830|0|0|0|2f6c6f67696e5f73797374656d2f66657463685f6962616e2e706870|]
+Jul  2 22:11:19 10.71.56.0 tmp94070858-7867 open "/login_system/fetch_structures.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:19 10.71.56.0 tmp94070858-7867 close "/login_system/fetch_structures.php" bytes read 0 written 832
+Jul  2 22:11:19 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|832|0|0|0|2f6c6f67696e5f73797374656d2f66657463685f737472756374757265732e706870|]
+Jul  2 22:11:19 10.71.56.0 tmp94070858-7867 open "/login_system/footer.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:19 10.71.56.0 tmp94070858-7867 close "/login_system/footer.php" bytes read 0 written 1279
+Jul  2 22:11:19 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|1279|0|0|0|2f6c6f67696e5f73797374656d2f666f6f7465722e706870|]
+Jul  2 22:11:19 10.71.56.0 tmp94070858-7867 open "/login_system/index.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:19 10.71.56.0 tmp94070858-7867 close "/login_system/index.php" bytes read 0 written 5450
+Jul  2 22:11:19 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|5450|0|0|0|2f6c6f67696e5f73797374656d2f696e6465782e706870|]
+Jul  2 22:11:19 10.71.56.0 tmp94070858-7867 open "/login_system/logout.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:19 10.71.56.0 tmp94070858-7867 close "/login_system/logout.php" bytes read 0 written 110
+Jul  2 22:11:19 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|110|0|0|0|2f6c6f67696e5f73797374656d2f6c6f676f75742e706870|]
+Jul  2 22:11:19 10.71.56.0 tmp94070858-7867 open "/login_system/nameInitials.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:19 10.71.56.0 tmp94070858-7867 close "/login_system/nameInitials.php" bytes read 0 written 2141
+Jul  2 22:11:19 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|2141|0|0|0|2f6c6f67696e5f73797374656d2f6e616d65496e697469616c732e706870|]
+Jul  2 22:11:20 10.71.56.0 tmp94070858-7867 open "/login_system/new.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:20 10.71.56.0 tmp94070858-7867 close "/login_system/new.php" bytes read 0 written 101
+Jul  2 22:11:20 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|101|0|0|0|2f6c6f67696e5f73797374656d2f6e65772e706870|]
+Jul  2 22:11:20 10.71.56.0 tmp94070858-7867 open "/login_system/pages-blank.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:20 10.71.56.0 tmp94070858-7867 close "/login_system/pages-blank.php" bytes read 0 written 2767
+Jul  2 22:11:20 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|2767|0|0|0|2f6c6f67696e5f73797374656d2f70616765732d626c616e6b2e706870|]
+Jul  2 22:11:20 10.71.56.0 tmp94070858-7867 open "/login_system/signin.css" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:20 10.71.56.0 tmp94070858-7867 close "/login_system/signin.css" bytes read 0 written 6888
+Jul  2 22:11:20 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|6888|0|0|0|2f6c6f67696e5f73797374656d2f7369676e696e2e637373|]
+Jul  2 22:11:20 10.71.56.0 tmp94070858-7867 open "/login_system/signin.js" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:20 10.71.56.0 tmp94070858-7867 close "/login_system/signin.js" bytes read 0 written 917
+Jul  2 22:11:20 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|917|0|0|0|2f6c6f67696e5f73797374656d2f7369676e696e2e6a73|]
+Jul  2 22:11:20 10.71.56.0 tmp94070858-7867 open "/login_system/validateLogin.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:11:20 10.71.56.0 tmp94070858-7867 close "/login_system/validateLogin.php" bytes read 0 written 1958
+Jul  2 22:11:20 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|1958|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  2 22:12:56 10.71.56.0 tmp94070858-7867 mkdir name "/login_system/database" mode 0777
+Jul  2 22:12:56 10.71.56.0 tmp94070858-7867 [10.71.56.0|mkdir|0|0|511|0|0|2f6c6f67696e5f73797374656d2f6461746162617365|]
+Jul  2 22:14:05 10.71.56.0 tmp94070858-7867 open "/login_system/database/config.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:14:05 10.71.56.0 tmp94070858-7867 close "/login_system/database/config.php" bytes read 0 written 118
+Jul  2 22:14:05 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|118|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f636f6e6669672e706870|]
+Jul  2 22:14:05 10.71.56.0 tmp94070858-7867 open "/login_system/database/opendb.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:14:05 10.71.56.0 tmp94070858-7867 close "/login_system/database/opendb.php" bytes read 0 written 180
+Jul  2 22:14:05 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|180|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f6f70656e64622e706870|]
+Jul  2 22:14:05 10.71.56.0 tmp94070858-7867 open "/login_system/database/closedb.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:14:05 10.71.56.0 tmp94070858-7867 close "/login_system/database/closedb.php" bytes read 0 written 106
+Jul  2 22:14:05 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|106|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f636c6f736564622e706870|]
+Jul  2 22:14:34 10.71.56.0 tmp94070858-7867 mkdir name "/login_system/css" mode 0777
+Jul  2 22:14:34 10.71.56.0 tmp94070858-7867 [10.71.56.0|mkdir|0|0|511|0|0|2f6c6f67696e5f73797374656d2f637373|]
+Jul  2 22:14:49 10.71.56.0 tmp94070858-7867 open "/login_system/css/app.css" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:14:49 10.71.56.0 tmp94070858-7867 close "/login_system/css/app.css" bytes read 0 written 198535
+Jul  2 22:14:49 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|198535|0|0|0|2f6c6f67696e5f73797374656d2f6373732f6170702e637373|]
+Jul  2 22:14:50 10.71.56.0 tmp94070858-7867 open "/login_system/css/app.css.map" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:14:50 10.71.56.0 tmp94070858-7867 close "/login_system/css/app.css.map" bytes read 0 written 310886
+Jul  2 22:14:50 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|310886|0|0|0|2f6c6f67696e5f73797374656d2f6373732f6170702e6373732e6d6170|]
+Jul  2 22:15:02 10.71.56.0 tmp94070858-7867 mkdir name "/login_system/css/fonts" mode 0777
+Jul  2 22:15:02 10.71.56.0 tmp94070858-7867 [10.71.56.0|mkdir|0|0|511|0|0|2f6c6f67696e5f73797374656d2f6373732f666f6e7473|]
+Jul  2 22:16:04 10.71.56.0 tmp94070858-7867 open "/login_system/fonts/.gitkeep" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:16:04 10.71.56.0 tmp94070858-7867 close "/login_system/fonts/.gitkeep" bytes read 0 written 0
+Jul  2 22:16:04 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|0|0|0|0|2f6c6f67696e5f73797374656d2f666f6e74732f2e6769746b656570|]
+Jul  2 22:16:47 10.71.56.0 tmp94070858-7867 mkdir name "/login_system/js" mode 0777
+Jul  2 22:16:47 10.71.56.0 tmp94070858-7867 [10.71.56.0|mkdir|0|0|511|0|0|2f6c6f67696e5f73797374656d2f6a73|]
+Jul  2 22:17:05 10.71.56.0 tmp94070858-7867 open "/login_system/js/app.js" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:17:05 10.71.56.0 tmp94070858-7867 close "/login_system/js/app.js" bytes read 0 written 900844
+Jul  2 22:17:05 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|900844|0|0|0|2f6c6f67696e5f73797374656d2f6a732f6170702e6a73|]
+Jul  2 22:17:05 10.71.56.0 tmp94070858-7867 open "/login_system/js/app.js.LICENSE.txt" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:17:05 10.71.56.0 tmp94070858-7867 close "/login_system/js/app.js.LICENSE.txt" bytes read 0 written 23683
+Jul  2 22:17:05 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|23683|0|0|0|2f6c6f67696e5f73797374656d2f6a732f6170702e6a732e4c4943454e53452e747874|]
+Jul  2 22:17:08 10.71.56.0 tmp94070858-7867 open "/login_system/js/app.js.map" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:17:08 10.71.56.0 tmp94070858-7867 close "/login_system/js/app.js.map" bytes read 0 written 3015559
+Jul  2 22:17:08 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|3015559|0|0|0|2f6c6f67696e5f73797374656d2f6a732f6170702e6a732e6d6170|]
+Jul  2 22:17:34 10.71.56.0 tmp94070858-7867 mkdir name "/login_system/images" mode 0777
+Jul  2 22:17:34 10.71.56.0 tmp94070858-7867 [10.71.56.0|mkdir|0|0|511|0|0|2f6c6f67696e5f73797374656d2f696d61676573|]
+Jul  2 22:17:44 10.71.56.0 tmp94070858-7867 mkdir name "/login_system/img" mode 0777
+Jul  2 22:17:44 10.71.56.0 tmp94070858-7867 [10.71.56.0|mkdir|0|0|511|0|0|2f6c6f67696e5f73797374656d2f696d67|]
+Jul  2 22:18:20 10.71.56.0 tmp94070858-7867 open "/login_system/img/module_table_top.png" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:18:20 10.71.56.0 tmp94070858-7867 close "/login_system/img/module_table_top.png" bytes read 0 written 337
+Jul  2 22:18:20 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|337|0|0|0|2f6c6f67696e5f73797374656d2f696d672f6d6f64756c655f7461626c655f746f702e706e67|]
+Jul  2 22:18:26 10.71.56.0 tmp94070858-7867 open "/login_system/img/module_table_top.png" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:18:26 10.71.56.0 tmp94070858-7867 close "/login_system/img/module_table_top.png" bytes read 0 written 337
+Jul  2 22:18:26 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|337|0|0|0|2f6c6f67696e5f73797374656d2f696d672f6d6f64756c655f7461626c655f746f702e706e67|]
+Jul  2 22:18:55 10.71.56.0 tmp94070858-7867 open "/login_system/images/back_button.png" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:18:55 10.71.56.0 tmp94070858-7867 close "/login_system/images/back_button.png" bytes read 0 written 450
+Jul  2 22:18:55 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|450|0|0|0|2f6c6f67696e5f73797374656d2f696d616765732f6261636b5f627574746f6e2e706e67|]
+Jul  2 22:18:55 10.71.56.0 tmp94070858-7867 open "/login_system/images/person.svg" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:18:55 10.71.56.0 tmp94070858-7867 close "/login_system/images/person.svg" bytes read 0 written 404026
+Jul  2 22:18:55 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|404026|0|0|0|2f6c6f67696e5f73797374656d2f696d616765732f706572736f6e2e737667|]
+Jul  2 22:19:38 10.71.56.0 tmp94070858-7867 mkdir name "/login_system/images/logo" mode 0777
+Jul  2 22:19:38 10.71.56.0 tmp94070858-7867 [10.71.56.0|mkdir|0|0|511|0|0|2f6c6f67696e5f73797374656d2f696d616765732f6c6f676f|]
+Jul  2 22:19:53 10.71.56.0 tmp94070858-7867 open "/login_system/images/logo/logo01_backgroundForm.png" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:19:53 10.71.56.0 tmp94070858-7867 close "/login_system/images/logo/logo01_backgroundForm.png" bytes read 0 written 237020
+Jul  2 22:19:53 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|237020|0|0|0|2f6c6f67696e5f73797374656d2f696d616765732f6c6f676f2f6c6f676f30315f6261636b67726f756e64466f726d2e706e67|]
+Jul  2 22:20:28 10.71.56.0 tmp94070858-7867 mkdir name "/login_system/img/logo" mode 0777
+Jul  2 22:20:28 10.71.56.0 tmp94070858-7867 [10.71.56.0|mkdir|0|0|511|0|0|2f6c6f67696e5f73797374656d2f696d672f6c6f676f|]
+Jul  2 22:20:51 10.71.56.0 tmp94070858-7867 open "/login_system/img/client_dashboard.svg" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:20:51 10.71.56.0 tmp94070858-7867 close "/login_system/img/client_dashboard.svg" bytes read 0 written 7592
+Jul  2 22:20:51 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|7592|0|0|0|2f6c6f67696e5f73797374656d2f696d672f636c69656e745f64617368626f6172642e737667|]
+Jul  2 22:20:52 10.71.56.0 tmp94070858-7867 open "/login_system/img/happynews.svg" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:20:52 10.71.56.0 tmp94070858-7867 close "/login_system/img/happynews.svg" bytes read 0 written 13973
+Jul  2 22:20:52 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|13973|0|0|0|2f6c6f67696e5f73797374656d2f696d672f68617070796e6577732e737667|]
+Jul  2 22:20:52 10.71.56.0 tmp94070858-7867 open "/login_system/img/log.svg" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:20:52 10.71.56.0 tmp94070858-7867 close "/login_system/img/log.svg" bytes read 0 written 34526
+Jul  2 22:20:52 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|34526|0|0|0|2f6c6f67696e5f73797374656d2f696d672f6c6f672e737667|]
+Jul  2 22:20:53 10.71.56.0 tmp94070858-7867 open "/login_system/img/person.png" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:20:53 10.71.56.0 tmp94070858-7867 close "/login_system/img/person.png" bytes read 0 written 2789662
+Jul  2 22:20:53 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|2789662|0|0|0|2f6c6f67696e5f73797374656d2f696d672f706572736f6e2e706e67|]
+Jul  2 22:21:07 10.71.56.0 tmp94070858-7867 open "/login_system/img/logo/logo01.png" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:21:07 10.71.56.0 tmp94070858-7867 close "/login_system/img/logo/logo01.png" bytes read 0 written 391224
+Jul  2 22:21:07 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|391224|0|0|0|2f6c6f67696e5f73797374656d2f696d672f6c6f676f2f6c6f676f30312e706e67|]
+Jul  2 22:21:42 10.71.56.0 tmp94070858-7867 mkdir name "/login_system/img/icons" mode 0777
+Jul  2 22:21:42 10.71.56.0 tmp94070858-7867 [10.71.56.0|mkdir|0|0|511|0|0|2f6c6f67696e5f73797374656d2f696d672f69636f6e73|]
+Jul  2 22:21:55 10.71.56.0 tmp94070858-7867 open "/login_system/img/icons/icon-48x48.png" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:21:55 10.71.56.0 tmp94070858-7867 close "/login_system/img/icons/icon-48x48.png" bytes read 0 written 1662
+Jul  2 22:21:55 10.71.56.0 tmp94070858-7867 [10.71.56.0|put|0|1662|0|0|0|2f6c6f67696e5f73797374656d2f696d672f69636f6e732f69636f6e2d34387834382e706e67|]
+Jul  2 22:26:42 10.71.56.0 tmp94070858-9098 Connection closed by 10.71.56.0 port 56666
+Jul  2 22:26:55 10.71.56.0 tmp94070858-7867 Connection closed by 10.71.56.0 port 52798
+Jul  2 22:26:55 10.71.56.0 tmp94070858-7867 session closed for local user tmp94070858-7867 from [10.71.56.0]
+Jul  2 22:37:46 10.71.56.0 tmp94070858-1857 Connection from 10.71.56.0 port 26504 on 82.165.86.221 port 22 rdomain ""
+Jul  2 22:37:46 10.71.56.0 tmp94070858-1857 Accepted password for tmp94070858-1857 from 10.71.56.0 port 26504 ssh2
+Jul  2 22:37:46 10.71.56.0 tmp94070858-1857 Starting session: subsystem 'sftp' for tmp94070858-1857 from 10.71.56.0 port 26504 id 0
+Jul  2 22:37:46 10.71.56.0 tmp94070858-1857 session opened for local user tmp94070858-1857 from [10.71.56.0]
+Jul  2 22:37:56 10.71.56.0 tmp94070858-1857 open "/login_system/database/config.php" flags READ mode 0666
+Jul  2 22:37:56 10.71.56.0 tmp94070858-1857 close "/login_system/database/config.php" bytes read 118 written 0
+Jul  2 22:37:56 10.71.56.0 tmp94070858-1857 [10.71.56.0|get|0|118|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f636f6e6669672e706870|]
+Jul  2 22:42:56 10.71.56.0 tmp94070858-1857 session closed for local user tmp94070858-1857 from [10.71.56.0]
+Jul  2 22:42:56 10.71.56.0 tmp94070858-1857 Connection closed by 10.71.56.0 port 26504
+Jul  2 22:43:44 10.71.56.0 tmp94070858-94 Connection from 10.71.56.0 port 32198 on 82.165.86.221 port 22 rdomain ""
+Jul  2 22:43:44 10.71.56.0 tmp94070858-94 Accepted password for tmp94070858-94 from 10.71.56.0 port 32198 ssh2
+Jul  2 22:43:44 10.71.56.0 tmp94070858-94 Starting session: subsystem 'sftp' for tmp94070858-94 from 10.71.56.0 port 32198 id 0
+Jul  2 22:43:45 10.71.56.0 tmp94070858-94 session opened for local user tmp94070858-94 from [10.71.56.0]
+Jul  2 22:43:45 10.71.56.0 tmp94070858-94 open "/login_system/database/config.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:43:45 10.71.56.0 tmp94070858-94 close "/login_system/database/config.php" bytes read 0 written 260
+Jul  2 22:43:45 10.71.56.0 tmp94070858-94 [10.71.56.0|put|0|260|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f636f6e6669672e706870|]
+Jul  2 22:43:47 10.71.56.0 tmp94070858-94 open "/login_system/database/config.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 22:43:47 10.71.56.0 tmp94070858-94 close "/login_system/database/config.php" bytes read 0 written 260
+Jul  2 22:43:47 10.71.56.0 tmp94070858-94 [10.71.56.0|put|0|260|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f636f6e6669672e706870|]
+Jul  2 22:43:59 10.71.56.0 tmp94070858-94 open "/login_system/database/opendb.php" flags READ mode 0666
+Jul  2 22:43:59 10.71.56.0 tmp94070858-94 close "/login_system/database/opendb.php" bytes read 180 written 0
+Jul  2 22:43:59 10.71.56.0 tmp94070858-94 [10.71.56.0|get|0|180|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f6f70656e64622e706870|]
+Jul  2 22:48:59 10.71.56.0 tmp94070858-94 session closed for local user tmp94070858-94 from [10.71.56.0]
+Jul  2 22:48:59 10.71.56.0 tmp94070858-94 Connection closed by 10.71.56.0 port 32198
+Jul  2 22:52:17 10.71.56.0 tmp94070858-4826 Connection from 10.71.56.0 port 31172 on 82.165.86.221 port 22 rdomain ""
+Jul  2 22:52:17 10.71.56.0 tmp94070858-4826 Accepted password for tmp94070858-4826 from 10.71.56.0 port 31172 ssh2
+Jul  2 22:52:17 10.71.56.0 tmp94070858-4826 Starting session: subsystem 'sftp' for tmp94070858-4826 from 10.71.56.0 port 31172 id 0
+Jul  2 22:52:17 10.71.56.0 tmp94070858-4826 session opened for local user tmp94070858-4826 from [10.71.56.0]
+Jul  2 22:57:17 10.71.56.0 tmp94070858-4826 session closed for local user tmp94070858-4826 from [10.71.56.0]
+Jul  2 22:57:17 10.71.56.0 tmp94070858-4826 Connection closed by 10.71.56.0 port 31172
+Jul  2 23:06:03 10.71.56.0 tmp94070858-8042 Connection from 10.71.56.0 port 49164 on 82.165.86.221 port 22 rdomain ""
+Jul  2 23:06:03 10.71.56.0 tmp94070858-8042 Accepted password for tmp94070858-8042 from 10.71.56.0 port 49164 ssh2
+Jul  2 23:06:03 10.71.56.0 tmp94070858-8042 Starting session: subsystem 'sftp' for tmp94070858-8042 from 10.71.56.0 port 49164 id 0
+Jul  2 23:06:03 10.71.56.0 tmp94070858-8042 session opened for local user tmp94070858-8042 from [10.71.56.0]
+Jul  2 23:06:11 10.71.56.0 tmp94070858-8042 open "/login_system/database/opendb.php" flags READ mode 0666
+Jul  2 23:06:11 10.71.56.0 tmp94070858-8042 close "/login_system/database/opendb.php" bytes read 180 written 0
+Jul  2 23:06:11 10.71.56.0 tmp94070858-8042 [10.71.56.0|get|0|180|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f6f70656e64622e706870|]
+Jul  2 23:07:50 10.71.56.0 tmp94070858-8042 open "/login_system/database/opendb.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 23:07:50 10.71.56.0 tmp94070858-8042 close "/login_system/database/opendb.php" bytes read 0 written 201
+Jul  2 23:07:50 10.71.56.0 tmp94070858-8042 [10.71.56.0|put|0|201|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f6f70656e64622e706870|]
+Jul  2 23:07:58 10.71.56.0 tmp94070858-8042 open "/login_system/database/config.php" flags READ mode 0666
+Jul  2 23:07:58 10.71.56.0 tmp94070858-8042 close "/login_system/database/config.php" bytes read 260 written 0
+Jul  2 23:07:58 10.71.56.0 tmp94070858-8042 [10.71.56.0|get|0|260|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f636f6e6669672e706870|]
+Jul  2 23:09:12 10.71.56.0 tmp94070858-8042 open "/logs/traffic.html/index.html" flags READ mode 0666
+Jul  2 23:09:12 10.71.56.0 tmp94070858-8042 close "/logs/traffic.html/index.html" bytes read 5441 written 0
+Jul  2 23:09:12 10.71.56.0 tmp94070858-8042 [10.71.56.0|get|0|5441|0|0|0|2f6c6f67732f747261666669632e68746d6c2f696e6465782e68746d6c|]
+Jul  2 23:09:24 10.71.56.0 tmp94070858-8042 open "/pages/index.html" flags READ mode 0666
+Jul  2 23:09:24 10.71.56.0 tmp94070858-8042 close "/pages/index.html" bytes read 0 written 0
+Jul  2 23:09:24 10.71.56.0 tmp94070858-8042 [10.71.56.0|get|0|0|0|0|0|2f70616765732f696e6465782e68746d6c|]
+Jul  2 23:09:48 10.71.56.0 tmp94070858-8042 open "/images/index.html" flags READ mode 0666
+Jul  2 23:09:48 10.71.56.0 tmp94070858-8042 close "/images/index.html" bytes read 0 written 0
+Jul  2 23:09:48 10.71.56.0 tmp94070858-8042 [10.71.56.0|get|0|0|0|0|0|2f696d616765732f696e6465782e68746d6c|]
+Jul  2 23:10:00 10.71.56.0 tmp94070858-8042 open "/images/demo/index.html" flags READ mode 0666
+Jul  2 23:10:00 10.71.56.0 tmp94070858-8042 close "/images/demo/index.html" bytes read 0 written 0
+Jul  2 23:10:00 10.71.56.0 tmp94070858-8042 [10.71.56.0|get|0|0|0|0|0|2f696d616765732f64656d6f2f696e6465782e68746d6c|]
+Jul  2 23:10:27 10.71.56.0 tmp94070858-8042 open "/layout/index.html" flags READ mode 0666
+Jul  2 23:10:27 10.71.56.0 tmp94070858-8042 close "/layout/index.html" bytes read 0 written 0
+Jul  2 23:10:27 10.71.56.0 tmp94070858-8042 [10.71.56.0|get|0|0|0|0|0|2f6c61796f75742f696e6465782e68746d6c|]
+Jul  2 23:10:53 10.71.56.0 tmp94070858-8042 open "/pages/gallery.html" flags READ mode 0666
+Jul  2 23:10:53 10.71.56.0 tmp94070858-8042 close "/pages/gallery.html" bytes read 15537 written 0
+Jul  2 23:10:53 10.71.56.0 tmp94070858-8042 [10.71.56.0|get|0|15537|0|0|0|2f70616765732f67616c6c6572792e68746d6c|]
+Jul  2 23:11:32 10.71.56.0 tmp94070858-8042 open "/images/demo/index.html" flags READ mode 0666
+Jul  2 23:11:32 10.71.56.0 tmp94070858-8042 close "/images/demo/index.html" bytes read 0 written 0
+Jul  2 23:11:32 10.71.56.0 tmp94070858-8042 [10.71.56.0|get|0|0|0|0|0|2f696d616765732f64656d6f2f696e6465782e68746d6c|]
+Jul  2 23:11:40 10.71.56.0 tmp94070858-8042 open "/images/demo/backgrounds/index.html" flags READ mode 0666
+Jul  2 23:11:40 10.71.56.0 tmp94070858-8042 close "/images/demo/backgrounds/index.html" bytes read 0 written 0
+Jul  2 23:11:40 10.71.56.0 tmp94070858-8042 [10.71.56.0|get|0|0|0|0|0|2f696d616765732f64656d6f2f6261636b67726f756e64732f696e6465782e68746d6c|]
+Jul  2 23:11:49 10.71.56.0 tmp94070858-8042 open "/layout/index.html" flags READ mode 0666
+Jul  2 23:11:49 10.71.56.0 tmp94070858-8042 close "/layout/index.html" bytes read 0 written 0
+Jul  2 23:11:49 10.71.56.0 tmp94070858-8042 [10.71.56.0|get|0|0|0|0|0|2f6c61796f75742f696e6465782e68746d6c|]
+Jul  2 23:12:00 10.71.56.0 tmp94070858-8042 open "/layout/styles/index.html" flags READ mode 0666
+Jul  2 23:12:00 10.71.56.0 tmp94070858-8042 close "/layout/styles/index.html" bytes read 0 written 0
+Jul  2 23:12:00 10.71.56.0 tmp94070858-8042 [10.71.56.0|get|0|0|0|0|0|2f6c61796f75742f7374796c65732f696e6465782e68746d6c|]
+Jul  2 23:12:12 10.71.56.0 tmp94070858-8042 open "/images/demo/backgrounds/index.html" flags READ mode 0666
+Jul  2 23:12:12 10.71.56.0 tmp94070858-8042 close "/images/demo/backgrounds/index.html" bytes read 0 written 0
+Jul  2 23:12:12 10.71.56.0 tmp94070858-8042 [10.71.56.0|get|0|0|0|0|0|2f696d616765732f64656d6f2f6261636b67726f756e64732f696e6465782e68746d6c|]
+Jul  2 23:12:20 10.71.56.0 tmp94070858-8042 open "/logs/traffic.html/02.html" flags READ mode 0666
+Jul  2 23:12:20 10.71.56.0 tmp94070858-8042 close "/logs/traffic.html/02.html" bytes read 1581 written 0
+Jul  2 23:12:20 10.71.56.0 tmp94070858-8042 [10.71.56.0|get|0|1581|0|0|0|2f6c6f67732f747261666669632e68746d6c2f30322e68746d6c|]
+Jul  2 23:12:28 10.71.56.0 tmp94070858-8042 open "/pages/index.html" flags READ mode 0666
+Jul  2 23:12:28 10.71.56.0 tmp94070858-8042 close "/pages/index.html" bytes read 0 written 0
+Jul  2 23:12:28 10.71.56.0 tmp94070858-8042 [10.71.56.0|get|0|0|0|0|0|2f70616765732f696e6465782e68746d6c|]
+Jul  2 23:16:26 10.71.56.0 tmp94070858-8042 open "/index.html" flags READ mode 0666
+Jul  2 23:16:26 10.71.56.0 tmp94070858-8042 close "/index.html" bytes read 19893 written 0
+Jul  2 23:16:26 10.71.56.0 tmp94070858-8042 [10.71.56.0|get|0|19893|0|0|0|2f696e6465782e68746d6c|]
+Jul  2 23:18:02 10.71.56.0 tmp94070858-8042 open "/index.html" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 23:18:02 10.71.56.0 tmp94070858-8042 close "/index.html" bytes read 0 written 19542
+Jul  2 23:18:02 10.71.56.0 tmp94070858-8042 [10.71.56.0|put|0|19542|0|0|0|2f696e6465782e68746d6c|]
+Jul  2 23:19:31 10.71.56.0 tmp94070858-8042 open "/login_system/database/opendb.php" flags READ mode 0666
+Jul  2 23:19:31 10.71.56.0 tmp94070858-8042 close "/login_system/database/opendb.php" bytes read 201 written 0
+Jul  2 23:19:31 10.71.56.0 tmp94070858-8042 [10.71.56.0|get|0|201|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f6f70656e64622e706870|]
+Jul  2 23:20:27 10.71.56.0 tmp94070858-8042 open "/login_system/database/opendb.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 23:20:27 10.71.56.0 tmp94070858-8042 close "/login_system/database/opendb.php" bytes read 0 written 390
+Jul  2 23:20:27 10.71.56.0 tmp94070858-8042 [10.71.56.0|put|0|390|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f6f70656e64622e706870|]
+Jul  2 23:21:13 10.71.56.0 tmp94070858-8042 open "/login_system/database/config.php" flags READ mode 0666
+Jul  2 23:21:13 10.71.56.0 tmp94070858-8042 close "/login_system/database/config.php" bytes read 260 written 0
+Jul  2 23:21:13 10.71.56.0 tmp94070858-8042 [10.71.56.0|get|0|260|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f636f6e6669672e706870|]
+Jul  2 23:22:19 10.71.56.0 tmp94070858-8042 open "/login_system/database/config.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 23:22:19 10.71.56.0 tmp94070858-8042 close "/login_system/database/config.php" bytes read 0 written 261
+Jul  2 23:22:19 10.71.56.0 tmp94070858-8042 [10.71.56.0|put|0|261|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f636f6e6669672e706870|]
+Jul  2 23:22:59 10.71.56.0 tmp94070858-8042 open "/login_system/database/config.php" flags READ mode 0666
+Jul  2 23:22:59 10.71.56.0 tmp94070858-8042 close "/login_system/database/config.php" bytes read 261 written 0
+Jul  2 23:22:59 10.71.56.0 tmp94070858-8042 [10.71.56.0|get|0|261|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f636f6e6669672e706870|]
+Jul  2 23:23:04 10.71.56.0 tmp94070858-8042 open "/login_system/database/opendb.php" flags READ mode 0666
+Jul  2 23:23:04 10.71.56.0 tmp94070858-8042 close "/login_system/database/opendb.php" bytes read 390 written 0
+Jul  2 23:23:04 10.71.56.0 tmp94070858-8042 [10.71.56.0|get|0|390|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f6f70656e64622e706870|]
+Jul  2 23:23:28 10.71.56.0 tmp94070858-8042 open "/login_system/database/opendb.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 23:23:28 10.71.56.0 tmp94070858-8042 close "/login_system/database/opendb.php" bytes read 0 written 198
+Jul  2 23:23:28 10.71.56.0 tmp94070858-8042 [10.71.56.0|put|0|198|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f6f70656e64622e706870|]
+Jul  2 23:24:00 10.71.56.0 tmp94070858-8042 open "/login_system/index.php" flags READ mode 0666
+Jul  2 23:24:00 10.71.56.0 tmp94070858-8042 close "/login_system/index.php" bytes read 5450 written 0
+Jul  2 23:24:00 10.71.56.0 tmp94070858-8042 [10.71.56.0|get|0|5450|0|0|0|2f6c6f67696e5f73797374656d2f696e6465782e706870|]
+Jul  2 23:25:44 10.71.56.0 tmp94070858-8042 open "/index.html" flags READ mode 0666
+Jul  2 23:25:44 10.71.56.0 tmp94070858-8042 close "/index.html" bytes read 19542 written 0
+Jul  2 23:25:44 10.71.56.0 tmp94070858-8042 [10.71.56.0|get|0|19542|0|0|0|2f696e6465782e68746d6c|]
+Jul  2 23:27:18 10.71.56.0 tmp94070858-8042 open "/login_system/index.php" flags READ mode 0666
+Jul  2 23:27:18 10.71.56.0 tmp94070858-8042 close "/login_system/index.php" bytes read 5450 written 0
+Jul  2 23:27:18 10.71.56.0 tmp94070858-8042 [10.71.56.0|get|0|5450|0|0|0|2f6c6f67696e5f73797374656d2f696e6465782e706870|]
+Jul  2 23:28:08 10.71.56.0 tmp94070858-8042 open "/login_system/index.php" flags READ mode 0666
+Jul  2 23:28:08 10.71.56.0 tmp94070858-8042 close "/login_system/index.php" bytes read 5450 written 0
+Jul  2 23:28:08 10.71.56.0 tmp94070858-8042 [10.71.56.0|get|0|5450|0|0|0|2f6c6f67696e5f73797374656d2f696e6465782e706870|]
+Jul  2 23:28:23 10.71.56.0 tmp94070858-8042 open "/login_system/signin.js" flags READ mode 0666
+Jul  2 23:28:23 10.71.56.0 tmp94070858-8042 close "/login_system/signin.js" bytes read 917 written 0
+Jul  2 23:28:23 10.71.56.0 tmp94070858-8042 [10.71.56.0|get|0|917|0|0|0|2f6c6f67696e5f73797374656d2f7369676e696e2e6a73|]
+Jul  2 23:33:23 10.71.56.0 tmp94070858-8042 session closed for local user tmp94070858-8042 from [10.71.56.0]
+Jul  2 23:33:23 10.71.56.0 tmp94070858-8042 Connection closed by 10.71.56.0 port 49164
+Jul  2 23:34:00 10.71.56.0 tmp94070858-33 Connection from 10.71.56.0 port 11684 on 82.165.86.221 port 22 rdomain ""
+Jul  2 23:34:01 10.71.56.0 tmp94070858-33 Accepted password for tmp94070858-33 from 10.71.56.0 port 11684 ssh2
+Jul  2 23:34:01 10.71.56.0 tmp94070858-33 Starting session: subsystem 'sftp' for tmp94070858-33 from 10.71.56.0 port 11684 id 0
+Jul  2 23:34:01 10.71.56.0 tmp94070858-33 session opened for local user tmp94070858-33 from [10.71.56.0]
+Jul  2 23:34:11 10.71.56.0 tmp94070858-33 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  2 23:34:11 10.71.56.0 tmp94070858-33 close "/login_system/validateLogin.php" bytes read 1958 written 0
+Jul  2 23:34:11 10.71.56.0 tmp94070858-33 [10.71.56.0|get|0|1958|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  2 23:35:32 10.71.56.0 tmp94070858-33 open "/login_system/validateLogin.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 23:35:32 10.71.56.0 tmp94070858-33 close "/login_system/validateLogin.php" bytes read 0 written 1921
+Jul  2 23:35:32 10.71.56.0 tmp94070858-33 [10.71.56.0|put|0|1921|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  2 23:36:09 10.71.56.0 tmp94070858-33 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  2 23:36:09 10.71.56.0 tmp94070858-33 close "/login_system/validateLogin.php" bytes read 1921 written 0
+Jul  2 23:36:09 10.71.56.0 tmp94070858-33 [10.71.56.0|get|0|1921|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  2 23:37:00 10.71.56.0 tmp94070858-33 open "/login_system/validateLogin.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 23:37:00 10.71.56.0 tmp94070858-33 close "/login_system/validateLogin.php" bytes read 0 written 1933
+Jul  2 23:37:00 10.71.56.0 tmp94070858-33 [10.71.56.0|put|0|1933|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  2 23:38:03 10.71.56.0 tmp94070858-33 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  2 23:38:03 10.71.56.0 tmp94070858-33 close "/login_system/validateLogin.php" bytes read 1933 written 0
+Jul  2 23:38:03 10.71.56.0 tmp94070858-33 [10.71.56.0|get|0|1933|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  2 23:39:17 10.71.56.0 tmp94070858-33 open "/login_system/validateLogin.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 23:39:17 10.71.56.0 tmp94070858-33 close "/login_system/validateLogin.php" bytes read 0 written 1884
+Jul  2 23:39:17 10.71.56.0 tmp94070858-33 [10.71.56.0|put|0|1884|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  2 23:39:19 10.71.56.0 tmp94070858-33 open "/login_system/validateLogin.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 23:39:19 10.71.56.0 tmp94070858-33 close "/login_system/validateLogin.php" bytes read 0 written 1884
+Jul  2 23:39:19 10.71.56.0 tmp94070858-33 [10.71.56.0|put|0|1884|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  2 23:39:37 10.71.56.0 tmp94070858-33 open "/login_system/admin_edit.php" flags READ mode 0666
+Jul  2 23:39:37 10.71.56.0 tmp94070858-33 close "/login_system/admin_edit.php" bytes read 33516 written 0
+Jul  2 23:39:37 10.71.56.0 tmp94070858-33 [10.71.56.0|get|0|33516|0|0|0|2f6c6f67696e5f73797374656d2f61646d696e5f656469742e706870|]
+Jul  2 23:40:13 10.71.56.0 tmp94070858-33 open "/login_system/auth_check.php" flags READ mode 0666
+Jul  2 23:40:13 10.71.56.0 tmp94070858-33 close "/login_system/auth_check.php" bytes read 116 written 0
+Jul  2 23:40:13 10.71.56.0 tmp94070858-33 [10.71.56.0|get|0|116|0|0|0|2f6c6f67696e5f73797374656d2f617574685f636865636b2e706870|]
+Jul  2 23:40:33 10.71.56.0 tmp94070858-33 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  2 23:40:33 10.71.56.0 tmp94070858-33 close "/login_system/validateLogin.php" bytes read 1884 written 0
+Jul  2 23:40:33 10.71.56.0 tmp94070858-33 [10.71.56.0|get|0|1884|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  2 23:41:05 10.71.56.0 tmp94070858-33 open "/login_system/validateLogin.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 23:41:05 10.71.56.0 tmp94070858-33 close "/login_system/validateLogin.php" bytes read 0 written 1888
+Jul  2 23:41:05 10.71.56.0 tmp94070858-33 [10.71.56.0|put|0|1888|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  2 23:41:58 10.71.56.0 tmp94070858-33 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  2 23:41:58 10.71.56.0 tmp94070858-33 close "/login_system/validateLogin.php" bytes read 1888 written 0
+Jul  2 23:41:58 10.71.56.0 tmp94070858-33 [10.71.56.0|get|0|1888|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  2 23:42:32 10.71.56.0 tmp94070858-33 open "/login_system/validateLogin.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 23:42:32 10.71.56.0 tmp94070858-33 close "/login_system/validateLogin.php" bytes read 0 written 1920
+Jul  2 23:42:32 10.71.56.0 tmp94070858-33 [10.71.56.0|put|0|1920|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  2 23:43:21 10.71.56.0 tmp94070858-33 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  2 23:43:21 10.71.56.0 tmp94070858-33 close "/login_system/validateLogin.php" bytes read 1920 written 0
+Jul  2 23:43:21 10.71.56.0 tmp94070858-33 [10.71.56.0|get|0|1920|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  2 23:43:58 10.71.56.0 tmp94070858-33 open "/login_system/validateLogin.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 23:43:58 10.71.56.0 tmp94070858-33 close "/login_system/validateLogin.php" bytes read 0 written 1969
+Jul  2 23:43:58 10.71.56.0 tmp94070858-33 [10.71.56.0|put|0|1969|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  2 23:43:59 10.71.56.0 tmp94070858-33 open "/login_system/validateLogin.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 23:43:59 10.71.56.0 tmp94070858-33 close "/login_system/validateLogin.php" bytes read 0 written 1969
+Jul  2 23:43:59 10.71.56.0 tmp94070858-33 [10.71.56.0|put|0|1969|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  2 23:44:31 10.71.56.0 tmp94070858-33 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  2 23:44:31 10.71.56.0 tmp94070858-33 close "/login_system/validateLogin.php" bytes read 1969 written 0
+Jul  2 23:44:31 10.71.56.0 tmp94070858-33 [10.71.56.0|get|0|1969|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  2 23:45:09 10.71.56.0 tmp94070858-33 open "/login_system/validateLogin.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 23:45:09 10.71.56.0 tmp94070858-33 close "/login_system/validateLogin.php" bytes read 0 written 1995
+Jul  2 23:45:09 10.71.56.0 tmp94070858-33 [10.71.56.0|put|0|1995|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  2 23:45:10 10.71.56.0 tmp94070858-33 open "/login_system/validateLogin.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 23:45:10 10.71.56.0 tmp94070858-33 close "/login_system/validateLogin.php" bytes read 0 written 1995
+Jul  2 23:45:10 10.71.56.0 tmp94070858-33 [10.71.56.0|put|0|1995|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  2 23:45:11 10.71.56.0 tmp94070858-33 open "/login_system/validateLogin.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 23:45:11 10.71.56.0 tmp94070858-33 close "/login_system/validateLogin.php" bytes read 0 written 1995
+Jul  2 23:45:11 10.71.56.0 tmp94070858-33 [10.71.56.0|put|0|1995|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  2 23:45:42 10.71.56.0 tmp94070858-33 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  2 23:45:42 10.71.56.0 tmp94070858-33 close "/login_system/validateLogin.php" bytes read 1995 written 0
+Jul  2 23:45:42 10.71.56.0 tmp94070858-33 [10.71.56.0|get|0|1995|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  2 23:47:22 10.71.56.0 tmp94070858-33 open "/login_system/validateLogin.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 23:47:22 10.71.56.0 tmp94070858-33 close "/login_system/validateLogin.php" bytes read 0 written 1994
+Jul  2 23:47:22 10.71.56.0 tmp94070858-33 [10.71.56.0|put|0|1994|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  2 23:47:53 10.71.56.0 tmp94070858-33 open "/enea/PAS Pure Air Solutions 2018.pdf" flags READ mode 0666
+Jul  2 23:47:53 10.71.56.0 tmp94070858-33 close "/enea/PAS Pure Air Solutions 2018.pdf" bytes read 6345063 written 0
+Jul  2 23:47:53 10.71.56.0 tmp94070858-33 [10.71.56.0|get|0|6345063|0|0|0|2f656e65612f50415320507572652041697220536f6c7574696f6e7320323031382e706466|]
+Jul  2 23:48:03 10.71.56.0 tmp94070858-33 open "/index.html" flags READ mode 0666
+Jul  2 23:48:03 10.71.56.0 tmp94070858-33 close "/index.html" bytes read 19542 written 0
+Jul  2 23:48:03 10.71.56.0 tmp94070858-33 [10.71.56.0|get|0|19542|0|0|0|2f696e6465782e68746d6c|]
+Jul  2 23:48:20 10.71.56.0 tmp94070858-33 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  2 23:48:20 10.71.56.0 tmp94070858-33 close "/login_system/validateLogin.php" bytes read 1994 written 0
+Jul  2 23:48:20 10.71.56.0 tmp94070858-33 [10.71.56.0|get|0|1994|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  2 23:48:37 10.71.56.0 tmp94070858-33 open "/login_system/index.php" flags READ mode 0666
+Jul  2 23:48:37 10.71.56.0 tmp94070858-33 close "/login_system/index.php" bytes read 5450 written 0
+Jul  2 23:48:37 10.71.56.0 tmp94070858-33 [10.71.56.0|get|0|5450|0|0|0|2f6c6f67696e5f73797374656d2f696e6465782e706870|]
+Jul  2 23:50:19 10.71.56.0 tmp94070858-33 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  2 23:50:19 10.71.56.0 tmp94070858-33 close "/login_system/validateLogin.php" bytes read 1994 written 0
+Jul  2 23:50:19 10.71.56.0 tmp94070858-33 [10.71.56.0|get|0|1994|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  2 23:50:40 10.71.56.0 tmp94070858-33 open "/login_system/database/opendb.php" flags READ mode 0666
+Jul  2 23:50:40 10.71.56.0 tmp94070858-33 close "/login_system/database/opendb.php" bytes read 198 written 0
+Jul  2 23:50:40 10.71.56.0 tmp94070858-33 [10.71.56.0|get|0|198|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f6f70656e64622e706870|]
+Jul  2 23:50:57 10.71.56.0 tmp94070858-33 open "/login_system/database/opendb.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 23:50:57 10.71.56.0 tmp94070858-33 close "/login_system/database/opendb.php" bytes read 0 written 197
+Jul  2 23:50:57 10.71.56.0 tmp94070858-33 [10.71.56.0|put|0|197|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f6f70656e64622e706870|]
+Jul  2 23:51:33 10.71.56.0 tmp94070858-33 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  2 23:51:33 10.71.56.0 tmp94070858-33 close "/login_system/validateLogin.php" bytes read 1994 written 0
+Jul  2 23:51:33 10.71.56.0 tmp94070858-33 [10.71.56.0|get|0|1994|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  2 23:51:56 10.71.56.0 tmp94070858-33 open "/login_system/validateLogin.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 23:51:56 10.71.56.0 tmp94070858-33 close "/login_system/validateLogin.php" bytes read 0 written 1994
+Jul  2 23:51:56 10.71.56.0 tmp94070858-33 [10.71.56.0|put|0|1994|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  2 23:53:37 10.71.56.0 tmp94070858-33 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  2 23:53:37 10.71.56.0 tmp94070858-33 close "/login_system/validateLogin.php" bytes read 1994 written 0
+Jul  2 23:53:37 10.71.56.0 tmp94070858-33 [10.71.56.0|get|0|1994|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  2 23:54:21 10.71.56.0 tmp94070858-33 open "/login_system/validateLogin.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  2 23:54:21 10.71.56.0 tmp94070858-33 close "/login_system/validateLogin.php" bytes read 0 written 1995
+Jul  2 23:54:21 10.71.56.0 tmp94070858-33 [10.71.56.0|put|0|1995|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  2 23:59:30 10.71.56.0 tmp94070858-33 Connection closed by 10.71.56.0 port 11684
+Jul  2 23:59:30 10.71.56.0 tmp94070858-33 session closed for local user tmp94070858-33 from [10.71.56.0]
+Jul  4 22:58:41 10.71.56.0 tmp94070858-7162 Connection from 10.71.56.0 port 41058 on 82.165.86.221 port 22 rdomain ""
+Jul  4 22:58:41 10.71.56.0 tmp94070858-7162 Accepted password for tmp94070858-7162 from 10.71.56.0 port 41058 ssh2
+Jul  4 22:58:41 10.71.56.0 tmp94070858-7162 Starting session: subsystem 'sftp' for tmp94070858-7162 from 10.71.56.0 port 41058 id 0
+Jul  4 22:58:41 10.71.56.0 tmp94070858-7162 session opened for local user tmp94070858-7162 from [10.71.56.0]
+Jul  4 23:03:42 10.71.56.0 tmp94070858-7162 Connection closed by 10.71.56.0 port 41058
+Jul  4 23:03:42 10.71.56.0 tmp94070858-7162 session closed for local user tmp94070858-7162 from [10.71.56.0]
+Jul  4 23:14:54 10.71.56.0 tmp94070858-6685 Connection from 10.71.56.0 port 48850 on 82.165.86.221 port 22 rdomain ""
+Jul  4 23:14:54 10.71.56.0 tmp94070858-6685 Accepted password for tmp94070858-6685 from 10.71.56.0 port 48850 ssh2
+Jul  4 23:14:54 10.71.56.0 tmp94070858-6685 Starting session: subsystem 'sftp' for tmp94070858-6685 from 10.71.56.0 port 48850 id 0
+Jul  4 23:14:54 10.71.56.0 tmp94070858-6685 session opened for local user tmp94070858-6685 from [10.71.56.0]
+Jul  4 23:15:12 10.71.56.0 tmp94070858-6685 open "/login_system/database/config.php" flags READ mode 0666
+Jul  4 23:15:12 10.71.56.0 tmp94070858-6685 close "/login_system/database/config.php" bytes read 261 written 0
+Jul  4 23:15:12 10.71.56.0 tmp94070858-6685 [10.71.56.0|get|0|261|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f636f6e6669672e706870|]
+Jul  4 23:15:42 10.71.56.0 tmp94070858-6685 open "/login_system/database/config.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  4 23:15:42 10.71.56.0 tmp94070858-6685 close "/login_system/database/config.php" bytes read 0 written 262
+Jul  4 23:15:42 10.71.56.0 tmp94070858-6685 [10.71.56.0|put|0|262|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f636f6e6669672e706870|]
+Jul  4 23:17:30 10.71.56.0 tmp94070858-6685 open "/login_system/database/config.php" flags READ mode 0666
+Jul  4 23:17:30 10.71.56.0 tmp94070858-6685 close "/login_system/database/config.php" bytes read 262 written 0
+Jul  4 23:17:30 10.71.56.0 tmp94070858-6685 [10.71.56.0|get|0|262|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f636f6e6669672e706870|]
+Jul  4 23:18:11 10.71.56.0 tmp94070858-6685 open "/login_system/database/config.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  4 23:18:11 10.71.56.0 tmp94070858-6685 close "/login_system/database/config.php" bytes read 0 written 263
+Jul  4 23:18:11 10.71.56.0 tmp94070858-6685 [10.71.56.0|put|0|263|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f636f6e6669672e706870|]
+Jul  4 23:18:18 10.71.56.0 tmp94070858-6685 open "/login_system/database/opendb.php" flags READ mode 0666
+Jul  4 23:18:18 10.71.56.0 tmp94070858-6685 close "/login_system/database/opendb.php" bytes read 197 written 0
+Jul  4 23:18:18 10.71.56.0 tmp94070858-6685 [10.71.56.0|get|0|197|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f6f70656e64622e706870|]
+Jul  4 23:18:27 10.71.56.0 tmp94070858-6685 open "/login_system/database/opendb.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  4 23:18:27 10.71.56.0 tmp94070858-6685 close "/login_system/database/opendb.php" bytes read 0 written 190
+Jul  4 23:18:27 10.71.56.0 tmp94070858-6685 [10.71.56.0|put|0|190|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f6f70656e64622e706870|]
+Jul  4 23:18:33 10.71.56.0 tmp94070858-6685 open "/login_system/database/closedb.php" flags READ mode 0666
+Jul  4 23:18:33 10.71.56.0 tmp94070858-6685 close "/login_system/database/closedb.php" bytes read 106 written 0
+Jul  4 23:18:33 10.71.56.0 tmp94070858-6685 [10.71.56.0|get|0|106|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f636c6f736564622e706870|]
+Jul  4 23:23:33 10.71.56.0 tmp94070858-6685 Connection closed by 10.71.56.0 port 48850
+Jul  4 23:23:33 10.71.56.0 tmp94070858-6685 session closed for local user tmp94070858-6685 from [10.71.56.0]
+Jul  6 12:11:46 10.71.56.0 tmp94070858-9769 Connection from 10.71.56.0 port 44826 on 82.165.86.221 port 22 rdomain ""
+Jul  6 12:11:46 10.71.56.0 tmp94070858-9769 Accepted password for tmp94070858-9769 from 10.71.56.0 port 44826 ssh2
+Jul  6 12:11:47 10.71.56.0 tmp94070858-9769 Starting session: subsystem 'sftp' for tmp94070858-9769 from 10.71.56.0 port 44826 id 0
+Jul  6 12:11:47 10.71.56.0 tmp94070858-9769 session opened for local user tmp94070858-9769 from [10.71.56.0]
+Jul  6 12:12:21 10.71.56.0 tmp94070858-9769 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  6 12:12:21 10.71.56.0 tmp94070858-9769 close "/login_system/validateLogin.php" bytes read 1995 written 0
+Jul  6 12:12:21 10.71.56.0 tmp94070858-9769 [10.71.56.0|get|0|1995|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 12:13:41 10.71.56.0 tmp94070858-9769 open "/login_system/validateLogin.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  6 12:13:41 10.71.56.0 tmp94070858-9769 close "/login_system/validateLogin.php" bytes read 0 written 3619
+Jul  6 12:13:41 10.71.56.0 tmp94070858-9769 [10.71.56.0|put|0|3619|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 12:14:36 10.71.56.0 tmp94070858-9769 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  6 12:14:36 10.71.56.0 tmp94070858-9769 close "/login_system/validateLogin.php" bytes read 3619 written 0
+Jul  6 12:14:36 10.71.56.0 tmp94070858-9769 [10.71.56.0|get|0|3619|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 12:17:10 10.71.56.0 tmp94070858-9769 open "/login_system/validateLogin.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  6 12:17:10 10.71.56.0 tmp94070858-9769 close "/login_system/validateLogin.php" bytes read 0 written 3672
+Jul  6 12:17:10 10.71.56.0 tmp94070858-9769 [10.71.56.0|put|0|3672|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 12:17:44 10.71.56.0 tmp94070858-9769 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  6 12:17:44 10.71.56.0 tmp94070858-9769 close "/login_system/validateLogin.php" bytes read 3672 written 0
+Jul  6 12:17:44 10.71.56.0 tmp94070858-9769 [10.71.56.0|get|0|3672|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 12:18:15 10.71.56.0 tmp94070858-9769 open "/login_system/validateLogin.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  6 12:18:15 10.71.56.0 tmp94070858-9769 close "/login_system/validateLogin.php" bytes read 0 written 3619
+Jul  6 12:18:15 10.71.56.0 tmp94070858-9769 [10.71.56.0|put|0|3619|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 12:20:10 10.71.56.0 tmp94070858-9769 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  6 12:20:10 10.71.56.0 tmp94070858-9769 close "/login_system/validateLogin.php" bytes read 3619 written 0
+Jul  6 12:20:10 10.71.56.0 tmp94070858-9769 [10.71.56.0|get|0|3619|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 12:20:21 10.71.56.0 tmp94070858-9769 open "/login_system/validateLogin.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  6 12:20:21 10.71.56.0 tmp94070858-9769 close "/login_system/validateLogin.php" bytes read 0 written 3908
+Jul  6 12:20:21 10.71.56.0 tmp94070858-9769 [10.71.56.0|put|0|3908|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 12:22:48 10.71.56.0 tmp94070858-9769 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  6 12:22:48 10.71.56.0 tmp94070858-9769 close "/login_system/validateLogin.php" bytes read 3908 written 0
+Jul  6 12:22:48 10.71.56.0 tmp94070858-9769 [10.71.56.0|get|0|3908|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 12:23:04 10.71.56.0 tmp94070858-9769 open "/login_system/validateLogin.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  6 12:23:04 10.71.56.0 tmp94070858-9769 close "/login_system/validateLogin.php" bytes read 0 written 4405
+Jul  6 12:23:04 10.71.56.0 tmp94070858-9769 [10.71.56.0|put|0|4405|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 12:23:12 10.71.56.0 tmp94070858-9769 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  6 12:23:12 10.71.56.0 tmp94070858-9769 close "/login_system/validateLogin.php" bytes read 4405 written 0
+Jul  6 12:23:12 10.71.56.0 tmp94070858-9769 [10.71.56.0|get|0|4405|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 12:28:12 10.71.56.0 tmp94070858-9769 Connection closed by 10.71.56.0 port 44826
+Jul  6 12:28:12 10.71.56.0 tmp94070858-9769 session closed for local user tmp94070858-9769 from [10.71.56.0]
+Jul  6 12:28:59 10.71.56.0 tmp94070858-5618 Connection from 10.71.56.0 port 51044 on 82.165.86.221 port 22 rdomain ""
+Jul  6 12:28:59 10.71.56.0 tmp94070858-5618 Accepted password for tmp94070858-5618 from 10.71.56.0 port 51044 ssh2
+Jul  6 12:28:59 10.71.56.0 tmp94070858-5618 Starting session: subsystem 'sftp' for tmp94070858-5618 from 10.71.56.0 port 51044 id 0
+Jul  6 12:28:59 10.71.56.0 tmp94070858-5618 session opened for local user tmp94070858-5618 from [10.71.56.0]
+Jul  6 12:28:59 10.71.56.0 tmp94070858-5618 open "/login_system/validateLogin.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  6 12:28:59 10.71.56.0 tmp94070858-5618 close "/login_system/validateLogin.php" bytes read 0 written 4405
+Jul  6 12:28:59 10.71.56.0 tmp94070858-5618 [10.71.56.0|put|0|4405|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 12:34:06 10.71.56.0 tmp94070858-5618 session closed for local user tmp94070858-5618 from [10.71.56.0]
+Jul  6 12:34:06 10.71.56.0 tmp94070858-5618 Connection closed by 10.71.56.0 port 51044
+Jul  6 12:38:37 10.71.56.0 tmp94070858-47 Connection from 10.71.56.0 port 56882 on 82.165.86.221 port 22 rdomain ""
+Jul  6 12:38:37 10.71.56.0 tmp94070858-47 Accepted password for tmp94070858-47 from 10.71.56.0 port 56882 ssh2
+Jul  6 12:38:37 10.71.56.0 tmp94070858-47 Starting session: subsystem 'sftp' for tmp94070858-47 from 10.71.56.0 port 56882 id 0
+Jul  6 12:38:37 10.71.56.0 tmp94070858-47 session opened for local user tmp94070858-47 from [10.71.56.0]
+Jul  6 12:38:37 10.71.56.0 tmp94070858-47 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  6 12:38:37 10.71.56.0 tmp94070858-47 close "/login_system/validateLogin.php" bytes read 4405 written 0
+Jul  6 12:38:37 10.71.56.0 tmp94070858-47 [10.71.56.0|get|0|4405|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 12:38:44 10.71.56.0 tmp94070858-47 open "/login_system/database/config.php" flags READ mode 0666
+Jul  6 12:38:44 10.71.56.0 tmp94070858-47 close "/login_system/database/config.php" bytes read 263 written 0
+Jul  6 12:38:44 10.71.56.0 tmp94070858-47 [10.71.56.0|get|0|263|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f636f6e6669672e706870|]
+Jul  6 12:39:13 10.71.56.0 tmp94070858-47 open "/login_system/database/config.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  6 12:39:13 10.71.56.0 tmp94070858-47 close "/login_system/database/config.php" bytes read 0 written 303
+Jul  6 12:39:13 10.71.56.0 tmp94070858-47 [10.71.56.0|put|0|303|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f636f6e6669672e706870|]
+Jul  6 12:39:47 10.71.56.0 tmp94070858-47 open "/login_system/database/config.php" flags READ mode 0666
+Jul  6 12:39:47 10.71.56.0 tmp94070858-47 close "/login_system/database/config.php" bytes read 303 written 0
+Jul  6 12:39:47 10.71.56.0 tmp94070858-47 [10.71.56.0|get|0|303|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f636f6e6669672e706870|]
+Jul  6 12:40:01 10.71.56.0 tmp94070858-47 open "/login_system/database/config.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  6 12:40:01 10.71.56.0 tmp94070858-47 close "/login_system/database/config.php" bytes read 0 written 263
+Jul  6 12:40:01 10.71.56.0 tmp94070858-47 [10.71.56.0|put|0|263|0|0|0|2f6c6f67696e5f73797374656d2f64617461626173652f636f6e6669672e706870|]
+Jul  6 12:45:07 10.71.56.0 tmp94070858-47 session closed for local user tmp94070858-47 from [10.71.56.0]
+Jul  6 12:45:07 10.71.56.0 tmp94070858-47 Connection closed by 10.71.56.0 port 56882
+Jul  6 12:54:29 10.71.56.0 tmp94070858-4037 Connection from 10.71.56.0 port 11170 on 82.165.86.221 port 22 rdomain ""
+Jul  6 12:54:29 10.71.56.0 tmp94070858-4037 Accepted password for tmp94070858-4037 from 10.71.56.0 port 11170 ssh2
+Jul  6 12:54:29 10.71.56.0 tmp94070858-4037 Starting session: subsystem 'sftp' for tmp94070858-4037 from 10.71.56.0 port 11170 id 0
+Jul  6 12:54:29 10.71.56.0 tmp94070858-4037 session opened for local user tmp94070858-4037 from [10.71.56.0]
+Jul  6 12:54:29 10.71.56.0 tmp94070858-4037 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  6 12:54:29 10.71.56.0 tmp94070858-4037 close "/login_system/validateLogin.php" bytes read 4405 written 0
+Jul  6 12:54:29 10.71.56.0 tmp94070858-4037 [10.71.56.0|get|0|4405|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 12:59:29 10.71.56.0 tmp94070858-4037 session closed for local user tmp94070858-4037 from [10.71.56.0]
+Jul  6 12:59:29 10.71.56.0 tmp94070858-4037 Connection closed by 10.71.56.0 port 11170
+Jul  6 13:13:41 10.71.56.0 tmp94070858-3500 Connection from 10.71.56.0 port 23598 on 82.165.86.221 port 22 rdomain ""
+Jul  6 13:13:42 10.71.56.0 tmp94070858-3500 Accepted password for tmp94070858-3500 from 10.71.56.0 port 23598 ssh2
+Jul  6 13:13:42 10.71.56.0 tmp94070858-3500 Starting session: subsystem 'sftp' for tmp94070858-3500 from 10.71.56.0 port 23598 id 0
+Jul  6 13:13:42 10.71.56.0 tmp94070858-3500 session opened for local user tmp94070858-3500 from [10.71.56.0]
+Jul  6 13:13:42 10.71.56.0 tmp94070858-3500 open "/login_system/validateLogin.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  6 13:13:42 10.71.56.0 tmp94070858-3500 close "/login_system/validateLogin.php" bytes read 0 written 4413
+Jul  6 13:13:42 10.71.56.0 tmp94070858-3500 [10.71.56.0|put|0|4413|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 13:16:44 10.71.56.0 tmp94070858-3500 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  6 13:16:44 10.71.56.0 tmp94070858-3500 close "/login_system/validateLogin.php" bytes read 4413 written 0
+Jul  6 13:16:44 10.71.56.0 tmp94070858-3500 [10.71.56.0|get|0|4413|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 13:18:35 10.71.56.0 tmp94070858-3500 open "/login_system/validateLogin.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  6 13:18:35 10.71.56.0 tmp94070858-3500 close "/login_system/validateLogin.php" bytes read 0 written 3925
+Jul  6 13:18:35 10.71.56.0 tmp94070858-3500 [10.71.56.0|put|0|3925|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 13:18:56 10.71.56.0 tmp94070858-3500 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  6 13:18:56 10.71.56.0 tmp94070858-3500 close "/login_system/validateLogin.php" bytes read 3925 written 0
+Jul  6 13:18:56 10.71.56.0 tmp94070858-3500 [10.71.56.0|get|0|3925|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 13:19:51 10.71.56.0 tmp94070858-3500 open "/login_system/validateLogin.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  6 13:19:51 10.71.56.0 tmp94070858-3500 close "/login_system/validateLogin.php" bytes read 0 written 3831
+Jul  6 13:19:51 10.71.56.0 tmp94070858-3500 [10.71.56.0|put|0|3831|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 13:21:05 10.71.56.0 tmp94070858-3500 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  6 13:21:05 10.71.56.0 tmp94070858-3500 close "/login_system/validateLogin.php" bytes read 3831 written 0
+Jul  6 13:21:05 10.71.56.0 tmp94070858-3500 [10.71.56.0|get|0|3831|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 13:21:51 10.71.56.0 tmp94070858-3500 open "/login_system/validateLogin.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  6 13:21:51 10.71.56.0 tmp94070858-3500 close "/login_system/validateLogin.php" bytes read 0 written 3858
+Jul  6 13:21:51 10.71.56.0 tmp94070858-3500 [10.71.56.0|put|0|3858|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 13:22:36 10.71.56.0 tmp94070858-3500 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  6 13:22:36 10.71.56.0 tmp94070858-3500 close "/login_system/validateLogin.php" bytes read 3858 written 0
+Jul  6 13:22:36 10.71.56.0 tmp94070858-3500 [10.71.56.0|get|0|3858|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 13:25:19 10.71.56.0 tmp94070858-3500 open "/login_system/validateLogin.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  6 13:25:19 10.71.56.0 tmp94070858-3500 close "/login_system/validateLogin.php" bytes read 0 written 3825
+Jul  6 13:25:19 10.71.56.0 tmp94070858-3500 [10.71.56.0|put|0|3825|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 13:25:54 10.71.56.0 tmp94070858-3500 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  6 13:25:54 10.71.56.0 tmp94070858-3500 close "/login_system/validateLogin.php" bytes read 3825 written 0
+Jul  6 13:25:54 10.71.56.0 tmp94070858-3500 [10.71.56.0|get|0|3825|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 13:26:29 10.71.56.0 tmp94070858-3500 open "/login_system/validateLogin.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  6 13:26:29 10.71.56.0 tmp94070858-3500 close "/login_system/validateLogin.php" bytes read 0 written 3785
+Jul  6 13:26:29 10.71.56.0 tmp94070858-3500 [10.71.56.0|put|0|3785|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 13:27:35 10.71.56.0 tmp94070858-3500 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  6 13:27:35 10.71.56.0 tmp94070858-3500 close "/login_system/validateLogin.php" bytes read 3785 written 0
+Jul  6 13:27:35 10.71.56.0 tmp94070858-3500 [10.71.56.0|get|0|3785|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 13:28:00 10.71.56.0 tmp94070858-3500 open "/login_system/index.php" flags READ mode 0666
+Jul  6 13:28:00 10.71.56.0 tmp94070858-3500 close "/login_system/index.php" bytes read 5450 written 0
+Jul  6 13:28:00 10.71.56.0 tmp94070858-3500 [10.71.56.0|get|0|5450|0|0|0|2f6c6f67696e5f73797374656d2f696e6465782e706870|]
+Jul  6 13:29:25 10.71.56.0 tmp94070858-3500 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  6 13:29:25 10.71.56.0 tmp94070858-3500 close "/login_system/validateLogin.php" bytes read 3785 written 0
+Jul  6 13:29:25 10.71.56.0 tmp94070858-3500 [10.71.56.0|get|0|3785|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 13:34:28 10.71.56.0 tmp94070858-3500 Connection closed by 10.71.56.0 port 23598
+Jul  6 13:34:28 10.71.56.0 tmp94070858-3500 session closed for local user tmp94070858-3500 from [10.71.56.0]
+Jul  6 13:37:03 10.71.56.0 tmp94070858-1053 Connection from 10.71.56.0 port 34866 on 82.165.86.221 port 22 rdomain ""
+Jul  6 13:37:03 10.71.56.0 tmp94070858-1053 Accepted password for tmp94070858-1053 from 10.71.56.0 port 34866 ssh2
+Jul  6 13:37:03 10.71.56.0 tmp94070858-1053 Starting session: subsystem 'sftp' for tmp94070858-1053 from 10.71.56.0 port 34866 id 0
+Jul  6 13:37:03 10.71.56.0 tmp94070858-1053 session opened for local user tmp94070858-1053 from [10.71.56.0]
+Jul  6 13:37:11 10.71.56.0 tmp94070858-1053 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  6 13:37:11 10.71.56.0 tmp94070858-1053 close "/login_system/validateLogin.php" bytes read 3785 written 0
+Jul  6 13:37:11 10.71.56.0 tmp94070858-1053 [10.71.56.0|get|0|3785|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 13:37:41 10.71.56.0 tmp94070858-1053 open "/login_system/validateLogin.php" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  6 13:37:41 10.71.56.0 tmp94070858-1053 close "/login_system/validateLogin.php" bytes read 0 written 3800
+Jul  6 13:37:41 10.71.56.0 tmp94070858-1053 [10.71.56.0|put|0|3800|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 13:40:18 10.71.56.0 tmp94070858-1053 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  6 13:40:18 10.71.56.0 tmp94070858-1053 close "/login_system/validateLogin.php" bytes read 3800 written 0
+Jul  6 13:40:18 10.71.56.0 tmp94070858-1053 [10.71.56.0|get|0|3800|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 13:49:10 10.71.56.0 tmp94070858-1053 session closed for local user tmp94070858-1053 from [10.71.56.0]
+Jul  6 13:49:10 10.71.56.0 tmp94070858-1053 Connection closed by 10.71.56.0 port 34866
+Jul  6 13:50:13 10.71.56.0 tmp94070858-9085 Connection from 10.71.56.0 port 49174 on 82.165.86.221 port 22 rdomain ""
+Jul  6 13:50:13 10.71.56.0 tmp94070858-9085 Accepted password for tmp94070858-9085 from 10.71.56.0 port 49174 ssh2
+Jul  6 13:50:13 10.71.56.0 tmp94070858-9085 Starting session: subsystem 'sftp' for tmp94070858-9085 from 10.71.56.0 port 49174 id 0
+Jul  6 13:50:13 10.71.56.0 tmp94070858-9085 session opened for local user tmp94070858-9085 from [10.71.56.0]
+Jul  6 13:50:30 10.71.56.0 tmp94070858-9085 open "/logs/traffic.html/07.html" flags READ mode 0666
+Jul  6 13:50:30 10.71.56.0 tmp94070858-9085 close "/logs/traffic.html/07.html" bytes read 1891 written 0
+Jul  6 13:50:30 10.71.56.0 tmp94070858-9085 [10.71.56.0|get|0|1891|0|0|0|2f6c6f67732f747261666669632e68746d6c2f30372e68746d6c|]
+Jul  6 13:51:23 10.71.56.0 tmp94070858-9085 open "/logs/info.py" flags READ mode 0666
+Jul  6 13:51:23 10.71.56.0 tmp94070858-9085 close "/logs/info.py" bytes read 6319 written 0
+Jul  6 13:51:23 10.71.56.0 tmp94070858-9085 [10.71.56.0|get|0|6319|0|0|0|2f6c6f67732f696e666f2e7079|]
+Jul  6 13:52:03 10.71.56.0 tmp94070858-9085 open "/logs/sftp.log" flags READ mode 0666
+Jul  6 13:52:03 10.71.56.0 tmp94070858-9085 close "/logs/sftp.log" bytes read 76492 written 0
+Jul  6 13:52:03 10.71.56.0 tmp94070858-9085 [10.71.56.0|get|0|76492|0|0|0|2f6c6f67732f736674702e6c6f67|]
+Jul  6 13:52:39 10.71.56.0 tmp94070858-9085 open "/logs/last_traffic" flags READ mode 0666
+Jul  6 13:52:39 10.71.56.0 tmp94070858-9085 close "/logs/last_traffic" bytes read 0 written 0
+Jul  6 13:52:39 10.71.56.0 tmp94070858-9085 [10.71.56.0|get|0|0|0|0|0|2f6c6f67732f6c6173745f74726166666963|]
+Jul  6 13:53:04 10.71.56.0 tmp94070858-9085 open "/logs/info.py" flags READ mode 0666
+Jul  6 13:53:04 10.71.56.0 tmp94070858-9085 close "/logs/info.py" bytes read 6319 written 0
+Jul  6 13:53:04 10.71.56.0 tmp94070858-9085 [10.71.56.0|get|0|6319|0|0|0|2f6c6f67732f696e666f2e7079|]
+Jul  6 13:58:21 10.71.56.0 tmp94070858-9085 Connection closed by 10.71.56.0 port 49174
+Jul  6 13:58:21 10.71.56.0 tmp94070858-9085 session closed for local user tmp94070858-9085 from [10.71.56.0]
+Jul  6 17:58:53 10.71.56.0 tmp94070858-8274 Connection from 10.71.56.0 port 18786 on 82.165.86.221 port 22 rdomain ""
+Jul  6 17:58:53 10.71.56.0 tmp94070858-8274 Accepted password for tmp94070858-8274 from 10.71.56.0 port 18786 ssh2
+Jul  6 17:58:53 10.71.56.0 tmp94070858-8274 Starting session: subsystem 'sftp' for tmp94070858-8274 from 10.71.56.0 port 18786 id 0
+Jul  6 17:58:53 10.71.56.0 tmp94070858-8274 session opened for local user tmp94070858-8274 from [10.71.56.0]
+Jul  6 17:59:13 10.71.56.0 tmp94070858-8274 open "/logs/sftp.log" flags READ mode 0666
+Jul  6 17:59:13 10.71.56.0 tmp94070858-8274 close "/logs/sftp.log" bytes read 78022 written 0
+Jul  6 17:59:13 10.71.56.0 tmp94070858-8274 [10.71.56.0|get|0|78022|0|0|0|2f6c6f67732f736674702e6c6f67|]
+Jul  6 18:01:19 10.71.56.0 tmp94070858-8274 session closed for local user tmp94070858-8274 from [10.71.56.0]
+Jul  6 18:01:19 10.71.56.0 tmp94070858-8274 Connection closed by 10.71.56.0 port 18786
+Jul  6 18:01:46 10.71.56.0 tmp94070858-4485 Connection from 10.71.56.0 port 30848 on 82.165.86.221 port 22 rdomain ""
+Jul  6 18:01:46 10.71.56.0 tmp94070858-4485 Accepted password for tmp94070858-4485 from 10.71.56.0 port 30848 ssh2
+Jul  6 18:01:46 10.71.56.0 tmp94070858-4485 Starting session: subsystem 'sftp' for tmp94070858-4485 from 10.71.56.0 port 30848 id 0
+Jul  6 18:01:47 10.71.56.0 tmp94070858-4485 session opened for local user tmp94070858-4485 from [10.71.56.0]
+Jul  6 18:06:52 10.71.56.0 tmp94070858-4485 session closed for local user tmp94070858-4485 from [10.71.56.0]
+Jul  6 18:06:52 10.71.56.0 tmp94070858-4485 Connection closed by 10.71.56.0 port 30848
+Jul  6 18:07:26 10.71.56.0 tmp94070858-5141 Connection from 10.71.56.0 port 23054 on 82.165.86.221 port 22 rdomain ""
+Jul  6 18:07:26 10.71.56.0 tmp94070858-5141 Accepted password for tmp94070858-5141 from 10.71.56.0 port 23054 ssh2
+Jul  6 18:07:26 10.71.56.0 tmp94070858-5141 Starting session: subsystem 'sftp' for tmp94070858-5141 from 10.71.56.0 port 23054 id 0
+Jul  6 18:07:26 10.71.56.0 tmp94070858-5141 session opened for local user tmp94070858-5141 from [10.71.56.0]
+Jul  6 18:07:36 10.71.56.0 tmp94070858-5141 open "/logs/traffic.html/index.html" flags READ mode 0666
+Jul  6 18:07:36 10.71.56.0 tmp94070858-5141 close "/logs/traffic.html/index.html" bytes read 5447 written 0
+Jul  6 18:07:36 10.71.56.0 tmp94070858-5141 [10.71.56.0|get|0|5447|0|0|0|2f6c6f67732f747261666669632e68746d6c2f696e6465782e68746d6c|]
+Jul  6 18:08:25 10.71.56.0 tmp94070858-5141 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  6 18:08:25 10.71.56.0 tmp94070858-5141 close "/login_system/validateLogin.php" bytes read 3800 written 0
+Jul  6 18:08:25 10.71.56.0 tmp94070858-5141 [10.71.56.0|get|0|3800|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  6 18:14:46 10.71.56.0 tmp94070858-5141 session closed for local user tmp94070858-5141 from [10.71.56.0]
+Jul  6 18:14:46 10.71.56.0 tmp94070858-5141 Connection closed by 10.71.56.0 port 23054
+Jul  7 10:54:30 10.71.56.0 tmp94070858-6284 Connection from 10.71.56.0 port 20406 on 82.165.86.221 port 22 rdomain ""
+Jul  7 10:54:30 10.71.56.0 tmp94070858-6284 Accepted password for tmp94070858-6284 from 10.71.56.0 port 20406 ssh2
+Jul  7 10:54:30 10.71.56.0 tmp94070858-6284 Starting session: subsystem 'sftp' for tmp94070858-6284 from 10.71.56.0 port 20406 id 0
+Jul  7 10:54:30 10.71.56.0 tmp94070858-6284 session opened for local user tmp94070858-6284 from [10.71.56.0]
+Jul  7 10:54:58 10.71.56.0 tmp94070858-6284 open "/logs/.htaccess" flags READ mode 0666
+Jul  7 10:54:58 10.71.56.0 tmp94070858-6284 close "/logs/.htaccess" bytes read 267 written 0
+Jul  7 10:54:58 10.71.56.0 tmp94070858-6284 [10.71.56.0|get|0|267|0|0|0|2f6c6f67732f2e6874616363657373|]
+Jul  7 10:55:33 10.71.56.0 tmp94070858-6284 open "/logs/.htaccess" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  7 10:55:33 10.71.56.0 tmp94070858-6284 sent status Permission denied
+Jul  7 10:55:33 10.71.56.0 tmp94070858-6284 Connection closed by 10.71.56.0 port 20406
+Jul  7 10:55:33 10.71.56.0 tmp94070858-6284 session closed for local user tmp94070858-6284 from [10.71.56.0]
+Jul  7 10:55:36 10.71.56.0 tmp94070858-108 Connection from 10.71.56.0 port 21006 on 82.165.86.221 port 22 rdomain ""
+Jul  7 10:55:36 10.71.56.0 tmp94070858-108 Accepted password for tmp94070858-108 from 10.71.56.0 port 21006 ssh2
+Jul  7 10:55:36 10.71.56.0 tmp94070858-108 Starting session: subsystem 'sftp' for tmp94070858-108 from 10.71.56.0 port 21006 id 0
+Jul  7 10:55:36 10.71.56.0 tmp94070858-108 session opened for local user tmp94070858-108 from [10.71.56.0]
+Jul  7 10:55:36 10.71.56.0 tmp94070858-108 open "/logs/.htaccess" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  7 10:55:36 10.71.56.0 tmp94070858-108 sent status Permission denied
+Jul  7 10:55:36 10.71.56.0 tmp94070858-108 session closed for local user tmp94070858-108 from [10.71.56.0]
+Jul  7 10:55:36 10.71.56.0 tmp94070858-108 Connection closed by 10.71.56.0 port 21006
+Jul  7 10:55:39 10.71.56.0 tmp94070858-108 Connection from 10.71.56.0 port 53512 on 82.165.86.221 port 22 rdomain ""
+Jul  7 10:55:39 10.71.56.0 tmp94070858-108 Accepted password for tmp94070858-108 from 10.71.56.0 port 53512 ssh2
+Jul  7 10:55:50 10.71.56.0 tmp94070858-108 Connection from 10.71.56.0 port 21242 on 82.165.86.221 port 22 rdomain ""
+Jul  7 10:55:50 10.71.56.0 tmp94070858-108 Accepted password for tmp94070858-108 from 10.71.56.0 port 21242 ssh2
+Jul  7 10:55:50 10.71.56.0 tmp94070858-108 Starting session: subsystem 'sftp' for tmp94070858-108 from 10.71.56.0 port 21242 id 0
+Jul  7 10:55:50 10.71.56.0 tmp94070858-108 session opened for local user tmp94070858-108 from [10.71.56.0]
+Jul  7 10:55:50 10.71.56.0 tmp94070858-108 open "/logs/.htaccess" flags READ mode 0666
+Jul  7 10:55:50 10.71.56.0 tmp94070858-108 close "/logs/.htaccess" bytes read 267 written 0
+Jul  7 10:55:50 10.71.56.0 tmp94070858-108 [10.71.56.0|get|0|267|0|0|0|2f6c6f67732f2e6874616363657373|]
+Jul  7 10:55:58 10.71.56.0 tmp94070858-108 Connection closed by 10.71.56.0 port 21242
+Jul  7 10:55:58 10.71.56.0 tmp94070858-108 open "/logs/.htaccess" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  7 10:55:58 10.71.56.0 tmp94070858-108 sent status Permission denied
+Jul  7 10:55:58 10.71.56.0 tmp94070858-108 session closed for local user tmp94070858-108 from [10.71.56.0]
+Jul  7 10:56:00 10.71.56.0 tmp94070858-108 Connection from 10.71.56.0 port 21296 on 82.165.86.221 port 22 rdomain ""
+Jul  7 10:56:00 10.71.56.0 tmp94070858-108 Accepted password for tmp94070858-108 from 10.71.56.0 port 21296 ssh2
+Jul  7 10:56:00 10.71.56.0 tmp94070858-108 Starting session: subsystem 'sftp' for tmp94070858-108 from 10.71.56.0 port 21296 id 0
+Jul  7 10:56:00 10.71.56.0 tmp94070858-108 session opened for local user tmp94070858-108 from [10.71.56.0]
+Jul  7 10:56:00 10.71.56.0 tmp94070858-108 open "/logs/.htaccess" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  7 10:56:00 10.71.56.0 tmp94070858-108 sent status Permission denied
+Jul  7 10:56:00 10.71.56.0 tmp94070858-108 session closed for local user tmp94070858-108 from [10.71.56.0]
+Jul  7 10:56:00 10.71.56.0 tmp94070858-108 Connection closed by 10.71.56.0 port 21296
+Jul  7 10:56:10 10.71.56.0 tmp94070858-108 Connection from 10.71.56.0 port 21380 on 82.165.86.221 port 22 rdomain ""
+Jul  7 10:56:10 10.71.56.0 tmp94070858-108 Accepted password for tmp94070858-108 from 10.71.56.0 port 21380 ssh2
+Jul  7 10:56:10 10.71.56.0 tmp94070858-108 Starting session: subsystem 'sftp' for tmp94070858-108 from 10.71.56.0 port 21380 id 0
+Jul  7 10:56:10 10.71.56.0 tmp94070858-108 session opened for local user tmp94070858-108 from [10.71.56.0]
+Jul  7 10:58:24 10.71.56.0 tmp94070858-108 open "/logs/info.py" flags READ mode 0666
+Jul  7 10:58:24 10.71.56.0 tmp94070858-108 close "/logs/info.py" bytes read 6319 written 0
+Jul  7 10:58:24 10.71.56.0 tmp94070858-108 [10.71.56.0|get|0|6319|0|0|0|2f6c6f67732f696e666f2e7079|]
+Jul  7 10:58:47 10.71.56.0 tmp94070858-108 open "/logs/traffic.html/.htaccess" flags READ mode 0666
+Jul  7 10:58:47 10.71.56.0 tmp94070858-108 close "/logs/traffic.html/.htaccess" bytes read 23 written 0
+Jul  7 10:58:47 10.71.56.0 tmp94070858-108 [10.71.56.0|get|0|23|0|0|0|2f6c6f67732f747261666669632e68746d6c2f2e6874616363657373|]
+Jul  7 11:01:00 10.71.56.0 tmp94070858-108 Connection closed by 10.71.56.0 port 53512
+Jul  7 11:01:16 10.71.56.0 tmp94070858-108 session closed for local user tmp94070858-108 from [10.71.56.0]
+Jul  7 11:01:16 10.71.56.0 tmp94070858-108 Connection closed by 10.71.56.0 port 21380
+Jul  7 11:01:27 10.71.57.0 tmp94070858-7231 Connection from 10.71.57.0 port 46324 on 82.165.86.221 port 22 rdomain ""
+Jul  7 11:01:28 10.71.57.0 tmp94070858-7231 Accepted password for tmp94070858-7231 from 10.71.57.0 port 46324 ssh2
+Jul  7 11:01:28 10.71.57.0 tmp94070858-7231 Starting session: subsystem 'sftp' for tmp94070858-7231 from 10.71.57.0 port 46324 id 0
+Jul  7 11:01:28 10.71.57.0 tmp94070858-7231 session opened for local user tmp94070858-7231 from [10.71.57.0]
+Jul  7 11:01:28 10.71.57.0 tmp94070858-7231 open "/logs/.htaccess" flags READ mode 0666
+Jul  7 11:01:28 10.71.57.0 tmp94070858-7231 close "/logs/.htaccess" bytes read 267 written 0
+Jul  7 11:01:28 10.71.57.0 tmp94070858-7231 [10.71.57.0|get|0|267|0|0|0|2f6c6f67732f2e6874616363657373|]
+Jul  7 11:02:08 10.71.57.0 tmp94070858-7231 open "/logs/.htaccess" flags READ mode 0666
+Jul  7 11:02:08 10.71.57.0 tmp94070858-7231 close "/logs/.htaccess" bytes read 267 written 0
+Jul  7 11:02:08 10.71.57.0 tmp94070858-7231 [10.71.57.0|get|0|267|0|0|0|2f6c6f67732f2e6874616363657373|]
+Jul  7 11:02:28 10.71.57.0 tmp94070858-7231 open "/logs/info.py" flags READ mode 0666
+Jul  7 11:02:28 10.71.57.0 tmp94070858-7231 close "/logs/info.py" bytes read 6319 written 0
+Jul  7 11:02:28 10.71.57.0 tmp94070858-7231 [10.71.57.0|get|0|6319|0|0|0|2f6c6f67732f696e666f2e7079|]
+Jul  7 11:03:03 10.71.57.0 tmp94070858-7231 open "/logs/access.log.current" flags READ mode 0666
+Jul  7 11:03:03 10.71.57.0 tmp94070858-7231 close "/logs/access.log.current" bytes read 53544 written 0
+Jul  7 11:03:03 10.71.57.0 tmp94070858-7231 [10.71.57.0|get|0|53544|0|0|0|2f6c6f67732f6163636573732e6c6f672e63757272656e74|]
+Jul  7 11:08:03 10.71.57.0 tmp94070858-7231 session closed for local user tmp94070858-7231 from [10.71.57.0]
+Jul  7 11:08:03 10.71.57.0 tmp94070858-7231 Connection closed by 10.71.57.0 port 46324
+Jul  7 11:12:31 10.71.57.0 tmp94070858-1190 Connection from 10.71.57.0 port 53956 on 82.165.86.221 port 22 rdomain ""
+Jul  7 11:12:31 10.71.57.0 tmp94070858-1190 Accepted password for tmp94070858-1190 from 10.71.57.0 port 53956 ssh2
+Jul  7 11:12:31 10.71.57.0 tmp94070858-1190 Starting session: subsystem 'sftp' for tmp94070858-1190 from 10.71.57.0 port 53956 id 0
+Jul  7 11:12:31 10.71.57.0 tmp94070858-1190 session opened for local user tmp94070858-1190 from [10.71.57.0]
+Jul  7 11:17:31 10.71.57.0 tmp94070858-1190 session closed for local user tmp94070858-1190 from [10.71.57.0]
+Jul  7 11:17:31 10.71.57.0 tmp94070858-1190 Connection closed by 10.71.57.0 port 53956
+Jul  7 11:28:45 10.71.57.0 tmp94070858-1106 Connection from 10.71.57.0 port 62378 on 82.165.86.221 port 22 rdomain ""
+Jul  7 11:28:45 10.71.57.0 tmp94070858-1106 Accepted password for tmp94070858-1106 from 10.71.57.0 port 62378 ssh2
+Jul  7 11:28:46 10.71.57.0 tmp94070858-1106 Starting session: subsystem 'sftp' for tmp94070858-1106 from 10.71.57.0 port 62378 id 0
+Jul  7 11:28:46 10.71.57.0 tmp94070858-1106 session opened for local user tmp94070858-1106 from [10.71.57.0]
+Jul  7 11:28:46 10.71.57.0 tmp94070858-1106 open "/logs/info.pl" flags READ mode 0666
+Jul  7 11:28:46 10.71.57.0 tmp94070858-1106 close "/logs/info.pl" bytes read 4176 written 0
+Jul  7 11:28:46 10.71.57.0 tmp94070858-1106 [10.71.57.0|get|0|4176|0|0|0|2f6c6f67732f696e666f2e706c|]
+Jul  7 11:29:09 10.71.57.0 tmp94070858-1106 open "/logs/info.php5" flags READ mode 0666
+Jul  7 11:29:09 10.71.57.0 tmp94070858-1106 close "/logs/info.php5" bytes read 21 written 0
+Jul  7 11:29:09 10.71.57.0 tmp94070858-1106 [10.71.57.0|get|0|21|0|0|0|2f6c6f67732f696e666f2e70687035|]
+Jul  7 11:31:18 10.71.57.0 tmp94070858-1106 open "/logs/.htaccess" flags READ mode 0666
+Jul  7 11:31:18 10.71.57.0 tmp94070858-1106 close "/logs/.htaccess" bytes read 267 written 0
+Jul  7 11:31:18 10.71.57.0 tmp94070858-1106 [10.71.57.0|get|0|267|0|0|0|2f6c6f67732f2e6874616363657373|]
+Jul  7 11:31:47 10.71.57.0 tmp94070858-1106 open "/logs/.htaccess" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  7 11:31:47 10.71.57.0 tmp94070858-1106 sent status Permission denied
+Jul  7 11:31:47 10.71.57.0 tmp94070858-1106 session closed for local user tmp94070858-1106 from [10.71.57.0]
+Jul  7 11:31:47 10.71.57.0 tmp94070858-1106 Connection closed by 10.71.57.0 port 62378
+Jul  7 11:31:51 10.71.57.0 tmp94070858-4349 Connection from 10.71.57.0 port 43186 on 82.165.86.221 port 22 rdomain ""
+Jul  7 11:31:51 10.71.57.0 tmp94070858-4349 Accepted password for tmp94070858-4349 from 10.71.57.0 port 43186 ssh2
+Jul  7 11:31:51 10.71.57.0 tmp94070858-4349 Starting session: subsystem 'sftp' for tmp94070858-4349 from 10.71.57.0 port 43186 id 0
+Jul  7 11:31:51 10.71.57.0 tmp94070858-4349 session opened for local user tmp94070858-4349 from [10.71.57.0]
+Jul  7 11:31:51 10.71.57.0 tmp94070858-4349 open "/logs/.htaccess" flags WRITE,CREATE,TRUNCATE mode 0666
+Jul  7 11:31:51 10.71.57.0 tmp94070858-4349 sent status Permission denied
+Jul  7 11:31:51 10.71.57.0 tmp94070858-4349 Connection closed by 10.71.57.0 port 43186
+Jul  7 11:31:51 10.71.57.0 tmp94070858-4349 session closed for local user tmp94070858-4349 from [10.71.57.0]
+Jul  7 11:31:54 10.71.57.0 tmp94070858-4349 Connection from 10.71.57.0 port 43208 on 82.165.86.221 port 22 rdomain ""
+Jul  7 11:31:54 10.71.57.0 tmp94070858-4349 Accepted password for tmp94070858-4349 from 10.71.57.0 port 43208 ssh2
+Jul  7 11:33:46 10.71.57.0 tmp94070858-3456 Connection from 10.71.57.0 port 65012 on 82.165.86.221 port 22 rdomain ""
+Jul  7 11:33:46 10.71.57.0 tmp94070858-3456 Accepted password for tmp94070858-3456 from 10.71.57.0 port 65012 ssh2
+Jul  7 11:33:46 10.71.57.0 tmp94070858-3456 Starting session: subsystem 'sftp' for tmp94070858-3456 from 10.71.57.0 port 65012 id 0
+Jul  7 11:33:46 10.71.57.0 tmp94070858-3456 session opened for local user tmp94070858-3456 from [10.71.57.0]
+Jul  7 11:35:20 10.71.57.0 tmp94070858-9780 Connection from 10.71.57.0 port 41380 on 82.165.86.221 port 22 rdomain ""
+Jul  7 11:35:20 10.71.57.0 tmp94070858-9780 Accepted password for tmp94070858-9780 from 10.71.57.0 port 41380 ssh2
+Jul  7 11:35:21 10.71.57.0 tmp94070858-9780 Starting session: subsystem 'sftp' for tmp94070858-9780 from 10.71.57.0 port 41380 id 0
+Jul  7 11:35:21 10.71.57.0 tmp94070858-9780 session opened for local user tmp94070858-9780 from [10.71.57.0]
+Jul  7 11:35:37 10.71.57.0 tmp94070858-9780 open "/login_system/validateLogin.php" flags READ mode 0666
+Jul  7 11:35:37 10.71.57.0 tmp94070858-9780 close "/login_system/validateLogin.php" bytes read 3800 written 0
+Jul  7 11:35:37 10.71.57.0 tmp94070858-9780 [10.71.57.0|get|0|3800|0|0|0|2f6c6f67696e5f73797374656d2f76616c69646174654c6f67696e2e706870|]
+Jul  7 11:36:54 10.71.57.0 tmp94070858-4349 Connection closed by 10.71.57.0 port 43208
+Jul  7 11:37:17 10.71.57.0 tmp94070858-3414 Connection from 10.71.57.0 port 42158 on 82.165.86.221 port 22 rdomain ""
+Jul  7 11:37:17 10.71.57.0 tmp94070858-3414 Accepted password for tmp94070858-3414 from 10.71.57.0 port 42158 ssh2
+Jul  7 11:39:14 10.71.57.0 tmp94070858-3456 session closed for local user tmp94070858-3456 from [10.71.57.0]
+Jul  7 11:39:14 10.71.57.0 tmp94070858-3456 Connection closed by 10.71.57.0 port 65012
+Jul  7 11:39:16 10.71.57.0 tmp94070858-9780 open "/logs/.htaccess" flags READ mode 0666
+Jul  7 11:39:16 10.71.57.0 tmp94070858-9780 close "/logs/.htaccess" bytes read 267 written 0
+Jul  7 11:39:16 10.71.57.0 tmp94070858-9780 [10.71.57.0|get|0|267|0|0|0|2f6c6f67732f2e6874616363657373|]
+Jul  7 11:39:40 10.71.57.0 tmp94070858-9780 open "/logs/traffic.html/.htaccess" flags READ mode 0666
+Jul  7 11:39:40 10.71.57.0 tmp94070858-9780 close "/logs/traffic.html/.htaccess" bytes read 23 written 0
+Jul  7 11:39:40 10.71.57.0 tmp94070858-9780 [10.71.57.0|get|0|23|0|0|0|2f6c6f67732f747261666669632e68746d6c2f2e6874616363657373|]
+Jul  7 11:39:56 10.71.57.0 tmp94070858-9780 open "/logs/traffic.db" flags READ mode 0666
+Jul  7 11:39:56 10.71.57.0 tmp94070858-9780 close "/logs/traffic.db" bytes read 49152 written 0
+Jul  7 11:39:56 10.71.57.0 tmp94070858-9780 [10.71.57.0|get|0|49152|0|0|0|2f6c6f67732f747261666669632e6462|]
+Jul  7 11:40:07 10.71.57.0 tmp94070858-9780 open "/logs/sftp.log" flags READ mode 0666

@@ -199,6 +199,14 @@ if ($entity == "aziende") {
 	echo deleteDirectory($id, $currentDateAndTime);
 } else if ($entity == 'documenti') {
 	echo deleteFile($id, $currentDateAndTime);
+} else if ($entity == 'dipendenti') {
+    $updateQuery = "UPDATE DIPENDENTI SET E_ATTIVO = 0, DATA_FINE = ? WHERE DIPENDENTE_ID = ?";
+    $stmtUpdate = mysqli_prepare($conn, $updateQuery);
+    mysqli_stmt_bind_param($stmtUpdate, "ii", $left_date, $id);
+    mysqli_stmt_execute($stmtUpdate);
+   	mysqli_stmt_close($stmtUpdate);
+
+    insertIntoLogs($conn, $_SESSION['user_id'], 'DIPENDENTI', $id, $currentDateAndTime);  
 }
 
 function insertIntoLogs($conn, $userId, $entity, $entityId, $actionDate) {
@@ -225,62 +233,111 @@ function insertIntoLogsUTENTI_AZIENDA($conn, $userId, $entity, $aziendaId, $uten
    	mysqli_stmt_close($stmtLog01);
 }
 
-function deleteFile($id, $currentDateAndTime){
-	include 'database/config.php';
+function deleteFile($filePath, $currentDateAndTime) {
+    include 'database/config.php';
     include 'database/opendb.php';
-    unlink($id);
-  
-   	$selectQuery = "SELECT DOCUMENTO_ID FROM DOCUMENTI WHERE PERCORSO = ? AND E_ATTIVO = 1";
-    $stmtSelect = mysqli_prepare($conn, $selectQuery);
-    
-  	if (!$stmtSelect) {
-      	throw new Exception("Impossibile preparare l'istruzione select");
+	include 'nas/credentials.php';
+
+    // Encode the file path
+    $encodedFileName = rawurlencode(basename($filePath));
+    $fileUrl = $baseUrl . '/' . rawurlencode(dirname($filePath)) . '/' . $encodedFileName;
+
+    // Send WebDAV DELETE request
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $filePath);
+    curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curlError = curl_error($ch);
+    curl_close($ch);
+
+    // Log WebDAV response
+    error_log("HTTP Code: $httpCode");
+    error_log("Response: $response");
+    error_log("cURL Error: $curlError");
+
+    // Check if the deletion was successful
+    if ($httpCode != 204 && $httpCode != 200) {
+        throw new Exception("Impossibile eliminare il file. URL: $filePath. Codice HTTP: $httpCode");
     }
-  
-  	mysqli_stmt_bind_param($stmtSelect, "s", $id);
+
+    // Mark the file as deleted in the database
+    $selectQuery = "SELECT DOCUMENTO_ID FROM DOCUMENTI WHERE PERCORSO = ? AND E_ATTIVO = 1";
+    $stmtSelect = mysqli_prepare($conn, $selectQuery);
+    if (!$stmtSelect) {
+        throw new Exception("Impossibile preparare l'istruzione SELECT: " . mysqli_error($conn));
+    }
+    mysqli_stmt_bind_param($stmtSelect, "s", $filePath);
     mysqli_stmt_execute($stmtSelect);
     mysqli_stmt_bind_result($stmtSelect, $documentoId);
     mysqli_stmt_fetch($stmtSelect);
     mysqli_stmt_close($stmtSelect);
-  	
-  	$updateQuery = "UPDATE DOCUMENTI SET E_ATTIVO = 0, DATA_CANCELLATA = ? WHERE DOCUMENTO_ID = ? AND E_ATTIVO = 1";
+
+    $updateQuery = "UPDATE DOCUMENTI SET E_ATTIVO = 0, DATA_CANCELLATA = ? WHERE DOCUMENTO_ID = ?";
     $stmtUpdate = mysqli_prepare($conn, $updateQuery);
-    
-  	if (!$stmtUpdate) {
-		throw new Exception("Impossibile preparare l'istruzione update");
+    if (!$stmtUpdate) {
+        throw new Exception("Impossibile preparare l'istruzione UPDATE: " . mysqli_error($conn));
     }
-    
-  	mysqli_stmt_bind_param($stmtUpdate, "si", $currentDateAndTime, $documentoId);
+    mysqli_stmt_bind_param($stmtUpdate, "si", $currentDateAndTime, $documentoId);
     mysqli_stmt_execute($stmtUpdate);
     mysqli_stmt_close($stmtUpdate);
 
-  	insertIntoLogs($conn, $_SESSION['user_id'], 'DOCUMENTI', $documentoId, $currentDateAndTime);
+    insertIntoLogs($conn, $_SESSION['user_id'], 'DOCUMENTI', $documentoId, $currentDateAndTime);
+
     include 'database/closedb.php';
 }
+
 
 function deleteDirectory($dirPath, $currentDateAndTime) {
     include 'database/config.php';
     include 'database/opendb.php';
-  
-    if (!is_dir($dirPath)) {
+
+    $baseUrl = "http://2.36.247.103:5000";
+    $username = "endi";
+    $password = "Endi12345!";
+
+/*    if (!is_dir($dirPath)) {
         throw new InvalidArgumentException("$dirPath must be a directory");
     }
+*/
+    // Add trailing slash if not present
     if (substr($dirPath, -1) != '/') {
         $dirPath .= '/';
     }
+
+    // Get all files and subdirectories in the directory
     $files = glob($dirPath . '*', GLOB_MARK);
 
     foreach ($files as $file) {
         if (is_dir($file)) {
+            // Recursive call to delete subdirectories
             deleteDirectory($file, $currentDateAndTime);
         } else {
-            if (!unlink($file)) {
-                throw new Exception("Impossibile eliminare il documento $file");
+            // Delete individual files via WebDAV
+            $fileUrl = $baseUrl . '/' . ltrim($file, '/');
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $fileUrl);
+            curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($ch);
+            curl_close($ch);
+
+            if ($httpCode != 204 && $httpCode != 200) {
+                throw new Exception("Impossibile eliminare il documento $file. Codice: $httpCode. Errore cURL: $curlError");
             }
+
+            // Update the database for deleted files
             $selectQuery = "SELECT DOCUMENTO_ID FROM DOCUMENTI WHERE PERCORSO = ? AND E_ATTIVO = 1";
             $stmtSelect = mysqli_prepare($conn, $selectQuery);
             if (!$stmtSelect) {
-                throw new Exception("Impossibile preparare l'istruzione select");
+                throw new Exception("Impossibile preparare l'istruzione select: " . mysqli_error($conn));
             }
             mysqli_stmt_bind_param($stmtSelect, "s", $file);
             mysqli_stmt_execute($stmtSelect);
@@ -291,7 +348,7 @@ function deleteDirectory($dirPath, $currentDateAndTime) {
             $updateQuery = "UPDATE DOCUMENTI SET E_ATTIVO = 0, DATA_CANCELLATA = ? WHERE DOCUMENTO_ID = ? AND E_ATTIVO = 1";
             $stmtUpdate = mysqli_prepare($conn, $updateQuery);
             if (!$stmtUpdate) {
-                throw new Exception("Impossibile preparare l'istruzione update");
+                throw new Exception("Impossibile preparare l'istruzione update: " . mysqli_error($conn));
             }
             mysqli_stmt_bind_param($stmtUpdate, "si", $currentDateAndTime, $documentoId);
             mysqli_stmt_execute($stmtUpdate);
@@ -300,13 +357,29 @@ function deleteDirectory($dirPath, $currentDateAndTime) {
             insertIntoLogs($conn, $_SESSION['user_id'], 'DOCUMENTI', $documentoId, $currentDateAndTime);
         }
     }
-    if (!rmdir($dirPath)) {
-        throw new Exception("Impossibile rimuovere la directory $dirPath");
+
+    // Delete the directory via WebDAV
+    $dirUrl = $baseUrl . '/' . ltrim($dirPath, '/');
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $dirUrl);
+    curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curlError = curl_error($ch);
+    curl_close($ch);
+
+    if ($httpCode != 204 && $httpCode != 200) {
+        throw new Exception("Impossibile rimuovere la directory $dirPath. Codice: $httpCode. Errore cURL: $curlError");
     } else {
         insertIntoLogs($conn, $_SESSION['user_id'], 'CARTELLE', $dirPath, $currentDateAndTime);
     }
+
     include 'database/closedb.php';
 }
+
 
 
 include 'database/closedb.php';

@@ -1,13 +1,18 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 include 'auth_check.php';
 
 include 'database/config.php';
 include 'database/opendb.php';
+include 'nas/credentials.php';
+include 'nas/nas_functions.php';
 
 $id = $_GET['id'];
 $entity = $_GET['entity'];
 date_default_timezone_set('Europe/Berlin');
-
+$errorMessage = '';
+$successfulMessage = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['update_user'])) {
@@ -20,22 +25,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $user_number = mysqli_real_escape_string($conn, $_POST['user_number']);
         $user_joined_date = empty(mysqli_real_escape_string($conn, $_POST['user_joined_date'])) ? null : mysqli_real_escape_string($conn, $_POST['user_joined_date']);
         $user_left_date = empty(mysqli_real_escape_string($conn, $_POST['user_left_date'])) ? null : mysqli_real_escape_string($conn, $_POST['user_left_date']);
-       
 
         $sql = "";
-      
+
         if (empty($user_password)) {
-                  $fields = [
-    		'NOME' => $user_first_name,
-    		'COGNOME' => $user_last_name,
-    		'EMAIL' => $user_email,
-    		'RUOLO' => $user_role,
-    		'NUMERO' => $user_number,
-    		'AZIENDA_POSIZIONE' => $user_position,
-    		'DATA_INIZIO' => $user_joined_date,
-    		'DATA_FINE' => $user_left_date
-		];
-                  $existingEntity = oldRecord($entity, $id);
+            $fields = [
+                'NOME' => $user_first_name,
+                'COGNOME' => $user_last_name,
+                'EMAIL' => $user_email,
+                'RUOLO' => $user_role,
+                'NUMERO' => $user_number,
+                'AZIENDA_POSIZIONE' => $user_position,
+                'DATA_INIZIO' => $user_joined_date,
+                'DATA_FINE' => $user_left_date
+            ];
+            $existingEntity = oldRecord($entity, $id);
 
             $sql = "UPDATE UTENTI 
                     SET NOME = ?, 
@@ -50,18 +54,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $params = array($user_first_name, $user_last_name, $user_email, $user_role, $user_number, $user_position, $user_joined_date, $user_left_date, $id);
         } else {
             $hashed_password = password_hash($user_password, PASSWORD_BCRYPT);
-        $fields = [
-    		'NOME' => $user_first_name,
-    		'COGNOME' => $user_last_name,
-    		'EMAIL' => $user_email,
-        	'PASSWORD' => $user_password,
-    		'RUOLO' => $user_role,
-    		'NUMERO' => $user_number,
-    		'AZIENDA_POSIZIONE' => $user_position,
-    		'DATA_INIZIO' => $user_joined_date,
-    		'DATA_FINE' => $user_left_date
-		];
-                  $existingEntity = oldRecord($entity, $id);
+            $fields = [
+                'NOME' => $user_first_name,
+                'COGNOME' => $user_last_name,
+                'EMAIL' => $user_email,
+                'PASSWORD' => $user_password,
+                'RUOLO' => $user_role,
+                'NUMERO' => $user_number,
+                'AZIENDA_POSIZIONE' => $user_position,
+                'DATA_INIZIO' => $user_joined_date,
+                'DATA_FINE' => $user_left_date
+            ];
+            $existingEntity = oldRecord($entity, $id);
 
             $sql = "UPDATE UTENTI 
                     SET NOME = ?, 
@@ -79,7 +83,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         try {
             $stmt = mysqli_prepare($conn, $sql);
-			$modifiedDate = date("Y-m-d H:i:s");
+            $modifiedDate = date("Y-m-d H:i:s");
 
             if ($stmt) {
                 if (empty($user_password)) {
@@ -88,66 +92,66 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     mysqli_stmt_bind_param($stmt, "ssssissssi", ...$params);
                 }
                 if (mysqli_stmt_execute($stmt)) {
-                  	mysqli_stmt_close($stmt);
+                    mysqli_stmt_close($stmt);
 
                     $existingCompaniesQuery = "SELECT AZIENDA_ID FROM UTENTI_AZIENDE WHERE UTENTE_ID = ?";
-					$stmt = mysqli_prepare($conn, $existingCompaniesQuery);
-					mysqli_stmt_bind_param($stmt, "i", $id);
-					mysqli_stmt_execute($stmt);
-					$result = mysqli_stmt_get_result($stmt);
+                    $stmt = mysqli_prepare($conn, $existingCompaniesQuery);
+                    mysqli_stmt_bind_param($stmt, "i", $id);
+                    mysqli_stmt_execute($stmt);
+                    $result = mysqli_stmt_get_result($stmt);
 
-					$existingCompanies = [];
-					while ($row = mysqli_fetch_assoc($result)) {
-    					$existingCompanies[] = $row['AZIENDA_ID'];
-					}
-					mysqli_stmt_close($stmt);
+                    $existingCompanies = [];
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        $existingCompanies[] = $row['AZIENDA_ID'];
+                    }
+                    mysqli_stmt_close($stmt);
 
-					$newCompanies = isset($_POST['user_companies']) ? $_POST['user_companies'] : [];
-					$companiesToAdd = array_diff($newCompanies, $existingCompanies);
-					$companiesToRemove = array_diff($existingCompanies, $newCompanies);
+                    $newCompanies = isset($_POST['user_companies']) ? $_POST['user_companies'] : [];
+                    $companiesToAdd = array_diff($newCompanies, $existingCompanies);
+                    $companiesToRemove = array_diff($existingCompanies, $newCompanies);
 
-					if (!empty($companiesToRemove)) {
-    					foreach ($companiesToRemove as $companyToRemove) {
-        					$deleteQuery = "DELETE FROM UTENTI_AZIENDE WHERE UTENTE_ID = ? AND AZIENDA_ID = ?";
-        					$stmt = mysqli_prepare($conn, $deleteQuery);
-        					mysqli_stmt_bind_param($stmt, "ii", $id, $companyToRemove);
-        					mysqli_stmt_execute($stmt);
-        					mysqli_stmt_close($stmt);
-                          
-                          
-                           	$logSql = "INSERT INTO LOGS (UTENTE_ID, ENTITA, UA_UTENTE_ID, AZIONE, UA_AZIENDA_ID, DATA_ORA) 
+                    if (!empty($companiesToRemove)) {
+                        foreach ($companiesToRemove as $companyToRemove) {
+                            $deleteQuery = "DELETE FROM UTENTI_AZIENDE WHERE UTENTE_ID = ? AND AZIENDA_ID = ?";
+                            $stmt = mysqli_prepare($conn, $deleteQuery);
+                            mysqli_stmt_bind_param($stmt, "ii", $id, $companyToRemove);
+                            mysqli_stmt_execute($stmt);
+                            mysqli_stmt_close($stmt);
+
+
+                            $logSql = "INSERT INTO LOGS (UTENTE_ID, ENTITA, UA_UTENTE_ID, AZIONE, UA_AZIENDA_ID, DATA_ORA) 
                             			VALUES (?, 'UTENTI_AZIENDE', ?, 'Eliminare', ?, ?)";
-        					$logStmt = mysqli_prepare($conn, $logSql);
-        					mysqli_stmt_bind_param($logStmt, "iiss", $_SESSION["user_id"], $id, $companyToRemove, $modifiedDate);
-        					mysqli_stmt_execute($logStmt);
-        					mysqli_stmt_close($logStmt);
-    					}
-					}
+                            $logStmt = mysqli_prepare($conn, $logSql);
+                            mysqli_stmt_bind_param($logStmt, "iiss", $_SESSION["user_id"], $id, $companyToRemove, $modifiedDate);
+                            mysqli_stmt_execute($logStmt);
+                            mysqli_stmt_close($logStmt);
+                        }
+                    }
 
-                  	$isChangedUtentiAziende = false;
-					if (!empty($companiesToAdd)) {
-    					foreach ($companiesToAdd as $companyToAdd) {
-        					$insertQuery = "INSERT INTO UTENTI_AZIENDE (UTENTE_ID, AZIENDA_ID) VALUES (?, ?)";
-        					$stmt = mysqli_prepare($conn, $insertQuery);
-        					mysqli_stmt_bind_param($stmt, "ii", $id, $companyToAdd);
-        					mysqli_stmt_execute($stmt);
-        					mysqli_stmt_close($stmt);
-                          
-                          
-							$logSql = "INSERT INTO LOGS (UTENTE_ID, ENTITA, UA_UTENTE_ID, AZIONE, UA_AZIENDA_ID, DATA_ORA) 
+                    $isChangedUtentiAziende = false;
+                    if (!empty($companiesToAdd)) {
+                        foreach ($companiesToAdd as $companyToAdd) {
+                            $insertQuery = "INSERT INTO UTENTI_AZIENDE (UTENTE_ID, AZIENDA_ID) VALUES (?, ?)";
+                            $stmt = mysqli_prepare($conn, $insertQuery);
+                            mysqli_stmt_bind_param($stmt, "ii", $id, $companyToAdd);
+                            mysqli_stmt_execute($stmt);
+                            mysqli_stmt_close($stmt);
+
+
+                            $logSql = "INSERT INTO LOGS (UTENTE_ID, ENTITA, UA_UTENTE_ID, AZIONE, UA_AZIENDA_ID, DATA_ORA) 
                             			VALUES (?, 'UTENTI_AZIENDE', ?, 'Creare', ?, ?)";
-        					$logStmt = mysqli_prepare($conn, $logSql);
-        					mysqli_stmt_bind_param($logStmt, "iiss", $_SESSION["user_id"], $id, $companyToAdd, $modifiedDate);
-        					mysqli_stmt_execute($logStmt);
-        					mysqli_stmt_close($logStmt);
-    					}
-                      	$isChangedUtentiAziende = true;
-					}
+                            $logStmt = mysqli_prepare($conn, $logSql);
+                            mysqli_stmt_bind_param($logStmt, "iiss", $_SESSION["user_id"], $id, $companyToAdd, $modifiedDate);
+                            mysqli_stmt_execute($logStmt);
+                            mysqli_stmt_close($logStmt);
+                        }
+                        $isChangedUtentiAziende = true;
+                    }
                     $isChangedUser = insertIntoLogs($fields, $entity, $id, $existingEntity);
-				
+
                     $isChanged = $isChangedUtentiAziende || $isChangedUser;
 
-                  	
+
                     $isChanged ? $successfulMessage = "Utente Aggiornato con Successo" : $infoMessage = "Non Hai Modificato Alcun Attributo";
                 } else {
                     mysqli_stmt_close($stmt);
@@ -180,31 +184,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $company_joined_date = empty(mysqli_real_escape_string($conn, $_POST['company_joined_date'])) ? null : mysqli_real_escape_string($conn, $_POST['company_joined_date']);
         $company_left_date = empty(mysqli_real_escape_string($conn, $_POST['company_left_date'])) ? null : mysqli_real_escape_string($conn, $_POST['company_left_date']);
 
-		$fields = [
-    		'AZIENDA_NOME' => $company_name,
-    		'PARTITA_IVA' => $company_nipt,
-    		'CODICE_FISCALE' => $company_codice_fiscale,
-    		'CONTATTO_1' => $company_contact1,
-    		'CONTATTO_2' => $company_contact2,
-    		'CONTATTO_3' => $company_contact3,
-    		'EMAIL_1' => $company_email1,
-    		'EMAIL_2' => $company_email2,
-    		'EMAIL_3' => $company_email3,
-    		'TELEFONO_1' => $company_telephone1,
-    		'TELEFONO_2' => $company_telephone2,
-    		'TELEFONO_3' => $company_telephone3,
-    		'INDIRIZZO' => $company_address,
-    		'CITTA' => $company_city,
-    		'INDIRIZZO_PEC' => $company_address_pec,
-    		'DATA_INIZIO' => $company_joined_date,
-    		'DATA_FINE' => $company_left_date,
-    		'WEBSITE' => $company_website,
-    		'INFORMAZIONI' => $company_information
+        $fields = [
+            'AZIENDA_NOME' => $company_name,
+            'PARTITA_IVA' => $company_nipt,
+            'CODICE_FISCALE' => $company_codice_fiscale,
+            'CONTATTO_1' => $company_contact1,
+            'CONTATTO_2' => $company_contact2,
+            'CONTATTO_3' => $company_contact3,
+            'EMAIL_1' => $company_email1,
+            'EMAIL_2' => $company_email2,
+            'EMAIL_3' => $company_email3,
+            'TELEFONO_1' => $company_telephone1,
+            'TELEFONO_2' => $company_telephone2,
+            'TELEFONO_3' => $company_telephone3,
+            'INDIRIZZO' => $company_address,
+            'CITTA' => $company_city,
+            'INDIRIZZO_PEC' => $company_address_pec,
+            'DATA_INIZIO' => $company_joined_date,
+            'DATA_FINE' => $company_left_date,
+            'WEBSITE' => $company_website,
+            'INFORMAZIONI' => $company_information
         ];
-      
+
         $existingEntity = oldRecord($entity, $id);
         $sql = '';
-      	$sql = "UPDATE AZIENDE 
+        $sql = "UPDATE AZIENDE 
                 SET AZIENDA_NOME = ?,
                     PARTITA_IVA = ?,
                     CODICE_FISCALE = ?,
@@ -274,20 +278,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $structure_information = mysqli_real_escape_string($conn, $_POST['structure_information']);
         $structure_joined_date = empty(mysqli_real_escape_string($conn, $_POST['structure_joined_date'])) ? null : mysqli_real_escape_string($conn, $_POST['structure_joined_date']);
         $structure_left_date = empty(mysqli_real_escape_string($conn, $_POST['structure_left_date'])) ? null : mysqli_real_escape_string($conn, $_POST['structure_left_date']);
-      
+
         $sql = '';
-      	$fields = [
-      		'STRUTTURA_NOME' =>	$structure_name, 
-        	'AZIENDA_ID' => $structure_company_id,
-        	'INDIRIZZO' => $structure_address,
-        	'CITTA' => $structure_city,
-        	'INFORMAZIONI' => $structure_information,
+        $fields = [
+            'STRUTTURA_NOME' => $structure_name,
+            'AZIENDA_ID' => $structure_company_id,
+            'INDIRIZZO' => $structure_address,
+            'CITTA' => $structure_city,
+            'INFORMAZIONI' => $structure_information,
             'DATA_INIZIO' => $structure_joined_date,
-       	 	'DATA_FINE' => $structure_left_date
+            'DATA_FINE' => $structure_left_date
         ];
-      
+
         $existingEntity = oldRecord($entity, $id);
-      
+
         $sql = "UPDATE STRUTTURE 
                 SET AZIENDA_ID = ?,
                     STRUTTURA_NOME = ?, 
@@ -325,20 +329,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $department_joined_date = empty(mysqli_real_escape_string($conn, $_POST['department_joined_date'])) ? null : mysqli_real_escape_string($conn, $_POST['department_joined_date']);
         $department_left_date = empty(mysqli_real_escape_string($conn, $_POST['department_left_date'])) ? null : mysqli_real_escape_string($conn, $_POST['department_left_date']);
 
-      	$fields = [
-      		'REPARTO_NOME' =>	$department_name, 
-          	'STRUTTURA_ID' => $department_structure_id,
-        	'AZIENDA_ID' => $department_company_id,
-        	'INDIRIZZO' => $department_address,
-        	'CITTA' => $department_city,
-        	'INFORMAZIONI' => $department_information,
+        $fields = [
+            'REPARTO_NOME' => $department_name,
+            'STRUTTURA_ID' => $department_structure_id,
+            'AZIENDA_ID' => $department_company_id,
+            'INDIRIZZO' => $department_address,
+            'CITTA' => $department_city,
+            'INFORMAZIONI' => $department_information,
             'DATA_INIZIO' => $department_joined_date,
-       	 	'DATA_FINE' => $department_left_date
+            'DATA_FINE' => $department_left_date
         ];
-      
+
         $existingEntity = oldRecord($entity, $id);
-        
-      	$sql = '';
+
+        $sql = '';
         $sql = "UPDATE REPARTI 
                 SET REPARTO_NOME = ?, 
                     AZIENDA_ID = ?, 
@@ -356,7 +360,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             if (mysqli_stmt_execute($stmt)) {
                 $isChanged = insertIntoLogs($fields, $entity, $id, $existingEntity);
-                $isChanged ? $successfulMessage = "Reparto Aggiornato con Successo": $infoMessage = "Non Hai Modificato Alcun Attributo";
+                $isChanged ? $successfulMessage = "Reparto Aggiornato con Successo" : $infoMessage = "Non Hai Modificato Alcun Attributo";
             } else {
                 $errorMessage = "Errore: Impossibile Aggiornare il Reparto";
             }
@@ -373,16 +377,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $bank_left_date = empty(mysqli_real_escape_string($conn, $_POST['bank_left_date'])) ? null : mysqli_real_escape_string($conn, $_POST['bank_left_date']);
 
         $fields = [
-        	'AZIENDA_ID' => $bank_company_id,
-        	'BANCA_NOME' => $bank_name,
-        	'IBAN' => $bank_IBAN,
+            'AZIENDA_ID' => $bank_company_id,
+            'BANCA_NOME' => $bank_name,
+            'IBAN' => $bank_IBAN,
             'DATA_INIZIO' => $bank_joined_date,
-       	 	'DATA_FINE' => $bank_left_date
+            'DATA_FINE' => $bank_left_date
         ];
-      
+
         $existingEntity = oldRecord($entity, $id);
-        
-      	$sql = '';
+
+        $sql = '';
         $sql = "UPDATE BANCA_CONTI 
                 SET AZIENDA_ID = ?, 
                     BANCA_NOME = ?, 
@@ -397,8 +401,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             try {
                 if (mysqli_stmt_execute($stmt)) {
-	                $isChanged = insertIntoLogs($fields, $entity, $id, $existingEntity);
-                    $isChanged ? $successfulMessage = "Il Conto Bancario è Stato Aggiornato con Successo": $infoMessage = "Non Hai Modificato Alcun Attributo";
+                    $isChanged = insertIntoLogs($fields, $entity, $id, $existingEntity);
+                    $isChanged ? $successfulMessage = "Il Conto Bancario è Stato Aggiornato con Successo" : $infoMessage = "Non Hai Modificato Alcun Attributo";
                 } else {
                     $errorMessage = "Errore: Impossibile Aggiornare  un Conto Bancario";
                 }
@@ -421,23 +425,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $bill_value_with_VAT = ROUND($_POST['bill_withVAT'], 2);
         $bill_expiration_date = empty(mysqli_real_escape_string($conn, $_POST['bill_expiration_date'])) ? null : mysqli_real_escape_string($conn, $_POST['bill_expiration_date']);
         $bill_bank_conto_id = empty(mysqli_real_escape_string($conn, $_POST['bill_bank_iban'])) ? null : mysqli_real_escape_string($conn, $_POST['bill_bank_iban']);
-      
+
         $fields = [
-			'AZIENDA_ID' => $bill_company_id,
-			'VALORE' => $bill_value,
-			'DATA_FATTURAZIONE' => $bill_billing_date,
-			'IVA' => $bill_VAT,
-			'MONETA' => $bill_currency,
-			'DATA_PAGAMENTO' => $bill_payment_date,
-			'DESCRIZIONE' => $bill_information,
-			'VALORE_IVA_INCLUSA' => $bill_value_with_VAT, 
-			'DATA_SCADENZA' => $bill_expiration_date,
-			'BANCA_CONTO_ID' => $bill_bank_conto_id
+            'AZIENDA_ID' => $bill_company_id,
+            'VALORE' => $bill_value,
+            'DATA_FATTURAZIONE' => $bill_billing_date,
+            'IVA' => $bill_VAT,
+            'MONETA' => $bill_currency,
+            'DATA_PAGAMENTO' => $bill_payment_date,
+            'DESCRIZIONE' => $bill_information,
+            'VALORE_IVA_INCLUSA' => $bill_value_with_VAT,
+            'DATA_SCADENZA' => $bill_expiration_date,
+            'BANCA_CONTO_ID' => $bill_bank_conto_id
         ];
-      
+
         $existingEntity = oldRecord($entity, $id);
-        
-      	$sql = '';
+
+        $sql = '';
         $sql = "UPDATE FATTURE 
                 SET AZIENDA_ID = ?, 
                     DESCRIZIONE = ?, 
@@ -458,7 +462,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             try {
                 if (mysqli_stmt_execute($stmt)) {
                     $isChanged = insertIntoLogs($fields, $entity, $id, $existingEntity);
-                    $isChanged ? $successfulMessage = "Fattura è Stata Aggiornata con Successo": $infoMessage = "Non Hai Modificato Alcun Attributo";
+                    $isChanged ? $successfulMessage = "Fattura è Stata Aggiornata con Successo" : $infoMessage = "Non Hai Modificato Alcun Attributo";
                 } else {
                     $errorMessage = "Errore: Impossibile Aggiornata la Fattura";
                 }
@@ -480,31 +484,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $impianto_data_ultima_att = empty(mysqli_real_escape_string($conn, $_POST['impianto_data_ultima_att'])) ? null : mysqli_real_escape_string($conn, $_POST['impianto_data_ultima_att']);
         $impianto_ultima_attivita = mysqli_real_escape_string($conn, $_POST['impianto_ultima_attivita']);
         $impianto_presa_aria_esterna = mysqli_real_escape_string($conn, $_POST['impianto_presa_aria_esterna']);
-        $impianto_data_fine =  empty(mysqli_real_escape_string($conn, $_POST['impianto_data_fine'])) ? null : mysqli_real_escape_string($conn, $_POST['impianto_data_fine']);
+        $impianto_data_fine = empty(mysqli_real_escape_string($conn, $_POST['impianto_data_fine'])) ? null : mysqli_real_escape_string($conn, $_POST['impianto_data_fine']);
 
         $impianto_company_id = mysqli_real_escape_string($conn, $_POST['company_name']);
         $impianto_structure_id = mysqli_real_escape_string($conn, $_POST['structure_name']);
         $impianto_department_id = mysqli_real_escape_string($conn, $_POST['department_name']);
 
         $fields = [
-			'IMPIANTO_NOME' => $impianto_nome,
-			'AZIENDA_ID' => $impianto_company_id,
-			'STRUTTURA_ID' => $impianto_structure_id,
-			'REPARTO_ID' => $impianto_department_id,
-			'CAPACITA_UTA' => $impianto_capacita_uta,
-			'MANDATA' => $impianto_mandata,
-			'RIPRESA' => $impianto_ripresa,
-			'ESPULSIONE' => $impianto_espulsione,
-			'PRESA_ARIA_ESTERNA' => $impianto_presa_aria_esterna,
-			'DATA_INIZIO' => $impianto_data_inizio,
-			'ULTIMA_ATTIVITA' => $impianto_ultima_attivita,
-          	'DATA_FINE' => $impianto_data_fine,
-			'DATA_ULTIMA_ATT' => $impianto_data_ultima_att
+            'IMPIANTO_NOME' => $impianto_nome,
+            'AZIENDA_ID' => $impianto_company_id,
+            'STRUTTURA_ID' => $impianto_structure_id,
+            'REPARTO_ID' => $impianto_department_id,
+            'CAPACITA_UTA' => $impianto_capacita_uta,
+            'MANDATA' => $impianto_mandata,
+            'RIPRESA' => $impianto_ripresa,
+            'ESPULSIONE' => $impianto_espulsione,
+            'PRESA_ARIA_ESTERNA' => $impianto_presa_aria_esterna,
+            'DATA_INIZIO' => $impianto_data_inizio,
+            'ULTIMA_ATTIVITA' => $impianto_ultima_attivita,
+            'DATA_FINE' => $impianto_data_fine,
+            'DATA_ULTIMA_ATT' => $impianto_data_ultima_att
         ];
-      
+
         $existingEntity = oldRecord($entity, $id);
-        
-      	$sql = '';
+
+        $sql = '';
         $sql = "UPDATE IMPIANTI 
                 SET IMPIANTO_NOME = ?,
                     AZIENDA_ID = ?,
@@ -544,7 +548,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             try {
                 if (mysqli_stmt_execute($stmt)) {
                     $isChanged = insertIntoLogs($fields, $entity, $id, $existingEntity);
-                    $isChanged ? $successfulMessage = "L'impianto è Stato Aggiornato con Successo": $infoMessage = "Non Hai Modificato Alcun Attributo";
+                    $isChanged ? $successfulMessage = "L'impianto è Stato Aggiornato con Successo" : $infoMessage = "Non Hai Modificato Alcun Attributo";
                 } else {
                     $errorMessage = "Errore: Impossibile Aggiornare l'Impianto";
                 }
@@ -556,54 +560,214 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             $errorMessage = "Errore: Impossibile Preparare l'Istruzione";
         }
-    }
-}
+    } else if (isset($_POST['update_employee'])) {
+        $employee_first_name = mysqli_real_escape_string($conn, $_POST['employee_first_name']);
+        $employee_last_name = mysqli_real_escape_string($conn, $_POST['employee_last_name']);
+        $employee_email = mysqli_real_escape_string($conn, $_POST['employee_email']);
+        ///$employee_photo = mysqli_real_escape_string($conn, $_POST['employee_photo']);
+        $employee_birthday = empty(mysqli_real_escape_string($conn, $_POST['employee_birthday'])) ? null : mysqli_real_escape_string($conn, $_POST['employee_birthday']);
+        $employee_code = mysqli_real_escape_string($conn, $_POST['employee_code']);
+        $employee_indirizzo = mysqli_real_escape_string($conn, $_POST['employee_indirizzo']);
+        $employee_role = mysqli_real_escape_string($conn, $_POST['employee_role']);
+        $employee_company = mysqli_real_escape_string($conn, $_POST['employee_company']);
+        $employee_iva = mysqli_real_escape_string($conn, $_POST['employee_iva']);
+        $employee_telephone = mysqli_real_escape_string($conn, $_POST['employee_telephone']);
+        $employee_number = mysqli_real_escape_string($conn, $_POST['employee_number']);
+        $employee_qualification = mysqli_real_escape_string($conn, $_POST['employee_qualification']);
+        $employee_position = mysqli_real_escape_string($conn, $_POST['employee_position']);
+        $employee_contract = mysqli_real_escape_string($conn, $_POST['employee_contract']);
+        $employee_inizio_date = empty(mysqli_real_escape_string($conn, $_POST['employee_inizio_date'])) ? null : mysqli_real_escape_string($conn, $_POST['employee_inizio_date']);
+        $employee_left_date = empty(mysqli_real_escape_string($conn, $_POST['employee_left_date'])) ? null : mysqli_real_escape_string($conn, $_POST['employee_left_date']);
+        $employee_medical_date = empty(mysqli_real_escape_string($conn, $_POST['employee_medical_date'])) ? null : mysqli_real_escape_string($conn, $_POST['employee_medical_date']);
+        $employee_cosegna_date = empty(mysqli_real_escape_string($conn, $_POST['employee_cosegna_date'])) ? null : mysqli_real_escape_string($conn, $_POST['employee_cosegna_date']);
+        $employee_specifica_date = empty(mysqli_real_escape_string($conn, $_POST['employee_specifica_date'])) ? null : mysqli_real_escape_string($conn, $_POST['employee_specifica_date']);
+        $employee_base_date = empty(mysqli_real_escape_string($conn, $_POST['employee_base_date'])) ? null : mysqli_real_escape_string($conn, $_POST['employee_base_date']);
+        $employee_cat3_date = empty(mysqli_real_escape_string($conn, $_POST['employee_cat3_date'])) ? null : mysqli_real_escape_string($conn, $_POST['employee_cat3_date']);
 
-include 'database/closedb.php';
+        $newFileName = mysqli_real_escape_string($conn, $_POST['file-name']);
+        $isUploadedToWebsite = FALSE;
+        $isUploadedToNAS = TRUE;
+        $uploadedFile = '';
+      	$fileTmp = '';
+        $targetFilePath = '';
+        $targetDirectory = $baseUrl . "/" . $imageRootPath;
+      
+      	if(isset($_FILES["employee_photo"]) && $_FILES["employee_photo"]["error"] === UPLOAD_ERR_OK) {
+          	$isUploadedToWebsite = TRUE;
+            $uploadedFile = $_FILES["employee_photo"];
+            $fileTmp = $uploadedFile["tmp_name"];
+            $fileName = pathinfo($uploadedFile["name"], PATHINFO_FILENAME);
+            $fileExt = strtolower(pathinfo($uploadedFile["name"], PATHINFO_EXTENSION));
+    
+            $allowedTypes = ["jpg", "jpeg", "png", "gif"];
+            if (in_array($fileExt, $allowedTypes)) {
+                $newFileName = $fileName . "___" . uniqid() . "." . $fileExt;
+                $targetFilePath = $targetDirectory . "/" . $newFileName;
+            } else {
+                $errorMessage = "Errore: Formato file non valido. Solo JPG, PNG e GIF sono consentiti.";
+            }
+        }  
 
-function insertIntoLogs($fields, $entity, $id, $existingEntity){
-    include 'database/config.php';
-	include 'database/opendb.php';
-	$modifiedDate = date("Y-m-d H:i:s");
-    $entity01 = strtoupper($entity);  
-    $changed = false;
+        $fields = [
+            'NOME' => $employee_first_name,
+            'COGNOME' => $employee_last_name,
+            'EMAIL' => $employee_email,
+            'FOTOGRAFIA' => $newFileName,
+            'DATA_DI_NASCITA' => $employee_birthday,
+            'CODICE_FISCALE' => $employee_code,
+            'INDIRIZZO' => $employee_indirizzo,
+            'RUOLO' => $employee_role,
+            'RAGIONE_SOCIALE' => $employee_company,
+            'PIVA' => $employee_iva,
+            'TELEFONO' => $employee_telephone,
+            'MATRICOLA' => $employee_number,
+            'QUALIFICA' => $employee_qualification,
+            'MANSIONE' => $employee_position,
+            'CONTRATTO' => $employee_contract,
+            'ASSUNTO_IL' => $employee_inizio_date,
+            'DATA_FINE' => $employee_left_date,
+            'VISITA_MEDICA_IDONEITA' => $employee_medical_date,
+            'RICEVUTA_CONSEGNA_DPI' => $employee_cosegna_date,
+            'ATTESTATO_FORMAZIONE_SPECIFICA' => $employee_specifica_date,
+            'CORSO_FORMAZIONE_INFORMAZIONE_BASE' => $employee_base_date,
+            'CORSO_UTILIZZO_DPI_CAT3' => $employee_cat3_date
+        ];
 
-  
-	foreach ($fields as $key => $value) {
-		if ($value != $existingEntity[$key] && $key != 'PASSWORD') {
-            $changed = true;
+        $existingEntity = oldRecord($entity, $id);
+        $sql = '';
+        $sql = "UPDATE DIPENDENTI 
+                SET NOME = ?,
+                    COGNOME = ?,
+                    EMAIL = ?,
+                    FOTOGRAFIA = ?,
+                    DATA_DI_NASCITA = ?,
+                    CODICE_FISCALE = ?,
+                    INDIRIZZO = ?,
+                    RUOLO = ?,
+                    RAGIONE_SOCIALE = ?,
+                    PIVA = ?,
+                    TELEFONO = ?,
+                    MATRICOLA = ?,
+                    QUALIFICA = ?,
+                    MANSIONE = ?,
+                    CONTRATTO = ?,
+                    ASSUNTO_IL = ?,
+                    DATA_FINE = ?,
+                    VISITA_MEDICA_IDONEITA = ?,
+                    RICEVUTA_CONSEGNA_DPI = ?,
+                    ATTESTATO_FORMAZIONE_SPECIFICA = ?,
+                    CORSO_FORMAZIONE_INFORMAZIONE_BASE = ?,
+                    CORSO_UTILIZZO_DPI_CAT3 = ?
+                WHERE DIPENDENTE_ID = ?";
 
-        	$logSql = "INSERT INTO LOGS (UTENTE_ID, ENTITA, ENTITA_ID, AZIONE, ATTRIBUTO, VECCHIO_VALORE, NUOVO_VALORE, DATA_ORA) 
-            			VALUES (?, ?, ?, 'Modificare', ?, ?, ?, ?)";
-            $logStmt = mysqli_prepare($conn, $logSql);
-            mysqli_stmt_bind_param($logStmt, "isissss", $_SESSION["user_id"], $entity01, $id, $key, $existingEntity[$key], $value, $modifiedDate);
-            mysqli_stmt_execute($logStmt);
-            mysqli_stmt_close($logStmt);
-        } else if ($key == 'PASSWORD' && $value != '') {
-        	$changed = true;
+        $stmt = mysqli_prepare($conn, $sql);
 
-        	$logSql01 = "INSERT INTO LOGS (UTENTE_ID, ENTITA, ENTITA_ID, AZIONE, ATTRIBUTO, DATA_ORA) 
-            				VALUES (?, ?, ?, 'Modificare', ?, ?)";
-            $logStmt01 = mysqli_prepare($conn, $logSql01);
-            mysqli_stmt_bind_param($logStmt01, "isiss", $_SESSION["user_id"], $entity01, $id, $key, $modifiedDate);
-            mysqli_stmt_execute($logStmt01);
-            mysqli_stmt_close($logStmt01);
-        
+        if ($stmt) {
+            mysqli_stmt_bind_param(
+                $stmt,
+                "sssssssssssissssssssssi",
+                $employee_first_name,
+                $employee_last_name,
+                $employee_email,
+                $newFileName,
+                $employee_birthday,
+                $employee_code,
+                $employee_indirizzo,
+                $employee_role,
+                $employee_company,
+                $employee_iva,
+                $employee_telephone,
+                $employee_number,
+                $employee_qualification,
+                $employee_position,
+                $employee_contract,
+                $employee_inizio_date,
+                $employee_left_date,
+                $employee_medical_date,
+                $employee_cosegna_date,
+                $employee_specifica_date,
+                $employee_base_date,
+                $employee_cat3_date,
+                $id
+            );
+                    
+            
+            if($isUploadedToWebsite) {
+                if(!uploadToWebDAV($targetFilePath, $fileTmp)){   
+                  echo $targetFilePath;
+                  echo $fileTmp;
+                    $newFileName = NULL;
+                    $errorMessage .= "Errore: Impossibile caricare l'immagine.";
+                    $isUploadedToNAS = FALSE;
+                }
+            }
+                
+            if ($isUploadedToNAS && mysqli_stmt_execute($stmt)) {
+                $isChanged = insertIntoLogs($fields, $entity, $id, $existingEntity);
+                $isChanged ? $successfulMessage = "Dipendente Aggiornata con Successo" : $infoMessage = "Non Hai Modificato Alcun Attributo";
+            } else {
+                if($isUploadedToWebsite && $isUploadedToNAS){
+                    deleteImage($targetFilePath);
+                }
+                $errorMessage .= "Errore: Impossibile Aggiornare la Azienda";
+            }
+            
+            mysqli_stmt_close($stmt); 
+        } else {
+            $errorMessage .= "Errore: Impossibile Preparare l'Istruzione";
         }
     }
-  
-	include 'database/closedb.php';
-    
-    return $changed;
+
+    include 'database/closedb.php';
 }
 
-function oldRecord($entity, $id){
+    function insertIntoLogs($fields, $entity, $id, $existingEntity)
+    {
+        include 'database/config.php';
+        include 'database/opendb.php';
+        $modifiedDate = date("Y-m-d H:i:s");
+        $entity01 = strtoupper($entity);
+        $changed = false;
+
+
+        foreach ($fields as $key => $value) {
+            if ($value != $existingEntity[$key] && $key != 'PASSWORD') {
+                $changed = true;
+
+                $logSql = "INSERT INTO LOGS (UTENTE_ID, ENTITA, ENTITA_ID, AZIONE, ATTRIBUTO, VECCHIO_VALORE, NUOVO_VALORE, DATA_ORA) 
+                            VALUES (?, ?, ?, 'Modificare', ?, ?, ?, ?)";
+                $logStmt = mysqli_prepare($conn, $logSql);
+                mysqli_stmt_bind_param($logStmt, "isissss", $_SESSION["user_id"], $entity01, $id, $key, $existingEntity[$key], $value, $modifiedDate);
+                mysqli_stmt_execute($logStmt);
+                mysqli_stmt_close($logStmt);
+            } else if ($key == 'PASSWORD' && $value != '') {
+                $changed = true;
+
+                $logSql01 = "INSERT INTO LOGS (UTENTE_ID, ENTITA, ENTITA_ID, AZIONE, ATTRIBUTO, DATA_ORA) 
+                                VALUES (?, ?, ?, 'Modificare', ?, ?)";
+                $logStmt01 = mysqli_prepare($conn, $logSql01);
+                mysqli_stmt_bind_param($logStmt01, "isiss", $_SESSION["user_id"], $entity01, $id, $key, $modifiedDate);
+                mysqli_stmt_execute($logStmt01);
+                mysqli_stmt_close($logStmt01);
+
+            }
+        }
+ 
+    
+
+        include 'database/closedb.php';
+
+        return $changed;
+    }   
+
+function oldRecord($entity, $id)
+{
     include 'database/config.php';
-	include 'database/opendb.php';
-  
-	if ($entity == 'utenti'){
-		$existingSql = "SELECT NOME, COGNOME, EMAIL, PASSWORD, NUMERO, AZIENDA_POSIZIONE, RUOLO, DATA_INIZIO, DATA_FINE FROM UTENTI WHERE UTENTE_ID = ?";
-    } else if ($entity == 'aziende'){
+    include 'database/opendb.php';
+
+    if ($entity == 'utenti') {
+        $existingSql = "SELECT NOME, COGNOME, EMAIL, PASSWORD, NUMERO, AZIENDA_POSIZIONE, RUOLO, DATA_INIZIO, DATA_FINE FROM UTENTI WHERE UTENTE_ID = ?";
+    } else if ($entity == 'aziende') {
         $existingSql = "SELECT AZIENDA_NOME, PARTITA_IVA ,CODICE_FISCALE ,CONTATTO_1 ,CONTATTO_2 ,CONTATTO_3 ,EMAIL_1 ,EMAIL_2 ,EMAIL_3,
                         TELEFONO_1 ,TELEFONO_2 ,TELEFONO_3 ,INDIRIZZO ,CITTA ,INDIRIZZO_PEC ,DATA_INIZIO ,DATA_FINE ,WEBSITE ,INFORMAZIONI 
                         FROM AZIENDE WHERE AZIENDA_ID = ?";
@@ -614,23 +778,25 @@ function oldRecord($entity, $id){
     } else if ($entity == 'banca conti') {
         $existingSql = "SELECT AZIENDA_ID, BANCA_NOME, IBAN, DATA_FINE, DATA_INIZIO FROM BANCA_CONTI WHERE BANCA_CONTO_ID = ?";
     } else if ($entity == 'fatture') {
-      	$existingSql = "SELECT DATA_FATTURAZIONE, VALORE_IVA_INCLUSA, VALORE, MONETA, IVA, E_PAGATO, DESCRIZIONE, DATA_SCADENZA, DATA_PAGAMENTO, BANCA_CONTO_ID, AZIENDA_ID FROM FATTURE WHERE FATTURA_ID = ?";
+        $existingSql = "SELECT DATA_FATTURAZIONE, VALORE_IVA_INCLUSA, VALORE, MONETA, IVA, E_PAGATO, DESCRIZIONE, DATA_SCADENZA, DATA_PAGAMENTO, BANCA_CONTO_ID, AZIENDA_ID FROM FATTURE WHERE FATTURA_ID = ?";
     } else if ($entity == 'reparti') {
         $existingSql = "SELECT REPARTO_NOME, STRUTTURA_ID, INFORMAZIONI, DATA_INIZIO, DATA_FINE, CITTA, AZIENDA_ID, INDIRIZZO FROM REPARTI WHERE REPARTO_ID = ?";
     } else if ($entity == 'strutture') {
         $existingSql = "SELECT STRUTTURA_NOME, INFORMAZIONI, INDIRIZZO, DATA_INIZIO, DATA_FINE, CITTA, AZIENDA_ID FROM STRUTTURE WHERE STRUTTURA_ID = ?";
     } else if ($entity == 'impianti') {
         $existingSql = "SELECT ULTIMA_ATTIVITA, STRUTTURA_ID, RIPRESA, REPARTO_ID, PRESA_ARIA_ESTERNA, IMPIANTO_NOME, MANDATA, ESPULSIONE, DATA_ULTIMA_ATT, DATA_INIZIO, DATA_FINE, CAPACITA_UTA, AZIENDA_ID FROM IMPIANTI WHERE IMPIANTO_ID = ?";
+    } else if ($entity == 'dipendenti') {
+        $existingSql = "SELECT NOME, COGNOME, EMAIL, FOTOGRAFIA, DATA_DI_NASCITA, CODICE_FISCALE, INDIRIZZO, RUOLO, RAGIONE_SOCIALE, PIVA, TELEFONO, MATRICOLA, QUALIFICA, MANSIONE, CONTRATTO, ASSUNTO_IL, DATA_FINE, VISITA_MEDICA_IDONEITA, RICEVUTA_CONSEGNA_DPI, ATTESTATO_FORMAZIONE_SPECIFICA, CORSO_FORMAZIONE_INFORMAZIONE_BASE, CORSO_UTILIZZO_DPI_CAT3 FROM DIPENDENTI WHERE DIPENDENTE_ID = ?";
     }
 
     $stmt = mysqli_prepare($conn, $existingSql);
     mysqli_stmt_bind_param($stmt, "i", $id);
     mysqli_stmt_execute($stmt);
-   	$result = mysqli_stmt_get_result($stmt);
+    $result = mysqli_stmt_get_result($stmt);
     $existingEntity = mysqli_fetch_assoc($result);
     mysqli_stmt_close($stmt);
-  
-  	include 'database/closedb.php';
+
+    include 'database/closedb.php';
 
     return $existingEntity;
 }
@@ -708,7 +874,7 @@ function showBankNameDropDown($aziendaID, $bancaContoID)
 
         $bankDropDown = "";
 
-        if(empty($bancaContoID) || $bancaContoID == NULL){
+        if (empty($bancaContoID) || $bancaContoID == NULL) {
             $bankDropDown .= '<option disable selected value="">Seleziona una Banca</option>';
         }
 
@@ -742,7 +908,7 @@ function showIBANDropDown($aziendaID, $bancaContoID)
 
         $bankDropDown = "";
 
-        if(empty($bancaContoID) || $bancaContoID == NULL){
+        if (empty($bancaContoID) || $bancaContoID == NULL) {
             $bankDropDown .= '<option disable selected value="">Seleziona un\'IBAN</option>';
         }
 
@@ -907,6 +1073,18 @@ function showForm()
             $row = mysqli_fetch_assoc($result);
             include 'admin_edit_impianto.php';
         }
+    } else if ($entity == "dipendenti") {
+        $query = "SELECT * FROM DIPENDENTI WHERE DIPENDENTE_ID = ?";
+
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, "i", $id);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        if ($result) {
+            $row = mysqli_fetch_assoc($result);
+            include 'admin_edit_employee.php';
+        }
     }
 
     include 'database/closedb.php';
@@ -948,14 +1126,14 @@ function showForm()
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     <script defer>
-    function calculateValueWithVAT() {
-        var value = parseFloat(document.getElementById("value").value);
-        var VAT = parseFloat(document.getElementById("VAT").value);
-        if (isNaN(value)) value = 0;
-        if (isNaN(VAT)) VAT = 0;
-        var valueWithVAT = (value * (1 + VAT / 100)).toFixed(2);
-        document.getElementById("bill_withVAT").value = valueWithVAT;
-    }
+        function calculateValueWithVAT() {
+            var value = parseFloat(document.getElementById("value").value);
+            var VAT = parseFloat(document.getElementById("VAT").value);
+            if (isNaN(value)) value = 0;
+            if (isNaN(VAT)) VAT = 0;
+            var valueWithVAT = (value * (1 + VAT / 100)).toFixed(2);
+            document.getElementById("bill_withVAT").value = valueWithVAT;
+        }
     </script>
 </head>
 
@@ -990,6 +1168,8 @@ function showForm()
                                     echo "Aggiorna la Fattura";
                                 } else if ($entity == "impianti") {
                                     echo "Aggiorna  l'Impianto";
+                                } else if ($entity == "dipendenti") {
+                                    echo "Aggiorna il Dipendente";
                                 }
                                 ?>
                             </h1>
@@ -1053,12 +1233,20 @@ function showForm()
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
     <script>
-        const flatpickrInstance = flatpickr("#datePicker", {
+		const flatpickrInstance = flatpickr("#datePicker", {
             locale: 'it',
             dateFormat: "Y-m-d",
         });
-       
 
+        document.getElementById("employee_photo").addEventListener("change", function() {
+          let fileName = this.files.length > 0 ? this.files[0].name : "Nessun file selezionato";
+          document.getElementById("file-name").value = fileName;
+        });
+
+        document.getElementById('clear-file').addEventListener('click', function() {
+			document.getElementById('employee_photo').value = ''; // Reset file input
+        	document.getElementById('file-name').value = 'Nessun file selezionato'; // Reset text input
+    	});
     </script>
     <script src="js/app.js"></script>
 

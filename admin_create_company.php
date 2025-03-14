@@ -129,7 +129,7 @@ function createCompanyFolders($company_name, $company_nipt, $start_date, $end_da
 }
 
 
-function callValidateNewFolder($foldername, $currentPath)
+function callValidateNewFolder($currentPath, $foldername)
 {
     $baseUrl = getBaseUrl();
     $validateUrl = $baseUrl . 'validate_new_folder.php';
@@ -151,7 +151,7 @@ function callValidateNewFolder($foldername, $currentPath)
     $context = stream_context_create($options);
 
     $response = file_get_contents($validateUrl, false, $context);
-
+/*
     if ($response === FALSE) {
         echo 'Errore: Impossibile chiamare validate_new_folder.php';
     } else {
@@ -162,7 +162,7 @@ function callValidateNewFolder($foldername, $currentPath)
         } else {
             echo "Errore: " . $responseData['message'];
         }
-    }
+    }*/
 }
 
 function nextCompanyID()

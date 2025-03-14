@@ -255,7 +255,10 @@ include 'database/closedb.php';
                                     <div class="row">
                                         <div class="col-12 col-lg-6">
                                             <div class="card-header">
-                                                <a onclick="loadDirectory('pas')"
+                                                <a onclick="loadDirectory('<?php 
+        														include 'nas/credentials.php'; 
+        														echo $rootPath; 
+    														?>')" 
                                                     class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
                                                     style="font-weight: bold;">Cartelle</a>
                                             </div>

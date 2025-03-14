@@ -1,10 +1,10 @@
 <?php
+include 'nas/credentials.php';
 header('Content-Type: application/json');
 
 session_start();
 date_default_timezone_set('Europe/Berlin');
 $currentDateAndTime = date('Y-m-d H:i:s');
-
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $newFolderName = $_POST['folderName'];
@@ -12,20 +12,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dirName = dirname($currentFolderPath);
 
     if (!is_dir($dirName)) {
-       echo json_encode(['success' => false, 'message' => 'Percorso Corrente Non Valido.']);
+        echo json_encode(['success' => false, 'message' => 'Percorso Corrente Non Valido.']);
     } else {
         $targetFolder = $dirName . '/' . $newFolderName;
+        $encodedCurrentPath = $baseUrl . '/' . ltrim($currentFolderPath, '/');
+        $encodedTargetPath = $baseUrl . '/' . ltrim($targetFolder, '/');
 
-        if (file_exists($targetFolder)) {
-            echo json_encode(['success' => false, 'message' => 'Esiste Già Una Cartella con Quel Nome.']);
+        // Rename folder on NAS using WebDAV
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $encodedCurrentPath);
+        curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "MOVE");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Destination: $encodedTargetPath"
+        ]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpCode == 201 || $httpCode == 204) { // HTTP 201 Created or 204 No Content
+            // Update documents and logs
+            getDocumentsThatWillChange($currentFolderPath, $targetFolder, $currentDateAndTime, $_SESSION['user_id']);
+            echo json_encode(['success' => true, 'message' => 'Cartella Rinominata Correttamente.', 'newPath' => $targetFolder]);
+        } elseif ($httpCode == 404) { // HTTP 404 Not Found
+            echo json_encode(['success' => false, 'message' => 'La cartella specificata non esiste.']);
         } else {
-			if (rename($currentFolderPath, $targetFolder)) {
-              	echo json_encode(['success' => true, 'message' => 'Cartella Rinominata Correttamente.', 'newPath' => $targetFolder]);
-              	getDocumentsThatWillChange($currentFolderPath, $targetFolder, $currentDateAndTime, $_SESSION['user_id']);
-
-            } else {
-                json_encode(['success' => false, 'message' => 'Impossibile Rinominare la Cartella.']);
-            }
+            echo json_encode(['success' => false, 'message' => 'Impossibile Rinominare la Cartella. Codice: ' . $httpCode]);
         }
     }
 } else {

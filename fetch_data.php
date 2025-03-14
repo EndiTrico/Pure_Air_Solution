@@ -48,6 +48,9 @@ if ($entity == "utenti") {
     $query = "SELECT LOG_ID, UTENTE_ID, ENTITA, ENTITA_ID, AZIONE, UA_AZIENDA_ID, UA_UTENTE_ID, ATTRIBUTO, VECCHIO_VALORE,
                 NUOVO_VALORE, DATA_ORA
                 FROM LOGS;";
+} else if ($entity == "dipendenti") {
+    $query = "SELECT DIPENDENTE_ID, MATRICOLA, NOME, COGNOME, EMAIL, DATA_DI_NASCITA, CODICE_FISCALE, TELEFONO, INDIRIZZO, RUOLO, RAGIONE_SOCIALE, CONTRATTO, ASSUNTO_IL, DATA_FINE, E_ATTIVO
+                FROM DIPENDENTI;";
 }
 
 if (!empty($_SESSION['company_ID'])) {
@@ -254,201 +257,238 @@ function linkToEntity($logs_current_entity, $entity_id)
         return '<td><a href="admin_details.php?entity=impianti&id=' . $entity_id . '">' . $entity_id . '</a></td>';
     } else if ($logs_current_entity == 'DOCUMENTI') {
         return '<td><a href="admin_details.php?entity=documenti&id=' . $entity_id . '">' . $entity_id . '</a></td>';
+    } else if ($logs_current_entity == 'DIPENDENTI') {
+        return '<td><a href="admin_details.php?entity=dipendenti&id=' . $entity_id . '">' . $entity_id . '</a></td>';
     }
 
     return '<td>' . $entity_id . '</td>';
 }
 
-
 function dateFilters($entity)
 {
     if ($entity == 'fatture') {
         return '
-            <div class="col-12 col-lg-12">
-                <table border="0" cellspacing="0" cellpadding="20" style="display: inline-block;">
-                    <tbody>
-                        <tr>
-                            <td style="display: inline-block; font-weight:bold; width:200px;">Data di Fatturazione</td>
-                            <td style="display: inline-block;">Da:</td>
-                            <td style="display: inline-block;">
-                                <input type="text" id="minFatturazione" name="flatpickr" 
-                                    style="text-align: center; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
-                            </td>
-                            <td style="display: inline-block; padding-left: 10px;">A:</td>
-                            <td style="display: inline-block;">
-                                <input type="text" id="maxFatturazione" name="flatpickr" 
-                                    style="text-align: center; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="display: inline-block; font-weight:bold; width:200px;">Data di Pagamento</td>
-                            <td style="display: inline-block;">Da:</td>
-                            <td style="display: inline-block;">
-                                <input type="text" id="minPagamento" name="flatpickr"
-                                    style="text-align: center; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
-                            </td>
-                            <td style="display: inline-block; padding-left: 10px;">A:</td>
-                            <td style="display: inline-block;">
-                                <input type="text" id="maxPagamento" name="flatpickr"
-                                    style="text-align: center; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="display: inline-block; font-weight:bold; width:200px;">Data di Scadenza</td>
-                            <td style="display: inline-block;">Da:</td>
-                            <td style="display: inline-block;">
-                                <input type="text" id="minScadenza" name="flatpickr"
-                                    style="text-align: center; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
-                            </td>
-                            <td style="display: inline-block; padding-left: 10px;">A:</td>
-                            <td style="display: inline-block;">
-                                <input type="text" id="maxScadenza" name="flatpickr"
-                                    style="text-align: center; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div class="container">
+    <div class="row">
+        <div class="col-12 mb-4">
+
+           <div class="d-flex flex-column flex-md-row align-items-center justify-content-center mb-3">
+                <div class="font-weight-bold mb-2 mb-md-0" style="width: 200px; text-align: center; font-weight: bold;">Data di Fatturazione</div>
+                <div class="d-flex flex-column flex-md-row align-items-center justify-content-center w-100">
+                    <div class="d-flex align-items-center mb-3 mb-md-0 mx-3" style="flex: 1; text-align: center;">
+                        <label class="mr-3" style="white-space: nowrap;">Da:</label>
+                        <input type="text" id="minFatturazione" name="flatpickr" class="form-control" 
+                            style="text-align: center; margin-left: 10px; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
+                    </div>
+                    <div class="d-flex align-items-center mb-3 mb-md-0 mx-3" style="flex: 1; text-align: center;">
+                        <label class="mr-3" style="white-space: nowrap;">&nbsp;&nbsp;A:</label>
+                        <input type="text" id="maxFatturazione" name="flatpickr" class="form-control" 
+                            style="text-align: center; margin-left: 10px; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
+                    </div>
+                </div>
             </div>
-        ';
+
+            <div class="d-flex flex-column flex-md-row align-items-center justify-content-center mb-3">
+                <div class="font-weight-bold mb-2 mb-md-0" style="width: 200px; text-align: center; font-weight: bold;">Data di Pagamento</div>
+                <div class="d-flex flex-column flex-md-row align-items-center justify-content-center w-100">
+                    <div class="d-flex align-items-center mb-3 mb-md-0 mx-3" style="flex: 1; text-align: center;">
+                        <label class="mr-3" style="white-space: nowrap;">Da:</label>
+                        <input type="text" id="minPagamento" name="flatpickr" class="form-control" 
+                            style="text-align: center; margin-left: 10px; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
+                    </div>
+                    <div class="d-flex align-items-center mb-3 mb-md-0 mx-3" style="flex: 1; text-align: center;">
+                        <label class="mr-3" style="white-space: nowrap;">&nbsp;&nbsp;A:</label>
+                        <input type="text" id="maxPagamento" name="flatpickr" class="form-control" 
+                            style="text-align: center; margin-left: 10px; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
+                    </div>
+                </div>
+            </div>
+
+              <div class="d-flex flex-column flex-md-row align-items-center justify-content-center mb-3">
+                <div class="font-weight-bold mb-2 mb-md-0" style="width: 200px; text-align: center; font-weight: bold;">Data di Scadenza</div>
+                <div class="d-flex flex-column flex-md-row align-items-center justify-content-center w-100">
+                    <div class="d-flex align-items-center mb-3 mb-md-0 mx-3" style="flex: 1; text-align: center;">
+                        <label class="mr-3" style="white-space: nowrap;">Da:</label>
+                        <input type="text" id="minScadenza" name="flatpickr" class="form-control" 
+                            style="text-align: center; margin-left: 10px; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
+                    </div>
+                    <div class="d-flex align-items-center mb-3 mb-md-0 mx-3" style="flex: 1; text-align: center;">
+                        <label class="mr-3" style="white-space: nowrap;">&nbsp;&nbsp;A:</label>
+                        <input type="text" id="maxScadenza" name="flatpickr" class="form-control" 
+                            style="text-align: center; margin-left: 10px; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>';
+                       
     } else if ($entity == 'documenti') {
         return '
-            <div class="col-12 col-lg-12">
-                <table border="0" cellspacing="0" cellpadding="20" style="display: inline-block;">
-                    <tbody>
-                        <tr>
-                            <td style="display: inline-block; font-weight:bold; width:200px;">Data di Caricamento</td>
-                            <td style="display: inline-block;">Da:</td>
-                            <td style="display: inline-block;">
-                                <input type="text" id="minCaricamento" name="flatpickr" 
-                                    style="text-align: center; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
-                            </td>
-                            <td style="display: inline-block; padding-left: 10px;">A:</td>
-                            <td style="display: inline-block;">
-                                <input type="text" id="maxCaricamento" name="flatpickr" 
-                                    style="text-align: center; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="display: inline-block; font-weight:bold; width:200px;">Data di Cancellata</td>
-                            <td style="display: inline-block;">Da:</td>
-                            <td style="display: inline-block;">
-                                <input type="text" id="minCancellata" name="flatpickr"
-                                    style="text-align: center; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
-                            </td>
-                            <td style="display: inline-block; padding-left: 10px;">A:</td>
-                            <td style="display: inline-block;">
-                                <input type="text" id="maxCancellata" name="flatpickr"
-                                    style="text-align: center; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div class="container">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <!-- Data di Inizio -->
+            <div class="d-flex flex-column flex-md-row align-items-center justify-content-center mb-3">
+                <div class="font-weight-bold mb-2 mb-md-0" style="width: 200px; text-align: center; font-weight: bold;">Data di Caricamento</div>
+                <div class="d-flex flex-column flex-md-row align-items-center justify-content-center w-100">
+                    <div class="d-flex align-items-center mb-3 mb-md-0 mx-3" style="flex: 1; text-align: center;">
+                        <label class="mr-3" style="white-space: nowrap;">Da:</label>
+                        <input type="text" id="minCaricamento" name="flatpickr" class="form-control" 
+                            style="text-align: center; margin-left: 10px; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
+                    </div>
+                    <div class="d-flex align-items-center mb-3 mb-md-0 mx-3" style="flex: 1; text-align: center;">
+                        <label class="mr-3" style="white-space: nowrap;">&nbsp;&nbsp;A:</label>
+                        <input type="text" id="maxCaricamento" name="flatpickr" class="form-control" 
+                            style="text-align: center; margin-left: 10px; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
+                    </div>
+                </div>
             </div>
+
+            <div class="d-flex flex-column flex-md-row align-items-center justify-content-center mb-3">
+                <div class="font-weight-bold mb-2 mb-md-0" style="width: 200px; text-align: center; font-weight: bold;">Data di Cancellata</div>
+                <div class="d-flex flex-column flex-md-row align-items-center justify-content-center w-100">
+                    <div class="d-flex align-items-center mb-3 mb-md-0 mx-3" style="flex: 1; text-align: center;">
+                        <label class="mr-3" style="white-space: nowrap;">Da:</label>
+                        <input type="text" id="minCancellata" name="flatpickr" class="form-control" 
+                            style="text-align: center; margin-left: 10px; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
+                    </div>
+                    <div class="d-flex align-items-center mb-3 mb-md-0 mx-3" style="flex: 1; text-align: center;">
+                        <label class="mr-3" style="white-space: nowrap;">&nbsp;&nbsp;A:</label>
+                        <input type="text" id="maxCancellata" name="flatpickr" class="form-control" 
+                            style="text-align: center; margin-left: 10px; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
         ';
     } else if ($entity == 'logs') {
         return '
-            <div class="col-12 col-lg-12">
-                <table border="0" cellspacing="0" cellpadding="20" style="display: inline-block;">
-                    <tbody>
-                        <tr>
-                            <td style="display: inline-block; font-weight:bold; width:200px;">Data e Ora</td>
-                            <td style="display: inline-block;">Da:</td>
-                            <td style="display: inline-block;">
-                                <input type="text" id="minDataOra" name="flatpickr"
-                                    style="text-align: center; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
-                            </td>
-                            <td style="display: inline-block; padding-left: 10px;">A:</td>
-                            <td style="display: inline-block;">
-                                <input type="text" id="maxDataOra" name="flatpickr" 
-                                    style="text-align: center; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div class="container">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <!-- Data di Inizio -->
+            <div class="d-flex flex-column flex-md-row align-items-center justify-content-center mb-3">
+                <div class="font-weight-bold mb-2 mb-md-0" style="width: 200px; text-align: center; font-weight: bold;">Data e Ora</div>
+                <div class="d-flex flex-column flex-md-row align-items-center justify-content-center w-100">
+                    <div class="d-flex align-items-center mb-3 mb-md-0 mx-3" style="flex: 1; text-align: center;">
+                        <label class="mr-3" style="white-space: nowrap;">Da:</label>
+                        <input type="text" id="minDataOra" name="flatpickr" class="form-control" 
+                            style="text-align: center; margin-left: 10px; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
+                    </div>
+                    <div class="d-flex align-items-center mb-3 mb-md-0 mx-3" style="flex: 1; text-align: center;">
+                        <label class="mr-3" style="white-space: nowrap;">&nbsp;&nbsp;A:</label>
+                        <input type="text" id="maxDataOra" name="flatpickr" class="form-control" 
+                            style="text-align: center; margin-left: 10px; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
+                    </div>
+                </div>
             </div>
+        </div>
+    </div>
+</div>
         ';
     } else if ($entity == 'impianti') {
         return '
-            <div class="col-12 col-lg-12">
-                <table border="0" cellspacing="0" cellpadding="20" style="display: inline-block;">
-                    <tbody>
-                        <tr>
-                            <td style="display: inline-block; font-weight:bold; width:200px;">Data di Inizio</td>
-                            <td style="display: inline-block;">Da:</td>
-                            <td style="display: inline-block;">
-                                <input type="text" id="minInizio" name="flatpickr" 
-                                    style="text-align: center; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
-                            </td>
-                            <td style="display: inline-block; padding-left: 10px;">A:</td>
-                            <td style="display: inline-block;">
-                                <input type="text" id="maxInizio" name="flatpickr" 
-                                    style="text-align: center; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="display: inline-block; font-weight:bold; width:200px;">Data di Fine</td>
-                            <td style="display: inline-block;">Da:</td>
-                            <td style="display: inline-block;">
-                                <input type="text" id="minFine" name="flatpickr"
-                                    style="text-align: center; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
-                            </td>
-                            <td style="display: inline-block; padding-left: 10px;">A:</td>
-                            <td style="display: inline-block;">
-                                <input type="text" id="maxFine" name="flatpickr"
-                                    style="text-align: center; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="display: inline-block; font-weight:bold; width:200px;">Data di Ultima Att</td>
-                            <td style="display: inline-block;">Da:</td>
-                            <td style="display: inline-block;">
-                                <input type="text" id="minUltima" name="flatpickr"
-                                    style="text-align: center; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
-                            </td>
-                            <td style="display: inline-block; padding-left: 10px;">A:</td>
-                            <td style="display: inline-block;">
-                                <input type="text" id="maxUltima" name="flatpickr"
-                                    style="text-align: center; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+<div class="container">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <!-- Data di Inizio -->
+            <div class="d-flex flex-column flex-md-row align-items-center justify-content-center mb-3">
+                <div class="font-weight-bold mb-2 mb-md-0" style="width: 200px; text-align: center; font-weight: bold;">Data di Inizio</div>
+                <div class="d-flex flex-column flex-md-row align-items-center justify-content-center w-100">
+                    <div class="d-flex align-items-center mb-3 mb-md-0 mx-3" style="flex: 1; text-align: center;">
+                        <label class="mr-3" style="white-space: nowrap;">Da:</label>
+                        <input type="text" id="minInizio" name="flatpickr" class="form-control" 
+                            style="text-align: center; margin-left: 10px; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
+                    </div>
+                    <div class="d-flex align-items-center mb-3 mb-md-0 mx-3" style="flex: 1; text-align: center;">
+                        <label class="mr-3" style="white-space: nowrap;">&nbsp;&nbsp;A:</label>
+                        <input type="text" id="maxInizio" name="flatpickr" class="form-control" 
+                            style="text-align: center; margin-left: 10px; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
+                    </div>
+                </div>
             </div>
-         ';
+
+            <!-- Data di Fine -->
+            <div class="d-flex flex-column flex-md-row align-items-center justify-content-center mb-3">
+                <div class="font-weight-bold mb-2 mb-md-0" style="width: 200px; text-align: center; font-weight: bold;">Data di Fine</div>
+                <div class="d-flex flex-column flex-md-row align-items-center justify-content-center w-100">
+                    <div class="d-flex align-items-center mb-3 mb-md-0 mx-3" style="flex: 1; text-align: center;">
+                        <label class="mr-3" style="white-space: nowrap;">Da:</label>
+                        <input type="text" id="minFine" name="flatpickr" class="form-control" 
+                            style="text-align: center; margin-left: 10px; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
+                    </div>
+                    <div class="d-flex align-items-center mb-3 mb-md-0 mx-3" style="flex: 1; text-align: center;">
+                        <label class="mr-3" style="white-space: nowrap;">&nbsp;&nbsp;A:</label>
+                        <input type="text" id="maxFine" name="flatpickr" class="form-control" 
+                            style="text-align: center; margin-left: 10px; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row align-items-center justify-content-center mb-3">
+                <div class="font-weight-bold mb-2 mb-md-0" style="width: 200px; text-align: center; font-weight: bold;">Data di Ultima Att</div>
+                <div class="d-flex flex-column flex-md-row align-items-center justify-content-center w-100">
+                    <div class="d-flex align-items-center mb-3 mb-md-0 mx-3" style="flex: 1; text-align: center;">
+                        <label class="mr-3" style="white-space: nowrap;">Da:</label>
+                        <input type="text" id="minUltima" name="flatpickr" class="form-control" 
+                            style="text-align: center; margin-left: 10px; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
+                    </div>
+                    <div class="d-flex align-items-center mb-3 mb-md-0 mx-3" style="flex: 1; text-align: center;">
+                        <label class="mr-3" style="white-space: nowrap;">&nbsp;&nbsp;A:</label>
+                        <input type="text" id="maxUltima" name="flatpickr" class="form-control" 
+                            style="text-align: center; margin-left: 10px; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        ';
     } else {
         return '
-            <div class="col-12 col-lg-12">
-                <table border="0" cellspacing="0" cellpadding="20" style="display: inline-block;">
-                    <tbody>
-                        <tr>
-                            <td style="display: inline-block; font-weight:bold; width:200px;">Data di Inizio</td>
-                            <td style="display: inline-block;">Da:</td>
-                            <td style="display: inline-block;">
-                                <input type="text" id="minInizio" name="flatpickr" 
-                                    style="text-align: center; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
-                            </td>
-                            <td style="display: inline-block; padding-left: 10px;">A:</td>
-                            <td style="display: inline-block;">
-                                <input type="text" id="maxInizio" name="flatpickr" 
-                                    style="text-align: center; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="display: inline-block; font-weight:bold; width:200px;">Data di Fine</td>
-                            <td style="display: inline-block;">Da:</td>
-                            <td style="display: inline-block;">
-                                <input type="text" id="minFine" name="flatpickr"
-                                    style="text-align: center; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
-                            </td>
-                            <td style="display: inline-block; padding-left: 10px;">A:</td>
-                            <td style="display: inline-block;">
-                                <input type="text" id="maxFine" name="flatpickr"
-                                    style="text-align: center; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+<div class="container">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <!-- Data di Inizio -->
+            <div class="d-flex flex-column flex-md-row align-items-center justify-content-center mb-3">
+                <div class="font-weight-bold mb-2 mb-md-0" style="width: 200px; text-align: center; font-weight: bold;">' . ($entity == 'dipendenti' ? 'Data di Assunzione' : 'Data di Inizio') . '</div>
+                <div class="d-flex flex-column flex-md-row align-items-center justify-content-center w-100">
+                    <div class="d-flex align-items-center mb-3 mb-md-0 mx-3" style="flex: 1; text-align: center;">
+                        <label class="mr-3" style="white-space: nowrap;">Da:</label>
+                        <input type="text" id="minInizio" name="flatpickr" class="form-control" 
+                            style="text-align: center; margin-left: 10px; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
+                    </div>
+                    <div class="d-flex align-items-center mb-3 mb-md-0 mx-3" style="flex: 1; text-align: center;">
+                        <label class="mr-3" style="white-space: nowrap;">&nbsp;&nbsp;A:</label>
+                        <input type="text" id="maxInizio" name="flatpickr" class="form-control" 
+                            style="text-align: center; margin-left: 10px; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
+                    </div>
+                </div>
             </div>
+
+            <!-- Data di Fine -->
+            <div class="d-flex flex-column flex-md-row align-items-center justify-content-center mb-3">
+                <div class="font-weight-bold mb-2 mb-md-0" style="width: 200px; text-align: center; font-weight: bold;">Data di Fine</div>
+                <div class="d-flex flex-column flex-md-row align-items-center justify-content-center w-100">
+                    <div class="d-flex align-items-center mb-3 mb-md-0 mx-3" style="flex: 1; text-align: center;">
+                        <label class="mr-3" style="white-space: nowrap;">Da:</label>
+                        <input type="text" id="minFine" name="flatpickr" class="form-control" 
+                            style="text-align: center; margin-left: 10px; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
+                    </div>
+                    <div class="d-flex align-items-center mb-3 mb-md-0 mx-3" style="flex: 1; text-align: center;">
+                        <label class="mr-3" style="white-space: nowrap;">&nbsp;&nbsp;A:</label>
+                        <input type="text" id="maxFine" name="flatpickr" class="form-control" 
+                            style="text-align: center; margin-left: 10px; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat left 10px center; background-size: 16px; background-color: white;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
         ';
     }
 }

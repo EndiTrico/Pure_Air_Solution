@@ -163,6 +163,12 @@ if ($entity == 'utenti') {
     } else {
         $isActive = 0;
     }
+} else if ($entity == "dipendenti") {
+    $isActive = 1;
+    $update = "UPDATE DIPENDENTI
+                SET E_ATTIVO = 1,
+                    DATA_FINE = NULL 
+                WHERE DIPENDENTE_ID = ?";
 }
 
 if ($isActive == 0) {

@@ -5,6 +5,8 @@ include 'database/config.php';
 include 'database/opendb.php';
 include 'fetch_companies.php';
 
+
+  
 $errorMessage = "";
 $successfulMessage = "";
 
@@ -338,10 +340,10 @@ include 'database/closedb.php';
                                                     <select style="font-size: 1px !important;" multiple
                                                         placeholder="Seleziona Azienda" name="user_companies[]"
                                                         id="multiple_select" data-allow-clear="1">
-                                                        <?php echo showAllCompanies(); ?>
+                                                        <?php echo showCompaniesNameDropDown(); ?>
                                                     </select>
                                                 </div>
-                                            </div>
+                                            </div>                         
                                         </div>
 
                                         <div class="row">
