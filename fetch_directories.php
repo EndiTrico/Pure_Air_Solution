@@ -1,7 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 include 'database/config.php';
 include 'database/opendb.php';
 include 'nas/credentials.php';
@@ -17,7 +14,13 @@ function generateBreadcrumb($path) {
     $fullPath = "";
 
     foreach ($parts as $index => $part) {
-        $fullPath .= "/" . $part;
+		
+      	if ($fullPath !== "") {
+    		$fullPath = $fullPath . "/" . $part;
+		} else {
+    		$fullPath = $part;
+		}
+      
         $encodedPath = htmlspecialchars($fullPath, ENT_QUOTES, 'UTF-8');
 
       	$breadcrumb[] = '<button class="folder btn btn-light px-1 py-0 m-0" data-path="' . $encodedPath . '">' . rawurldecode($part) . '</button>';
@@ -72,7 +75,7 @@ curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
     $previousPath = '';
   	$encodedPreviousPath = '';
 	$encodedRootPath = htmlspecialchars('clienti', ENT_QUOTES, 'UTF-8');
-    $lastSlashPos = strrpos($path, '/');
+	$lastSlashPos = strrpos(trim($path, '/'), '/');
 
     if ($lastSlashPos !== false) {
         $previousPath = substr($path, 0, $lastSlashPos);
@@ -81,7 +84,7 @@ curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
     } else {
         $disabled = 'disabled';
     }
-	
+
   	$breadcrumb = generateBreadcrumb($path);
 
     // Generate HTML output

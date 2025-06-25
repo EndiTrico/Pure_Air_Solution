@@ -14,8 +14,13 @@ function generateBreadcrumb($path) {
     $fullPath = "";
 
     foreach ($parts as $index => $part) {
-        $fullPath .= "/" . $part;
-        $encodedPath = htmlspecialchars($fullPath, ENT_QUOTES, 'UTF-8');
+      	if ($fullPath !== "") {
+    		$fullPath = $fullPath . "/" . $part;
+		} else {
+    		$fullPath = $part;
+		}
+      	
+      	$encodedPath = htmlspecialchars($fullPath, ENT_QUOTES, 'UTF-8');
 
       	$breadcrumb[] = '<button class="folder btn btn-light px-1 py-0 m-0" data-path="' . $encodedPath . '">' . rawurldecode($part) . '</button>';
     }
@@ -72,7 +77,7 @@ function listDirectory($path)
     $previousPath = '';
   	$encodedPreviousPath = '';
 	$encodedRootPath = htmlspecialchars('clienti', ENT_QUOTES, 'UTF-8');
-    $lastSlashPos = strrpos($path, '/');
+	$lastSlashPos = strrpos(rtrim($path, '/'), '/');
 
     if ($lastSlashPos !== false) {
         $previousPath = substr($path, 0, $lastSlashPos);

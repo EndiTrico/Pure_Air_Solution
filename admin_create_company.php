@@ -86,30 +86,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 include 'database/closedb.php';
 
-function getBaseUrl()
-{
-    $scheme = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
-    $host = $_SERVER['HTTP_HOST'];
-    $scriptPath = $_SERVER['SCRIPT_NAME'];
-
-    $baseDir = dirname($scriptPath);
-
-    $baseUrl = "$scheme://$host$baseDir/";
-
-    return $baseUrl;
-}
-
-
 function createCompanyFolders($company_name, $company_nipt, $start_date, $end_date)
 {
-    $base_path = 'pas';
-    $folder_name = $company_name . ' - ' . $company_nipt;
+    include 'nas/credentials.php';
+    include 'validate_new_folder.php';
 
-    callValidateNewFolder($base_path, $folder_name);
-
-    $company_folder = $base_path . '/' . $company_name . ' - ' . $company_nipt;
+    $companyFolderName = $company_name . ' - ' . $company_nipt;
+    $currentFolderPath = rawurlencode($rootPath) . '/' . rawurlencode($companyFolderName);
 
     $current_year = date('Y');
+    createFolder($companyFolderName, $rootPath, true); 
 
     if (!empty($start_date)) {
         $start_year = date('Y', strtotime($start_date));
@@ -124,45 +110,9 @@ function createCompanyFolders($company_name, $company_nipt, $start_date, $end_da
     }
 
     for ($year = $start_year; $year <= $end_year; $year++) {
-        callValidateNewFolder($company_folder, $year);
+        $newFolderName = 'Anno ' .  $year;
+        createFolder($newFolderName, $currentFolderPath, true); 
     }
-}
-
-
-function callValidateNewFolder($currentPath, $foldername)
-{
-    $baseUrl = getBaseUrl();
-    $validateUrl = $baseUrl . 'validate_new_folder.php';
-
-    $data = array(
-        'folderName' => $foldername,
-        'currentPath' => $currentPath 
-    );
-
-    $postData = http_build_query($data);
-
-    $options = array(
-        'http' => array(
-            'method' => 'POST',
-            'header' => "Content-type: application/x-www-form-urlencoded\r\n",
-            'content' => $postData
-        )
-    );
-    $context = stream_context_create($options);
-
-    $response = file_get_contents($validateUrl, false, $context);
-/*
-    if ($response === FALSE) {
-        echo 'Errore: Impossibile chiamare validate_new_folder.php';
-    } else {
-        $responseData = json_decode($response, true);
-
-        if ($responseData['success']) {
-            echo "Successo: " . $responseData['message'];
-        } else {
-            echo "Errore: " . $responseData['message'];
-        }
-    }*/
 }
 
 function nextCompanyID()
@@ -188,10 +138,7 @@ function nextCompanyID()
     return $next_id;
 }
 
-
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
