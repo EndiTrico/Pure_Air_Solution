@@ -9,7 +9,6 @@ echo '
 <form id="companyForm" method="post">
     <div class="row"         
         style="background:url(\'./images/logo/logo01_backgroundForm.png\'); background-color: white;  background-size: contain; background-position: center; background-repeat: no-repeat; ">
-        <div class="row">
             <div class="col-12">
                 <div class="mb-3 row d-flex justify-content-center">
                     <h5 class="card-title col-sm-2 col-form-label">Nome</h5>
@@ -175,7 +174,6 @@ echo '
                 <div class="col-sm-4">
                     <input disabled type="text" class="form-control" style="font-weight:bold; color:' . $color . ';" value="' . $status . '" />
                 </div>
-            </div>
             </div>
         </div>
     </div>

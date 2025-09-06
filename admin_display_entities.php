@@ -226,7 +226,7 @@ include 'database/closedb.php';
                             <div class="card">
                                 <div class="card-header">
                                     <div class="row">
-                                        <div class="col-12 col-lg-3">
+                                        <div class="col-12 col-lg-4">
                                             <div class="card-header">
                                                 <a onclick="fetchData('utenti')"
                                                     class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
@@ -235,7 +235,7 @@ include 'database/closedb.php';
                                             </div>
                                         </div>
 
-                                        <div class="col-12 col-lg-3">
+                                        <div class="col-12 col-lg-4">
                                             <div class="card-header">
                                                 <a onclick="fetchData('aziende')"
                                                     class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
@@ -244,7 +244,7 @@ include 'database/closedb.php';
                                             </div>
                                         </div>
 
-                                        <div class="col-12 col-lg-3">
+                                        <div class="col-12 col-lg-4">
                                             <div class="card-header">
                                                 <a onclick="fetchData('strutture')"
                                                     class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
@@ -252,8 +252,9 @@ include 'database/closedb.php';
                                                 </a>
                                             </div>
                                         </div>
-
-                                        <div class="col-12 col-lg-3">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 col-lg-4">
                                             <div class="card-header">
                                                 <a onclick="fetchData('reparti')"
                                                     class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
@@ -261,10 +262,8 @@ include 'database/closedb.php';
                                                 </a>
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-12 col-lg-3">
+                                    
+                                        <div class="col-12 col-lg-4">
                                             <div class="card-header">
                                                 <a onclick="fetchData('banca conti')"
                                                     class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
@@ -272,7 +271,7 @@ include 'database/closedb.php';
                                             </div>
                                         </div>
 
-                                        <div class="col-12 col-lg-3">
+                                        <div class="col-12 col-lg-4">
                                             <div class="card-header">
                                                 <a onclick="fetchData('fatture')"
                                                     class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
@@ -280,8 +279,9 @@ include 'database/closedb.php';
                                                 </a>
                                             </div>
                                         </div>
-
-                                        <div class="col-12 col-lg-3">
+                                    </div>  
+                                    <div class="row">
+                                        <div class="col-12 col-lg-4">
                                             <div class="card-header">
                                                 <a id="mybtn" onclick="fetchData('impianti')"
                                                     class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
@@ -290,11 +290,20 @@ include 'database/closedb.php';
                                             </div>
                                         </div>
                                       
-                                        <div class="col-12 col-lg-3">
+                                        <div class="col-12 col-lg-4">
                                             <div class="card-header">
                                                 <a id="mybtn" onclick="fetchData('dipendenti')"
                                                     class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
                                                     style="font-weight: bold;">Mostra Dipendenti
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12 col-lg-4">
+                                            <div class="card-header">
+                                                <a id="mybtn" onclick="fetchData('registro_lavori')"
+                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                    style="font-weight: bold;">Mostra Lavori
                                                 </a>
                                             </div>
                                         </div>
@@ -502,9 +511,13 @@ include 'database/closedb.php';
                             dateFormat: "Y-m-d"
                         });
                     } else {
-						var inizioColIdx = table.column(':contains("' + (entity === 'dipendenti' ? 'Assunto Il' : 'Data Inizio') + '")').index();
-                        var fineColIdx = table.column(':contains("Data Fine")').index();
-						console.log ("INI: " + inizioColIdx + " FINE: " + fineColIdx);
+						var inizioColIdx = table.column(':contains("' + 
+                            (entity == 'dipendenti' ? 'Assunto Il' : 
+                            entity == 'registro_lavori' ? 'Data Lavoro' : 
+                            'Data Inizio') + '")').index();
+                        var fineColIdx = table.column(':contains("' + 
+                            (entity == 'registro_lavori' ? 'Data Creato' : 'Data Fine') + '")').index();
+
                         $.fn.dataTable.ext.search.push(
                             function (settings, data, dataIndex) {
                                 var minInizio = $('#minInizio').val();
@@ -559,7 +572,6 @@ include 'database/closedb.php';
                     if (entity != "fatture") {
                         htmlText = '<h4>Tutte le Entità Dipendenti Verranno Impostate su Inattive</h4><p style="margin-top: 20px;">Seleziona la data di fine</p><input id="datePicker1" class="swal2-input delete_date" style = "margin-top: -10px; height: 45px; text-align: center; background: url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22currentColor%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2218%22 rx=%222%22 ry=%222%22/%3E%3Cline x1=%2216%22 y1=%222%22 x2=%2216%22 y2=%226%22/%3E%3Cline x1=%228%22 y1=%222%22 x2=%228%22 y2=%226%22/%3E%3Cline x1=%223%22 y1=%2210%22 x2=%2221%22 y2=%2210%22/%3E%3C/svg%3E\') no-repeat right 10px center; background-size: 20px; background-color: white">';
                     }
-					console.log("ID " + id  + " ENTITY: " + entity);
                     Swal.fire({
                         title: "Sei Sicuro di Eliminare?",
                         html: htmlText,
@@ -599,6 +611,43 @@ include 'database/closedb.php';
                                 var url = 'admin_delete.php?id=' + encodeURIComponent(id) + '&entity=' + encodeURIComponent(entity) + '&dateValue=' + encodeURIComponent(dateValue);
                                 window.location.href = url;
 
+                            }, 2000);
+                        }
+                    });
+
+                    const flatpickrInstance = flatpickr("#datePicker1", {
+                        locale: 'it',
+                        defaultDate: new Date(),
+                        dateFormat: "Y-m-d",
+                    });
+                }
+
+                function confirmPermanentlyDelete(id, entity) {
+                    var htmlText = "";
+                    Swal.fire({
+                        title: "Sei Sicuro di Eliminare?",
+                        html: htmlText,
+                        focusConfirm: false,
+                        icon: "warning",
+                        showCancelButton: true,
+                        cancelButtonText: "No",
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Si"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+
+                            Swal.fire({
+                                title: "Eliminato!",
+                                text: "Azione eseguita con successo",
+                                icon: "success",
+                                showConfirmButton: false
+                            });
+                            setTimeout(function () {
+                                var dateValue = result.value || ""
+                                var url = 'admin_delete.php?id=' + encodeURIComponent(id) + '&entity=' + encodeURIComponent(entity)
+
+                                window.location.href = url;
                             }, 2000);
                         }
                     });

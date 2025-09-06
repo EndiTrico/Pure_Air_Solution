@@ -11,6 +11,8 @@ if (isset($_SESSION['email'])) {
         header('Location: admin_dashboard.php');
     } else if ($role === "Client") {
         header('Location: client_dashboard.php');
+    } else if ($role === "Dipendente") {
+        header('Location: employee_dashboard.php');
     } else {
         header('Location: admin_create_user.php');
     }
@@ -60,7 +62,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header('Location: client_dashboard.php');
             exit();
         }
-    } else {
+    } else if ($role == "Dipendente") {
+        header('Location: employee_dashboard.php');
+        exit();    
+    }
+    else {
         $_SESSION['errorMessage'] = $loginResult['message'];
         header('Location: index.php');
         exit();

@@ -47,10 +47,14 @@ if ($entity == "utenti") {
 } else if ($entity == "logs") {
     $query = "SELECT LOG_ID, UTENTE_ID, ENTITA, ENTITA_ID, AZIONE, UA_AZIENDA_ID, UA_UTENTE_ID, ATTRIBUTO, VECCHIO_VALORE,
                 NUOVO_VALORE, DATA_ORA
-                FROM LOGS;";
+                FROM LOGS";
 } else if ($entity == "dipendenti") {
     $query = "SELECT DIPENDENTE_ID, MATRICOLA, NOME, COGNOME, EMAIL, DATA_DI_NASCITA, CODICE_FISCALE, TELEFONO, INDIRIZZO, RUOLO, RAGIONE_SOCIALE, CONTRATTO, ASSUNTO_IL, DATA_FINE, E_ATTIVO
-                FROM DIPENDENTI;";
+                FROM DIPENDENTI";
+} else if ($entity == "registro_lavori") {
+    $query = "SELECT RL.REGISTRO_LAVORO_ID, RL.CANTIERE, RL.DATA_LAVORO, RL.DATA_CREATO, CONCAT(U.NOME, ' ', U.COGNOME) AS NOME_E_COGNOME
+                FROM REGISTRO_LAVORI AS RL
+                INNER JOIN UTENTI AS U ON RL.UTENTE_ID = U.UTENTE_ID";
 }
 
 if (!empty($_SESSION['company_ID'])) {
@@ -68,6 +72,10 @@ if (!empty($_SESSION['company_ID'])) {
                     u.AZIENDA_POSIZIONE, 
                     u.E_ATTIVO";
     }
+}
+
+if ($_SESSION["role"] == "Dipendente") {
+    $query .= " WHERE RL.UTENTE_ID = ". $_SESSION['user_id'];
 }
 
 
@@ -90,7 +98,6 @@ while ($fieldinfo = mysqli_fetch_field($result)) {
             ($fieldinfo->name == 'LOG_ID' || $fieldinfo->name == 'UTENTE_ID' || $fieldinfo->name == 'ENTITA_ID'
                 || $fieldinfo->name == 'UA_AZIENDA_ID' || $fieldinfo->name == 'UA_UTENTE_ID'))
     ) {
-
         $fieldName = ucwords(str_replace('_', ' ', strtolower($fieldinfo->name)));
     } else if ($fieldinfo->name === 'PASSWORD' || strpos(strtolower($fieldinfo->name), 'id')) {
         continue;
@@ -202,6 +209,9 @@ if (mysqli_num_rows($result) > 0) {
                 echo '<button ' . $disabled_document . ' class="btn btn-danger" onclick="confirmDeleteFile(\'' . addslashes($row['PERCORSO']) . '\')">Elimina</button>&nbsp;&nbsp;&nbsp;';
             } else if ($entity == 'logs') {
                 continue;
+            } else if ($entity == 'registro_lavori') {
+                echo '<button ' . $disabled . ' onclick="editEntity(' . reset($row) . ', \'' . $entity . '\')" class="btn btn-warning">Modifica</button>&nbsp&nbsp&nbsp';
+                echo '<button ' . $disabled . ' class="btn btn-danger" onclick="confirmPermanentlyDelete(' . reset($row) . ', \'' . $entity . '\')">Elimina</button>&nbsp&nbsp&nbsp';
             } else {
                 echo '<button ' . $disabled . ' onclick="editEntity(' . reset($row) . ', \'' . $entity . '\')" class="btn btn-warning">Modifica</button>&nbsp&nbsp&nbsp';
 
@@ -210,6 +220,25 @@ if (mysqli_num_rows($result) > 0) {
                 } else {
                     echo '<button ' . $disabled . ' class="btn btn-danger" onclick="confirmDelete(' . reset($row) . ', \'' . $entity . '\')">Elimina</button>&nbsp&nbsp&nbsp';
                 }
+            }
+
+            echo '</div></td></tr>';
+        } else if ($_SESSION['role'] == 'Dipendente') {
+            echo '<td>
+                <div class="btn-group">';
+            
+            if ($entity == 'registro_lavori') {
+                $disabled = "";
+                if (!empty($row['DATA_CREATO'])) {
+                    $createdDate = new DateTime($row['DATA_CREATO']);
+                    $now = new DateTime();
+                    $interval = $now->diff($createdDate);
+                    if ($interval->days > 3 || $createdDate < $now->sub(new DateInterval('P3D'))) {
+                        $disabled = "disabled";
+                    }
+                }
+                echo '<a href="admin_details.php?id=' . reset($row) . '&entity=' . $entity . '" class="btn btn-info">Dettagli</a>&nbsp&nbsp&nbsp';
+                echo '<button ' . $disabled . ' onclick="editEntity(' . reset($row) . ', \'' . $entity . '\')" class="btn btn-warning">Modifica</button>&nbsp&nbsp&nbsp';
             }
 
             echo '</div></td></tr>';
@@ -259,6 +288,8 @@ function linkToEntity($logs_current_entity, $entity_id)
         return '<td><a href="admin_details.php?entity=documenti&id=' . $entity_id . '">' . $entity_id . '</a></td>';
     } else if ($logs_current_entity == 'DIPENDENTI') {
         return '<td><a href="admin_details.php?entity=dipendenti&id=' . $entity_id . '">' . $entity_id . '</a></td>';
+    } else if ($logs_current_entity == 'REGISTRO_LAVORI') {
+        return '<td><a href="admin_details.php?entity=registro_lavori&id=' . $entity_id . '">' . $entity_id . '</a></td>';
     }
 
     return '<td>' . $entity_id . '</td>';
@@ -449,13 +480,23 @@ function dateFilters($entity)
 </div>
         ';
     } else {
+        if ($entity == 'dipendenti') {
+            $label1 = 'Data di Assunzione';
+            $label2 = 'Data di Fine';
+        } else if ($entity == 'registro_lavori') {
+            $label1 = 'Data del Lavoro';
+            $label2 = 'Data Creato';
+        } else {
+            $label1 = 'Data di Inizio';
+            $label2 = 'Data di Fine';
+        }
         return '
 <div class="container">
     <div class="row">
         <div class="col-12 mb-4">
             <!-- Data di Inizio -->
             <div class="d-flex flex-column flex-md-row align-items-center justify-content-center mb-3">
-                <div class="font-weight-bold mb-2 mb-md-0" style="width: 200px; text-align: center; font-weight: bold;">' . ($entity == 'dipendenti' ? 'Data di Assunzione' : 'Data di Inizio') . '</div>
+                <div class="font-weight-bold mb-2 mb-md-0" style="width: 200px; text-align: center; font-weight: bold;">' . $label1 . '</div>
                 <div class="d-flex flex-column flex-md-row align-items-center justify-content-center w-100">
                     <div class="d-flex align-items-center mb-3 mb-md-0 mx-3" style="flex: 1; text-align: center;">
                         <label class="mr-3" style="white-space: nowrap;">Da:</label>
@@ -472,7 +513,7 @@ function dateFilters($entity)
 
             <!-- Data di Fine -->
             <div class="d-flex flex-column flex-md-row align-items-center justify-content-center mb-3">
-                <div class="font-weight-bold mb-2 mb-md-0" style="width: 200px; text-align: center; font-weight: bold;">Data di Fine</div>
+                <div class="font-weight-bold mb-2 mb-md-0" style="width: 200px; text-align: center; font-weight: bold;">' . $label2 .'</div>
                 <div class="d-flex flex-column flex-md-row align-items-center justify-content-center w-100">
                     <div class="d-flex align-items-center mb-3 mb-md-0 mx-3" style="flex: 1; text-align: center;">
                         <label class="mr-3" style="white-space: nowrap;">Da:</label>

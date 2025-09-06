@@ -120,6 +120,15 @@ include 'database/closedb.php';
                                                     </a>
                                                 </div>
                                             </div>
+
+                                            <div class=" card w-100">
+                                                <div class="card-header">
+                                                    <a href="admin_create_job.php"
+                                                        class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
+                                                        style="font-size: 28px; height: 200px; font-weight: bold;">Crea un Rapporto di Lavoro
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

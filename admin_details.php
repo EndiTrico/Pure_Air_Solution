@@ -195,7 +195,7 @@ function showIBANDropDown($aziendaID, $bancaContoID)
     return $bankDropDown;
 }
 
-function showForm()
+function showForm(): void
 {
     include 'database/config.php';
     include 'database/opendb.php';
@@ -317,10 +317,27 @@ function showForm()
         $result = mysqli_stmt_get_result($stmt);
 
         if ($result) {
-            include 'client_details_employee.php';
+            include 'employee_details/display_employee_details.php';
 
             $row = mysqli_fetch_assoc($result);
             showEmployees($row);
+        }
+    } else if ($entity == "registro_lavori") {
+        $query = "SELECT RL.REGISTRO_LAVORO_ID, RL.CANTIERE, RL.DATA_CREATO, RL.DATA_LAVORO, RL.INFORMAZIONI, CONCAT(U.NOME, ' ', U.COGNOME) AS NOME_E_COGNOME
+                FROM REGISTRO_LAVORI AS RL
+                INNER JOIN UTENTI AS U ON RL.UTENTE_ID = U.UTENTE_ID
+                WHERE REGISTRO_LAVORO_ID = ?";
+
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, "i", $id);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        if ($result) {
+            include 'details_job.php';
+
+            $row = mysqli_fetch_assoc($result);
+            showJob($row);
         }
     }
 
@@ -371,16 +388,22 @@ function showForm()
 </head>
 
 <body>
+    <?php
+        $verticalNav = $_SESSION["role"] === "Admin" ? "admin_verticalNavBar.php" : "employee_verticalNavBar.php";
+        $horizontalNav = $_SESSION["role"] === "Admin" ? "admin_horizontalNavBar.php" : "employee_horizontalNavBar.php";
+        $backButtonHref = $_SESSION["role"] === "Admin" ? "admin_display_logs.php" : "employee_display_entities.php";
+    ?>
     <div class="wrapper">
-        <?php include "admin_verticalNavBar.php"; ?>
+
+        <?php include $verticalNav; ?>
         <div class="main">
-            <?php include "admin_horizontalNavBar.php"; ?>
+            <?php include $horizontalNav; ?>
 
             <main class="content">
                 <div class="container-fluid p-0">
                     <div class="row">
                         <div class="col-auto">
-                            <a class="btn transparent-btn" style="margin-top: -7px;" href="admin_display_logs.php">
+                            <a class="btn transparent-btn" style="margin-top: -7px;" href="<?php echo $backButtonHref; ?>">
                                 <img alt="Back" src="./images/back_button.png">
                             </a>
                         </div>
@@ -405,6 +428,8 @@ function showForm()
                                     echo "Documenti";
                                 } else if ($entity == "dipendenti") {
                                     echo "Dipendente";
+                                } else if ($entity == "registro_lavori") {
+                                    echo "Registro dei Lavori";
                                 }
                                 ?>
                             </h1>

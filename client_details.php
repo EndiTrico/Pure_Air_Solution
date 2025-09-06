@@ -285,7 +285,22 @@ function showForm()
             $row = mysqli_fetch_assoc($result);
             showImpianti($row);
         }
+    } else if ($entity == "registro_lavori") {
+        $query = "SELECT * FROM IMPIANTI WHERE IMPIANTO_ID = ?";
+
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, "i", $id);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        if ($result) {
+            include 'details_job.php';
+
+            $row = mysqli_fetch_assoc($result);
+            showImpianti($row);
+        }
     }
+
 
 
     include 'database/closedb.php';

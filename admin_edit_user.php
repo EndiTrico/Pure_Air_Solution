@@ -129,6 +129,7 @@
                         </option>
                         <option value="Admin" ' . ($row["RUOLO"] == "Admin" ? 'selected' : '') . '>Admin</option>
                         <option value="Cliente" ' . ($row["RUOLO"] == "Cliente" ? 'selected' : '') . '>Cliente</option>
+                        <option value="Dipendente" ' . ($row["RUOLO"] == "Dipendente" ? 'selected' : '') . '>Dipendente</option>
                     </select>
                 </div>
             </div>
@@ -187,5 +188,22 @@ function togglePassword() {
         iconPassword.classList.remove("fa-eye-slash");
     }
 }
+    
+const roleSelect = document.querySelector(\'select[name="user_role"]\');
+const companiesSelect = document.getElementById(\'multiple_select\');
 
+function handleRoleChange() {
+    if (roleSelect.value === "Dipendente") {
+        $(companiesSelect).val(null).trigger(\'change\'); // Clear selection
+        companiesSelect.disabled = true;
+    } else {
+        companiesSelect.disabled = false;
+    }
+}
+document.addEventListener("DOMContentLoaded", function () {
+    handleRoleChange();
+});
+roleSelect.addEventListener(\'change\', handleRoleChange);
+
+handleRoleChange();
 </script>';

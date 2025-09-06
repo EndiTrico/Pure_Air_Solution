@@ -11,7 +11,7 @@ function remoteFileExists($url)
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // Ignore SSL verification
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); // Ignore SSL host verification
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_TIMEOUT, value: 5);
     curl_exec($ch);
     
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -19,8 +19,6 @@ function remoteFileExists($url)
     curl_close($ch);
 
    //     echo "CURL ERROR: $curlError";
-    
-
     return ($httpCode >= 200 && $httpCode < 400); 
 }
 
@@ -35,7 +33,7 @@ function getImageURL($id)
     $query = "SELECT * FROM DIPENDENTI WHERE DIPENDENTE_ID = ?";
     $stmt = mysqli_prepare($conn, $query);
     mysqli_stmt_bind_param($stmt, "i", $id);
-    mysqli_stmt_execute($stmt);
+    mysqli_stmt_execute(statement: $stmt);
     $result = mysqli_stmt_get_result($stmt);
 
     $imageURL = '';
@@ -77,6 +75,8 @@ function showForm($id)
     if ($result) {
         $row = mysqli_fetch_assoc($result);
         include 'display_employee_details.php';
+
+        showEmployees($row);
     }
 
     include '../database/closedb.php';
@@ -120,8 +120,8 @@ function showForm($id)
 
                                                 <div style="display: flex; justify-content: center; align-items: center;">
                                                     <img src="<?php echo htmlspecialchars($imageURL, ENT_QUOTES, 'UTF-8'); ?>" 
-                                                         alt="User Avatar" 
-                                                         style="width: 400px; height: 400px; border-radius: 50%; object-fit: cover;">
+                                                        alt="User Avatar" 
+                                                        style="width: 400px; height: 400px; border-radius: 50%; object-fit: cover;">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-lg-8">

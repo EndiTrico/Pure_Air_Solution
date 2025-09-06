@@ -33,12 +33,6 @@ echo '
         color: #6d6f72 !important;
     }
     
-STRUTTURA_ID	
-NOME	
-PERCORSO	
-DATA_CARICAMENTO	
-DATA_CANCELLATA	
-E_ATTIVO
     </style>
     <form id="userForm" method="post">
         <div class="row">
@@ -53,7 +47,7 @@ E_ATTIVO
                     </div>
                 </div>
     
-                                <div class="mb-3 row d-flex justify-content-center">
+                <div class="mb-3 row d-flex justify-content-center">
                     <h5 class="card-title col-sm-2 col-form-label">
                         Azienda
                     </h5>
@@ -68,10 +62,10 @@ E_ATTIVO
                         Struttura
                     </h5>
                     <div class="col-sm-4">
-                                                                    <select disabled name="structure_name" id="structure_name" class="form-select mb-3" required>
-                                                                        <option disabled selected value="">Seleziona una
-                                                                            Struttura</option> ' . showStructureDropDown("documenti") .'
-                                                                    </select>
+                        <select disabled name="structure_name" id="structure_name" class="form-select mb-3" required>
+                            <option disabled selected value="">Seleziona una
+                                Struttura</option> ' . showStructureDropDown("documenti") .'
+                        </select>
                     </div>
                 </div>
                 

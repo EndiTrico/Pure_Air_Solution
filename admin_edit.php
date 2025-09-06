@@ -560,6 +560,51 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             $errorMessage = "Errore: Impossibile Preparare l'Istruzione";
         }
+    } else if (isset($_POST['update_job'])) {
+        $job_construction = mysqli_real_escape_string($conn, $_POST['job_construction']);
+        $job_data = empty(mysqli_real_escape_string($conn, $_POST['job_data'])) ? null : mysqli_real_escape_string($conn, $_POST['job_data']);
+        $job_information = mysqli_real_escape_string($conn, $_POST['job_information']);
+
+        $fields = [
+            'CANTIERE' => $job_construction,
+            'DATA_LAVORO' => $job_data,
+            'INFORMAZIONI' => $job_information
+        ];
+
+        $existingEntity = oldRecord($entity, $id);
+
+        $sql = '';
+        $sql = "UPDATE REGISTRO_LAVORI 
+                SET CANTIERE = ?,
+                    DATA_LAVORO = ?,
+                    INFORMAZIONI = ?
+                WHERE REGISTRO_LAVORO_ID = ?"; 
+
+        $stmt = mysqli_prepare($conn, $sql);
+        if ($stmt) {
+            mysqli_stmt_bind_param(
+                $stmt,
+                "sssi",
+                $job_construction,
+                $job_data,
+                $job_information,
+                $id
+            );
+            try {
+                if (mysqli_stmt_execute($stmt)) {
+                    $isChanged = insertIntoLogs($fields, $entity, $id, $existingEntity);
+                    $isChanged ? $successfulMessage = "Il Registro del Lavori è Stato Aggiornato con Successo" : $infoMessage = "Non Hai Modificato Alcun Attributo";
+                } else {
+                    $errorMessage = "Errore: Impossibile Aggiornare il Registro del Lavori";
+                }
+            } catch (mysqli_sql_exception $e) {
+                $errorMessage = "Errore: " . $e->getMessage();
+            }
+
+            mysqli_stmt_close($stmt);
+        } else {
+            $errorMessage = "Errore: Impossibile Preparare l'Istruzione";
+        }
     } else if (isset($_POST['update_employee'])) {
         $employee_first_name = mysqli_real_escape_string($conn, $_POST['employee_first_name']);
         $employee_last_name = mysqli_real_escape_string($conn, $_POST['employee_last_name']);
@@ -787,6 +832,8 @@ function oldRecord($entity, $id)
         $existingSql = "SELECT ULTIMA_ATTIVITA, STRUTTURA_ID, RIPRESA, REPARTO_ID, PRESA_ARIA_ESTERNA, IMPIANTO_NOME, MANDATA, ESPULSIONE, DATA_ULTIMA_ATT, DATA_INIZIO, DATA_FINE, CAPACITA_UTA, AZIENDA_ID FROM IMPIANTI WHERE IMPIANTO_ID = ?";
     } else if ($entity == 'dipendenti') {
         $existingSql = "SELECT NOME, COGNOME, EMAIL, FOTOGRAFIA, DATA_DI_NASCITA, CODICE_FISCALE, INDIRIZZO, RUOLO, RAGIONE_SOCIALE, PIVA, TELEFONO, MATRICOLA, QUALIFICA, MANSIONE, CONTRATTO, ASSUNTO_IL, DATA_FINE, VISITA_MEDICA_IDONEITA, RICEVUTA_CONSEGNA_DPI, ATTESTATO_FORMAZIONE_SPECIFICA, CORSO_FORMAZIONE_INFORMAZIONE_BASE, CORSO_UTILIZZO_DPI_CAT3 FROM DIPENDENTI WHERE DIPENDENTE_ID = ?";
+    } else if ($entity == 'registro_lavori') {
+        $existingSql = "SELECT CANTIERE, DATA_LAVORO, INFORMAZIONI FROM REGISTRO_LAVORI WHERE REGISTRO_LAVORO_ID = ?";
     }
 
     $stmt = mysqli_prepare($conn, $existingSql);
@@ -1085,6 +1132,21 @@ function showForm()
             $row = mysqli_fetch_assoc($result);
             include 'admin_edit_employee.php';
         }
+    } else if ($entity == "registro_lavori") {
+        $query = "SELECT RL.REGISTRO_LAVORO_ID, RL.CANTIERE, RL.DATA_CREATO, RL.DATA_LAVORO, RL.INFORMAZIONI, CONCAT(U.NOME, ' ', U.COGNOME) AS NOME_E_COGNOME
+                FROM REGISTRO_LAVORI AS RL
+                INNER JOIN UTENTI AS U ON RL.UTENTE_ID = U.UTENTE_ID
+                WHERE REGISTRO_LAVORO_ID = ?";
+
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, "i", $id);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        if ($result) {
+            $row = mysqli_fetch_assoc($result);
+            include 'admin_edit_job.php';
+        }
     }
 
     include 'database/closedb.php';
@@ -1138,16 +1200,21 @@ function showForm()
 </head>
 
 <body>
+    <?php
+        $verticalNav = $_SESSION["role"] === "Admin" ? "admin_verticalNavBar.php" : "employee_verticalNavBar.php";
+        $horizontalNav = $_SESSION["role"] === "Admin" ? "admin_horizontalNavBar.php" : "employee_horizontalNavBar.php";
+        $backButtonHref = $_SESSION["role"] === "Admin" ? "admin_display_entities.php" : "employee_display_entities.php";
+    ?>
     <div class="wrapper">
-        <?php include "admin_verticalNavBar.php"; ?>
+        <?php include $verticalNav; ?>
         <div class="main">
-            <?php include "admin_horizontalNavBar.php"; ?>
+            <?php include $horizontalNav; ?>
 
             <main class="content">
                 <div class="container-fluid p-0">
                     <div class="row">
                         <div class="col-auto">
-                            <a class="btn transparent-btn" style="margin-top: -7px;" href="admin_display_entities.php">
+                            <a class="btn transparent-btn" style="margin-top: -7px;" href="<?php echo $backButtonHref; ?>">
                                 <img alt="Back" src="./images/back_button.png">
                             </a>
                         </div>
@@ -1167,9 +1234,11 @@ function showForm()
                                 } else if ($entity == "fatture") {
                                     echo "Aggiorna la Fattura";
                                 } else if ($entity == "impianti") {
-                                    echo "Aggiorna  l'Impianto";
+                                    echo "Aggiorna l'Impianto";
                                 } else if ($entity == "dipendenti") {
                                     echo "Aggiorna il Dipendente";
+                                } else if ($entity == "registro_lavori") {
+                                    echo "Aggiorna il Registro dei Lavori";
                                 }
                                 ?>
                             </h1>

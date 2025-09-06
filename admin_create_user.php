@@ -21,9 +21,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $user_numero = mysqli_real_escape_string($conn, $_POST['user_number']);
         $user_joined_date = empty(mysqli_real_escape_string($conn, $_POST['user_joined_date'])) ? null : mysqli_real_escape_string($conn, $_POST['user_joined_date']);
         $user_left_date = mysqli_real_escape_string($conn, $_POST['user_left_date']);
-
-        if (!empty($_POST['user_companies'])) {
+        $user_companies = [];
+        
+        if ($user_role !== "Dipendente" && !empty($_POST['user_companies'])) {
             $user_companies = $_POST['user_companies'];
+        } else {
+            $user_companies = [];
         }
 
         $hashed_password = password_hash($user_password, PASSWORD_BCRYPT);
@@ -329,6 +332,7 @@ include 'database/closedb.php';
                                                                 disabled selected hidden>Seleziona Ruolo</option>
                                                             <option value="Admin">Admin</option>
                                                             <option value="Cliente">Cliente</option>
+                                                            <option value="Dipendente">Dipendente</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -402,6 +406,22 @@ include 'database/closedb.php';
                             iconPassword.classList.remove("fa-eye-slash");
                         }
                     }
+
+                    const roleSelect = document.querySelector('select[name="user_role"]');
+                    const companiesSelect = document.getElementById('multiple_select');
+
+                    function handleRoleChange() {
+                        if (roleSelect.value === "Dipendente") {
+                            $(companiesSelect).val(null).trigger('change'); // Clear selection
+                            companiesSelect.disabled = true;
+                        } else {
+                            companiesSelect.disabled = false;
+                        }
+                    }
+
+                    roleSelect.addEventListener('change', handleRoleChange);
+
+                    handleRoleChange();
 
                 </script>
 

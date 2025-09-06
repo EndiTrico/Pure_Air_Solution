@@ -190,7 +190,7 @@ if ($entity == "aziende") {
 }  else if ($entity == "impianti") {
     $updateQuery = "UPDATE IMPIANTI SET E_ATTIVO = 0, DATA_FINE = ? WHERE IMPIANTO_ID = ?";
     $stmtUpdate = mysqli_prepare($conn, $updateQuery);
-    mysqli_stmt_bind_param($stmtUpdate, "ii", $left_date, $id);
+    mysqli_stmt_bind_param($stmtUpdate, "si", $left_date, $id);
     mysqli_stmt_execute($stmtUpdate);
    	mysqli_stmt_close($stmtUpdate);
 
@@ -207,6 +207,14 @@ if ($entity == "aziende") {
    	mysqli_stmt_close($stmtUpdate);
 
     insertIntoLogs($conn, $_SESSION['user_id'], 'DIPENDENTI', $id, $currentDateAndTime);  
+} else if ($entity == 'registro_lavori') {
+    $deleteQuery = "DELETE FROM REGISTRO_LAVORI WHERE REGISTRO_LAVORO_ID = ?";
+    $stmtDelete = mysqli_prepare($conn, $deleteQuery);
+    mysqli_stmt_bind_param($stmtDelete, "i",  $id);
+    mysqli_stmt_execute($stmtDelete);
+   	mysqli_stmt_close($stmtDelete);
+
+    insertIntoLogs($conn, $_SESSION['user_id'], 'REGISTRO_LAVORI', $id, $currentDateAndTime);  
 }
 
 function insertIntoLogs($conn, $userId, $entity, $entityId, $actionDate) {

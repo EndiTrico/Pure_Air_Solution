@@ -1,10 +1,10 @@
 <?php
-include 'auth_check.php';
+include '../auth_check.php';
 
-include 'database/config.php';
-include 'database/opendb.php';
+include '../database/config.php';
+include '../database/opendb.php';
 
-include 'database/closedb.php';
+include '.../database/closedb.php';
 ?>
 
 
@@ -19,7 +19,7 @@ include 'database/closedb.php';
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="shortcut icon" href="images/logo/small_logo.png" />
 
-    <title>Rapporti</title>
+    <title>Visualizza Entità</title>
 
     <link href="css/app.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -40,16 +40,7 @@ include 'database/closedb.php';
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css"
         href="https://cdn.datatables.net/fixedheader/3.1.7/css/fixedHeader.dataTables.min.css">
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
-        #datepicker {
-            display: inline-block;
-        }
-
         .current {
             background-color: whitesmoke !important;
             border: none !important;
@@ -57,11 +48,6 @@ include 'database/closedb.php';
 
         option {
             text-align: center;
-        }
-
-        .swal2-overflow {
-            overflow-x: visible;
-            overflow-y: visible;
         }
 
         th,
@@ -76,6 +62,7 @@ include 'database/closedb.php';
             font-size: 14px;
             padding: 5px 10px;
             border-radius: 999px;
+            font-weight:bold;
         }
 
         .badge-danger-custom {
@@ -84,6 +71,16 @@ include 'database/closedb.php';
             font-size: 14px;
             padding: 5px 10px;
             border-radius: 999px;
+            font-weight:bold;
+        }
+      
+   	   .badge-warning-custom {
+            background-color: #ffc107;
+            color: #fff;
+            font-size: 14px;
+            padding: 5px 10px;
+            border-radius: 999px;
+         	font-weight:bold;
         }
 
         .button-row {
@@ -95,6 +92,7 @@ include 'database/closedb.php';
         .button {
             padding: 10px 20px;
             margin: 0 5px;
+
         }
 
 
@@ -201,38 +199,6 @@ include 'database/closedb.php';
         .modal-content>*:last-child {
             margin-bottom: 0;
         }
-
-
-
-
-
-
-        .drop-zone {
-            border: dashed 2px #1d3b55;
-            border-radius: 5px;
-            padding: 20px;
-            color: #1d3b55;
-            text-align: center;
-            margin: 10px 0;
-            cursor: pointer;
-        }
-
-        .drop-zone:hover {
-            background-color: #1d3b55;
-            color: white;
-            font-weight: bold;
-
-        }
-
-        #file-upload {
-            display: none;
-        }
-
-        .file-info {
-            font-size: 0.85rem;
-            color: #666;
-            margin-top: 10px;
-        }
     </style>
 
 </head>
@@ -246,33 +212,15 @@ include 'database/closedb.php';
             <main class="content">
                 <div class="container-fluid p-0">
 
-                    <h1 class="h3 mb-3">Visualizza Rapporti</h1>
+                    <h1 class="h3 mb-3">Visualizza Entità</h1>
 
                     <div class="row">
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
                                     <div class="row">
-                                        <div class="col-12 col-lg-6">
-                                            <div class="card-header">
-                                                <a onclick="loadDirectory
-                                                            ('<?php 
-        														include 'nas/credentials.php'; 
-        														echo $rootPath; 
-    														?>)" 
-                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                    style="font-weight: bold;">Cartelle</a>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12 col-lg-6">
-                                            <div class="card-header">
-                                                <a onclick="fetchData('documenti')"
-                                                    class="btn btn-primary btn-lg btn-block text-center d-flex align-items-center justify-content-center"
-                                                    style="font-weight: bold;">Tabella</a>
-                                            </div>
-                                        </div>
                                     </div>
+
                                     <div class="col-12 col-lg-12">
                                         <div id="tableContainer" class="mt-4">
                                         </div>
@@ -284,47 +232,21 @@ include 'database/closedb.php';
                 </div>
             </main>
 
+
+
             <script>
-                window.onload = function () {
-                    const urlParams = new URLSearchParams(window.location.search);
-                    if (urlParams.has('load') && urlParams.has('path')) {
-                        const path = urlParams.get('path');
-                        loadDirectory(path);
-                    }
-                };
-
-                function loadDirectory(path) {
-                    var xhttp = new XMLHttpRequest();
-
-                    xhttp.onreadystatechange = function () {
-                        if (this.readyState == 4 && this.status == 200) {
-                            document.getElementById("tableContainer").innerHTML = this.responseText;
-                        } else if (this.readyState == 4) {
-                            alert('Errore durante il recupero delle cartelle');
-                        }
-                    };
-
-                    xhttp.open("GET", "client_fetch_directories.php?path=" + encodeURIComponent(path), true);
-                    xhttp.send();
-                }
-
-                $(document).ready(function () {
-                    $(document).on('click', 'button.folder', function (event) {
-                        event.preventDefault();
-                        var path = $(this).data('path');
-                        loadDirectory(path);
-                    });
-
+                $(document).ready(function() {
+                    fetchData('REGISTRO_LAVORI'); // Replace with your desired entity
                 });
 
                 function fetchData(entity) {
                     var xhttp = new XMLHttpRequest();
-                    var table;
 
                     xhttp.onreadystatechange = function () {
                         if (this.readyState == 4 && this.status == 200) {
                             document.getElementById("tableContainer").innerHTML = this.responseText;
-                            table = $('#fetchTable').DataTable({
+
+                            var table = $('#fetchTable').DataTable({
                                 language: {
                                     "url": "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Italian.json"
                                 },
@@ -343,9 +265,9 @@ include 'database/closedb.php';
                                     });
 
                                     clonedRow.find('th').each(function (i) {
+                                        var title = $(this).text();
                                         if (i !== $(this).siblings().length && title !== "Azioni") {
-                                            var title = $(this).text();
-                                            var input = $('<input type="text" style = "text-align: center;" placeholder="Cerca ' + title + '" />').appendTo($(this).empty());
+                                            var input = $('<input type="text" style="text-align: center;" placeholder="Cerca ' + title + '" />').appendTo($(this).empty());
 
                                             input.on('keyup change', function () {
                                                 if (table.column(i).search() !== this.value) {
@@ -371,56 +293,57 @@ include 'database/closedb.php';
                     xhttp.send();
                 }
 
+
                 function filterWithDate(table) {
-                    var caricamentoColIdx = table.column(':contains("Data Caricamento")').index();
-                    var cancellataColIdx = table.column(':contains("Data Cancellata")').index();
+                    var inizioColIdx = table.column(':contains("Data del Lavoro")').index();
+                    var fineColIdx = table.column(':contains("Data Creato")').index();
 
                     $.fn.dataTable.ext.search.push(
                         function (settings, data, dataIndex) {
-                            var minCaricamento = $('#minCaricamento').val();
-                            var maxCaricamento = $('#maxCaricamento').val();
-                            var minCancellata = $('#minCancellata').val();
-                            var maxCancellata = $('#maxCancellata').val();
+                            var minLavoro = $('#minInizio').val();
+                            var maxLavoro = $('#maxInizio').val();
+                            var minCreato = $('#minFine').val();
+                            var maxCreato = $('#maxFine').val();
 
-                            var dataCaricamento = data[caricamentoColIdx];
-                            var dataCancellata = data[cancellataColIdx];
+                            var dataInizio = data[inizioColIdx];
+                            var dataFine = data[fineColIdx];
 
-                            dataCaricamento = dataCaricamento ? new Date(dataCaricamento) : null;
-                            dataCancellata = dataCancellata ? new Date(dataCancellata) : null;
+                            dataInizio = dataInizio ? new Date(dataInizio) : null;
+                            dataFine = dataFine ? new Date(dataFine) : null;
 
-                            minCaricamento = minCaricamento ? new Date(minCaricamento) : null;
-                            maxCaricamento = maxCaricamento ? new Date(maxCaricamento) : null;
-                            minCancellata = minCancellata ? new Date(minCancellata) : null;
-                            maxCancellata = maxCancellata ? new Date(maxCancellata) : null;
+                            minLavoro = minLavoro ? new Date(minLavoro) : null;
+                            maxLavoro = maxLavoro ? new Date(maxLavoro) : null;
+                            minCreato = minCreato ? new Date(minCreato) : null;
+                            maxCreato = maxCreato ? new Date(maxCreato) : null;
 
                             if (
                                 (
-                                    (minCaricamento === null || (dataCaricamento !== null && dataCaricamento >= minCaricamento)) &&
-                                    (maxCaricamento === null || (dataCaricamento !== null && dataCaricamento <= maxCaricamento))
+                                    (minLavoro === null || (dataInizio !== null && dataInizio >= minLavoro)) &&
+                                    (maxLavoro === null || (dataInizio !== null && dataInizio <= maxLavoro))
                                 )
 
                                 &&
 
                                 (
-                                    (minCancellata === null || (dataCancellata !== null && dataCancellata >= minCancellata)) &&
-                                    (maxCancellata === null || (dataCancellata !== null && dataCancellata <= maxCancellata))
+                                    (minCreato === null || (dataFine !== null && dataFine >= minCreato)) &&
+                                    (maxCreato === null || (dataFine !== null && dataFine <= maxCreato))
                                 )
                             ) {
                                 return true;
                             }
-
                             return false;
                         }
                     );
 
-                    $('#minCaricamento, #maxCaricamento, #minCancellata, #maxCancellata').change(function () {
+                    $('#minLavoro, #maxLavoro, #minCreato, #maxCreato').change(function () {
                         table.draw();
                     });
 
-                    flatpickr("#minCaricamento, #maxCaricamento, #minCancellata, #maxCancellata", {
+                    flatpickr("#minLavoro, #maxLavoro, #minCreato, #maxCreato", {
                         locale: 'it',
                         dateFormat: "Y-m-d"
                     });
+                    
                 }
             </script>
             <?php
@@ -430,9 +353,10 @@ include 'database/closedb.php';
     </div>
 
     <script src="js/app.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/it.js"></script>
+
+
+
+
 
 </body>
 

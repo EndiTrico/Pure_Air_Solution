@@ -1,4 +1,6 @@
 <?php
+include 'auth_check.php';
+
 include 'database/config.php';
 include 'database/opendb.php';
 
@@ -337,8 +339,9 @@ function showLeftForm($email)
 
 <body>
     <div class="wrapper">
+        <?php include "client_verticalNavBar.php"; ?>
         <div class="main">
-            <?php include "employee_horizontalNavBar.php"; ?>
+            <?php include "client_horizontalNavBar.php"; ?>
 
             <main class="content">
                 <div class="container-fluid p-0">
@@ -387,7 +390,7 @@ function showLeftForm($email)
                                                     <div style="width: 400px;
                                                                 height: 400px;
                                                                 border-radius: 50%; 
-                                                                background-color: #222e3c;
+                                                                background-color: #0275d8;
                                                                 color: #fff; 
                                                                 display: inline-flex;
                                                                 margin-top: 46px;
